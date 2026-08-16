@@ -52,10 +52,12 @@ The first stable deliverable should be a JSON-serializable morphology tree, even
 
 ## Repository context graph
 
-For architecture, scientific-model, validation, or dataset tasks, read
-`docs/repository_context_graph.json` after this file. It is an evidence-backed
+For architecture, scientific-model, validation, or dataset tasks, a local
+`docs/repository_context_graph.json` may be available as an evidence-backed
 descriptive map of subsystems, entrypoints, artifacts, tests, constraints, and
-decisions. Do not load the full graph for a trivial, file-local edit.
+decisions. It is deliberately not versioned because `docs/` also contains
+drafts and third-party references. Do not load the full graph for a trivial,
+file-local edit.
 
 `AGENTS.md` remains the prescriptive authority and overrides the context graph
 if they conflict. The graph must not treat generated outputs or legacy code as
@@ -177,7 +179,7 @@ If the repository only contains `planta_procedural_v05.py` and related notes:
 2. Move `planta_procedural_v05.py` to `legacy/`.
 3. Create empty but documented modules under `src/uchuva_lsystem/`.
 4. Create or update `.gitignore`.
-5. Add `docs/` and place checkpoints/references there when available.
+5. Keep local checkpoints and references outside version control when available.
 6. Do not rewrite the entire generator yet.
 7. Do not implement a full L-System before the morphology dataclasses exist.
 

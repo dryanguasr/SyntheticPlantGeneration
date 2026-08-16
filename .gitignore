@@ -1,6 +1,7 @@
 # Datasets and private/raw source data
 Dataset Original/
 datasets/
+docs/
 
 # Generated renders, training runs, reports and temporary artifacts
 outputs/*

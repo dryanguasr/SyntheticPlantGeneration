@@ -24,7 +24,6 @@ class RepositoryLayoutTests(unittest.TestCase):
         for name in (
             "assets",
             "contributions",
-            "docs",
             "legacy",
             "outputs",
             "scripts",
@@ -39,7 +38,6 @@ class RepositoryLayoutTests(unittest.TestCase):
             (self.repo_root / "src" / "uchuva_classical_augmentation").is_dir()
         )
         self.assertTrue((self.repo_root / "src" / "uchuva_gazebo").is_dir())
-        self.assertTrue((self.repo_root / "docs" / "workstreams" / "README.md").is_file())
         self.assertTrue(
             (
                 self.repo_root

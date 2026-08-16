@@ -56,7 +56,6 @@ datasets nuevos de manera reproducible.
 |---|---|
 | `generate_uchuva_texture_library.py` | Regenera `assets/textures/current/` |
 | `download_cc0_assets.py` | Descarga y verifica activos CC0 del entorno |
-| `validate_repository_context_graph.py` | Valida arquitectura y evidencia |
 | `promote_human_validation_suite.py` | Promueve una suite revisada sin sobrescribirla |
 
 Los nombres incluyen el artefacto producido; no se usan números de versión en

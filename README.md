@@ -30,7 +30,6 @@ morfología serializable
 | Dataset sintético original | `outputs/datasets/uchuva_original_synthetic_seed_1000_v1/` |
 | Checkpoint híbrido ganador | `outputs/experiments/checkpoint_interpolation_scale80_seed_1000_v1/interpolated_checkpoints/natural_hybrid_alpha_045.pt` |
 | Resultado híbrido | 0.690637 mAP50–95 frente a 0.682706 natural |
-| Reporte del experimento | `docs/reports/resultado_dataset_hibrido_2026-08-01.md` |
 | Validación humana | `outputs/human_validation/` |
 | Prototipos anteriores | `legacy/` |
 | Resultados históricos | `outputs/archive/` |
@@ -46,7 +45,6 @@ SyntheticPlantGeneration/
 ├── src/uchuva_lsystem/       modelo y pipeline vigentes
 ├── scripts/                  comandos actuales, documentados en scripts/README.md
 ├── tests/                    regresiones Python puras
-├── docs/                     arquitectura, guías, evidencia y reportes
 ├── assets/
 │   └── textures/
 │       ├── current/          biblioteca activa
@@ -63,7 +61,6 @@ SyntheticPlantGeneration/
 
 Índices detallados:
 
-- [Documentación](docs/README.md)
 - [Scripts actuales](scripts/README.md)
 - [Activos](assets/README.md)
 - [Resultados](outputs/README.md)
@@ -144,15 +141,13 @@ Validación humana de un cambio significativo:
 El comando genera diez casos EEVEE estándar y requiere auditoría de malla.
 Cycles solo se usa si se selecciona explícitamente un perfil Cycles.
 Para verificar la integración sin crear evidencia use `--smoke --case-id
-case_07`. El protocolo completo está en
-[`docs/guides/protocolo_validacion_humana.md`](docs/guides/protocolo_validacion_humana.md).
+case_07`. El protocolo de validación se mantiene localmente fuera del repositorio.
 
 ## Verificación
 
 ```powershell
 $env:PYTHONPATH='C:\dev\SyntheticPlantGeneration\src'
 python -m unittest discover -s tests -v
-python scripts\validate_repository_context_graph.py
 ```
 
 Las pruebas puras no requieren Blender. La auditoría de malla evaluada sí se
@@ -177,19 +172,14 @@ ejecuta dentro de Blender.
 El repositorio se organiza en tres frentes: aumentación clásica, generación
 sintética y un puente puro de morfología hacia Gazebo. La implementación
 vigente del generador permanece en `src/uchuva_lsystem/`; el baseline clásico
-se documenta en `src/uchuva_classical_augmentation/` y la interfaz Gazebo en
-`src/uchuva_gazebo/`. Consulte
-[`docs/workstreams/README.md`](docs/workstreams/README.md) y
-[`docs/architecture/integracion_augmentacion_sintetica_gazebo.md`](docs/architecture/integracion_augmentacion_sintetica_gazebo.md).
+está en `src/uchuva_classical_augmentation/` y la interfaz Gazebo en
+`src/uchuva_gazebo/`.
 
 Las entregas de terceros se preservan con autoría y procedencia bajo
 `contributions/`, sin datasets, pesos ni resultados generados.
 
-## Documentos de referencia
+## Documentación local
 
-- [Arquitectura multi-planta](docs/architecture/crecimiento_multi_planta_sincronizado.md)
-- [Modelo morfológico](docs/architecture/modelo_morfologico_uchuva.md)
-- [Registro de evidencia](docs/governance/registro_evidencia.md)
-- [Reporte comparativo](docs/reports/comparacion_multi_planta_2026-07-23.md)
-- [Grafo de contexto](docs/repository_context_graph.json)
-- [Informe de mejoras virtuales v2](docs/reports/mejoras_virtuales_prioritarias_2026-08-14.md)
+`docs/` se excluye deliberadamente del control de versiones: contiene
+borradores, evidencia de trabajo y referencias de terceros. El código y los
+contratos ejecutables permanecen versionados en `src/`, `scripts/` y `tests/`.
