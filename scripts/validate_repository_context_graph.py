@@ -33,6 +33,8 @@ ALLOWED_RELATIONS = {
 }
 GENERATED_PREFIXES = ("outputs/", "generated_specs/")
 PURE_MODULE_IDS = {
+    "module.classical_augmentation",
+    "module.gazebo_interface",
     "module.morphology",
     "module.parameters",
     "module.phenology",
@@ -53,6 +55,11 @@ PURE_MODULE_IDS = {
     "module.photometric_calibration",
     "module.spatial_calibration",
 }
+PUBLIC_PACKAGE_DIRECTORIES = (
+    "uchuva_lsystem",
+    "uchuva_classical_augmentation",
+    "uchuva_gazebo",
+)
 BLENDER_MODULE_IDS = {
     "module.blender_annotations",
     "module.blender_dataset",
@@ -244,7 +251,8 @@ def validate_graph_data(
 
     public_modules = {
         path.relative_to(repo_root).as_posix()
-        for path in (repo_root / "src/uchuva_lsystem").glob("*.py")
+        for package_name in PUBLIC_PACKAGE_DIRECTORIES
+        for path in (repo_root / "src" / package_name).glob("*.py")
     }
     missing_modules = sorted(public_modules - represented_paths)
     if missing_modules:

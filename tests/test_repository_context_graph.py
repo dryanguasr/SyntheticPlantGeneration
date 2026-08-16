@@ -31,18 +31,38 @@ class RepositoryContextGraphTests(unittest.TestCase):
     def test_repository_graph_is_valid(self) -> None:
         report = validate_graph(self.repo_root, self.graph_path)
         self.assertEqual(report["status"], "valid", report["errors"])
-        self.assertEqual(report["covered_public_modules"], 34)
+        expected_public_modules = {
+            path.relative_to(self.repo_root).as_posix()
+            for package_name in (
+                "uchuva_lsystem",
+                "uchuva_classical_augmentation",
+                "uchuva_gazebo",
+            )
+            for path in (self.repo_root / "src" / package_name).glob("*.py")
+        }
+        self.assertEqual(report["covered_public_modules"], len(expected_public_modules))
 
     def test_all_public_modules_are_represented(self) -> None:
         represented = {
             path
             for node in self.graph["nodes"]
             for path in node["paths"]
-            if path.startswith("src/uchuva_lsystem/")
+            if path.startswith(
+                (
+                    "src/uchuva_lsystem/",
+                    "src/uchuva_classical_augmentation/",
+                    "src/uchuva_gazebo/",
+                )
+            )
         }
         expected = {
             path.relative_to(self.repo_root).as_posix()
-            for path in (self.repo_root / "src/uchuva_lsystem").glob("*.py")
+            for package_name in (
+                "uchuva_lsystem",
+                "uchuva_classical_augmentation",
+                "uchuva_gazebo",
+            )
+            for path in (self.repo_root / "src" / package_name).glob("*.py")
         }
         self.assertEqual(represented & expected, expected)
 

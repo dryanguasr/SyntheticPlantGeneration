@@ -1,0 +1,28 @@
+﻿EJECUTAR DESDE LA RAIZ DEL PROYECTO
+
+1. Crear entorno:
+py -3.11 -m venv .venv_gpu
+.\.venv_gpu\Scripts\Activate.ps1
+
+2. Instalar PyTorch con CUDA usando el selector oficial de pytorch.org.
+python -m pip install --upgrade pip
+python -m pip install -r scripts/training/multiseed_yolo11n/requirements.txt
+
+3. Confirmar GPU:
+python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0))"
+
+4. Validar SIN ENTRENAR:
+python scripts/training/multiseed_yolo11n/train_multiseed.py --device 0 --dry-run
+
+5. Ejecutar las 90 corridas:
+python scripts/training/multiseed_yolo11n/train_multiseed.py --device 0
+
+REANUDAR:
+Ejecute exactamente el mismo comando. Omite corridas completas y reanuda last.pt.
+
+PRUEBA DE UNA SEMILLA:
+python scripts/training/multiseed_yolo11n/train_multiseed.py --device 0 --seeds 1
+
+Semillas por defecto: 1-29 y 42.
+Resultados: runs/detect/experiments/training/yolo11n_multiseed_v1
+No agregue --amp si desea conservar el protocolo original amp=False.

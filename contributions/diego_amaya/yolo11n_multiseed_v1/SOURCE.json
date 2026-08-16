@@ -1,0 +1,20 @@
+{
+  "snapshot_id": "diego_amaya_yolo11n_multiseed_v1",
+  "source_kind": "student_project_delivery",
+  "source_relative_path": "Dataset Original/Dataset + Aumentación clásica/ENTRENAMIENTO MULTI-SEED UCHUVA/ENTREGA_CODIGO_PROFESOR_YOLO11N_30_SEMILLAS",
+  "included": [
+    "README.md",
+    "configs/datasets/*.yaml",
+    "scripts/training/multiseed_yolo11n/*"
+  ],
+  "excluded": [
+    "data/",
+    "models/pretrained/yolo11n.pt",
+    "runs/"
+  ],
+  "file_hashes_sha256": {
+    "scripts/training/multiseed_yolo11n/train_multiseed.py": "44F6EAEA0A893F4BEDB60BE2CEDF0D0622648F67C60C1868BE33A9BE57FC9828",
+    "README.md": "43620470B97C54AFB779C61E316E21CD3A69157EBF9118D998581D2958A8DE0C"
+  },
+  "recipe_reproducibility": "E1 and E2 augmentation recipes are not included in the received source snapshot."
+}

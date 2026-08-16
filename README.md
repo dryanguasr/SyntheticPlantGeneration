@@ -172,6 +172,19 @@ ejecuta dentro de Blender.
   test natural; cada corrida puede reanudarse desde `last.pt`;
 - no se añaden dependencias externas para el pipeline base.
 
+## Frentes interoperables
+
+El repositorio se organiza en tres frentes: aumentación clásica, generación
+sintética y un puente puro de morfología hacia Gazebo. La implementación
+vigente del generador permanece en `src/uchuva_lsystem/`; el baseline clásico
+se documenta en `src/uchuva_classical_augmentation/` y la interfaz Gazebo en
+`src/uchuva_gazebo/`. Consulte
+[`docs/workstreams/README.md`](docs/workstreams/README.md) y
+[`docs/architecture/integracion_augmentacion_sintetica_gazebo.md`](docs/architecture/integracion_augmentacion_sintetica_gazebo.md).
+
+Las entregas de terceros se preservan con autoría y procedencia bajo
+`contributions/`, sin datasets, pesos ni resultados generados.
+
 ## Documentos de referencia
 
 - [Arquitectura multi-planta](docs/architecture/crecimiento_multi_planta_sincronizado.md)

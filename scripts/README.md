@@ -38,6 +38,18 @@ reemplazados están en `legacy/scripts/`.
 | `generate_human_validation_suite.py` | Diez casos antes/después con EEVEE estándar y Cycles opcional |
 | `example_run_blender_background.ps1` | Ejemplo Windows |
 
+## Puente hacia Gazebo
+
+| Script | Propósito |
+|---|---|
+| `export_gazebo_plant.py` | Exporta un plan JSON puro por LOD desde una morfología; no produce SDF ni requiere Gazebo |
+
+La entrega estudiantil de aumentación clásica se conserva bajo
+`contributions/diego_amaya/`. No se registra como entrada vigente del
+generador: su lanzador mantiene su propio protocolo y las recetas E1/E2 aún
+deben recuperarse o reimplementarse antes de que esa línea pueda producir
+datasets nuevos de manera reproducible.
+
 ## Activos y mantenimiento
 
 | Script | Propósito |

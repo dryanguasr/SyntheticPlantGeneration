@@ -885,6 +885,78 @@
       "summary": "Comprueba exclusion del test real, coherencia imagen-etiqueta, inmutabilidad de fuentes y aumento de escala aparente.",
       "paths": ["tests/test_spatial_calibration.py"],
       "evidence": [{"path": "tests/test_spatial_calibration.py", "locator": "class SpatialCalibrationTests"}]
+    },
+    {
+      "id": "module.classical_augmentation",
+      "type": "subsystem",
+      "label": "Baseline de aumentacion clasica",
+      "summary": "Registra condiciones convencionales y declara de forma explicita cuando una receta solo existe como dataset precomputado.",
+      "paths": ["src/uchuva_classical_augmentation/__init__.py", "src/uchuva_classical_augmentation/protocol.py"],
+      "evidence": [{"path": "src/uchuva_classical_augmentation/protocol.py", "locator": "def student_yolo11n_conditions"}]
+    },
+    {
+      "id": "module.gazebo_interface",
+      "type": "subsystem",
+      "label": "Interfaz pura morphology a Gazebo",
+      "summary": "Deriva planes semanticos visuales y fisicos por LOD desde Plant, sin depender de Blender ni del runtime Gazebo.",
+      "paths": ["src/uchuva_gazebo/__init__.py", "src/uchuva_gazebo/interfaces.py"],
+      "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "def build_gazebo_export_plan"}]
+    },
+    {
+      "id": "entrypoint.export_gazebo_plant",
+      "type": "entrypoint",
+      "label": "Exportar plan de Gazebo",
+      "summary": "CLI puro que convierte un JSON morfologico en un plan semantico JSON por nivel de detalle.",
+      "paths": ["scripts/export_gazebo_plant.py"],
+      "evidence": [{"path": "scripts/export_gazebo_plant.py", "locator": "def main"}]
+    },
+    {
+      "id": "artifact.classical_augmentation_protocol",
+      "type": "artifact",
+      "label": "Protocolo clasico trazable",
+      "summary": "Definicion serializable de condiciones E0, E1 y E2 con procedencia y estado de reproducibilidad de recetas.",
+      "paths": ["src/uchuva_classical_augmentation/protocol.py", "contributions/diego_amaya/yolo11n_multiseed_v1/CONTRIBUTION.md"],
+      "evidence": [{"path": "contributions/diego_amaya/yolo11n_multiseed_v1/CONTRIBUTION.md", "locator": "sus recetas son reproducibles"}]
+    },
+    {
+      "id": "artifact.gazebo_export_plan",
+      "type": "artifact",
+      "label": "Plan semantico de Gazebo",
+      "summary": "JSON reproducible para spikes de Gazebo que conserva identidad morfologica y deja explicita la ausencia de SDF y fisica medida.",
+      "paths": ["src/uchuva_gazebo/interfaces.py", "scripts/export_gazebo_plant.py"],
+      "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "class GazeboExportPlan"}]
+    },
+    {
+      "id": "constraint.gazebo_pure_bridge",
+      "type": "constraint",
+      "label": "Gazebo como interprete puro",
+      "summary": "El puente hacia Gazebo consume morfologia serializable sin importar bpy, Gazebo, ROS ni asumir coeficientes fisicos medidos.",
+      "paths": ["docs/architecture/integracion_augmentacion_sintetica_gazebo.md"],
+      "evidence": [{"path": "docs/architecture/integracion_augmentacion_sintetica_gazebo.md", "locator": "no importa `bpy`, `gz`, ROS 2 ni Gazebo"}]
+    },
+    {
+      "id": "decision.three_workstreams",
+      "type": "decision",
+      "label": "Tres frentes interoperables",
+      "summary": "Aumentacion clasica, generacion sintetica y Gazebo se separan por responsabilidad y se conectan mediante artefactos trazables.",
+      "paths": ["docs/plan_reestructuracion_augmentacion_sintetica_gazebo.md", "docs/architecture/integracion_augmentacion_sintetica_gazebo.md"],
+      "evidence": [{"path": "docs/plan_reestructuracion_augmentacion_sintetica_gazebo.md", "locator": "tres líneas claramente diferenciadas pero interoperables"}]
+    },
+    {
+      "id": "test.classical_augmentation",
+      "type": "test",
+      "label": "Pruebas del protocolo clasico",
+      "summary": "Comprueba condiciones preservadas y que las recetas no entregadas sigan marcadas como precomputadas.",
+      "paths": ["tests/test_classical_augmentation.py"],
+      "evidence": [{"path": "tests/test_classical_augmentation.py", "locator": "class ClassicalAugmentationProtocolTests"}]
+    },
+    {
+      "id": "test.gazebo_interface",
+      "type": "test",
+      "label": "Pruebas del puente Gazebo",
+      "summary": "Comprueba LODs, serializacion, incertidumbre fisica y ausencia de dependencias de runtime.",
+      "paths": ["tests/test_gazebo_interfaces.py"],
+      "evidence": [{"path": "tests/test_gazebo_interfaces.py", "locator": "class GazeboInterfaceTests"}]
     }
   ],
   "edges": [
@@ -1106,5 +1178,15 @@
     ,{"source": "entrypoint.audit_virtual_fidelity_pilot", "relation": "depends_on", "target": "artifact.domain_report", "evidence": [{"path": "scripts/audit_virtual_fidelity_pilot.py", "locator": "domain_comparison"}]}
     ,{"source": "entrypoint.audit_virtual_fidelity_pilot", "relation": "produces", "target": "artifact.virtual_fidelity_pilot_audit", "evidence": [{"path": "scripts/audit_virtual_fidelity_pilot.py", "locator": "pilot_audit.json"}]}
     ,{"source": "entrypoint.create_dataset_sample_sheet", "relation": "validates", "target": "artifact.yolo_dataset", "evidence": [{"path": "scripts/create_dataset_sample_sheet.py", "locator": "manifest.jsonl"}]}
+    ,{"source": "module.classical_augmentation", "relation": "produces", "target": "artifact.classical_augmentation_protocol", "evidence": [{"path": "src/uchuva_classical_augmentation/protocol.py", "locator": "ClassicalAugmentationCondition"}]}
+    ,{"source": "module.gazebo_interface", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "from uchuva_lsystem.morphology import"}]}
+    ,{"source": "module.gazebo_interface", "relation": "produces", "target": "artifact.gazebo_export_plan", "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "def write_gazebo_export_plan"}]}
+    ,{"source": "module.gazebo_interface", "relation": "must_preserve", "target": "constraint.gazebo_pure_bridge", "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "not emit SDF yet"}]}
+    ,{"source": "entrypoint.export_gazebo_plant", "relation": "depends_on", "target": "module.gazebo_interface", "evidence": [{"path": "scripts/export_gazebo_plant.py", "locator": "from uchuva_gazebo import"}]}
+    ,{"source": "entrypoint.export_gazebo_plant", "relation": "produces", "target": "artifact.gazebo_export_plan", "evidence": [{"path": "scripts/export_gazebo_plant.py", "locator": "gazebo_export_plan.json"}]}
+    ,{"source": "decision.three_workstreams", "relation": "configures", "target": "module.classical_augmentation", "evidence": [{"path": "docs/architecture/integracion_augmentacion_sintetica_gazebo.md", "locator": "Aumentacion clasica"}]}
+    ,{"source": "decision.three_workstreams", "relation": "configures", "target": "module.gazebo_interface", "evidence": [{"path": "docs/architecture/integracion_augmentacion_sintetica_gazebo.md", "locator": "Gazebo"}]}
+    ,{"source": "test.classical_augmentation", "relation": "tests", "target": "module.classical_augmentation", "evidence": [{"path": "tests/test_classical_augmentation.py", "locator": "class ClassicalAugmentationProtocolTests"}]}
+    ,{"source": "test.gazebo_interface", "relation": "tests", "target": "module.gazebo_interface", "evidence": [{"path": "tests/test_gazebo_interfaces.py", "locator": "class GazeboInterfaceTests"}]}
   ]
 }

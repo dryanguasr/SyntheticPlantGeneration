@@ -26,6 +26,17 @@ La documentación se organiza por función, no por orden de creación.
 - `governance/registro_evidencia.md`: procedencia e incertidumbre.
 - `repository_context_graph.json`: mapa descriptivo validable del repositorio.
 
+## Frentes de trabajo
+
+- `architecture/integracion_augmentacion_sintetica_gazebo.md`: contratos y
+  límites entre aumentación clásica, generación sintética y Gazebo.
+- `workstreams/classical_augmentation.md`: baseline convencional y procedencia
+  de la entrega estudiantil.
+- `workstreams/synthetic_generation.md`: implementación vigente del generador.
+- `workstreams/gazebo_bridge.md`: plan de exportación semántica por LOD.
+- `plan_reestructuracion_augmentacion_sintetica_gazebo.md`: especificación de
+  la reorganización inicial y los spikes posteriores.
+
 ## Referencias
 
 - `references/referencias_uchuva_lsystem.bib`.

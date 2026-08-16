@@ -21,9 +21,34 @@ class RepositoryLayoutTests(unittest.TestCase):
                 root_names,
                 f"Obsolete root entry returned: {name}",
             )
-        for name in ("assets", "docs", "legacy", "outputs", "scripts", "src"):
+        for name in (
+            "assets",
+            "contributions",
+            "docs",
+            "legacy",
+            "outputs",
+            "scripts",
+            "src",
+        ):
             self.assertIn(name, root_names)
             self.assertTrue((self.repo_root / name).is_dir())
+
+    def test_three_workstreams_have_explicit_boundaries(self) -> None:
+        self.assertTrue((self.repo_root / "src" / "uchuva_lsystem").is_dir())
+        self.assertTrue(
+            (self.repo_root / "src" / "uchuva_classical_augmentation").is_dir()
+        )
+        self.assertTrue((self.repo_root / "src" / "uchuva_gazebo").is_dir())
+        self.assertTrue((self.repo_root / "docs" / "workstreams" / "README.md").is_file())
+        self.assertTrue(
+            (
+                self.repo_root
+                / "contributions"
+                / "diego_amaya"
+                / "yolo11n_multiseed_v1"
+                / "CONTRIBUTION.md"
+            ).is_file()
+        )
 
     def test_texture_library_has_explicit_current_and_legacy_paths(self) -> None:
         texture_root = self.repo_root / "assets" / "textures"

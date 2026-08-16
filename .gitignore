@@ -8,6 +8,12 @@ outputs/*
 output/
 tmp/
 generated_specs/
+exports/
+
+# Large local inputs and outputs for preserved external contributions
+contributions/**/data/
+contributions/**/models/
+contributions/**/runs/
 
 # Python environments and caches
 .venv/
