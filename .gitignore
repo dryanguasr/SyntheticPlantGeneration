@@ -1,0 +1,39 @@
+# Datasets and private/raw source data
+Dataset Original/
+datasets/
+
+# Generated renders, training runs, reports and temporary artifacts
+outputs/*
+!outputs/README.md
+output/
+tmp/
+generated_specs/
+
+# Python environments and caches
+.venv/
+.venv-*/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Model weights and exported inference engines
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.engine
+
+# Blender backups and heavy intermediate render formats
+*.blend1
+*.blend2
+*.exr
+
+# OS and editor metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

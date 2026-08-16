@@ -1,0 +1,1133 @@
+{
+  "calibration": {
+    "calyx_sample": {
+      "boxes_available": 3820,
+      "boxes_sampled": 800,
+      "cluster_median_srgb": [
+        [
+          81,
+          94,
+          37
+        ],
+        [
+          122,
+          125,
+          60
+        ],
+        [
+          164,
+          164,
+          94
+        ],
+        [
+          199,
+          192,
+          133
+        ]
+      ],
+      "method_status": "dataset_inferred_camera_srgb"
+    },
+    "dataset": "Dataset Original (read-only)",
+    "leaf_sample": {
+      "frames": 400,
+      "green_pixels": 300000,
+      "median_srgb": [
+        111,
+        136,
+        74
+      ],
+      "method_status": "dataset_inferred_camera_srgb",
+      "midtone_median_srgb": [
+        111,
+        136,
+        77
+      ]
+    },
+    "literature_calyx_cielch_mean": {
+      "C_star": 31.34,
+      "L_star": 52.53,
+      "h_degrees": 94.91,
+      "method_status": "literature_reported",
+      "sampling": "mean_across_20_27_34_41_days_after_anthesis"
+    },
+    "reflection": {
+      "calyx_blender_roughness_range": [
+        0.93,
+        0.99
+      ],
+      "leaf_blender_roughness_range": [
+        0.92,
+        0.96
+      ],
+      "leaf_ior": 1.45,
+      "method_status": "literature_bounded_manual_initial_guess",
+      "note": "Blender Principled roughness is not numerically identical to the roughness parameter fitted by leaf BRDF models.",
+      "specular_ior_level_max": 0.15
+    }
+  },
+  "color_space": {
+    "albedo": "sRGB IEC 61966-2-1",
+    "colorimetric_caution": "Dataset colors are camera/render-domain inferences, not a spectrophotometer measurement of intrinsic reflectance.",
+    "height_normal_roughness_masks": "non-color linear data"
+  },
+  "generator": "uchuva_lsystem.texture_assets",
+  "generator_version": "0.5.0-maturity-continuum",
+  "preview": "texture_contact_sheet.png",
+  "resolution_px": 512,
+  "seed": 1701,
+  "texture_sets": {
+    "calyx_dry_v0": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_dry_v0_albedo.png",
+        "height": "calyx_dry_v0_height.png",
+        "normal": "calyx_dry_v0_normal.png",
+        "roughness": "calyx_dry_v0_roughness.png",
+        "vein_debug": "calyx_dry_v0_vein_debug.png",
+        "vein_mask": "calyx_dry_v0_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.0,
+        "base_cielab_d65": [
+          72.505,
+          -0.825,
+          20.784
+        ],
+        "base_srgb": [
+          191,
+          177,
+          140
+        ],
+        "ior": 1.45,
+        "name": "calyx_dry_v0",
+        "normal_strength": 0.28,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.28,
+        "roughness": 0.95,
+        "roughness_variation": 0.045,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "dry_deteriorated",
+        "subsurface_weight": 0.002,
+        "vein_cielab_d65": [
+          40.518,
+          6.308,
+          19.453
+        ],
+        "vein_contrast": 0.64,
+        "vein_srgb": [
+          116,
+          91,
+          64
+        ]
+      },
+      "seed": 12800,
+      "sha256": {
+        "albedo": "91b2d93a78deedd4d3698facf6cc7d32006d321a633e0e378f08c62fba7eb459",
+        "height": "34545d9cc90301dd2bb8ccf59de490ad0b7c58c2c0cc08f326e56b76098dcdd7",
+        "normal": "7c1eb34e08a647a8ab58458ae4f342edefae2feeae67283f7c3d6d6fc44028db",
+        "roughness": "a356d12396340892e9b4ef08627b88b3924256c397b75874ae2fda6a83b7f5db",
+        "vein_debug": "afa10db0dcfe5508c83bd6f670221ebc142bc163efa065a2fd122b7637e7050c",
+        "vein_mask": "b5119439337deae54af94450ebd347d690d00625f8f573202a906274a6647954"
+      }
+    },
+    "calyx_dry_v1": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_dry_v1_albedo.png",
+        "height": "calyx_dry_v1_height.png",
+        "normal": "calyx_dry_v1_normal.png",
+        "roughness": "calyx_dry_v1_roughness.png",
+        "vein_debug": "calyx_dry_v1_vein_debug.png",
+        "vein_mask": "calyx_dry_v1_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.06,
+        "base_cielab_d65": [
+          63.538,
+          2.38,
+          25.296
+        ],
+        "base_srgb": [
+          174,
+          151,
+          109
+        ],
+        "ior": 1.45,
+        "name": "calyx_dry_v1",
+        "normal_strength": 0.31,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.26,
+        "roughness": 0.97,
+        "roughness_variation": 0.045,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "dry_deteriorated",
+        "subsurface_weight": 0.002,
+        "vein_cielab_d65": [
+          30.546,
+          7.711,
+          14.95
+        ],
+        "vein_contrast": 0.78,
+        "vein_srgb": [
+          91,
+          67,
+          49
+        ]
+      },
+      "seed": 13809,
+      "sha256": {
+        "albedo": "dbffd6c3fe372519da05aa8feac0421c55da204072c24a95dff846ca56e0046b",
+        "height": "224c3d978af910f43bb187246503c86520d1f79dee07e6d04add0845067c1fc3",
+        "normal": "d66dad859aeba4414703be38b9ac7ab09d3bb6bfa468e4a8b41084ea7e75d51a",
+        "roughness": "42a48eb60efb655b37a1a40036908a4c07916e54818d51daf2c1185651bab130",
+        "vein_debug": "cde5f47ce0ff44868305fb2020d624dcb9b5154100f4855f6e1a04d1d734e28f",
+        "vein_mask": "b5a76347e41024a944987b5d86929c7f2fac625a3c8036a93fbb748ef2de7a1c"
+      }
+    },
+    "calyx_dry_v2": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_dry_v2_albedo.png",
+        "height": "calyx_dry_v2_height.png",
+        "normal": "calyx_dry_v2_normal.png",
+        "roughness": "calyx_dry_v2_roughness.png",
+        "vein_debug": "calyx_dry_v2_vein_debug.png",
+        "vein_mask": "calyx_dry_v2_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.12,
+        "base_cielab_d65": [
+          50.853,
+          4.897,
+          24.21
+        ],
+        "base_srgb": [
+          143,
+          117,
+          80
+        ],
+        "ior": 1.45,
+        "name": "calyx_dry_v2",
+        "normal_strength": 0.34,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.24,
+        "roughness": 0.99,
+        "roughness_variation": 0.045,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "dry_deteriorated",
+        "subsurface_weight": 0.002,
+        "vein_cielab_d65": [
+          21.753,
+          7.057,
+          9.783
+        ],
+        "vein_contrast": 0.9,
+        "vein_srgb": [
+          67,
+          48,
+          38
+        ]
+      },
+      "seed": 14818,
+      "sha256": {
+        "albedo": "065b698e6a5ce21931746b6252d8e05f3a8ca1b5026045dcb7913f64f3a50703",
+        "height": "5141a0f0a34eecba485e0968e0388075631ab8f39af3f47fa5b890f777d740c1",
+        "normal": "2df11d8a14c4499788626da5e49b1286544b13c59d1c3af45120051b3f627e08",
+        "roughness": "833fa0b934f62a49f2ceb95acdebb2b9ae41c4f02e85145a88b2be77a27ed1cb",
+        "vein_debug": "b792fb5d51fc89f56905d33b4d83e996c98a35ff161e903571244be3a3ef1f15",
+        "vein_mask": "5e1b651069cdb152f35c31a01f0385ac51770d3b17b8ea8da3b3c7b9fcfc79f5"
+      }
+    },
+    "calyx_green_v0": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_green_v0_albedo.png",
+        "height": "calyx_green_v0_height.png",
+        "normal": "calyx_green_v0_normal.png",
+        "roughness": "calyx_green_v0_roughness.png",
+        "vein_debug": "calyx_green_v0_vein_debug.png",
+        "vein_mask": "calyx_green_v0_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.0,
+        "base_cielab_d65": [
+          52.757,
+          -17.826,
+          36.316
+        ],
+        "base_srgb": [
+          116,
+          133,
+          61
+        ],
+        "ior": 1.45,
+        "name": "calyx_green_v0",
+        "normal_strength": 0.22,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.24,
+        "roughness": 0.93,
+        "roughness_variation": 0.035,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "inflated_green",
+        "subsurface_weight": 0.004,
+        "vein_cielab_d65": [
+          31.388,
+          -11.356,
+          22.24
+        ],
+        "vein_contrast": 0.58,
+        "vein_srgb": [
+          68,
+          78,
+          38
+        ]
+      },
+      "seed": 3719,
+      "sha256": {
+        "albedo": "66df50c5171832bfb185f772bd5d3062e9c62cd49cefdb886982cd03c154141c",
+        "height": "838369d406157f8fa9336bff26374d0c2d27f0cd809eb2f484d5210e9c2cd900",
+        "normal": "17173789762c6c630ce58913ec0d14ebbe8c1b0ff84b74eb9888832f02741de6",
+        "roughness": "f1ef2a355d9ab3399dfb138abc4dc1226130dcf719e6abac789fc297fdb87ff6",
+        "vein_debug": "435cb3c6d6d43f472c628d7c7488f5325835bb74730f718ff0b6f71506c06a72",
+        "vein_mask": "faa81997b0b90dc04ff811b112e9715a64b2adcde34cce0af2899fd4e950e66e"
+      }
+    },
+    "calyx_green_v1": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_green_v1_albedo.png",
+        "height": "calyx_green_v1_height.png",
+        "normal": "calyx_green_v1_normal.png",
+        "roughness": "calyx_green_v1_roughness.png",
+        "vein_debug": "calyx_green_v1_vein_debug.png",
+        "vein_mask": "calyx_green_v1_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.08,
+        "base_cielab_d65": [
+          54.198,
+          -18.545,
+          37.557
+        ],
+        "base_srgb": [
+          119,
+          137,
+          62
+        ],
+        "ior": 1.45,
+        "name": "calyx_green_v1",
+        "normal_strength": 0.24,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.22,
+        "roughness": 0.94,
+        "roughness_variation": 0.035,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "inflated_green",
+        "subsurface_weight": 0.004,
+        "vein_cielab_d65": [
+          26.927,
+          -11.898,
+          18.248
+        ],
+        "vein_contrast": 0.7,
+        "vein_srgb": [
+          55,
+          68,
+          35
+        ]
+      },
+      "seed": 4728,
+      "sha256": {
+        "albedo": "d9a97e881798b0ed47a559ab8258737f1f061c4250324647d38636867e910b5d",
+        "height": "4d440f5818f6f296bf561ddb873550b90ff7508bedd5b5722463dd417b62081b",
+        "normal": "e4fe69a36ad52f5fd60a2e144876c61043f660e47736072940448c5d09328bc2",
+        "roughness": "2382b64eb6f2734523a692bd54eac3aadebeacc1c5d23e7e5bc1c9f43e8d7dfe",
+        "vein_debug": "fe1503958b3a7a2ebc3b18e799cc94d91e50312c0c62cc2f37c4003aec702bde",
+        "vein_mask": "d5696abba7dd3a818a12e8bb06656dd2f616d7dd9de58f00be964455131fbe11"
+      }
+    },
+    "calyx_green_v2": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_green_v2_albedo.png",
+        "height": "calyx_green_v2_height.png",
+        "normal": "calyx_green_v2_normal.png",
+        "roughness": "calyx_green_v2_roughness.png",
+        "vein_debug": "calyx_green_v2_vein_debug.png",
+        "vein_mask": "calyx_green_v2_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.24,
+        "base_cielab_d65": [
+          56.325,
+          -19.673,
+          38.621
+        ],
+        "base_srgb": [
+          123,
+          143,
+          65
+        ],
+        "ior": 1.45,
+        "name": "calyx_green_v2",
+        "normal_strength": 0.26,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.2,
+        "roughness": 0.95,
+        "roughness_variation": 0.035,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "inflated_green",
+        "subsurface_weight": 0.004,
+        "vein_cielab_d65": [
+          21.52,
+          -9.491,
+          14.315
+        ],
+        "vein_contrast": 0.82,
+        "vein_srgb": [
+          45,
+          55,
+          30
+        ]
+      },
+      "seed": 5737,
+      "sha256": {
+        "albedo": "40530fbfd68220a069b09dbefded0cf8f1112c9d756f03b4b6e5f044842f2a12",
+        "height": "cb22b3f68acffd881728e8f2ee724e6b49fe4d7a2524e0463bd32ceb6e1d45b4",
+        "normal": "5a75f1148c9fcdbdbb597e80eaf2f0ca97d9c1b605ccabaa1e32bcb76c3eb2e0",
+        "roughness": "93d07d9ba0a12a3e945c3547b0fa811f7bda3679b9c670a7d9233a73f1f144db",
+        "vein_debug": "0847efbe3778efbdb3dee970810aa32fa3813957ce11d686555b2147d95535a0",
+        "vein_mask": "60ebf1ea385839e4d2ee8a533e719299a60136995f43f9a286b3595ddb21ba94"
+      }
+    },
+    "calyx_green_v3": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_green_v3_albedo.png",
+        "height": "calyx_green_v3_height.png",
+        "normal": "calyx_green_v3_normal.png",
+        "roughness": "calyx_green_v3_roughness.png",
+        "vein_debug": "calyx_green_v3_vein_debug.png",
+        "vein_mask": "calyx_green_v3_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.45,
+        "base_cielab_d65": [
+          58.141,
+          -20.276,
+          39.331
+        ],
+        "base_srgb": [
+          127,
+          148,
+          68
+        ],
+        "ior": 1.45,
+        "name": "calyx_green_v3",
+        "normal_strength": 0.28,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.18,
+        "roughness": 0.97,
+        "roughness_variation": 0.035,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "inflated_green",
+        "subsurface_weight": 0.004,
+        "vein_cielab_d65": [
+          16.91,
+          -6.743,
+          11.486
+        ],
+        "vein_contrast": 0.94,
+        "vein_srgb": [
+          38,
+          44,
+          25
+        ]
+      },
+      "seed": 6746,
+      "sha256": {
+        "albedo": "95d35c0d0aaa291527a2dec645989e309bb5a128429a6acf7304188dd7e087ad",
+        "height": "083448892af4c465245549b48a3266c4c1251c2f716e6cc5460cc21d2e2803ce",
+        "normal": "ef6326d8bb5e28761769796434cf3ea524a4b5bd2da40dc269d727ca7a7f5f2b",
+        "roughness": "432ac9db2ee0a042d340a054b5d81160a533c4758f585947a41b6e0f33a3e017",
+        "vein_debug": "85a238c229953a40701bce806070701b8c52bd35cc5d15a39ba6a86f45968e6b",
+        "vein_mask": "25442d74e485ed147d17a0cbed8ec3ceae115f7a0fd829c588c58e5954460851"
+      }
+    },
+    "calyx_straw_v0": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_straw_v0_albedo.png",
+        "height": "calyx_straw_v0_height.png",
+        "normal": "calyx_straw_v0_normal.png",
+        "roughness": "calyx_straw_v0_roughness.png",
+        "vein_debug": "calyx_straw_v0_vein_debug.png",
+        "vein_mask": "calyx_straw_v0_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.0,
+        "base_cielab_d65": [
+          75.584,
+          -4.414,
+          29.31
+        ],
+        "base_srgb": [
+          198,
+          187,
+          132
+        ],
+        "ior": 1.45,
+        "name": "calyx_straw_v0",
+        "normal_strength": 0.24,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.26,
+        "roughness": 0.94,
+        "roughness_variation": 0.045,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "straw_yellow",
+        "subsurface_weight": 0.002,
+        "vein_cielab_d65": [
+          45.577,
+          4.918,
+          21.62
+        ],
+        "vein_contrast": 0.58,
+        "vein_srgb": [
+          128,
+          104,
+          72
+        ]
+      },
+      "seed": 9773,
+      "sha256": {
+        "albedo": "d5de4ac77d9e088aabda20b36a750aa9d15a89128015f3628b44938ed88af8e1",
+        "height": "fe2c106a12c9161b5a3f9beffc1e6f692e9983e1d2af37953930df3645499b29",
+        "normal": "cbf33a2b5d44e0b85aa312249931b67f1f4c544a9f4fbb5986f1719acc763060",
+        "roughness": "ca146e85ef86bc554cc3aafe2c6aa3e92784fcca9ca0fc104a3bcee806e1cd78",
+        "vein_debug": "de17bc14758d1433f288ce8c597400b38403c50ab36a22e163592ac67f97725e",
+        "vein_mask": "5fbe31c9e786d242e212efd013d027238086fe668bd0198ed91a63af33bef9cf"
+      }
+    },
+    "calyx_straw_v1": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_straw_v1_albedo.png",
+        "height": "calyx_straw_v1_height.png",
+        "normal": "calyx_straw_v1_normal.png",
+        "roughness": "calyx_straw_v1_roughness.png",
+        "vein_debug": "calyx_straw_v1_vein_debug.png",
+        "vein_mask": "calyx_straw_v1_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.04,
+        "base_cielab_d65": [
+          73.066,
+          -4.509,
+          33.806
+        ],
+        "base_srgb": [
+          193,
+          180,
+          117
+        ],
+        "ior": 1.45,
+        "name": "calyx_straw_v1",
+        "normal_strength": 0.26,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.24,
+        "roughness": 0.96,
+        "roughness_variation": 0.045,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "straw_yellow",
+        "subsurface_weight": 0.002,
+        "vein_cielab_d65": [
+          35.774,
+          7.737,
+          17.203
+        ],
+        "vein_contrast": 0.72,
+        "vein_srgb": [
+          105,
+          79,
+          57
+        ]
+      },
+      "seed": 10782,
+      "sha256": {
+        "albedo": "df972c55aaf5ac7d5ba8631ca16f3a9a8d4a045f88ae086f61419b4f0886c6a6",
+        "height": "bde0ffc2a6e228ad1120b2579cce2ef08f0897dfd050d7676e14ff0a0f6db5b0",
+        "normal": "902ba91194decc186fa5961598b9bb7ca259d1c02b4d959b5617207c3b40ca78",
+        "roughness": "eeed6c53ae5003193f35779bd1e5a6823c4884762b8767bf2788eae394bc7e69",
+        "vein_debug": "0c3ec8b07417cb1a422282fbd66e390fc569f12987706422075560a3abf73671",
+        "vein_mask": "8854dd25f3497466a37c9df947f4d57881cfab7e9f3f3afb1d29aca617195d3c"
+      }
+    },
+    "calyx_straw_v2": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_straw_v2_albedo.png",
+        "height": "calyx_straw_v2_height.png",
+        "normal": "calyx_straw_v2_normal.png",
+        "roughness": "calyx_straw_v2_roughness.png",
+        "vein_debug": "calyx_straw_v2_vein_debug.png",
+        "vein_mask": "calyx_straw_v2_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.1,
+        "base_cielab_d65": [
+          67.709,
+          -1.741,
+          34.627
+        ],
+        "base_srgb": [
+          183,
+          164,
+          102
+        ],
+        "ior": 1.45,
+        "name": "calyx_straw_v2",
+        "normal_strength": 0.28,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.22,
+        "roughness": 0.98,
+        "roughness_variation": 0.045,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "straw_yellow",
+        "subsurface_weight": 0.002,
+        "vein_cielab_d65": [
+          27.34,
+          7.396,
+          13.033
+        ],
+        "vein_contrast": 0.86,
+        "vein_srgb": [
+          82,
+          60,
+          45
+        ]
+      },
+      "seed": 11791,
+      "sha256": {
+        "albedo": "3e91b83856c56ca13a29add73e66ca9894ecc847a3acb630ee05484ba42c6d01",
+        "height": "475053dc7e40b39d68b68047190ec43e9618c152e19cc7ec44585fcf41606b46",
+        "normal": "1580db8888b7f52e1535218be9bd4f6fca9d4b8133bb21574819e829fe5133b3",
+        "roughness": "e7fd009bf843aaae9f29d88bbb3c8b312621e8a3cc4a9afe969d950a3132dd25",
+        "vein_debug": "242c705f13be1eff4fc0fb68bf046714234329896a7f681da95083896aa7608c",
+        "vein_mask": "ed28dff429c12c441c9d4398b4ffdefb6b3ce59929d24b91b0a60b3e58fbbc67"
+      }
+    },
+    "calyx_transition_v0": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_transition_v0_albedo.png",
+        "height": "calyx_transition_v0_height.png",
+        "normal": "calyx_transition_v0_normal.png",
+        "roughness": "calyx_transition_v0_roughness.png",
+        "vein_debug": "calyx_transition_v0_vein_debug.png",
+        "vein_mask": "calyx_transition_v0_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.05,
+        "base_cielab_d65": [
+          62.997,
+          -14.418,
+          40.543
+        ],
+        "base_srgb": [
+          151,
+          158,
+          78
+        ],
+        "ior": 1.45,
+        "name": "calyx_transition_v0",
+        "normal_strength": 0.23,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.24,
+        "roughness": 0.95,
+        "roughness_variation": 0.045,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "transitioning_yellow",
+        "subsurface_weight": 0.002,
+        "vein_cielab_d65": [
+          32.219,
+          -2.453,
+          20.626
+        ],
+        "vein_contrast": 0.68,
+        "vein_srgb": [
+          83,
+          76,
+          43
+        ]
+      },
+      "seed": 7755,
+      "sha256": {
+        "albedo": "e0f89be7b6e9b1091c7438aeda0af68e28fc135d54b227097d748d4eb2358567",
+        "height": "9080e5bc946f2b6d44e28889f466c56169854b2ffb7a8a04a4d048f0e682a00f",
+        "normal": "b1d7ca61ba14e32524cee29f17845d12c3991aa5107897b3c1caa5255238b6d6",
+        "roughness": "784e5123d6b4b0f4a63de891b73b94d5da311615f268b366582ccb951c07ac1a",
+        "vein_debug": "eb242374ede3c3749145247baf29f461a4f24ca87439ed2fc1a71871a8729c49",
+        "vein_mask": "f31b69686e53b16d89525b023a179bbd34c24d1844a51822dacaaeefe66e3ab8"
+      }
+    },
+    "calyx_transition_v1": {
+      "diagnostics": {
+        "seamless_u": true,
+        "stroke_counts": {
+          "intercostal": 5,
+          "major_midrib": 5,
+          "reticulate": 1032
+        },
+        "topology": {
+          "evidence_status": "literature_reported_and_dataset_confirmed",
+          "fruiting_calyx": "ovoid_inflated_reticulate",
+          "longitudinal_ribs_or_angles": 10,
+          "major_sepal_midribs": 5,
+          "ripe_vein_color": "sometimes_purplish_to_brown",
+          "secondary_network": "reticulate_cross_linked",
+          "surface": "persistently_hairy_chartaceous"
+        }
+      },
+      "files": {
+        "albedo": "calyx_transition_v1_albedo.png",
+        "height": "calyx_transition_v1_height.png",
+        "normal": "calyx_transition_v1_normal.png",
+        "roughness": "calyx_transition_v1_roughness.png",
+        "vein_debug": "calyx_transition_v1_vein_debug.png",
+        "vein_mask": "calyx_transition_v1_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.1,
+        "base_cielab_d65": [
+          68.156,
+          -8.975,
+          39.153
+        ],
+        "base_srgb": [
+          174,
+          169,
+          94
+        ],
+        "ior": 1.45,
+        "name": "calyx_transition_v1",
+        "normal_strength": 0.24,
+        "organ": "calyx",
+        "parameter_status": "dataset_inferred_camera_srgb+manual_initial_guess_reflection",
+        "primary_relief_scale": 0.23,
+        "roughness": 0.96,
+        "roughness_variation": 0.045,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "transitioning_yellow",
+        "subsurface_weight": 0.002,
+        "vein_cielab_d65": [
+          35.537,
+          1.113,
+          19.733
+        ],
+        "vein_contrast": 0.78,
+        "vein_srgb": [
+          96,
+          82,
+          52
+        ]
+      },
+      "seed": 8764,
+      "sha256": {
+        "albedo": "3b3e9310399fedc08502d727082952449d1e69dc3d9f519a867232f39a2441b8",
+        "height": "c3b5b32bd052e12474ea11db46a72241815da152491e79d2ae2ba80f76d78bc2",
+        "normal": "97a4281ce928333539b9b405ebf26cfc6a583a6396cdaea9dcf1273c36679508",
+        "roughness": "154be60cc88629776ea08b3fbb21cde7b47e8eca40b1a1edb6871f4189ca34eb",
+        "vein_debug": "89ffdc83b65d2a20b75e8c5f1aec15ea08f2a6949ccceab53059e8cca52d670d",
+        "vein_mask": "32d7bbf7eee22370be28d565002317b4648acf7d74c5347fe4a20cfd2b799ebc"
+      }
+    },
+    "leaf_healthy": {
+      "diagnostics": {
+        "generated_lateral_veins_per_side": 6,
+        "stroke_counts": {
+          "primary": 3,
+          "quaternary": 287,
+          "secondary": 22,
+          "tertiary": 30
+        },
+        "suprabasal_primary_pair": true,
+        "topology": {
+          "areolation": "moderately_developed",
+          "evidence_status": "literature_reported",
+          "freely_ending_ultimate_veins": "two_or_more_branched",
+          "highest_modeled_order": 4,
+          "lateral_veins_per_side": [
+            5,
+            7
+          ],
+          "primary_category": "suprabasal",
+          "quaternary_category": "regular_polygonal_reticulate",
+          "secondary_angle": "acute",
+          "secondary_category": "semicraspedodromous",
+          "tertiary_category": "alternate_percurrent",
+          "tertiary_course": "sinuous"
+        }
+      },
+      "files": {
+        "albedo": "leaf_healthy_albedo.png",
+        "height": "leaf_healthy_height.png",
+        "normal": "leaf_healthy_normal.png",
+        "roughness": "leaf_healthy_roughness.png",
+        "vein_debug": "leaf_healthy_vein_debug.png",
+        "vein_mask": "leaf_healthy_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.0,
+        "base_cielab_d65": [
+          48.051,
+          -21.948,
+          27.564
+        ],
+        "base_srgb": [
+          92,
+          123,
+          66
+        ],
+        "ior": 1.45,
+        "name": "leaf_healthy",
+        "normal_strength": 0.35,
+        "organ": "leaf",
+        "parameter_status": "dataset_inferred_camera_srgb+literature_bounded_reflection",
+        "primary_relief_scale": 1.0,
+        "roughness": 0.92,
+        "roughness_variation": 0.05,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "healthy",
+        "subsurface_weight": 0.005,
+        "vein_cielab_d65": [
+          63.828,
+          -17.14,
+          27.9
+        ],
+        "vein_contrast": 0.58,
+        "vein_srgb": [
+          142,
+          162,
+          104
+        ]
+      },
+      "seed": 1701,
+      "sha256": {
+        "albedo": "1ba5d1c96d909a2775a4833b7b386441df2b07e74553824e48d85ba81198298f",
+        "height": "83eff454550d75b4c4947db9cda27d8b740cf760c04d9a8f654d39587b7dc0d8",
+        "normal": "7ea5a653584d032a41f4cda1582eee28b258959e2bcf85aea46470a73c83e2a0",
+        "roughness": "dd430dc5ac66cfe356a1a6beb28679e2dd77d77d7b5cf29e738b439729005079",
+        "vein_debug": "f3896e7a066de2e4a8e0a6adeb939ad6f1e687f58f80979053f8d3b840b275bc",
+        "vein_mask": "c030e7f7c2dd12eacb538d38fdd9ff99e17d87ad694c04c75eaa3a481d698ad6"
+      }
+    },
+    "leaf_senescent": {
+      "diagnostics": {
+        "generated_lateral_veins_per_side": 6,
+        "stroke_counts": {
+          "primary": 3,
+          "quaternary": 287,
+          "secondary": 22,
+          "tertiary": 30
+        },
+        "suprabasal_primary_pair": true,
+        "topology": {
+          "areolation": "moderately_developed",
+          "evidence_status": "literature_reported",
+          "freely_ending_ultimate_veins": "two_or_more_branched",
+          "highest_modeled_order": 4,
+          "lateral_veins_per_side": [
+            5,
+            7
+          ],
+          "primary_category": "suprabasal",
+          "quaternary_category": "regular_polygonal_reticulate",
+          "secondary_angle": "acute",
+          "secondary_category": "semicraspedodromous",
+          "tertiary_category": "alternate_percurrent",
+          "tertiary_course": "sinuous"
+        }
+      },
+      "files": {
+        "albedo": "leaf_senescent_albedo.png",
+        "height": "leaf_senescent_height.png",
+        "normal": "leaf_senescent_normal.png",
+        "roughness": "leaf_senescent_roughness.png",
+        "vein_debug": "leaf_senescent_vein_debug.png",
+        "vein_mask": "leaf_senescent_vein_mask.png"
+      },
+      "preset": {
+        "apical_darkening": 0.0,
+        "base_cielab_d65": [
+          53.277,
+          -8.463,
+          33.097
+        ],
+        "base_srgb": [
+          132,
+          130,
+          69
+        ],
+        "ior": 1.45,
+        "name": "leaf_senescent",
+        "normal_strength": 0.4,
+        "organ": "leaf",
+        "parameter_status": "manual_initial_guess_from_dataset_range",
+        "primary_relief_scale": 1.0,
+        "roughness": 0.95,
+        "roughness_variation": 0.05,
+        "sheen_weight": 0.0,
+        "specular_ior_level": 0.15,
+        "state": "senescent",
+        "subsurface_weight": 0.003,
+        "vein_cielab_d65": [
+          61.472,
+          -5.932,
+          30.454
+        ],
+        "vein_contrast": 0.48,
+        "vein_srgb": [
+          157,
+          150,
+          94
+        ]
+      },
+      "seed": 2710,
+      "sha256": {
+        "albedo": "f92fb1f78349474bd28b17ffb084e6ae9e6afdf2669229154dd28b88564107f6",
+        "height": "fdc7cda4e9fdbc56b0086db1dc87e5de5eb667d6c1ce581bc73c709e978a5e65",
+        "normal": "90fe6e23fb8b6bc166304ab3e0a187857d7daf5e38d7eb1a98426b8846086b4c",
+        "roughness": "998abc9990f967fb01c2c50ef4e1a3a7fd6b13101dd96f525e2f4cd2dea61593",
+        "vein_debug": "001b9483eda38b34488491c679b738bd4769b4283ce5fdb07bbd62007be65bc7",
+        "vein_mask": "ed7919c23033c8992556a3e7ab03240c2f9014f9ce3a6b0db2930097a6670694"
+      }
+    }
+  },
+  "venation_taxonomy": {
+    "calyx": {
+      "evidence_status": "literature_reported_and_dataset_confirmed",
+      "fruiting_calyx": "ovoid_inflated_reticulate",
+      "longitudinal_ribs_or_angles": 10,
+      "major_sepal_midribs": 5,
+      "ripe_vein_color": "sometimes_purplish_to_brown",
+      "secondary_network": "reticulate_cross_linked",
+      "surface": "persistently_hairy_chartaceous"
+    },
+    "leaf": {
+      "areolation": "moderately_developed",
+      "evidence_status": "literature_reported",
+      "freely_ending_ultimate_veins": "two_or_more_branched",
+      "highest_modeled_order": 4,
+      "lateral_veins_per_side": [
+        5,
+        7
+      ],
+      "primary_category": "suprabasal",
+      "quaternary_category": "regular_polygonal_reticulate",
+      "secondary_angle": "acute",
+      "secondary_category": "semicraspedodromous",
+      "tertiary_category": "alternate_percurrent",
+      "tertiary_course": "sinuous"
+    }
+  }
+}
