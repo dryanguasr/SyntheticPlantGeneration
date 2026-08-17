@@ -1,10 +1,38 @@
-# Generador morfológico multi-planta de uchuva
+# SyntheticPlantGeneration
 
-Generador reproducible de *Physalis peruviana* para datos sintéticos de
-robótica agrícola. La arquitectura vigente sigue este contrato:
+Plataforma experimental para estudiar aumentación de datos, generación
+procedural de *Physalis peruviana* y su uso en robótica agrícola. El repositorio
+se organiza en tres frentes interoperables:
+
+1. aumentación clásica y sus baselines experimentales;
+2. generación sintética morphology-first para Blender y visión artificial;
+3. una interfaz morphology-first hacia Gazebo para percepción e interacción
+   robot-planta.
+
+El núcleo botánico vigente permanece en `src/uchuva_lsystem/`. Blender y Gazebo
+se tratan como intérpretes distintos de una morfología serializable, no como
+fuentes alternativas de la arquitectura de la planta.
 
 ```text
-morfología serializable
+                           ┌─→ Blender → imágenes / anotaciones / ML
+morfología serializable ───┤
+                           └─→ Gazebo  → percepción / interacción / robot
+```
+
+## Frentes interoperables
+
+| Frente | Ruta principal | Estado |
+|---|---|---|
+| Aumentación clásica | `src/uchuva_classical_augmentation/` | Contrato y baseline estudiantil preservados |
+| Generación sintética | `src/uchuva_lsystem/` | Implementación vigente y madura |
+| Gazebo | `src/uchuva_gazebo/` | Interfaz semántica por LOD; aún no emite SDF |
+| Contribuciones externas | `contributions/` | Snapshots atribuidos, separados del código vigente |
+
+La implementación vigente del generador sigue este contrato:
+
+```text
+parámetros con procedencia
+  → morfología serializable
   → crecimiento multi-planta sincronizado
   → validación y política de contacto
   → geometría Blender
@@ -23,48 +51,72 @@ morfología serializable
 | Texturas | `assets/textures/current/` |
 | Fenología de dataset v2 | `literature_cohort_v1` |
 | Fondo de dataset v2 | `layered_understory_v2` |
-| Código Python | `src/uchuva_lsystem/` |
+| Código del generador | `src/uchuva_lsystem/` |
+| Baseline clásico | `src/uchuva_classical_augmentation/` |
+| Interfaz Gazebo | `src/uchuva_gazebo/` |
 | Entradas ejecutables | `scripts/` |
 | Escena para revisión | `outputs/current_review/` |
 | Blend de fidelidad vigente | `outputs/current_review/uchuva_fidelity_competition_seed_025.blend` |
 | Dataset sintético original | `outputs/datasets/uchuva_original_synthetic_seed_1000_v1/` |
 | Checkpoint híbrido ganador | `outputs/experiments/checkpoint_interpolation_scale80_seed_1000_v1/interpolated_checkpoints/natural_hybrid_alpha_045.pt` |
-| Resultado híbrido | 0.690637 mAP50–95 frente a 0.682706 natural |
+| Resultado híbrido preliminar | 0.690637 mAP50–95 frente a 0.682706 natural |
+| Reporte del experimento | `docs/reports/resultado_dataset_hibrido_2026-08-01.md` |
 | Validación humana | `outputs/human_validation/` |
 | Prototipos anteriores | `legacy/` |
 | Resultados históricos | `outputs/archive/` |
 
 El código bajo `src/uchuva_lsystem/` es la única implementación vigente del
-modelo. Los archivos bajo `legacy/` se conservan como evidencia histórica y
-no deben usarse para definir arquitectura botánica.
+modelo morfológico. Los archivos bajo `legacy/` se conservan como evidencia
+histórica y no deben usarse para definir arquitectura botánica.
 
 ## Navegación
 
 ```text
 SyntheticPlantGeneration/
-├── src/uchuva_lsystem/       modelo y pipeline vigentes
-├── scripts/                  comandos actuales, documentados en scripts/README.md
-├── tests/                    regresiones Python puras
+├── src/
+│   ├── uchuva_lsystem/                 modelo procedural y pipeline vigentes
+│   ├── uchuva_classical_augmentation/  contrato de aumentación clásica
+│   └── uchuva_gazebo/                  interfaz semántica morphology → Gazebo
+├── contributions/                      entregas externas preservadas y atribuidas
+├── scripts/                            comandos ejecutables
+├── tests/                              regresiones Python puras
+├── docs/
+│   ├── architecture/                   arquitectura y contratos del modelo
+│   ├── governance/                     procedencia, incertidumbre y decisiones
+│   ├── guides/                         protocolos y guías operativas
+│   ├── reports/                        reportes fechados de experimentos
+│   ├── references/                     bibliografía y rutas públicas, sin PDFs
+│   ├── workstreams/                    definición de los tres frentes
+│   └── drafts/                         borradores locales; fuera de Git
 ├── assets/
 │   └── textures/
-│       ├── current/          biblioteca activa
-│       └── legacy/           generaciones v1 y v2
-├── outputs/
-│   ├── current_review/       Blend y artefactos listos para inspección
-│   ├── diagnostics/          métricas vigentes
-│   ├── diagnostic_renders/   vistas estructurales vigentes
-│   ├── reference_measurements/
-│   └── archive/              ejecuciones anteriores
-├── legacy/                   prototipos, scripts y documentos reemplazados
-└── Dataset Original/         fuente real de solo lectura
+│       ├── current/                    biblioteca activa
+│       └── legacy/                     generaciones previas
+├── outputs/                             artefactos generados; no versionados
+├── legacy/                              prototipos reemplazados
+└── Dataset Original/                    fuente real local de solo lectura
 ```
 
 Índices detallados:
 
+- [Documentación](docs/README.md)
 - [Scripts actuales](scripts/README.md)
 - [Activos](assets/README.md)
 - [Resultados](outputs/README.md)
+- [Contribuciones](contributions/README.md)
 - [Legado](legacy/README.md)
+
+## Documentación y referencias
+
+La documentación producida por el proyecto se versiona bajo `docs/`. Solo
+`docs/drafts/` permanece fuera del control de versiones.
+
+Los artículos científicos de referencia no se almacenan como copias PDF en el
+repositorio. Las referencias utilizadas por el proyecto son de acceso libre o
+cuentan con una versión pública disponible en sus ubicaciones de origen,
+repositorios institucionales o servicios públicos de preprints. Sus DOI, URL y
+metadatos se conservan en `docs/references/` para poder localizarlos desde la
+fuente pública correspondiente.
 
 ## Generar la escena Blender vigente
 
@@ -139,15 +191,17 @@ Validación humana de un cambio significativo:
 ```
 
 El comando genera diez casos EEVEE estándar y requiere auditoría de malla.
-Cycles solo se usa si se selecciona explícitamente un perfil Cycles.
-Para verificar la integración sin crear evidencia use `--smoke --case-id
-case_07`. El protocolo de validación se mantiene localmente fuera del repositorio.
+Cycles solo se usa si se selecciona explícitamente un perfil Cycles. Para
+verificar la integración sin crear evidencia use `--smoke --case-id case_07`.
+El protocolo completo está en
+`docs/guides/protocolo_validacion_humana.md`.
 
 ## Verificación
 
 ```powershell
 $env:PYTHONPATH='C:\dev\SyntheticPlantGeneration\src'
 python -m unittest discover -s tests -v
+python scripts\validate_repository_context_graph.py
 ```
 
 Las pruebas puras no requieren Blender. La auditoría de malla evaluada sí se
@@ -167,19 +221,18 @@ ejecuta dentro de Blender.
   test natural; cada corrida puede reanudarse desde `last.pt`;
 - no se añaden dependencias externas para el pipeline base.
 
-## Frentes interoperables
+## Licencia
 
-El repositorio se organiza en tres frentes: aumentación clásica, generación
-sintética y un puente puro de morfología hacia Gazebo. La implementación
-vigente del generador permanece en `src/uchuva_lsystem/`; el baseline clásico
-está en `src/uchuva_classical_augmentation/` y la interfaz Gazebo en
-`src/uchuva_gazebo/`.
+El código fuente original desarrollado para este repositorio se distribuye bajo
+la [licencia MIT](LICENSE), salvo indicación explícita en contrario.
 
-Las entregas de terceros se preservan con autoría y procedencia bajo
-`contributions/`, sin datasets, pesos ni resultados generados.
+La licencia MIT del repositorio **no relicencia automáticamente**:
 
-## Documentación local
+- entregas estudiantiles o de terceros preservadas bajo `contributions/`;
+- datasets;
+- pesos de modelos;
+- artículos científicos u otro material de terceros.
 
-`docs/` se excluye deliberadamente del control de versiones: contiene
-borradores, evidencia de trabajo y referencias de terceros. El código y los
-contratos ejecutables permanecen versionados en `src/`, `scripts/` y `tests/`.
+Cada uno de esos elementos conserva su autoría y sus términos propios. Consulte
+`contributions/README.md` y `docs/references/README.md` para el alcance de esas
+exclusiones.

@@ -1,0 +1,92 @@
+{
+  "protocol_version": "0.3.0-leakage-repaired-real-validation-sealed",
+  "reviewer": "codex_visual_review",
+  "reviewed_at_utc": "2026-08-11T21:42:08.7088331Z",
+  "method": "Original-resolution side-by-side visual review after cross-split dHash screening.",
+  "candidate_reviews": [
+    {
+      "left_split": "train",
+      "left_id": "0275",
+      "right_split": "val",
+      "right_id": "1134",
+      "dhash_hamming": 1,
+      "verdict": "confirmed_near_duplicate",
+      "cluster_id": "indoor_calyx_sequence_a",
+      "rationale": "Same calyx, hand pose, tabletop objects and camera position; only slight object motion."
+    },
+    {
+      "left_split": "train",
+      "left_id": "0357",
+      "right_split": "val",
+      "right_id": "1117",
+      "dhash_hamming": 2,
+      "verdict": "confirmed_near_duplicate",
+      "cluster_id": "field_calyx_sequence_b",
+      "rationale": "Same plant, fruit arrangement, fingers and grass pattern in consecutive frames."
+    },
+    {
+      "left_split": "train",
+      "left_id": "0480",
+      "right_split": "val",
+      "right_id": "1274",
+      "dhash_hamming": 1,
+      "verdict": "confirmed_near_duplicate",
+      "cluster_id": "indoor_calyx_sequence_c",
+      "rationale": "Same calyx, hand, tabletop and background with a small rotation."
+    },
+    {
+      "left_split": "train",
+      "left_id": "0609",
+      "right_split": "val",
+      "right_id": "1116",
+      "dhash_hamming": 2,
+      "verdict": "confirmed_near_duplicate",
+      "cluster_id": "indoor_calyx_sequence_d",
+      "rationale": "Same calyx and laboratory background in adjacent viewpoints."
+    },
+    {
+      "left_split": "train",
+      "left_id": "0609",
+      "right_split": "test",
+      "right_id": "1282",
+      "dhash_hamming": 2,
+      "verdict": "confirmed_near_duplicate",
+      "cluster_id": "indoor_calyx_sequence_d",
+      "rationale": "Same calyx and laboratory background in the same capture sequence."
+    },
+    {
+      "left_split": "train",
+      "left_id": "0749",
+      "right_split": "test",
+      "right_id": "1244",
+      "dhash_hamming": 0,
+      "verdict": "confirmed_near_duplicate",
+      "cluster_id": "field_branch_sequence_e",
+      "rationale": "Same branch, two calyces and grass background with a minor crop shift."
+    }
+  ],
+  "split_overrides": [
+    {"source_split": "train", "sample_id": "0275", "destination_split": "val"},
+    {"source_split": "train", "sample_id": "0357", "destination_split": "val"},
+    {"source_split": "train", "sample_id": "0480", "destination_split": "val"},
+    {"source_split": "train", "sample_id": "0609", "destination_split": "test"},
+    {"source_split": "val", "sample_id": "1116", "destination_split": "test"},
+    {"source_split": "train", "sample_id": "0749", "destination_split": "test"},
+    {"source_split": "val", "sample_id": "1324", "destination_split": "train"},
+    {"source_split": "val", "sample_id": "1327", "destination_split": "train"},
+    {"source_split": "test", "sample_id": "1325", "destination_split": "train"},
+    {"source_split": "test", "sample_id": "1326", "destination_split": "train"},
+    {"source_split": "test", "sample_id": "1328", "destination_split": "train"}
+  ],
+  "replacement_selection": {
+    "method": "Deterministic high-ID singleton selection after all-pairs dHash screening.",
+    "maximum_cross_candidate_hamming": 2,
+    "require_no_candidate_neighbor": true
+  },
+  "expected_partition_counts": {
+    "train": 1061,
+    "val": 133,
+    "test": 133
+  },
+  "historical_evaluation_caveat": "The repaired cohorts are isolated within this study, but source images have participated in historical training or evaluation workflows; the final test is sealed prospectively, not an externally pristine benchmark."
+}

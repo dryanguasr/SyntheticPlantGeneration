@@ -1,7 +1,11 @@
 # Datasets and private/raw source data
 Dataset Original/
 datasets/
-docs/
+
+# Project documentation: version authored docs, keep drafts and raw article copies local
+docs/drafts/
+docs/references/raw/
+docs/references/**/*.pdf
 
 # Generated renders, training runs, reports and temporary artifacts
 outputs/*

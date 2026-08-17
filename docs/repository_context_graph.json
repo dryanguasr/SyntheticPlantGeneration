@@ -1,0 +1,1192 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "name": "SyntheticPlantGeneration",
+    "purpose": "Generador morfologico y procedural de uchuva para datos sinteticos de robotica agricola.",
+    "graph_kind": "evidence_backed_repository_context",
+    "authority": {
+      "prescriptive": "AGENTS.md",
+      "descriptive": "docs/repository_context_graph.json"
+    },
+    "maintenance": "manual_with_standard_library_validator",
+    "primary_pipeline": [
+      "module.parameters",
+      "module.phenology",
+      "module.grammar",
+      "module.morphology",
+      "module.scene",
+      "module.support",
+      "module.growth",
+      "module.spatial",
+      "module.cultivation",
+      "module.collisions",
+      "module.validation",
+      "module.blender_geometry",
+      "module.blender_scene",
+      "module.blender_annotations",
+      "module.yolo_export",
+      "module.blender_dataset",
+      "module.domain_analysis"
+    ]
+  },
+  "nodes": [
+    {
+      "id": "module.public_api",
+      "type": "subsystem",
+      "label": "API publica del paquete",
+      "summary": "Reexporta los tipos y funciones estables del generador sin definir la arquitectura botanica.",
+      "paths": ["src/uchuva_lsystem/__init__.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "__all__ = ["}]
+    },
+    {
+      "id": "module.morphology",
+      "type": "subsystem",
+      "label": "Modelo morfologico",
+      "summary": "Dataclasses serializables para ejes, nodos, organos y unidades reproductivas.",
+      "paths": ["src/uchuva_lsystem/morphology.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/morphology.py", "locator": "class Plant"}]
+    },
+    {
+      "id": "module.parameters",
+      "type": "subsystem",
+      "label": "Parametros y perfiles",
+      "summary": "Rangos, estimaciones iniciales y perfiles fenologicos reproducibles.",
+      "paths": ["src/uchuva_lsystem/parameters.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/parameters.py", "locator": "def get_initial_parameters"}]
+    },
+    {
+      "id": "module.phenology",
+      "type": "subsystem",
+      "label": "Fenologia reproductiva por cohortes",
+      "summary": "Asigna edad topologica, BBCH, DAA y rasgos continuos del capacho con priors bibliograficos auditables y sin depender de Blender.",
+      "paths": ["src/uchuva_lsystem/phenology.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/phenology.py", "locator": "def reproductive_phenology"}]
+    },
+    {
+      "id": "module.provenance",
+      "type": "subsystem",
+      "label": "Procedencia de parametros",
+      "summary": "Normaliza la taxonomia epistemologica y audita la procedencia sin eliminar estados historicos.",
+      "paths": ["src/uchuva_lsystem/provenance.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/provenance.py", "locator": "class ParameterProvenance"}]
+    },
+    {
+      "id": "module.metrics",
+      "type": "subsystem",
+      "label": "Metricas de morfologia y copa",
+      "summary": "Calcula medidas estructurales, ocupacion, contactos, ajustes y rendimiento sin requerir Blender.",
+      "paths": ["src/uchuva_lsystem/metrics.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/metrics.py", "locator": "class SceneMetricsReport"}]
+    },
+    {
+      "id": "module.human_validation",
+      "type": "subsystem",
+      "label": "Protocolo puro de validacion humana",
+      "summary": "Define los diez casos, problemas, perfiles, bloqueo de semillas, manifests y reglas de aceptacion sin depender de Blender.",
+      "paths": ["src/uchuva_lsystem/human_validation.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/human_validation.py", "locator": "class HumanValidationSuite"}]
+    },
+    {
+      "id": "module.support",
+      "type": "subsystem",
+      "label": "Sistema de soporte agricola",
+      "summary": "Describe postes, lineas continuas, amarres, zonas y contactos intencionales antes del crecimiento.",
+      "paths": ["src/uchuva_lsystem/support.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/support.py", "locator": "class SupportSystem"}]
+    },
+    {
+      "id": "module.spatial",
+      "type": "subsystem",
+      "label": "Ocupacion y politica de contacto",
+      "summary": "Clasifica ocupacion dura, blanda, oclusion, clearance y contacto intencional mediante proxies puros.",
+      "paths": ["src/uchuva_lsystem/spatial.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/spatial.py", "locator": "class ContactPolicy"}]
+    },
+    {
+      "id": "module.growth",
+      "type": "subsystem",
+      "label": "Coordinacion de crecimiento sincronizado",
+      "summary": "Recopila y resuelve propuestas canonicas de todas las plantas contra soporte, ocupacion compartida y guia por estratos.",
+      "paths": ["src/uchuva_lsystem/growth.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/growth.py", "locator": "def coordinate_synchronous_growth"}]
+    },
+    {
+      "id": "module.light_competition",
+      "type": "subsystem",
+      "label": "Competencia luminica estratificada",
+      "summary": "Proyecta huellas foliares con muestras diurnas y registra cobertura, sombreo intra/interplanta y estratos sin depender de Blender.",
+      "paths": ["src/uchuva_lsystem/light_competition.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/light_competition.py", "locator": "class StratifiedLightField"}]
+    },
+    {
+      "id": "module.texture_assets",
+      "type": "subsystem",
+      "label": "Texturas vasculares procedurales",
+      "summary": "Genera sin Blender mapas PNG reproducibles de albedo, altura, normal, rugosidad y venacion para hojas y capachos.",
+      "paths": ["src/uchuva_lsystem/texture_assets.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/texture_assets.py", "locator": "def generate_texture_asset_library"}]
+    },
+    {
+      "id": "module.grammar",
+      "type": "subsystem",
+      "label": "Gramatica morfologica",
+      "summary": "Genera el arbol morfologico nodal a partir de parametros y una semilla.",
+      "paths": ["src/uchuva_lsystem/grammar.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "def generate_morphology_tree"}]
+    },
+    {
+      "id": "module.scene",
+      "type": "subsystem",
+      "label": "Escena de cultivo pura",
+      "summary": "Describe plantas, ambiente y render sin requerir la API de Blender.",
+      "paths": ["src/uchuva_lsystem/scene.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/scene.py", "locator": "class CultivationScene"}]
+    },
+    {
+      "id": "module.cultivation",
+      "type": "subsystem",
+      "label": "Adaptacion conjunta del cultivo",
+      "summary": "Expone el coordinador morfologico multi-planta y conserva la relajacion posterior como modo legado compatible.",
+      "paths": ["src/uchuva_lsystem/cultivation.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/cultivation.py", "locator": "def generate_cultivation_morphologies"}]
+    },
+    {
+      "id": "module.collisions",
+      "type": "subsystem",
+      "label": "Resolucion global de colisiones",
+      "summary": "Construye proxies globales, resuelve contactos antes de Blender y reporta conflictos pendientes de forma determinista.",
+      "paths": ["src/uchuva_lsystem/collisions.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/collisions.py", "locator": "def resolve_global_collisions"}]
+    },
+    {
+      "id": "module.validation",
+      "type": "subsystem",
+      "label": "Validacion morfologica",
+      "summary": "Valida arboles y escenas antes de interpretarlos como geometria.",
+      "paths": ["src/uchuva_lsystem/validation.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/validation.py", "locator": "def validate_morphology_tree"}]
+    },
+    {
+      "id": "module.exporters",
+      "type": "subsystem",
+      "label": "Exportadores JSON",
+      "summary": "Serializa morfologia y reportes con JSON legible y determinista.",
+      "paths": ["src/uchuva_lsystem/exporters.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/exporters.py", "locator": "def export_morphology_tree"}]
+    },
+    {
+      "id": "module.blender_geometry",
+      "type": "subsystem",
+      "label": "Interpretacion geometrica Blender",
+      "summary": "Convierte morfologia validada en tallos, hojas, flores y capachos renderizables.",
+      "paths": ["src/uchuva_lsystem/blender_geometry.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/blender_geometry.py", "locator": "def build_geometry_from_morphology"}]
+    },
+    {
+      "id": "module.blender_scene",
+      "type": "subsystem",
+      "label": "Escena y render Blender",
+      "summary": "Gestiona limpieza, materiales, camaras, luces y configuracion de render.",
+      "paths": ["src/uchuva_lsystem/blender_scene.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/blender_scene.py", "locator": "def setup_render_settings"}]
+    },
+    {
+      "id": "module.blender_review",
+      "type": "subsystem",
+      "label": "Revision fotorrealista Blender",
+      "summary": "Configura EEVEE estandar o Cycles explicito, encuadra por bounds, hace preflight de exposicion y compone comparaciones.",
+      "paths": ["src/uchuva_lsystem/blender_review.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/blender_review.py", "locator": "def configure_render_profile"}]
+    },
+    {
+      "id": "module.blender_environment",
+      "type": "subsystem",
+      "label": "Entorno procedural Blender",
+      "summary": "Construye suelo, vegetacion contextual, activos y perfiles de iluminacion.",
+      "paths": ["src/uchuva_lsystem/blender_environment.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/blender_environment.py", "locator": "def create_outdoor_environment"}]
+    },
+    {
+      "id": "module.blender_annotations",
+      "type": "subsystem",
+      "label": "Render de anotaciones",
+      "summary": "Produce RGB, mascaras, metadatos de camara y previews de deteccion.",
+      "paths": ["src/uchuva_lsystem/blender_annotations.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/blender_annotations.py", "locator": "def render_reproductive_annotations"}]
+    },
+    {
+      "id": "module.yolo_export",
+      "type": "subsystem",
+      "label": "Contrato YOLO",
+      "summary": "Deriva cajas desde mascaras y exporta la unica clase de deteccion calyx.",
+      "paths": ["src/uchuva_lsystem/yolo_export.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/yolo_export.py", "locator": "class DetectionBox"}]
+    },
+    {
+      "id": "module.blender_pilot",
+      "type": "subsystem",
+      "label": "Piloto anotable",
+      "summary": "Orquesta una escena contextual pequena para inspeccion y anotaciones.",
+      "paths": ["src/uchuva_lsystem/blender_pilot.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/blender_pilot.py", "locator": "def generate_annotation_pilot"}]
+    },
+    {
+      "id": "module.blender_dataset",
+      "type": "subsystem",
+      "label": "Orquestador de dataset Blender",
+      "summary": "Programa, acepta, divide, reanuda y audita capturas real-matched.",
+      "paths": ["src/uchuva_lsystem/blender_dataset.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "class DatasetConfig"}]
+    },
+    {
+      "id": "module.domain_analysis",
+      "type": "subsystem",
+      "label": "Analisis de dominio",
+      "summary": "Compara datasets YOLO reales y sinteticos en modo de solo lectura.",
+      "paths": ["src/uchuva_lsystem/domain_analysis.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/domain_analysis.py", "locator": "def analyze_yolo_domain"}]
+    },
+    {
+      "id": "module.composition_calibration",
+      "type": "subsystem",
+      "label": "Calibracion reproducible de composicion",
+      "summary": "Estima la matriz de rendimiento de cajas por camara y busca una mezcla determinista contra estadisticas exclusivas de train real.",
+      "paths": ["src/uchuva_lsystem/composition_calibration.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/composition_calibration.py", "locator": "def calibrate_camera_mixture"}]
+    },
+    {
+      "id": "module.detection_diagnostics",
+      "type": "subsystem",
+      "label": "Diagnostico de errores del detector",
+      "summary": "Descompone TP, FP, FN y errores de localizacion mediante emparejamiento IoU determinista sobre validacion real aislada.",
+      "paths": ["src/uchuva_lsystem/detection_diagnostics.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/detection_diagnostics.py", "locator": "def deterministic_iou_match"}]
+    },
+    {
+      "id": "module.hybrid_experiments",
+      "type": "subsystem",
+      "label": "Preparacion de experimentos hibridos",
+      "summary": "Materializa mezclas reproducibles de entrenamiento natural y sintetico con validacion y prueba exclusivamente reales.",
+      "paths": ["src/uchuva_lsystem/hybrid_experiments.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/hybrid_experiments.py", "locator": "def build_hybrid_experiment_matrix"}]
+    },
+    {
+      "id": "module.hybrid_training",
+      "type": "subsystem",
+      "label": "Entrenamiento hibrido reproducible",
+      "summary": "Ejecuta y reanuda entrenamientos comparables y evalua el mejor checkpoint de cada mezcla sobre el mismo test natural.",
+      "paths": ["src/uchuva_lsystem/hybrid_training.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/hybrid_training.py", "locator": "def run_hybrid_training_matrix"}]
+    },
+    {
+      "id": "module.hybrid_study",
+      "type": "subsystem",
+      "label": "Estudio hibrido sellado multisemilla",
+      "summary": "Audita y repara fugas perceptuales, prepara cohortes anidadas, selecciona solo con validacion real y bloquea el test hasta fijar un ganador.",
+      "paths": ["src/uchuva_lsystem/hybrid_study.py", "docs/governance/real_split_perceptual_review_20260811.json"],
+      "evidence": [{"path": "src/uchuva_lsystem/hybrid_study.py", "locator": "def materialize_repaired_real_partition"}]
+    },
+    {
+      "id": "module.photometric_calibration",
+      "type": "subsystem",
+      "label": "Calibracion fotometrica sintetica",
+      "summary": "Deriva una copia sintetica con ajuste robusto de luminancia aprendido solo de train y val reales, conservando crominancia, etiquetas y fuentes.",
+      "paths": ["src/uchuva_lsystem/photometric_calibration.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/photometric_calibration.py", "locator": "def derive_photometrically_calibrated_dataset"}]
+    },
+    {
+      "id": "module.spatial_calibration",
+      "type": "subsystem",
+      "label": "Calibracion espacial sintetica",
+      "summary": "Deriva una copia sintetica con acercamientos adaptativos ajustados solo contra train y val reales, transformando imagenes y cajas de forma conjunta.",
+      "paths": ["src/uchuva_lsystem/spatial_calibration.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/spatial_calibration.py", "locator": "def derive_spatially_calibrated_dataset"}]
+    },
+    {
+      "id": "entrypoint.generate_single_plant",
+      "type": "entrypoint",
+      "label": "Generar una planta pura",
+      "summary": "CLI sin Blender para producir morfologia y validacion por semilla.",
+      "paths": ["scripts/generate_morphology_tree.py"],
+      "evidence": [{"path": "scripts/generate_morphology_tree.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.generate_texture_assets",
+      "type": "entrypoint",
+      "label": "Generar biblioteca de texturas",
+      "summary": "CLI puro para producir activos vasculares auditables por semilla y resolucion.",
+      "paths": ["scripts/generate_uchuva_texture_library.py"],
+      "evidence": [{"path": "scripts/generate_uchuva_texture_library.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.generate_blender_plant",
+      "type": "entrypoint",
+      "label": "Generar preview Blender",
+      "summary": "CLI Blender para interpretar una planta individual.",
+      "paths": ["scripts/generate_blender_single_plant_preview.py"],
+      "evidence": [{"path": "scripts/generate_blender_single_plant_preview.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.generate_blender_scene",
+      "type": "entrypoint",
+      "label": "Generar escena de cultivo",
+      "summary": "CLI Blender para una escena con multiples instancias de plantas.",
+      "paths": ["scripts/generate_blender_cultivation_scene.py"],
+      "evidence": [{"path": "scripts/generate_blender_cultivation_scene.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.generate_annotation_pilot",
+      "type": "entrypoint",
+      "label": "Generar piloto contextual",
+      "summary": "CLI Blender para el piloto RGB y anotable de una escena.",
+      "paths": ["scripts/generate_annotation_pilot.py"],
+      "evidence": [{"path": "scripts/generate_annotation_pilot.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.generate_annotation_dataset",
+      "type": "entrypoint",
+      "label": "Generar dataset real-matched",
+      "summary": "CLI Blender para el dataset YOLO reproducible y dividido por escena.",
+      "paths": ["scripts/generate_annotation_dataset.py"],
+      "evidence": [{"path": "scripts/generate_annotation_dataset.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.compare_real_synthetic",
+      "type": "entrypoint",
+      "label": "Comparar dominios",
+      "summary": "CLI puro para generar perfiles y reportes real versus sintetico.",
+      "paths": ["scripts/compare_real_vs_synthetic_domain.py"],
+      "evidence": [{"path": "scripts/compare_real_vs_synthetic_domain.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.prepare_hybrid_experiments",
+      "type": "entrypoint",
+      "label": "Preparar matriz hibrida",
+      "summary": "CLI puro para crear baseline y mezclas natural-sintetico sin modificar sus fuentes.",
+      "paths": ["scripts/prepare_hybrid_experiments.py"],
+      "evidence": [{"path": "scripts/prepare_hybrid_experiments.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.run_hybrid_training",
+      "type": "entrypoint",
+      "label": "Entrenar matriz hibrida",
+      "summary": "CLI opcional para entrenar todas las mezclas con condiciones fijas y resumir su test natural.",
+      "paths": ["scripts/run_hybrid_training.py"],
+      "evidence": [{"path": "scripts/run_hybrid_training.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.run_hybrid_fidelity_study",
+      "type": "entrypoint",
+      "label": "Ejecutar estudio hibrido sellado",
+      "summary": "CLI por fases para preparar, reanudar, seleccionar por validacion real y evaluar unicamente el ganador bloqueado en test.",
+      "paths": ["scripts/run_hybrid_fidelity_study.py"],
+      "evidence": [{"path": "scripts/run_hybrid_fidelity_study.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.run_curriculum_training",
+      "type": "entrypoint",
+      "label": "Entrenar curriculum sintetico-natural",
+      "summary": "CLI opcional para preentrenar forma con sintetico y afinar despues exclusivamente con el conjunto natural completo.",
+      "paths": ["scripts/run_curriculum_training.py"],
+      "evidence": [{"path": "scripts/run_curriculum_training.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.run_natural_refinement",
+      "type": "entrypoint",
+      "label": "Refinar checkpoint hibrido con dominio natural",
+      "summary": "CLI para cerrar un entrenamiento mixto con pocas epocas naturales y evaluar el mejor checkpoint sobre el test natural fijo.",
+      "paths": ["scripts/run_natural_refinement.py"],
+      "evidence": [{"path": "scripts/run_natural_refinement.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.run_checkpoint_interpolation",
+      "type": "entrypoint",
+      "label": "Interpolar checkpoints natural e hibrido",
+      "summary": "CLI que selecciona una interpolacion de pesos exclusivamente con validacion natural y consulta test una vez para el candidato elegido.",
+      "paths": ["scripts/run_checkpoint_interpolation.py"],
+      "evidence": [{"path": "scripts/run_checkpoint_interpolation.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.calibrate_synthetic_photometry",
+      "type": "entrypoint",
+      "label": "Calibrar fotometria sintetica",
+      "summary": "CLI puro para crear un dataset derivado con color global ajustado sin leer test real.",
+      "paths": ["scripts/calibrate_synthetic_photometry.py"],
+      "evidence": [{"path": "scripts/calibrate_synthetic_photometry.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.calibrate_synthetic_scale",
+      "type": "entrypoint",
+      "label": "Calibrar escala sintetica",
+      "summary": "CLI puro para ajustar la escala aparente de los capachos sin leer test real ni modificar las fuentes.",
+      "paths": ["scripts/calibrate_synthetic_scale.py"],
+      "evidence": [{"path": "scripts/calibrate_synthetic_scale.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.generate_diagnostics",
+      "type": "entrypoint",
+      "label": "Generar diagnosticos estructurales",
+      "summary": "CLI puro para congelar baseline y ablaciones con semillas, metricas, rendimiento y huella de fuentes.",
+      "paths": ["scripts/generate_morphology_diagnostics.py"],
+      "evidence": [{"path": "scripts/generate_morphology_diagnostics.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.generate_human_validation",
+      "type": "entrypoint",
+      "label": "Generar suite humana de diez casos",
+      "summary": "CLI Blender explicito para bootstrap o comparacion bloqueada antes/despues con artefactos, hashes y formulario humano.",
+      "paths": ["scripts/generate_human_validation_suite.py"],
+      "evidence": [{"path": "scripts/generate_human_validation_suite.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.promote_human_validation",
+      "type": "entrypoint",
+      "label": "Promover suite humana",
+      "summary": "CLI puro y manual que valida el formulario humano antes de registrar un baseline nuevo sin sobrescribir el anterior.",
+      "paths": ["scripts/promote_human_validation_suite.py"],
+      "evidence": [{"path": "scripts/promote_human_validation_suite.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.calibrate_composition_schedule",
+      "type": "entrypoint",
+      "label": "Calibrar mezcla de cámaras",
+      "summary": "CLI puro que estima rendimiento por cámara y busca una mezcla determinista contra train real.",
+      "paths": ["scripts/calibrate_composition_schedule.py"],
+      "evidence": [{"path": "scripts/calibrate_composition_schedule.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.analyze_detection_errors",
+      "type": "entrypoint",
+      "label": "Diagnosticar errores del detector",
+      "summary": "CLI secuencial y reanudable que compara checkpoints baseline e híbridos solo sobre validación real.",
+      "paths": ["scripts/analyze_detection_errors.py"],
+      "evidence": [{"path": "scripts/analyze_detection_errors.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.audit_literature_cohorts",
+      "type": "entrypoint",
+      "label": "Auditar cohortes fenológicas",
+      "summary": "CLI puro que verifica el contrato morfológico y fenológico sobre múltiples semillas sin Blender.",
+      "paths": ["scripts/audit_literature_cohort_morphologies.py"],
+      "evidence": [{"path": "scripts/audit_literature_cohort_morphologies.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.generate_virtual_fidelity_pairs",
+      "type": "entrypoint",
+      "label": "Generar pares de fidelidad v1/v2",
+      "summary": "CLI Blender para comparar rutas morfológicas con semilla, cámara, iluminación y exposición pareadas.",
+      "paths": ["scripts/generate_virtual_fidelity_pairs.py"],
+      "evidence": [{"path": "scripts/generate_virtual_fidelity_pairs.py", "locator": "def main"}]
+    },
+    {
+      "id": "entrypoint.audit_virtual_fidelity_pilot",
+      "type": "entrypoint",
+      "label": "Auditar piloto de fidelidad v2",
+      "summary": "CLI puro que aplica los umbrales fijos de integridad, composición, contexto, luminancia y revisión visual.",
+      "paths": ["scripts/audit_virtual_fidelity_pilot.py"],
+      "evidence": [{"path": "scripts/audit_virtual_fidelity_pilot.py", "locator": "def build_audit"}]
+    },
+    {
+      "id": "entrypoint.create_dataset_sample_sheet",
+      "type": "entrypoint",
+      "label": "Crear muestra visual del dataset",
+      "summary": "CLI puro que produce una lámina determinista con cajas para revisión humana del piloto.",
+      "paths": ["scripts/create_dataset_sample_sheet.py"],
+      "evidence": [{"path": "scripts/create_dataset_sample_sheet.py", "locator": "def main"}]
+    },
+    {
+      "id": "artifact.morphology_tree",
+      "type": "artifact",
+      "label": "Arbol morfologico JSON",
+      "summary": "Representacion serializable y reproducible de una planta antes de Blender.",
+      "paths": ["src/uchuva_lsystem/exporters.py", "scripts/generate_morphology_tree.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/exporters.py", "locator": "def export_morphology_tree"}]
+    },
+    {
+      "id": "artifact.texture_library",
+      "type": "artifact",
+      "label": "Biblioteca de texturas vasculares",
+      "summary": "Conjunto reproducible de mapas de organo, preview, manifiesto de evidencia y hashes.",
+      "paths": ["src/uchuva_lsystem/texture_assets.py", "scripts/generate_uchuva_texture_library.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/texture_assets.py", "locator": "manifest = {"}]
+    },
+    {
+      "id": "artifact.validation_report",
+      "type": "artifact",
+      "label": "Reporte de validacion",
+      "summary": "Resultado serializable de validez morfologica o de escena.",
+      "paths": ["src/uchuva_lsystem/validation.py", "scripts/generate_morphology_tree.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/validation.py", "locator": "def validate_morphology_tree"}]
+    },
+    {
+      "id": "artifact.scene_metrics",
+      "type": "artifact",
+      "label": "Reporte de metricas de escena",
+      "summary": "JSON, CSV y Markdown reproducibles de morfologia, copa, contactos, ajustes y rendimiento.",
+      "paths": ["src/uchuva_lsystem/metrics.py", "scripts/generate_morphology_diagnostics.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/metrics.py", "locator": "def write_metrics_bundle"}]
+    },
+    {
+      "id": "artifact.human_validation_suite",
+      "type": "artifact",
+      "label": "Suite de validacion humana",
+      "summary": "Manifest, escenas, RGB, comparaciones, pases auxiliares, hoja de contacto, reporte y decisiones para diez casos reproducibles.",
+      "paths": ["src/uchuva_lsystem/human_validation.py", "docs/guides/protocolo_validacion_humana.md"],
+      "evidence": [{"path": "docs/guides/protocolo_validacion_humana.md", "locator": "## Artefactos"}]
+    },
+    {
+      "id": "artifact.blender_scene",
+      "type": "artifact",
+      "label": "Escena Blender",
+      "summary": "Archivo .blend o escena activa derivada de una morfologia validada.",
+      "paths": ["src/uchuva_lsystem/blender_scene.py", "scripts/generate_blender_cultivation_scene.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/blender_scene.py", "locator": "def save_blend_file"}]
+    },
+    {
+      "id": "artifact.yolo_dataset",
+      "type": "artifact",
+      "label": "Dataset YOLO anotado",
+      "summary": "Imagenes, etiquetas, previews, manifiesto y reporte con split por escena.",
+      "paths": ["src/uchuva_lsystem/blender_dataset.py", "src/uchuva_lsystem/yolo_export.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "def generate_annotation_dataset"}]
+    },
+    {
+      "id": "artifact.domain_report",
+      "type": "artifact",
+      "label": "Reporte de comparacion de dominio",
+      "summary": "JSON y Markdown con distribuciones, integridad y brechas real-sintetico.",
+      "paths": ["src/uchuva_lsystem/domain_analysis.py", "scripts/compare_real_vs_synthetic_domain.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/domain_analysis.py", "locator": "def write_domain_comparison"}]
+    },
+    {
+      "id": "artifact.composition_calibration",
+      "type": "artifact",
+      "label": "Calibración de composición",
+      "summary": "JSON reproducible con objetivo train, rendimiento por cámara, hashes y mezcla recomendada.",
+      "paths": ["src/uchuva_lsystem/composition_calibration.py", "scripts/calibrate_composition_schedule.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/composition_calibration.py", "locator": "def write_composition_calibration"}]
+    },
+    {
+      "id": "artifact.detection_diagnostic",
+      "type": "artifact",
+      "label": "Diagnóstico multisemilla del detector",
+      "summary": "JSON, CSV y Markdown de TP, FP, FN y localización sobre validación real aislada.",
+      "paths": ["src/uchuva_lsystem/detection_diagnostics.py", "scripts/analyze_detection_errors.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/detection_diagnostics.py", "locator": "def aggregate_error_report"}]
+    },
+    {
+      "id": "artifact.virtual_fidelity_pilot_audit",
+      "type": "artifact",
+      "label": "Auditoría del piloto v2",
+      "summary": "JSON y Markdown que bloquean el escalado si falla cualquier criterio automático o visual acordado.",
+      "paths": ["scripts/audit_virtual_fidelity_pilot.py", "docs/reports/mejoras_virtuales_prioritarias_2026-08-14.md"],
+      "evidence": [{"path": "scripts/audit_virtual_fidelity_pilot.py", "locator": "Acceptance requires every automated and visual criterion to pass"}]
+    },
+    {
+      "id": "artifact.hybrid_experiment_matrix",
+      "type": "artifact",
+      "label": "Matriz de experimentos hibridos",
+      "summary": "Datasets derivados, YAML y manifiestos de procedencia para el baseline y las mezclas controladas.",
+      "paths": ["src/uchuva_lsystem/hybrid_experiments.py", "scripts/prepare_hybrid_experiments.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/hybrid_experiments.py", "locator": "DEFAULT_EXPERIMENT_SPECS"}]
+    },
+    {
+      "id": "artifact.hybrid_training_report",
+      "type": "artifact",
+      "label": "Reporte de entrenamiento hibrido",
+      "summary": "Checkpoints, metricas de test, ranking y delta mAP50-95 frente al baseline natural.",
+      "paths": ["src/uchuva_lsystem/hybrid_training.py", "scripts/run_hybrid_training.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/hybrid_training.py", "locator": "def build_training_summary"}]
+    },
+    {
+      "id": "artifact.sealed_hybrid_study",
+      "type": "artifact",
+      "label": "Estudio hibrido real-sintetico sellado",
+      "summary": "Manifiestos reparados, auditorias, metricas multisemilla, curvas, decision bloqueada y reporte final con test real aislado.",
+      "paths": ["src/uchuva_lsystem/hybrid_study.py", "scripts/run_hybrid_fidelity_study.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/hybrid_study.py", "locator": "def create_selection_lock"}]
+    },
+    {
+      "id": "artifact.photometrically_calibrated_dataset",
+      "type": "artifact",
+      "label": "Dataset sintetico calibrado",
+      "summary": "Copia derivada con pixeles RGB calibrados, etiquetas preservadas y manifiesto de transformacion y hashes.",
+      "paths": ["src/uchuva_lsystem/photometric_calibration.py", "scripts/calibrate_synthetic_photometry.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/photometric_calibration.py", "locator": "photometric_calibration.json"}]
+    },
+    {
+      "id": "artifact.spatially_calibrated_dataset",
+      "type": "artifact",
+      "label": "Dataset sintetico calibrado en escala",
+      "summary": "Copia derivada con recortes, cajas YOLO coherentes, hashes y reporte del ajuste de distribucion espacial.",
+      "paths": ["src/uchuva_lsystem/spatial_calibration.py", "scripts/calibrate_synthetic_scale.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/spatial_calibration.py", "locator": "spatial_calibration.json"}]
+    },
+    {
+      "id": "constraint.morphological_attachment",
+      "type": "constraint",
+      "label": "Organos unidos a nodos",
+      "summary": "Hojas, ramas y unidades reproductivas deben proceder de nodos o axilas, no de coordenadas globales arbitrarias.",
+      "paths": ["AGENTS.md"],
+      "evidence": [{"path": "AGENTS.md", "locator": "## Botanical assumptions to preserve"}]
+    },
+    {
+      "id": "constraint.original_dataset_immutable",
+      "type": "constraint",
+      "label": "Dataset original inmutable",
+      "summary": "Dataset Original es una referencia inmutable y toda comparacion debe operar en modo de solo lectura.",
+      "paths": ["Dataset Original", "README.md"],
+      "evidence": [{"path": "README.md", "locator": "`Dataset Original/` es de solo lectura"}]
+    },
+    {
+      "id": "constraint.closed_calyx_hidden_fruit",
+      "type": "constraint",
+      "label": "Capacho cerrado y fruto oculto",
+      "summary": "Los frutos permanecen en el arbol morfologico pero los capachos cerrados y opacos los ocultan en Blender.",
+      "paths": ["src/uchuva_lsystem/grammar.py", "src/uchuva_lsystem/blender_geometry.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "calyx_visibility_policy"}]
+    },
+    {
+      "id": "constraint.collision_taxonomy",
+      "type": "constraint",
+      "label": "Colision distinta de oclusion",
+      "summary": "La validacion distingue colision geometrica, oclusion visual y morfologia fuera de rango.",
+      "paths": ["AGENTS.md", "src/uchuva_lsystem/validation.py"],
+      "evidence": [{"path": "AGENTS.md", "locator": "geometric collision"}]
+    },
+    {
+      "id": "constraint.reproducible_seeds",
+      "type": "constraint",
+      "label": "Semillas reproducibles",
+      "summary": "Toda generacion registra semilla, version y preset para reproducir artefactos.",
+      "paths": ["AGENTS.md", "src/uchuva_lsystem/grammar.py"],
+      "evidence": [{"path": "AGENTS.md", "locator": "Use reproducible seeds."}]
+    },
+    {
+      "id": "constraint.output_hygiene",
+      "type": "constraint",
+      "label": "Outputs no autoritativos",
+      "summary": "Los artefactos generados se ignoran y nunca se usan como evidencia autoritativa del grafo.",
+      "paths": [".gitignore", "AGENTS.md"],
+      "evidence": [{"path": ".gitignore", "locator": "outputs/"}]
+    },
+    {
+      "id": "constraint.single_class_calyx",
+      "type": "constraint",
+      "label": "Una clase YOLO calyx",
+      "summary": "Solo los capachos producen cajas de clase 0; fenologia y madurez permanecen como metadatos.",
+      "paths": ["src/uchuva_lsystem/yolo_export.py", "docs/governance/decisiones_tecnicas.md"],
+      "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "El contrato YOLO se reduce a `0 = calyx`"}]
+    },
+    {
+      "id": "decision.morphology_first",
+      "type": "decision",
+      "label": "Arquitectura morphology-first",
+      "summary": "El arbol morfologico validado es la fuente de estructura antes de Blender y las anotaciones.",
+      "paths": ["AGENTS.md", "README.md"],
+      "evidence": [{"path": "AGENTS.md", "locator": "morphological tree"}]
+    },
+    {
+      "id": "decision.legacy_prototype",
+      "type": "decision",
+      "label": "Prototipo legado no autoritativo",
+      "summary": "El prototipo v0.5 es no autoritativo y solo puede aportar utilidades geometricas aisladas.",
+      "paths": ["legacy/prototypes/generic_blender_plant_v0_5.py", "AGENTS.md"],
+      "evidence": [{"path": "AGENTS.md", "locator": "legacy geometric prototype"}]
+    },
+    {
+      "id": "decision.real_matched_single_class",
+      "type": "decision",
+      "label": "Piloto real-matched de clase unica",
+      "summary": "La primera convergencia cuantitativa usa perfil real y deteccion unificada de capachos.",
+      "paths": ["src/uchuva_lsystem/blender_dataset.py", "docs/governance/decisiones_tecnicas.md"],
+      "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "## 2026-07-16 - Primera convergencia real-matched"}]
+    },
+    {
+      "id": "decision.rig_adoption",
+      "type": "decision",
+      "label": "RIG local sin dependencias",
+      "summary": "Se adopta un grafo de contexto pequeno, versionado y validable sin 2context, Graphiti ni base de grafos.",
+      "paths": ["README.md", "docs/governance/decisiones_tecnicas.md", "scripts/validate_repository_context_graph.py"],
+      "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "## 2026-07-16 - Grafo de contexto para agentes"}]
+    },
+    {
+      "id": "decision.ten_case_human_validation",
+      "type": "decision",
+      "label": "Diez casos humanos bloqueados",
+      "summary": "Cada cambio significativo usa exactamente diez casos, semillas bloqueadas y pares comparables; EEVEE estandar es el perfil activo y Cycles queda explicito.",
+      "paths": ["docs/guides/protocolo_validacion_humana.md", "src/uchuva_lsystem/human_validation.py"],
+      "evidence": [{"path": "docs/guides/protocolo_validacion_humana.md", "locator": "## Matriz de casos"}]
+    },
+    {
+      "id": "decision.stratified_light_trellis",
+      "type": "decision",
+      "label": "Copa estratificada y tutorado por capas",
+      "summary": "Las hojas ocupan claros proyectados bajo/medio/alto y las ramas expanden el estrato antes de elevarse hacia el trellis.",
+      "paths": ["docs/architecture/competencia_luminica_tutorado_y_cobertura.md", "src/uchuva_lsystem/light_competition.py", "src/uchuva_lsystem/growth.py"],
+      "evidence": [{"path": "docs/architecture/competencia_luminica_tutorado_y_cobertura.md", "locator": "## Campo de luz estratificado"}]
+    },
+    {
+      "id": "decision.standard_render_default",
+      "type": "decision",
+      "label": "EEVEE como render normal",
+      "summary": "La ruta activa usa standard_eevee; Cycles se conserva como opcion explicita cuando el detalle justifique su coste.",
+      "paths": ["src/uchuva_lsystem/human_validation.py", "docs/governance/decisiones_tecnicas.md"],
+      "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "## 2026-07-30 - EEVEE como render normal"}]
+    },
+    {
+      "id": "decision.hybrid_evaluation_protocol",
+      "type": "decision",
+      "label": "Evaluacion hibrida con test natural",
+      "summary": "Las proporciones solo alteran entrenamiento; validacion y test naturales se mantienen constantes frente al baseline completo.",
+      "paths": ["src/uchuva_lsystem/hybrid_experiments.py", "docs/governance/decisiones_tecnicas.md"],
+      "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "## 2026-07-31 - Protocolo de mezcla natural y sintética"}]
+    },
+    {
+      "id": "decision.spatial_calibration_checkpoint_interpolation",
+      "type": "decision",
+      "label": "Calibracion espacial y consolidacion de checkpoints",
+      "summary": "La escala sintetica se ajusta sin test natural y el coeficiente natural-hibrido se selecciona solo con validacion natural.",
+      "paths": ["src/uchuva_lsystem/spatial_calibration.py", "src/uchuva_lsystem/hybrid_training.py", "docs/governance/decisiones_tecnicas.md"],
+      "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "## 2026-08-01 - Calibración espacial y checkpoint híbrido final"}]
+    },
+    {
+      "id": "test.dataset_helpers",
+      "type": "test",
+      "label": "Pruebas del orquestador de dataset",
+      "summary": "Comprueba programacion, determinismo, filtrado de mascaras y aceptacion.",
+      "paths": ["tests/test_dataset_helpers.py"],
+      "evidence": [{"path": "tests/test_dataset_helpers.py", "locator": "class DatasetHelperTests"}]
+    },
+    {
+      "id": "test.domain_analysis",
+      "type": "test",
+      "label": "Pruebas del analisis de dominio",
+      "summary": "Comprueba integridad YOLO, etiquetas ausentes y comparacion de perfiles.",
+      "paths": ["tests/test_domain_analysis.py"],
+      "evidence": [{"path": "tests/test_domain_analysis.py", "locator": "class DomainAnalysisTests"}]
+    },
+    {
+      "id": "test.phenology",
+      "type": "test",
+      "label": "Pruebas de fenologia por cohortes",
+      "summary": "Comprueba compatibilidad serializable, determinismo, orden ontogenetico, BBCH y maduracion conjunta.",
+      "paths": ["tests/test_phenology.py"],
+      "evidence": [{"path": "tests/test_phenology.py", "locator": "class LiteratureCohortPhenologyTests"}]
+    },
+    {
+      "id": "test.composition_calibration",
+      "type": "test",
+      "label": "Pruebas de calibracion de composicion",
+      "summary": "Comprueba matriz de rendimiento por camara, aislamiento de split y busqueda determinista de mezcla.",
+      "paths": ["tests/test_composition_calibration.py"],
+      "evidence": [{"path": "tests/test_composition_calibration.py", "locator": "class CompositionCalibrationTests"}]
+    },
+    {
+      "id": "test.detection_diagnostics",
+      "type": "test",
+      "label": "Pruebas del diagnostico del detector",
+      "summary": "Comprueba emparejamiento IoU, distincion entre ausencia y mala localizacion, y bloqueo estricto de test/sinteticos.",
+      "paths": ["tests/test_detection_diagnostics.py"],
+      "evidence": [{"path": "tests/test_detection_diagnostics.py", "locator": "class DetectionDiagnosticsTests"}]
+    },
+    {
+      "id": "test.real_matched_morphology",
+      "type": "test",
+      "label": "Pruebas morfologicas real-matched",
+      "summary": "Comprueba serializacion, radios, uniones axilares y fruto oculto.",
+      "paths": ["tests/test_real_matched_morphology.py"],
+      "evidence": [{"path": "tests/test_real_matched_morphology.py", "locator": "class RealMatchedMorphologyTests"}]
+    },
+    {
+      "id": "test.yolo_export",
+      "type": "test",
+      "label": "Pruebas del contrato YOLO",
+      "summary": "Comprueba clase unica, exclusion de flores y metadatos fenologicos.",
+      "paths": ["tests/test_yolo_export.py"],
+      "evidence": [{"path": "tests/test_yolo_export.py", "locator": "class YoloExportTests"}]
+    },
+    {
+      "id": "test.context_graph",
+      "type": "test",
+      "label": "Pruebas del grafo de contexto",
+      "summary": "Comprueba esquema, cobertura, recorridos, evidencia y limites arquitectonicos.",
+      "paths": ["tests/test_repository_context_graph.py"],
+      "evidence": [{"path": "tests/test_repository_context_graph.py", "locator": "class RepositoryContextGraphTests"}]
+    },
+    {
+      "id": "test.texture_assets",
+      "type": "test",
+      "label": "Pruebas de texturas reproducibles",
+      "summary": "Comprueba determinismo, PNG validos, taxonomia y estados de evidencia.",
+      "paths": ["tests/test_texture_assets.py", "tests/test_environment_sizing.py"],
+      "evidence": [{"path": "tests/test_texture_assets.py", "locator": "class TextureAssetTests"}]
+    },
+    {
+      "id": "test.cultivation_adaptation",
+      "type": "test",
+      "label": "Pruebas de adaptacion del cultivo",
+      "summary": "Comprueba determinismo, carga, tutores, condiciones de planta y solapamiento permisivo.",
+      "paths": ["tests/test_cultivation_adaptation.py"],
+      "evidence": [{"path": "tests/test_cultivation_adaptation.py", "locator": "class CultivationAdaptationTests"}]
+    },
+    {
+      "id": "test.human_validation",
+      "type": "test",
+      "label": "Pruebas del protocolo humano",
+      "summary": "Comprueba serializacion, determinismo, semillas bloqueadas, diversidad, cobertura, perfiles y reglas de aceptacion.",
+      "paths": ["tests/test_human_validation.py"],
+      "evidence": [{"path": "tests/test_human_validation.py", "locator": "class HumanValidationProtocolTests"}]
+    },
+    {
+      "id": "test.light_competition",
+      "type": "test",
+      "label": "Pruebas de competencia luminica y vegetacion",
+      "summary": "Comprueba campo compartido, estratos, tutorado, serializacion y mezcla de vegetacion acompañante.",
+      "paths": ["tests/test_light_competition.py"],
+      "evidence": [{"path": "tests/test_light_competition.py", "locator": "class StratifiedLightCompetitionTests"}]
+    },
+    {
+      "id": "test.hybrid_experiments",
+      "type": "test",
+      "label": "Pruebas de mezclas hibridas",
+      "summary": "Comprueba proporciones, determinismo, procedencia y preservacion de validacion y test naturales.",
+      "paths": ["tests/test_hybrid_experiments.py"],
+      "evidence": [{"path": "tests/test_hybrid_experiments.py", "locator": "class HybridExperimentTests"}]
+    },
+    {
+      "id": "test.hybrid_training",
+      "type": "test",
+      "label": "Pruebas del protocolo de entrenamiento",
+      "summary": "Comprueba extraccion de metricas y comparacion contra el baseline natural sin cargar el entrenador externo.",
+      "paths": ["tests/test_hybrid_training.py"],
+      "evidence": [{"path": "tests/test_hybrid_training.py", "locator": "class HybridTrainingTests"}]
+    },
+    {
+      "id": "test.hybrid_study",
+      "type": "test",
+      "label": "Pruebas del estudio hibrido sellado",
+      "summary": "Comprueba cohortes anidadas, reparacion perceptual, reglas de parada, bloqueo del test y reanudacion por checkpoint.",
+      "paths": ["tests/test_hybrid_study.py"],
+      "evidence": [{"path": "tests/test_hybrid_study.py", "locator": "class HybridStudyTests"}]
+    },
+    {
+      "id": "test.photometric_calibration",
+      "type": "test",
+      "label": "Pruebas de calibracion fotometrica",
+      "summary": "Comprueba exclusion del test real, preservacion de etiquetas, inmutabilidad de fuentes y ajuste de color.",
+      "paths": ["tests/test_photometric_calibration.py"],
+      "evidence": [{"path": "tests/test_photometric_calibration.py", "locator": "class PhotometricCalibrationTests"}]
+    },
+    {
+      "id": "test.spatial_calibration",
+      "type": "test",
+      "label": "Pruebas de calibracion espacial",
+      "summary": "Comprueba exclusion del test real, coherencia imagen-etiqueta, inmutabilidad de fuentes y aumento de escala aparente.",
+      "paths": ["tests/test_spatial_calibration.py"],
+      "evidence": [{"path": "tests/test_spatial_calibration.py", "locator": "class SpatialCalibrationTests"}]
+    },
+    {
+      "id": "module.classical_augmentation",
+      "type": "subsystem",
+      "label": "Baseline de aumentacion clasica",
+      "summary": "Registra condiciones convencionales y declara de forma explicita cuando una receta solo existe como dataset precomputado.",
+      "paths": ["src/uchuva_classical_augmentation/__init__.py", "src/uchuva_classical_augmentation/protocol.py"],
+      "evidence": [{"path": "src/uchuva_classical_augmentation/protocol.py", "locator": "def student_yolo11n_conditions"}]
+    },
+    {
+      "id": "module.gazebo_interface",
+      "type": "subsystem",
+      "label": "Interfaz pura morphology a Gazebo",
+      "summary": "Deriva planes semanticos visuales y fisicos por LOD desde Plant, sin depender de Blender ni del runtime Gazebo.",
+      "paths": ["src/uchuva_gazebo/__init__.py", "src/uchuva_gazebo/interfaces.py"],
+      "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "def build_gazebo_export_plan"}]
+    },
+    {
+      "id": "entrypoint.export_gazebo_plant",
+      "type": "entrypoint",
+      "label": "Exportar plan de Gazebo",
+      "summary": "CLI puro que convierte un JSON morfologico en un plan semantico JSON por nivel de detalle.",
+      "paths": ["scripts/export_gazebo_plant.py"],
+      "evidence": [{"path": "scripts/export_gazebo_plant.py", "locator": "def main"}]
+    },
+    {
+      "id": "artifact.classical_augmentation_protocol",
+      "type": "artifact",
+      "label": "Protocolo clasico trazable",
+      "summary": "Definicion serializable de condiciones E0, E1 y E2 con procedencia y estado de reproducibilidad de recetas.",
+      "paths": ["src/uchuva_classical_augmentation/protocol.py", "contributions/diego_amaya/yolo11n_multiseed_v1/CONTRIBUTION.md"],
+      "evidence": [{"path": "contributions/diego_amaya/yolo11n_multiseed_v1/CONTRIBUTION.md", "locator": "sus recetas son reproducibles"}]
+    },
+    {
+      "id": "artifact.gazebo_export_plan",
+      "type": "artifact",
+      "label": "Plan semantico de Gazebo",
+      "summary": "JSON reproducible para spikes de Gazebo que conserva identidad morfologica y deja explicita la ausencia de SDF y fisica medida.",
+      "paths": ["src/uchuva_gazebo/interfaces.py", "scripts/export_gazebo_plant.py"],
+      "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "class GazeboExportPlan"}]
+    },
+    {
+      "id": "constraint.gazebo_pure_bridge",
+      "type": "constraint",
+      "label": "Gazebo como interprete puro",
+      "summary": "El puente hacia Gazebo consume morfologia serializable sin importar bpy, Gazebo, ROS ni asumir coeficientes fisicos medidos.",
+      "paths": ["docs/architecture/integracion_augmentacion_sintetica_gazebo.md"],
+      "evidence": [{"path": "docs/architecture/integracion_augmentacion_sintetica_gazebo.md", "locator": "no importa `bpy`, `gz`, ROS 2 ni Gazebo"}]
+    },
+    {
+      "id": "decision.three_workstreams",
+      "type": "decision",
+      "label": "Tres frentes interoperables",
+      "summary": "Aumentacion clasica, generacion sintetica y Gazebo se separan por responsabilidad y se conectan mediante artefactos trazables.",
+      "paths": ["docs/plan_reestructuracion_augmentacion_sintetica_gazebo.md", "docs/architecture/integracion_augmentacion_sintetica_gazebo.md"],
+      "evidence": [{"path": "docs/plan_reestructuracion_augmentacion_sintetica_gazebo.md", "locator": "tres líneas claramente diferenciadas pero interoperables"}]
+    },
+    {
+      "id": "test.classical_augmentation",
+      "type": "test",
+      "label": "Pruebas del protocolo clasico",
+      "summary": "Comprueba condiciones preservadas y que las recetas no entregadas sigan marcadas como precomputadas.",
+      "paths": ["tests/test_classical_augmentation.py"],
+      "evidence": [{"path": "tests/test_classical_augmentation.py", "locator": "class ClassicalAugmentationProtocolTests"}]
+    },
+    {
+      "id": "test.gazebo_interface",
+      "type": "test",
+      "label": "Pruebas del puente Gazebo",
+      "summary": "Comprueba LODs, serializacion, incertidumbre fisica y ausencia de dependencias de runtime.",
+      "paths": ["tests/test_gazebo_interfaces.py"],
+      "evidence": [{"path": "tests/test_gazebo_interfaces.py", "locator": "class GazeboInterfaceTests"}]
+    }
+  ],
+  "edges": [
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .morphology import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.grammar", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .grammar import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.parameters", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .parameters import"}]},
+    {"source": "module.parameters", "relation": "configures", "target": "module.phenology", "evidence": [{"path": "src/uchuva_lsystem/phenology.py", "locator": "PROFILE_THERMAL_TIME_RANGES_CD"}]},
+    {"source": "module.phenology", "relation": "configures", "target": "module.grammar", "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "build_phenology_snapshot"}]},
+    {"source": "module.grammar", "relation": "depends_on", "target": "module.phenology", "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "from .phenology import"}]},
+    {"source": "module.phenology", "relation": "configures", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/phenology.py", "locator": "class ReproductivePhenology"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.growth", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .growth import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.light_competition", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .light_competition import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.spatial", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .spatial import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.support", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .support import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.texture_assets", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .texture_assets import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.scene", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .scene import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.cultivation", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .cultivation import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.collisions", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .collisions import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.validation", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .validation import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.human_validation", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .human_validation import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.yolo_export", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .yolo_export import"}]},
+    {"source": "module.public_api", "relation": "depends_on", "target": "module.blender_dataset", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .blender_dataset import"}]},
+    {"source": "module.parameters", "relation": "configures", "target": "module.grammar", "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "get_initial_parameters"}]},
+    {"source": "module.parameters", "relation": "configures", "target": "module.light_competition", "evidence": [{"path": "src/uchuva_lsystem/parameters.py", "locator": "\"light_competition\""}]},
+    {"source": "module.provenance", "relation": "configures", "target": "module.parameters", "evidence": [{"path": "src/uchuva_lsystem/provenance.py", "locator": "def normalise_parameter_provenance"}]},
+    {"source": "module.metrics", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/metrics.py", "locator": "from .morphology import"}]},
+    {"source": "module.metrics", "relation": "depends_on", "target": "module.scene", "evidence": [{"path": "src/uchuva_lsystem/metrics.py", "locator": "from .scene import"}]},
+    {"source": "module.metrics", "relation": "produces", "target": "artifact.scene_metrics", "evidence": [{"path": "src/uchuva_lsystem/metrics.py", "locator": "def write_metrics_bundle"}]},
+    {"source": "module.human_validation", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/human_validation.py", "locator": "from .morphology import SerializableMixin"}]},
+    {"source": "module.human_validation", "relation": "depends_on", "target": "module.cultivation", "evidence": [{"path": "src/uchuva_lsystem/human_validation.py", "locator": "from .cultivation import generate_cultivation_morphologies"}]},
+    {"source": "module.human_validation", "relation": "depends_on", "target": "module.metrics", "evidence": [{"path": "src/uchuva_lsystem/human_validation.py", "locator": "from .metrics import compute_scene_metrics"}]},
+    {"source": "module.human_validation", "relation": "produces", "target": "artifact.human_validation_suite", "evidence": [{"path": "src/uchuva_lsystem/human_validation.py", "locator": "def build_validation_suite"}]},
+    {"source": "module.scene", "relation": "depends_on", "target": "module.support", "evidence": [{"path": "src/uchuva_lsystem/scene.py", "locator": "from .support import"}]},
+    {"source": "module.support", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/support.py", "locator": "from .morphology import"}]},
+    {"source": "module.spatial", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/spatial.py", "locator": "from .morphology import"}]},
+    {"source": "module.growth", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/growth.py", "locator": "from .morphology import"}]},
+    {"source": "module.growth", "relation": "depends_on", "target": "module.scene", "evidence": [{"path": "src/uchuva_lsystem/growth.py", "locator": "from .scene import"}]},
+    {"source": "module.growth", "relation": "depends_on", "target": "module.spatial", "evidence": [{"path": "src/uchuva_lsystem/growth.py", "locator": "from .spatial import"}]},
+    {"source": "module.growth", "relation": "depends_on", "target": "module.support", "evidence": [{"path": "src/uchuva_lsystem/growth.py", "locator": "from .support import"}]},
+    {"source": "module.growth", "relation": "depends_on", "target": "module.light_competition", "evidence": [{"path": "src/uchuva_lsystem/growth.py", "locator": "from .light_competition import"}]},
+    {"source": "module.texture_assets", "relation": "produces", "target": "artifact.texture_library", "evidence": [{"path": "src/uchuva_lsystem/texture_assets.py", "locator": "def generate_texture_asset_library"}]},
+    {"source": "module.grammar", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "from .morphology import"}]},
+    {"source": "module.grammar", "relation": "produces", "target": "artifact.morphology_tree", "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "return Plant("}]},
+    {"source": "module.scene", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/scene.py", "locator": "from .morphology import"}]},
+    {"source": "module.cultivation", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/cultivation.py", "locator": "from .morphology import"}]},
+    {"source": "module.cultivation", "relation": "depends_on", "target": "module.scene", "evidence": [{"path": "src/uchuva_lsystem/cultivation.py", "locator": "from .scene import"}]},
+    {"source": "module.cultivation", "relation": "depends_on", "target": "module.growth", "evidence": [{"path": "src/uchuva_lsystem/cultivation.py", "locator": "from .growth import"}]},
+    {"source": "module.cultivation", "relation": "depends_on", "target": "module.spatial", "evidence": [{"path": "src/uchuva_lsystem/cultivation.py", "locator": "from .spatial import"}]},
+    {"source": "module.cultivation", "relation": "depends_on", "target": "module.collisions", "evidence": [{"path": "src/uchuva_lsystem/cultivation.py", "locator": "from .collisions import"}]},
+    {"source": "module.collisions", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/collisions.py", "locator": "from .morphology import"}]},
+    {"source": "module.collisions", "relation": "depends_on", "target": "module.scene", "evidence": [{"path": "src/uchuva_lsystem/collisions.py", "locator": "from .scene import"}]},
+    {"source": "module.collisions", "relation": "configures", "target": "module.blender_geometry", "evidence": [{"path": "src/uchuva_lsystem/collisions.py", "locator": "build_scene_proxies"}]},
+    {"source": "module.cultivation", "relation": "configures", "target": "module.blender_geometry", "evidence": [{"path": "src/uchuva_lsystem/blender_geometry.py", "locator": "mechanical_deflection_deg"}]},
+    {"source": "module.validation", "relation": "validates", "target": "module.cultivation", "evidence": [{"path": "src/uchuva_lsystem/validation.py", "locator": "cultivation_adaptation"}]},
+    {"source": "module.validation", "relation": "validates", "target": "module.collisions", "evidence": [{"path": "src/uchuva_lsystem/validation.py", "locator": "mesh_collision_audit"}]},
+    {"source": "module.validation", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/validation.py", "locator": "from .morphology import"}]},
+    {"source": "module.validation", "relation": "validates", "target": "artifact.morphology_tree", "evidence": [{"path": "src/uchuva_lsystem/validation.py", "locator": "def validate_morphology_tree"}]},
+    {"source": "module.validation", "relation": "produces", "target": "artifact.validation_report", "evidence": [{"path": "scripts/generate_morphology_tree.py", "locator": "validation_report"}]},
+    {"source": "module.exporters", "relation": "produces", "target": "artifact.morphology_tree", "evidence": [{"path": "src/uchuva_lsystem/exporters.py", "locator": "def export_morphology_tree"}]},
+    {"source": "module.blender_geometry", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/blender_geometry.py", "locator": "from .morphology import"}]},
+    {"source": "module.blender_geometry", "relation": "depends_on", "target": "module.validation", "evidence": [{"path": "scripts/generate_blender_cultivation_scene.py", "locator": "validate_morphology_tree"}]},
+    {"source": "module.blender_geometry", "relation": "depends_on", "target": "module.blender_scene", "evidence": [{"path": "src/uchuva_lsystem/blender_geometry.py", "locator": "from .blender_scene import"}]},
+    {"source": "module.blender_scene", "relation": "depends_on", "target": "module.texture_assets", "evidence": [{"path": "src/uchuva_lsystem/blender_scene.py", "locator": "def _apply_generated_organ_textures"}]},
+    {"source": "module.blender_review", "relation": "depends_on", "target": "module.human_validation", "evidence": [{"path": "src/uchuva_lsystem/blender_review.py", "locator": "from .human_validation import"}]},
+    {"source": "module.blender_review", "relation": "depends_on", "target": "module.blender_scene", "evidence": [{"path": "src/uchuva_lsystem/blender_review.py", "locator": "from .blender_scene import create_annotation_camera"}]},
+    {"source": "module.blender_geometry", "relation": "produces", "target": "artifact.blender_scene", "evidence": [{"path": "src/uchuva_lsystem/blender_geometry.py", "locator": "def build_geometry_from_morphology"}]},
+    {"source": "module.blender_environment", "relation": "depends_on", "target": "module.blender_scene", "evidence": [{"path": "src/uchuva_lsystem/blender_environment.py", "locator": "from .blender_scene import"}]},
+    {"source": "module.blender_annotations", "relation": "depends_on", "target": "module.blender_scene", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "setup_render_settings"}]},
+    {"source": "module.blender_annotations", "relation": "depends_on", "target": "module.yolo_export", "evidence": [{"path": "src/uchuva_lsystem/blender_annotations.py", "locator": "from .yolo_export import"}]},
+    {"source": "module.blender_pilot", "relation": "depends_on", "target": "module.blender_geometry", "evidence": [{"path": "src/uchuva_lsystem/blender_pilot.py", "locator": "from .blender_geometry import"}]},
+    {"source": "module.blender_pilot", "relation": "depends_on", "target": "module.cultivation", "evidence": [{"path": "src/uchuva_lsystem/blender_pilot.py", "locator": "adapt_cultivation_morphologies"}]},
+    {"source": "module.blender_pilot", "relation": "depends_on", "target": "module.blender_annotations", "evidence": [{"path": "src/uchuva_lsystem/blender_pilot.py", "locator": "from .blender_annotations import"}]},
+    {"source": "module.blender_dataset", "relation": "depends_on", "target": "module.blender_geometry", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "from .blender_geometry import"}]},
+    {"source": "module.blender_dataset", "relation": "depends_on", "target": "module.cultivation", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "generate_cultivation_morphologies"}]},
+    {"source": "module.blender_dataset", "relation": "depends_on", "target": "module.blender_scene", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "from .blender_scene import"}]},
+    {"source": "module.blender_dataset", "relation": "depends_on", "target": "module.blender_annotations", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "from .blender_annotations import"}]},
+    {"source": "module.blender_dataset", "relation": "depends_on", "target": "module.yolo_export", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "from .yolo_export import"}]},
+    {"source": "module.blender_dataset", "relation": "depends_on", "target": "module.domain_analysis", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "from .domain_analysis import"}]},
+    {"source": "module.blender_dataset", "relation": "depends_on", "target": "module.composition_calibration", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "from .composition_calibration import"}]},
+    {"source": "module.composition_calibration", "relation": "configures", "target": "module.blender_dataset", "evidence": [{"path": "src/uchuva_lsystem/composition_calibration.py", "locator": "recommended_image_schedule_rates_pct"}]},
+    {"source": "module.blender_dataset", "relation": "produces", "target": "artifact.yolo_dataset", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "def generate_annotation_dataset"}]},
+    {"source": "module.yolo_export", "relation": "produces", "target": "artifact.yolo_dataset", "evidence": [{"path": "src/uchuva_lsystem/yolo_export.py", "locator": "def write_yolo_file"}]},
+    {"source": "module.domain_analysis", "relation": "validates", "target": "artifact.yolo_dataset", "evidence": [{"path": "src/uchuva_lsystem/domain_analysis.py", "locator": "def analyze_yolo_domain"}]},
+    {"source": "module.detection_diagnostics", "relation": "validates", "target": "artifact.yolo_dataset", "evidence": [{"path": "src/uchuva_lsystem/detection_diagnostics.py", "locator": "def aggregate_error_report"}]},
+    {"source": "module.detection_diagnostics", "relation": "depends_on", "target": "module.hybrid_study", "evidence": [{"path": "src/uchuva_lsystem/detection_diagnostics.py", "locator": "def selection_pairs"}]},
+    {"source": "module.domain_analysis", "relation": "produces", "target": "artifact.domain_report", "evidence": [{"path": "src/uchuva_lsystem/domain_analysis.py", "locator": "def write_domain_comparison"}]},
+    {"source": "module.hybrid_experiments", "relation": "produces", "target": "artifact.hybrid_experiment_matrix", "evidence": [{"path": "src/uchuva_lsystem/hybrid_experiments.py", "locator": "def build_hybrid_experiment_matrix"}]},
+    {"source": "module.hybrid_training", "relation": "depends_on", "target": "artifact.hybrid_experiment_matrix", "evidence": [{"path": "src/uchuva_lsystem/hybrid_training.py", "locator": "MATRIX_MANIFEST_FILENAME"}]},
+    {"source": "module.hybrid_training", "relation": "produces", "target": "artifact.hybrid_training_report", "evidence": [{"path": "src/uchuva_lsystem/hybrid_training.py", "locator": "training_summary.json"}]},
+    {"source": "module.hybrid_study", "relation": "depends_on", "target": "module.hybrid_experiments", "evidence": [{"path": "src/uchuva_lsystem/hybrid_study.py", "locator": "build_hybrid_experiment_matrix"}]},
+    {"source": "module.hybrid_study", "relation": "depends_on", "target": "module.hybrid_training", "evidence": [{"path": "src/uchuva_lsystem/hybrid_study.py", "locator": "TrainingConfig"}]},
+    {"source": "module.hybrid_study", "relation": "produces", "target": "artifact.sealed_hybrid_study", "evidence": [{"path": "src/uchuva_lsystem/hybrid_study.py", "locator": "def create_selection_lock"}]},
+    {"source": "module.photometric_calibration", "relation": "produces", "target": "artifact.photometrically_calibrated_dataset", "evidence": [{"path": "src/uchuva_lsystem/photometric_calibration.py", "locator": "def derive_photometrically_calibrated_dataset"}]},
+    {"source": "module.spatial_calibration", "relation": "produces", "target": "artifact.spatially_calibrated_dataset", "evidence": [{"path": "src/uchuva_lsystem/spatial_calibration.py", "locator": "def derive_spatially_calibrated_dataset"}]},
+
+    {"source": "entrypoint.generate_single_plant", "relation": "depends_on", "target": "module.grammar", "evidence": [{"path": "scripts/generate_morphology_tree.py", "locator": "generate_morphology_tree"}]},
+    {"source": "entrypoint.generate_single_plant", "relation": "produces", "target": "artifact.morphology_tree", "evidence": [{"path": "scripts/generate_morphology_tree.py", "locator": "export_morphology_tree"}]},
+    {"source": "entrypoint.generate_single_plant", "relation": "produces", "target": "artifact.validation_report", "evidence": [{"path": "scripts/generate_morphology_tree.py", "locator": "validation_report"}]},
+    {"source": "entrypoint.generate_texture_assets", "relation": "depends_on", "target": "module.texture_assets", "evidence": [{"path": "scripts/generate_uchuva_texture_library.py", "locator": "generate_texture_asset_library"}]},
+    {"source": "entrypoint.generate_texture_assets", "relation": "produces", "target": "artifact.texture_library", "evidence": [{"path": "scripts/generate_uchuva_texture_library.py", "locator": "def main"}]},
+    {"source": "entrypoint.generate_blender_plant", "relation": "depends_on", "target": "module.blender_geometry", "evidence": [{"path": "scripts/generate_blender_single_plant_preview.py", "locator": "build_geometry_from_morphology"}]},
+    {"source": "entrypoint.generate_blender_plant", "relation": "produces", "target": "artifact.blender_scene", "evidence": [{"path": "scripts/generate_blender_single_plant_preview.py", "locator": "save_blend_file"}]},
+    {"source": "entrypoint.generate_blender_scene", "relation": "depends_on", "target": "module.scene", "evidence": [{"path": "scripts/generate_blender_cultivation_scene.py", "locator": "create_cultivation_scene"}]},
+    {"source": "entrypoint.generate_blender_scene", "relation": "produces", "target": "artifact.blender_scene", "evidence": [{"path": "scripts/generate_blender_cultivation_scene.py", "locator": "save_blend_file"}]},
+    {"source": "entrypoint.generate_annotation_pilot", "relation": "depends_on", "target": "module.blender_pilot", "evidence": [{"path": "scripts/generate_annotation_pilot.py", "locator": "generate_annotation_pilot"}]},
+    {"source": "entrypoint.generate_annotation_pilot", "relation": "produces", "target": "artifact.yolo_dataset", "evidence": [{"path": "scripts/generate_annotation_pilot.py", "locator": "generate_annotation_pilot"}]},
+    {"source": "entrypoint.generate_annotation_dataset", "relation": "depends_on", "target": "module.blender_dataset", "evidence": [{"path": "scripts/generate_annotation_dataset.py", "locator": "generate_annotation_dataset"}]},
+    {"source": "entrypoint.generate_annotation_dataset", "relation": "produces", "target": "artifact.yolo_dataset", "evidence": [{"path": "scripts/generate_annotation_dataset.py", "locator": "generate_annotation_dataset"}]},
+    {"source": "entrypoint.compare_real_synthetic", "relation": "depends_on", "target": "module.domain_analysis", "evidence": [{"path": "scripts/compare_real_vs_synthetic_domain.py", "locator": "compare_domain_reports"}]},
+    {"source": "entrypoint.compare_real_synthetic", "relation": "produces", "target": "artifact.domain_report", "evidence": [{"path": "scripts/compare_real_vs_synthetic_domain.py", "locator": "write_domain_comparison"}]},
+    {"source": "entrypoint.prepare_hybrid_experiments", "relation": "depends_on", "target": "module.hybrid_experiments", "evidence": [{"path": "scripts/prepare_hybrid_experiments.py", "locator": "build_hybrid_experiment_matrix"}]},
+    {"source": "entrypoint.prepare_hybrid_experiments", "relation": "produces", "target": "artifact.hybrid_experiment_matrix", "evidence": [{"path": "scripts/prepare_hybrid_experiments.py", "locator": "def main"}]},
+    {"source": "entrypoint.run_hybrid_training", "relation": "depends_on", "target": "module.hybrid_training", "evidence": [{"path": "scripts/run_hybrid_training.py", "locator": "run_hybrid_training_matrix"}]},
+    {"source": "entrypoint.run_hybrid_training", "relation": "produces", "target": "artifact.hybrid_training_report", "evidence": [{"path": "scripts/run_hybrid_training.py", "locator": "def main"}]},
+    {"source": "entrypoint.run_hybrid_fidelity_study", "relation": "depends_on", "target": "module.hybrid_study", "evidence": [{"path": "scripts/run_hybrid_fidelity_study.py", "locator": "from uchuva_lsystem.hybrid_study import"}]},
+    {"source": "entrypoint.run_hybrid_fidelity_study", "relation": "produces", "target": "artifact.sealed_hybrid_study", "evidence": [{"path": "scripts/run_hybrid_fidelity_study.py", "locator": "def render_report"}]},
+    {"source": "entrypoint.run_curriculum_training", "relation": "depends_on", "target": "module.hybrid_training", "evidence": [{"path": "scripts/run_curriculum_training.py", "locator": "run_synthetic_pretrain_natural_finetune"}]},
+    {"source": "entrypoint.run_curriculum_training", "relation": "produces", "target": "artifact.hybrid_training_report", "evidence": [{"path": "scripts/run_curriculum_training.py", "locator": "def main"}]},
+    {"source": "entrypoint.run_natural_refinement", "relation": "depends_on", "target": "module.hybrid_training", "evidence": [{"path": "scripts/run_natural_refinement.py", "locator": "run_natural_refinement_from_hybrid"}]},
+    {"source": "entrypoint.run_natural_refinement", "relation": "produces", "target": "artifact.hybrid_training_report", "evidence": [{"path": "scripts/run_natural_refinement.py", "locator": "def main"}]},
+    {"source": "entrypoint.run_checkpoint_interpolation", "relation": "depends_on", "target": "module.hybrid_training", "evidence": [{"path": "scripts/run_checkpoint_interpolation.py", "locator": "run_checkpoint_interpolation"}]},
+    {"source": "entrypoint.run_checkpoint_interpolation", "relation": "produces", "target": "artifact.hybrid_training_report", "evidence": [{"path": "scripts/run_checkpoint_interpolation.py", "locator": "def main"}]},
+    {"source": "entrypoint.calibrate_synthetic_photometry", "relation": "depends_on", "target": "module.photometric_calibration", "evidence": [{"path": "scripts/calibrate_synthetic_photometry.py", "locator": "derive_photometrically_calibrated_dataset"}]},
+    {"source": "entrypoint.calibrate_synthetic_photometry", "relation": "produces", "target": "artifact.photometrically_calibrated_dataset", "evidence": [{"path": "scripts/calibrate_synthetic_photometry.py", "locator": "def main"}]},
+    {"source": "entrypoint.calibrate_synthetic_scale", "relation": "depends_on", "target": "module.spatial_calibration", "evidence": [{"path": "scripts/calibrate_synthetic_scale.py", "locator": "derive_spatially_calibrated_dataset"}]},
+    {"source": "entrypoint.calibrate_synthetic_scale", "relation": "produces", "target": "artifact.spatially_calibrated_dataset", "evidence": [{"path": "scripts/calibrate_synthetic_scale.py", "locator": "def main"}]},
+    {"source": "entrypoint.generate_diagnostics", "relation": "depends_on", "target": "module.metrics", "evidence": [{"path": "scripts/generate_morphology_diagnostics.py", "locator": "compute_scene_metrics"}]},
+    {"source": "entrypoint.generate_diagnostics", "relation": "depends_on", "target": "module.provenance", "evidence": [{"path": "scripts/generate_morphology_diagnostics.py", "locator": "normalise_parameter_provenance"}]},
+    {"source": "entrypoint.generate_diagnostics", "relation": "produces", "target": "artifact.scene_metrics", "evidence": [{"path": "scripts/generate_morphology_diagnostics.py", "locator": "write_metrics_bundle"}]},
+    {"source": "entrypoint.generate_human_validation", "relation": "depends_on", "target": "module.human_validation", "evidence": [{"path": "scripts/generate_human_validation_suite.py", "locator": "build_validation_suite"}]},
+    {"source": "entrypoint.generate_human_validation", "relation": "depends_on", "target": "module.blender_review", "evidence": [{"path": "scripts/generate_human_validation_suite.py", "locator": "compose_suite_contact_sheet"}]},
+    {"source": "entrypoint.generate_human_validation", "relation": "produces", "target": "artifact.human_validation_suite", "evidence": [{"path": "scripts/generate_human_validation_suite.py", "locator": "complete_pending_human_review"}]},
+    {"source": "entrypoint.generate_human_validation", "relation": "produces", "target": "artifact.blender_scene", "evidence": [{"path": "scripts/generate_human_validation_suite.py", "locator": "save_blend_file"}]},
+    {"source": "entrypoint.promote_human_validation", "relation": "depends_on", "target": "module.human_validation", "evidence": [{"path": "scripts/promote_human_validation_suite.py", "locator": "evaluate_human_review"}]},
+    {"source": "entrypoint.promote_human_validation", "relation": "validates", "target": "artifact.human_validation_suite", "evidence": [{"path": "scripts/promote_human_validation_suite.py", "locator": "accepted_baseline_manifest.json"}]},
+
+    {"source": "module.grammar", "relation": "must_preserve", "target": "constraint.morphological_attachment", "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "parent_node_id"}]},
+    {"source": "module.blender_geometry", "relation": "must_preserve", "target": "constraint.morphological_attachment", "evidence": [{"path": "src/uchuva_lsystem/blender_geometry.py", "locator": "build_geometry_from_morphology"}]},
+    {"source": "module.domain_analysis", "relation": "must_preserve", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "src/uchuva_lsystem/domain_analysis.py", "locator": "Read-only comparison helpers"}]},
+    {"source": "module.hybrid_experiments", "relation": "must_preserve", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "src/uchuva_lsystem/hybrid_experiments.py", "locator": "unmatched originals remain untouched"}]},
+    {"source": "module.hybrid_training", "relation": "must_preserve", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "src/uchuva_lsystem/hybrid_training.py", "locator": "real test"}]},
+    {"source": "module.hybrid_study", "relation": "must_preserve", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "src/uchuva_lsystem/hybrid_study.py", "locator": "without editing originals"}]},
+    {"source": "module.photometric_calibration", "relation": "must_preserve", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "src/uchuva_lsystem/photometric_calibration.py", "locator": "Photometric calibration must use real train/val only."}]},
+    {"source": "module.spatial_calibration", "relation": "must_preserve", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "src/uchuva_lsystem/spatial_calibration.py", "locator": "Natural test labels are never read."}]},
+    {"source": "module.grammar", "relation": "must_preserve", "target": "constraint.closed_calyx_hidden_fruit", "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "calyx_visibility_policy"}]},
+    {"source": "module.blender_geometry", "relation": "must_preserve", "target": "constraint.closed_calyx_hidden_fruit", "evidence": [{"path": "src/uchuva_lsystem/blender_geometry.py", "locator": "uchuva_calyx_openness"}]},
+    {"source": "module.blender_dataset", "relation": "must_preserve", "target": "constraint.closed_calyx_hidden_fruit", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "visible_hidden_fruit_count"}]},
+    {"source": "module.validation", "relation": "must_preserve", "target": "constraint.collision_taxonomy", "evidence": [{"path": "src/uchuva_lsystem/validation.py", "locator": "visual_occlusion"}]},
+    {"source": "module.blender_geometry", "relation": "must_preserve", "target": "constraint.collision_taxonomy", "evidence": [{"path": "src/uchuva_lsystem/blender_geometry.py", "locator": "physical_collisions"}]},
+    {"source": "module.grammar", "relation": "must_preserve", "target": "constraint.reproducible_seeds", "evidence": [{"path": "src/uchuva_lsystem/grammar.py", "locator": "random.Random(seed)"}]},
+    {"source": "module.blender_dataset", "relation": "must_preserve", "target": "constraint.reproducible_seeds", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "seed: int = 0"}]},
+    {"source": "module.texture_assets", "relation": "must_preserve", "target": "constraint.reproducible_seeds", "evidence": [{"path": "src/uchuva_lsystem/texture_assets.py", "locator": "seed: int = 1701"}]},
+    {"source": "module.hybrid_experiments", "relation": "must_preserve", "target": "constraint.reproducible_seeds", "evidence": [{"path": "src/uchuva_lsystem/hybrid_experiments.py", "locator": "def _stable_seed"}]},
+    {"source": "module.yolo_export", "relation": "must_preserve", "target": "constraint.single_class_calyx", "evidence": [{"path": "src/uchuva_lsystem/yolo_export.py", "locator": "YOLO_CLASSES"}]},
+    {"source": "module.blender_dataset", "relation": "must_preserve", "target": "constraint.single_class_calyx", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "label_mode: str = \"calyx_single_class\""}]},
+    {"source": "artifact.morphology_tree", "relation": "must_preserve", "target": "constraint.output_hygiene", "evidence": [{"path": "AGENTS.md", "locator": "Do not commit generated output by default."}]},
+    {"source": "artifact.yolo_dataset", "relation": "must_preserve", "target": "constraint.output_hygiene", "evidence": [{"path": ".gitignore", "locator": "outputs/"}]},
+    {"source": "artifact.human_validation_suite", "relation": "must_preserve", "target": "constraint.output_hygiene", "evidence": [{"path": ".gitignore", "locator": "outputs/"}]},
+    {"source": "artifact.hybrid_experiment_matrix", "relation": "must_preserve", "target": "constraint.output_hygiene", "evidence": [{"path": ".gitignore", "locator": "outputs/"}]},
+    {"source": "artifact.hybrid_training_report", "relation": "must_preserve", "target": "constraint.output_hygiene", "evidence": [{"path": ".gitignore", "locator": "outputs/"}]},
+    {"source": "artifact.sealed_hybrid_study", "relation": "must_preserve", "target": "constraint.output_hygiene", "evidence": [{"path": ".gitignore", "locator": "outputs/"}]},
+    {"source": "artifact.photometrically_calibrated_dataset", "relation": "must_preserve", "target": "constraint.output_hygiene", "evidence": [{"path": ".gitignore", "locator": "outputs/"}]},
+    {"source": "artifact.spatially_calibrated_dataset", "relation": "must_preserve", "target": "constraint.output_hygiene", "evidence": [{"path": ".gitignore", "locator": "outputs/"}]},
+    {"source": "artifact.human_validation_suite", "relation": "must_preserve", "target": "constraint.single_class_calyx", "evidence": [{"path": "scripts/generate_human_validation_suite.py", "locator": "YOLO_CLASSES"}]},
+    {"source": "artifact.human_validation_suite", "relation": "must_preserve", "target": "constraint.closed_calyx_hidden_fruit", "evidence": [{"path": "docs/guides/protocolo_validacion_humana.md", "locator": "fruto continúa oculto"}]},
+
+    {"source": "decision.morphology_first", "relation": "supersedes", "target": "decision.legacy_prototype", "evidence": [{"path": "AGENTS.md", "locator": "Do not use v0.5 as the main biological model."}]},
+    {"source": "decision.real_matched_single_class", "relation": "configures", "target": "module.blender_dataset", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "composition_profile: str = \"real_matched\""}]},
+    {"source": "decision.real_matched_single_class", "relation": "configures", "target": "module.yolo_export", "evidence": [{"path": "src/uchuva_lsystem/yolo_export.py", "locator": "YOLO_CLASSES"}]},
+    {"source": "decision.rig_adoption", "relation": "must_preserve", "target": "constraint.output_hygiene", "evidence": [{"path": "scripts/validate_repository_context_graph.py", "locator": "generated output cannot be authoritative evidence"}]},
+    {"source": "decision.ten_case_human_validation", "relation": "configures", "target": "module.human_validation", "evidence": [{"path": "docs/guides/protocolo_validacion_humana.md", "locator": "se revisan diez casos"}]},
+    {"source": "decision.ten_case_human_validation", "relation": "configures", "target": "module.blender_review", "evidence": [{"path": "docs/guides/protocolo_validacion_humana.md", "locator": "`standard_eevee`"}]},
+    {"source": "decision.stratified_light_trellis", "relation": "configures", "target": "module.light_competition", "evidence": [{"path": "docs/architecture/competencia_luminica_tutorado_y_cobertura.md", "locator": "## Campo de luz estratificado"}]},
+    {"source": "decision.stratified_light_trellis", "relation": "configures", "target": "module.growth", "evidence": [{"path": "docs/architecture/competencia_luminica_tutorado_y_cobertura.md", "locator": "## Secuencia de tutorado"}]},
+    {"source": "decision.standard_render_default", "relation": "configures", "target": "module.human_validation", "evidence": [{"path": "src/uchuva_lsystem/human_validation.py", "locator": "\"standard_eevee\""}]},
+    {"source": "decision.standard_render_default", "relation": "configures", "target": "module.blender_dataset", "evidence": [{"path": "src/uchuva_lsystem/blender_dataset.py", "locator": "cycles_qa_count: int = 0"}]},
+    {"source": "decision.hybrid_evaluation_protocol", "relation": "configures", "target": "module.hybrid_experiments", "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "## 2026-07-31 - Protocolo de mezcla natural y sintética"}]},
+    {"source": "decision.hybrid_evaluation_protocol", "relation": "configures", "target": "module.hybrid_training", "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "El criterio de éxito es igualar o superar el baseline natural"}]},
+    {"source": "decision.hybrid_evaluation_protocol", "relation": "configures", "target": "module.hybrid_study", "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "## 2026-08-11 - Estudio híbrido multisemilla con evaluación real sellada"}]},
+    {"source": "decision.hybrid_evaluation_protocol", "relation": "configures", "target": "module.photometric_calibration", "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "La calibración visual y"}]},
+    {"source": "decision.hybrid_evaluation_protocol", "relation": "must_preserve", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "El conjunto `Dataset Original` permanece inmutable"}]},
+    {"source": "decision.spatial_calibration_checkpoint_interpolation", "relation": "configures", "target": "module.spatial_calibration", "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "Se adopta una copia derivada e inmutable con acercamientos adaptativos"}]},
+    {"source": "decision.spatial_calibration_checkpoint_interpolation", "relation": "configures", "target": "module.hybrid_training", "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "Se permite interpolar checkpoints"}]},
+    {"source": "decision.spatial_calibration_checkpoint_interpolation", "relation": "must_preserve", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "docs/governance/decisiones_tecnicas.md", "locator": "ajuste usa únicamente `train+val` naturales"}]},
+
+    {"source": "test.dataset_helpers", "relation": "tests", "target": "module.blender_dataset", "evidence": [{"path": "tests/test_dataset_helpers.py", "locator": "class DatasetHelperTests"}]},
+    {"source": "test.domain_analysis", "relation": "tests", "target": "module.domain_analysis", "evidence": [{"path": "tests/test_domain_analysis.py", "locator": "class DomainAnalysisTests"}]},
+    {"source": "test.real_matched_morphology", "relation": "tests", "target": "module.grammar", "evidence": [{"path": "tests/test_real_matched_morphology.py", "locator": "class RealMatchedMorphologyTests"}]},
+    {"source": "test.real_matched_morphology", "relation": "tests", "target": "module.morphology", "evidence": [{"path": "tests/test_real_matched_morphology.py", "locator": "to_dict"}]},
+    {"source": "test.yolo_export", "relation": "tests", "target": "module.yolo_export", "evidence": [{"path": "tests/test_yolo_export.py", "locator": "class YoloExportTests"}]},
+    {"source": "test.context_graph", "relation": "tests", "target": "decision.rig_adoption", "evidence": [{"path": "tests/test_repository_context_graph.py", "locator": "class RepositoryContextGraphTests"}]},
+    {"source": "test.context_graph", "relation": "tests", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "tests/test_repository_context_graph.py", "locator": "test_rejects_generated_evidence"}]},
+    {"source": "test.context_graph", "relation": "tests", "target": "decision.morphology_first", "evidence": [{"path": "tests/test_repository_context_graph.py", "locator": "test_rejects_legacy_without_superseding_edge"}]}
+    ,{"source": "test.texture_assets", "relation": "tests", "target": "module.texture_assets", "evidence": [{"path": "tests/test_texture_assets.py", "locator": "test_generator_is_deterministic_and_writes_valid_pngs"}]}
+    ,{"source": "test.cultivation_adaptation", "relation": "tests", "target": "module.cultivation", "evidence": [{"path": "tests/test_cultivation_adaptation.py", "locator": "test_joint_relaxation_is_deterministic_and_serializable"}]}
+    ,{"source": "test.cultivation_adaptation", "relation": "tests", "target": "module.collisions", "evidence": [{"path": "tests/test_cultivation_adaptation.py", "locator": "collision_resolution"}]}
+    ,{"source": "test.human_validation", "relation": "tests", "target": "module.human_validation", "evidence": [{"path": "tests/test_human_validation.py", "locator": "class HumanValidationProtocolTests"}]}
+    ,{"source": "test.human_validation", "relation": "tests", "target": "module.scene", "evidence": [{"path": "tests/test_human_validation.py", "locator": "test_scene_support_mode_is_additive_and_preserves_counts"}]}
+    ,{"source": "test.light_competition", "relation": "tests", "target": "module.light_competition", "evidence": [{"path": "tests/test_light_competition.py", "locator": "test_field_distinguishes_open_self_and_neighbour_claims"}]}
+    ,{"source": "test.light_competition", "relation": "tests", "target": "module.growth", "evidence": [{"path": "tests/test_light_competition.py", "locator": "test_growth_records_strata_training_and_light_proxies"}]}
+    ,{"source": "test.light_competition", "relation": "tests", "target": "module.blender_environment", "evidence": [{"path": "tests/test_light_competition.py", "locator": "test_ground_plan_adds_tall_grass_kikuyu_and_weeds"}]}
+    ,{"source": "test.hybrid_experiments", "relation": "tests", "target": "module.hybrid_experiments", "evidence": [{"path": "tests/test_hybrid_experiments.py", "locator": "class HybridExperimentTests"}]}
+    ,{"source": "test.hybrid_experiments", "relation": "tests", "target": "constraint.original_dataset_immutable", "evidence": [{"path": "tests/test_hybrid_experiments.py", "locator": "test_matrix_keeps_validation_and_test_real_only"}]}
+    ,{"source": "test.hybrid_training", "relation": "tests", "target": "module.hybrid_training", "evidence": [{"path": "tests/test_hybrid_training.py", "locator": "class HybridTrainingTests"}]}
+    ,{"source": "test.hybrid_study", "relation": "tests", "target": "module.hybrid_study", "evidence": [{"path": "tests/test_hybrid_study.py", "locator": "class HybridStudyTests"}]}
+    ,{"source": "test.photometric_calibration", "relation": "tests", "target": "module.photometric_calibration", "evidence": [{"path": "tests/test_photometric_calibration.py", "locator": "class PhotometricCalibrationTests"}]}
+    ,{"source": "test.spatial_calibration", "relation": "tests", "target": "module.spatial_calibration", "evidence": [{"path": "tests/test_spatial_calibration.py", "locator": "class SpatialCalibrationTests"}]}
+    ,{"source": "test.phenology", "relation": "tests", "target": "module.phenology", "evidence": [{"path": "tests/test_phenology.py", "locator": "class LiteratureCohortPhenologyTests"}]}
+    ,{"source": "test.composition_calibration", "relation": "tests", "target": "module.composition_calibration", "evidence": [{"path": "tests/test_composition_calibration.py", "locator": "class CompositionCalibrationTests"}]}
+    ,{"source": "test.detection_diagnostics", "relation": "tests", "target": "module.detection_diagnostics", "evidence": [{"path": "tests/test_detection_diagnostics.py", "locator": "class DetectionDiagnosticsTests"}]}
+    ,{"source": "entrypoint.calibrate_composition_schedule", "relation": "depends_on", "target": "module.composition_calibration", "evidence": [{"path": "scripts/calibrate_composition_schedule.py", "locator": "calibrate_camera_mixture"}]}
+    ,{"source": "entrypoint.calibrate_composition_schedule", "relation": "produces", "target": "artifact.composition_calibration", "evidence": [{"path": "scripts/calibrate_composition_schedule.py", "locator": "def main"}]}
+    ,{"source": "entrypoint.analyze_detection_errors", "relation": "depends_on", "target": "module.detection_diagnostics", "evidence": [{"path": "scripts/analyze_detection_errors.py", "locator": "def main"}]}
+    ,{"source": "entrypoint.analyze_detection_errors", "relation": "produces", "target": "artifact.detection_diagnostic", "evidence": [{"path": "scripts/analyze_detection_errors.py", "locator": "def main"}]}
+    ,{"source": "entrypoint.audit_literature_cohorts", "relation": "depends_on", "target": "module.phenology", "evidence": [{"path": "scripts/audit_literature_cohort_morphologies.py", "locator": "literature_cohort_v1"}]}
+    ,{"source": "entrypoint.audit_literature_cohorts", "relation": "depends_on", "target": "module.validation", "evidence": [{"path": "scripts/audit_literature_cohort_morphologies.py", "locator": "validate_morphology_tree"}]}
+    ,{"source": "entrypoint.generate_virtual_fidelity_pairs", "relation": "depends_on", "target": "module.blender_dataset", "evidence": [{"path": "scripts/generate_virtual_fidelity_pairs.py", "locator": "def main"}]}
+    ,{"source": "entrypoint.audit_virtual_fidelity_pilot", "relation": "validates", "target": "artifact.yolo_dataset", "evidence": [{"path": "scripts/audit_virtual_fidelity_pilot.py", "locator": "dataset_integrity"}]}
+    ,{"source": "entrypoint.audit_virtual_fidelity_pilot", "relation": "depends_on", "target": "artifact.domain_report", "evidence": [{"path": "scripts/audit_virtual_fidelity_pilot.py", "locator": "domain_comparison"}]}
+    ,{"source": "entrypoint.audit_virtual_fidelity_pilot", "relation": "produces", "target": "artifact.virtual_fidelity_pilot_audit", "evidence": [{"path": "scripts/audit_virtual_fidelity_pilot.py", "locator": "pilot_audit.json"}]}
+    ,{"source": "entrypoint.create_dataset_sample_sheet", "relation": "validates", "target": "artifact.yolo_dataset", "evidence": [{"path": "scripts/create_dataset_sample_sheet.py", "locator": "manifest.jsonl"}]}
+    ,{"source": "module.classical_augmentation", "relation": "produces", "target": "artifact.classical_augmentation_protocol", "evidence": [{"path": "src/uchuva_classical_augmentation/protocol.py", "locator": "ClassicalAugmentationCondition"}]}
+    ,{"source": "module.gazebo_interface", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "from uchuva_lsystem.morphology import"}]}
+    ,{"source": "module.gazebo_interface", "relation": "produces", "target": "artifact.gazebo_export_plan", "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "def write_gazebo_export_plan"}]}
+    ,{"source": "module.gazebo_interface", "relation": "must_preserve", "target": "constraint.gazebo_pure_bridge", "evidence": [{"path": "src/uchuva_gazebo/interfaces.py", "locator": "not emit SDF yet"}]}
+    ,{"source": "entrypoint.export_gazebo_plant", "relation": "depends_on", "target": "module.gazebo_interface", "evidence": [{"path": "scripts/export_gazebo_plant.py", "locator": "from uchuva_gazebo import"}]}
+    ,{"source": "entrypoint.export_gazebo_plant", "relation": "produces", "target": "artifact.gazebo_export_plan", "evidence": [{"path": "scripts/export_gazebo_plant.py", "locator": "gazebo_export_plan.json"}]}
+    ,{"source": "decision.three_workstreams", "relation": "configures", "target": "module.classical_augmentation", "evidence": [{"path": "docs/architecture/integracion_augmentacion_sintetica_gazebo.md", "locator": "Aumentacion clasica"}]}
+    ,{"source": "decision.three_workstreams", "relation": "configures", "target": "module.gazebo_interface", "evidence": [{"path": "docs/architecture/integracion_augmentacion_sintetica_gazebo.md", "locator": "Gazebo"}]}
+    ,{"source": "test.classical_augmentation", "relation": "tests", "target": "module.classical_augmentation", "evidence": [{"path": "tests/test_classical_augmentation.py", "locator": "class ClassicalAugmentationProtocolTests"}]}
+    ,{"source": "test.gazebo_interface", "relation": "tests", "target": "module.gazebo_interface", "evidence": [{"path": "tests/test_gazebo_interfaces.py", "locator": "class GazeboInterfaceTests"}]}
+  ]
+}
