@@ -895,6 +895,22 @@
       "evidence": [{"path": "src/uchuva_classical_augmentation/protocol.py", "locator": "def student_yolo11n_conditions"}]
     },
     {
+      "id": "module.classical_augmentation_v2",
+      "type": "subsystem",
+      "label": "Classical Augmentation v2 reproducible",
+      "summary": "Perfila train, genera recetas moderadas trazables, transforma labels, audita procedencia y ejecuta matrices YOLO sin reinterpretar E1/E2 historicos.",
+      "paths": ["src/uchuva_classical_augmentation/v2/", "configs/classical_augmentation_v2/campaign_v1.json"],
+      "evidence": [{"path": "src/uchuva_classical_augmentation/v2/builder.py", "locator": "def build_scenario_dataset"}]
+    },
+    {
+      "id": "entrypoint.classical_augmentation_v2",
+      "type": "entrypoint",
+      "label": "Pipeline Classical Augmentation v2",
+      "summary": "CLIs separados para perfil, build, auditoria, preview, entrenamiento y resumen multisemilla.",
+      "paths": ["scripts/analyze_real_training_domain.py", "scripts/build_classical_augmentation_v2.py", "scripts/audit_classical_augmentation_v2.py", "scripts/preview_classical_augmentation_v2.py", "scripts/run_classical_augmentation_v2_screening.py", "scripts/run_classical_augmentation_v2_campaign.py", "scripts/summarize_classical_augmentation_v2.py"],
+      "evidence": [{"path": "scripts/build_classical_augmentation_v2.py", "locator": "def main"}]
+    },
+    {
       "id": "module.gazebo_interface",
       "type": "subsystem",
       "label": "Interfaz pura morphology a Gazebo",
@@ -917,6 +933,22 @@
       "summary": "Definicion serializable de condiciones E0, E1 y E2 con procedencia y estado de reproducibilidad de recetas.",
       "paths": ["src/uchuva_classical_augmentation/protocol.py", "contributions/diego_amaya/yolo11n_multiseed_v1/CONTRIBUTION.md"],
       "evidence": [{"path": "contributions/diego_amaya/yolo11n_multiseed_v1/CONTRIBUTION.md", "locator": "sus recetas son reproducibles"}]
+    },
+    {
+      "id": "artifact.classical_augmentation_v2_profile",
+      "type": "artifact",
+      "label": "Perfil real train-only v2",
+      "summary": "Cuantiles geometricos y fotometricos de train mas manifiestos y fingerprints congelados de train, val y test.",
+      "paths": ["src/uchuva_classical_augmentation/v2/profiles.py", "docs/reports/aumento_clasico_v2_domain_profile_2026-08-21.md"],
+      "evidence": [{"path": "src/uchuva_classical_augmentation/v2/profiles.py", "locator": "def analyze_real_training_domain"}]
+    },
+    {
+      "id": "artifact.classical_augmentation_v2_dataset",
+      "type": "artifact",
+      "label": "Dataset aumentado v2 auditable",
+      "summary": "Dataset YOLO con val/test byte a byte congelados, manifiesto por derivada, hashes, cambios de visibilidad y reporte de auditoria.",
+      "paths": ["src/uchuva_classical_augmentation/v2/builder.py", "src/uchuva_classical_augmentation/v2/manifest.py", "src/uchuva_classical_augmentation/v2/validation.py"],
+      "evidence": [{"path": "src/uchuva_classical_augmentation/v2/manifest.py", "locator": "class DerivedSampleRecord"}]
     },
     {
       "id": "artifact.gazebo_export_plan",
@@ -949,6 +981,14 @@
       "summary": "Comprueba condiciones preservadas y que las recetas no entregadas sigan marcadas como precomputadas.",
       "paths": ["tests/test_classical_augmentation.py"],
       "evidence": [{"path": "tests/test_classical_augmentation.py", "locator": "class ClassicalAugmentationProtocolTests"}]
+    },
+    {
+      "id": "test.classical_augmentation_v2",
+      "type": "test",
+      "label": "Pruebas de Classical Augmentation v2",
+      "summary": "Comprueba geometria YOLO, masks, Copy-Paste, hashes, manifiestos, procedencia train-only, conteos, reproducibilidad y resume.",
+      "paths": ["tests/test_classical_augmentation_v2.py"],
+      "evidence": [{"path": "tests/test_classical_augmentation_v2.py", "locator": "class ClassicalAugmentationV2GeometryTests"}]
     },
     {
       "id": "test.gazebo_interface",
@@ -1187,6 +1227,11 @@
     ,{"source": "decision.three_workstreams", "relation": "configures", "target": "module.classical_augmentation", "evidence": [{"path": "docs/architecture/integracion_augmentacion_sintetica_gazebo.md", "locator": "Aumentacion clasica"}]}
     ,{"source": "decision.three_workstreams", "relation": "configures", "target": "module.gazebo_interface", "evidence": [{"path": "docs/architecture/integracion_augmentacion_sintetica_gazebo.md", "locator": "Gazebo"}]}
     ,{"source": "test.classical_augmentation", "relation": "tests", "target": "module.classical_augmentation", "evidence": [{"path": "tests/test_classical_augmentation.py", "locator": "class ClassicalAugmentationProtocolTests"}]}
+    ,{"source": "module.classical_augmentation_v2", "relation": "preserves", "target": "module.classical_augmentation", "evidence": [{"path": "src/uchuva_classical_augmentation/v2/__init__.py", "locator": "Classical Augmentation"}]}
+    ,{"source": "module.classical_augmentation_v2", "relation": "produces", "target": "artifact.classical_augmentation_v2_profile", "evidence": [{"path": "src/uchuva_classical_augmentation/v2/profiles.py", "locator": "def analyze_real_training_domain"}]}
+    ,{"source": "module.classical_augmentation_v2", "relation": "produces", "target": "artifact.classical_augmentation_v2_dataset", "evidence": [{"path": "src/uchuva_classical_augmentation/v2/builder.py", "locator": "def build_scenario_dataset"}]}
+    ,{"source": "entrypoint.classical_augmentation_v2", "relation": "depends_on", "target": "module.classical_augmentation_v2", "evidence": [{"path": "scripts/build_classical_augmentation_v2.py", "locator": "from uchuva_classical_augmentation.v2.builder import"}]}
+    ,{"source": "test.classical_augmentation_v2", "relation": "tests", "target": "module.classical_augmentation_v2", "evidence": [{"path": "tests/test_classical_augmentation_v2.py", "locator": "class ClassicalAugmentationV2GeometryTests"}]}
     ,{"source": "test.gazebo_interface", "relation": "tests", "target": "module.gazebo_interface", "evidence": [{"path": "tests/test_gazebo_interfaces.py", "locator": "class GazeboInterfaceTests"}]}
   ]
 }

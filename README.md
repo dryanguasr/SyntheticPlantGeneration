@@ -23,7 +23,7 @@ morfología serializable ───┤
 
 | Frente | Ruta principal | Estado |
 |---|---|---|
-| Aumentación clásica | `src/uchuva_classical_augmentation/` | Contrato y baseline estudiantil preservados |
+| Aumentación clásica | `src/uchuva_classical_augmentation/` | E0/E1/E2 históricos preservados; campaña v2 reproducible en desarrollo |
 | Generación sintética | `src/uchuva_lsystem/` | Implementación vigente y madura |
 | Gazebo | `src/uchuva_gazebo/` | Interfaz semántica por LOD; aún no emite SDF |
 | Contribuciones externas | `contributions/` | Snapshots atribuidos, separados del código vigente |
@@ -52,7 +52,8 @@ parámetros con procedencia
 | Fenología de dataset v2 | `literature_cohort_v1` |
 | Fondo de dataset v2 | `layered_understory_v2` |
 | Código del generador | `src/uchuva_lsystem/` |
-| Baseline clásico | `src/uchuva_classical_augmentation/` |
+| Baseline clásico | `src/uchuva_classical_augmentation/protocol.py` |
+| Aumentación clásica reproducible | `src/uchuva_classical_augmentation/v2/` |
 | Interfaz Gazebo | `src/uchuva_gazebo/` |
 | Entradas ejecutables | `scripts/` |
 | Escena para revisión | `outputs/current_review/` |
@@ -75,7 +76,7 @@ histórica y no deben usarse para definir arquitectura botánica.
 SyntheticPlantGeneration/
 ├── src/
 │   ├── uchuva_lsystem/                 modelo procedural y pipeline vigentes
-│   ├── uchuva_classical_augmentation/  contrato de aumentación clásica
+│   ├── uchuva_classical_augmentation/  contrato histórico + pipeline v2 reproducible
 │   └── uchuva_gazebo/                  interfaz semántica morphology → Gazebo
 ├── contributions/                      entregas externas preservadas y atribuidas
 ├── scripts/                            comandos ejecutables

@@ -50,6 +50,22 @@ generador: su lanzador mantiene su propio protocolo y las recetas E1/E2 aún
 deben recuperarse o reimplementarse antes de que esa línea pueda producir
 datasets nuevos de manera reproducible.
 
+## Classical Augmentation v2
+
+| Script | Propósito |
+|---|---|
+| `analyze_real_training_domain.py` | Sella splits y mide geometría/fotometría usando sólo train |
+| `build_classical_augmentation_v2.py` | Construye recetas trazables; genera 25 muestras smoke por defecto |
+| `audit_classical_augmentation_v2.py` | Verifica imágenes, labels, hashes, procedencia, splits y distribución de tamaños |
+| `preview_classical_augmentation_v2.py` | Genera láminas original/aumentada/overlay de cajas |
+| `run_classical_augmentation_v2_screening.py` | Ejecuta smoke training o screening de 3 semillas sin augmentación online |
+| `run_classical_augmentation_v2_campaign.py` | Ejecuta la confirmación congelada de escenarios seleccionados |
+| `summarize_classical_augmentation_v2.py` | Agrega mAP y calcula Recall sujeto a Precision ≥ 0,98 sobre val |
+
+La configuración serializable vive en
+`configs/classical_augmentation_v2/campaign_v1.json`. El test permanece fuera
+de cualquier selección y sólo puede consultarse después de congelar la campaña.
+
 ## Activos y mantenimiento
 
 | Script | Propósito |
