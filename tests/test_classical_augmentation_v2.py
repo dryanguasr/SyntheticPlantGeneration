@@ -145,6 +145,41 @@ class ClassicalAugmentationV2GeometryTests(unittest.TestCase):
 
 
 class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
+    def test_audit_detects_content_hash_split_leakage(self) -> None:
+        import cv2
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "source"
+            shared = np.full((80, 100, 3), 90, dtype=np.uint8)
+            for split in ("train", "val", "test"):
+                (source / "IMAGENES" / split).mkdir(parents=True)
+                (source / "LABELS" / split).mkdir(parents=True)
+                image = shared if split != "test" else np.full((80, 100, 3), 180, dtype=np.uint8)
+                self.assertTrue(cv2.imwrite(str(source / "IMAGENES" / split / f"{split}.jpg"), image))
+                (source / "LABELS" / split / f"{split}.txt").write_text(
+                    "0 0.5 0.5 0.2 0.2\n", encoding="utf-8"
+                )
+            profile = analyze_real_training_domain(source)
+            profile_path = root / "profile.json"
+            write_profile(profile_path, profile)
+            scenario = next(
+                item
+                for item in default_campaign_config().scenarios
+                if item.code == "V2-E0R"
+            )
+            built = build_scenario_dataset(
+                source, root / "generated", profile_path, scenario, seed=5, derived_count=1
+            )
+            audit = audit_scenario_dataset(
+                Path(built["dataset_dir"]),
+                source,
+                profile_path,
+                expected_derived_count=1,
+            )
+            self.assertEqual(audit["status"], "invalid")
+            self.assertIn("split_leakage", {issue["code"] for issue in audit["issues"]})
+
     def test_confirmatory_decision_requires_repeated_paired_improvement(self) -> None:
         runs = [
             {"scenario": scenario, "seed": seed, "epochs_completed": 50}
