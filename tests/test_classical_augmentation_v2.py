@@ -30,6 +30,7 @@ from uchuva_classical_augmentation.v2.profiles import (
 )
 from uchuva_classical_augmentation.v2.validation import audit_scenario_dataset
 from uchuva_classical_augmentation.v2.training import _is_complete, balanced_scenario_order
+from uchuva_classical_augmentation.v2.selection import confirmation_decisions, paired_interval
 from scripts.summarize_classical_augmentation_v2 import (
     _aggregate,
     _discover_runs,
@@ -120,6 +121,69 @@ class ClassicalAugmentationV2GeometryTests(unittest.TestCase):
 
 
 class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
+    def test_confirmatory_decision_requires_repeated_paired_improvement(self) -> None:
+        runs = [
+            {"scenario": scenario, "seed": seed, "epochs_completed": 50}
+            for scenario in ("V2-E0", "V2-E0R", "V2-E6")
+            for seed in range(1, 6)
+        ]
+        paired = {
+            "V2-E6": {
+                "V2-E0": {
+                    "mean_delta_map5095": 0.01,
+                    "positive_seeds": 4,
+                    "differences": [0.01, 0.02, 0.01, 0.01, -0.001],
+                    "operational_recall_differences": [0.01] * 5,
+                },
+                "V2-E0R": {
+                    "mean_delta_map5095": 0.01,
+                    "positive_seeds": 4,
+                    "differences": [0.01, 0.02, 0.01, 0.01, -0.001],
+                    "operational_recall_differences": [0.01] * 5,
+                },
+            }
+        }
+        decision = confirmation_decisions(
+            {
+                "test_consulted": False,
+                "selection_split": "val",
+                "runs": runs,
+                "paired": paired,
+            }
+        )
+        recipe = decision["decisions"]["V2-E6"]
+        self.assertTrue(recipe["case_a_global_improvement"])
+        self.assertTrue(recipe["extend_to_ten_seeds"])
+        self.assertEqual(recipe["paired_map5095_vs_e0r"]["n"], 5)
+        self.assertIsNotNone(recipe["paired_map5095_vs_e0r"]["ci95"])
+
+    def test_confirmatory_decision_rejects_single_seed_win(self) -> None:
+        runs = [
+            {"scenario": scenario, "seed": seed, "epochs_completed": 50}
+            for scenario in ("V2-E0", "V2-E0R", "V2-E5")
+            for seed in range(1, 6)
+        ]
+        comparison = {
+            "mean_delta_map5095": -0.006,
+            "positive_seeds": 1,
+            "differences": [0.02, -0.01, -0.01, -0.01, -0.02],
+            "operational_recall_differences": [-0.03] * 5,
+        }
+        decision = confirmation_decisions(
+            {
+                "test_consulted": False,
+                "selection_split": "val",
+                "runs": runs,
+                "paired": {"V2-E5": {"V2-E0": comparison, "V2-E0R": comparison}},
+            }
+        )
+        recipe = decision["decisions"]["V2-E5"]
+        self.assertFalse(recipe["strong_candidate"])
+        self.assertFalse(recipe["extend_to_ten_seeds"])
+
+    def test_paired_interval_refuses_to_imply_precision_from_one_seed(self) -> None:
+        self.assertIsNone(paired_interval([0.01])["ci95"])
+
     def test_manifest_round_trip_and_hash_verification(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
