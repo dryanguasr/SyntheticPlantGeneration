@@ -20,16 +20,14 @@ def confidence_sweep(ground_truth_by_image: dict[str, list[YoloBox]], prediction
     thresholds = [1.0, *confidences, 0.0]
     rows = []
     for threshold in thresholds:
-        tp = fp = fn = 0
-        for image_id, ground_truth in ground_truth_by_image.items():
-            predictions = [item for item in predictions_by_image.get(image_id, []) if item.confidence >= threshold]
-            matched, unmatched_predictions = match_predictions(ground_truth, predictions, iou_threshold=iou_threshold)
-            tp += len(matched)
-            fp += len(unmatched_predictions)
-            fn += len(ground_truth) - len(matched)
-        precision = tp / (tp + fp) if tp + fp else 1.0
-        recall = tp / (tp + fn) if tp + fn else 0.0
-        rows.append({"confidence": threshold, "precision": precision, "recall": recall, "f1": 2 * precision * recall / (precision + recall) if precision + recall else 0.0, "tp": tp, "fp": fp, "fn": fn})
+        rows.append(
+            detection_metrics_at_confidence(
+                ground_truth_by_image,
+                predictions_by_image,
+                confidence=threshold,
+                iou_threshold=iou_threshold,
+            )
+        )
     feasible = [row for row in rows if row["precision"] >= 0.98 and row["tp"] > 0]
     if feasible:
         selected = max(feasible, key=lambda row: (row["recall"], -row["confidence"]))
@@ -39,6 +37,46 @@ def confidence_sweep(ground_truth_by_image: dict[str, list[YoloBox]], prediction
         selected = max(nonempty, key=lambda row: (row["precision"], row["recall"])) if nonempty else rows[0]
         rule = "no_point_at_precision_ge_0.98; maximum_precision_available"
     return {"selection_rule": rule, "selected": selected, "point_count": len(rows), "curve": rows}
+
+
+def detection_metrics_at_confidence(
+    ground_truth_by_image: dict[str, list[YoloBox]],
+    predictions_by_image: dict[str, list[Prediction]],
+    *,
+    confidence: float,
+    iou_threshold: float = 0.5,
+) -> dict[str, float | int]:
+    """Compute fixed-threshold detection metrics without selecting a threshold."""
+    if not 0.0 <= confidence <= 1.0:
+        raise ValueError("Confidence must be within [0, 1].")
+    tp = fp = fn = 0
+    all_image_ids = set(ground_truth_by_image) | set(predictions_by_image)
+    for image_id in all_image_ids:
+        ground_truth = ground_truth_by_image.get(image_id, [])
+        predictions = [
+            item
+            for item in predictions_by_image.get(image_id, [])
+            if item.confidence >= confidence
+        ]
+        matched, unmatched_predictions = match_predictions(
+            ground_truth, predictions, iou_threshold=iou_threshold
+        )
+        tp += len(matched)
+        fp += len(unmatched_predictions)
+        fn += len(ground_truth) - len(matched)
+    precision = tp / (tp + fp) if tp + fp else 1.0
+    recall = tp / (tp + fn) if tp + fn else 0.0
+    return {
+        "confidence": confidence,
+        "precision": precision,
+        "recall": recall,
+        "f1": 2 * precision * recall / (precision + recall)
+        if precision + recall
+        else 0.0,
+        "tp": tp,
+        "fp": fp,
+        "fn": fn,
+    }
 
 
 def match_predictions(ground_truth: list[YoloBox], predictions: list[Prediction], *, iou_threshold: float = 0.5):

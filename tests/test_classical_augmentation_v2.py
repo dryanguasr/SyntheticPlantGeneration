@@ -22,7 +22,11 @@ from uchuva_classical_augmentation.v2.manifest import (
     write_jsonl,
 )
 from uchuva_classical_augmentation.v2.occlusion import GrabCutMaskError, estimate_object_mask
-from uchuva_classical_augmentation.v2.metrics import Prediction, match_predictions
+from uchuva_classical_augmentation.v2.metrics import (
+    Prediction,
+    detection_metrics_at_confidence,
+    match_predictions,
+)
 from uchuva_classical_augmentation.v2.profiles import (
     analyze_real_training_domain,
     area_within_robust_train_range,
@@ -118,6 +122,20 @@ class ClassicalAugmentationV2GeometryTests(unittest.TestCase):
         self.assertEqual(matches[0]["prediction_index"], 0)
         self.assertEqual(matches[0]["truth_index"], 0)
         self.assertEqual(len(unmatched), 1)
+
+    def test_fixed_confidence_metrics_do_not_reselect_threshold(self) -> None:
+        truth = {"image.jpg": [YoloBox(0, 0.5, 0.5, 0.2, 0.2)]}
+        predictions = {
+            "image.jpg": [
+                Prediction(YoloBox(0, 0.5, 0.5, 0.2, 0.2), 0.75),
+                Prediction(YoloBox(0, 0.1, 0.1, 0.1, 0.1), 0.60),
+            ]
+        }
+        high = detection_metrics_at_confidence(truth, predictions, confidence=0.70)
+        low = detection_metrics_at_confidence(truth, predictions, confidence=0.50)
+        self.assertEqual((high["tp"], high["fp"], high["fn"]), (1, 0, 0))
+        self.assertEqual((low["tp"], low["fp"], low["fn"]), (1, 1, 0))
+        self.assertEqual(high["confidence"], 0.70)
 
 
 class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
