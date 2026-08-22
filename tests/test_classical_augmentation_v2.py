@@ -30,6 +30,7 @@ from uchuva_classical_augmentation.v2.profiles import (
 from uchuva_classical_augmentation.v2.validation import audit_scenario_dataset
 from uchuva_classical_augmentation.v2.training import _is_complete, balanced_scenario_order
 from scripts.summarize_classical_augmentation_v2 import (
+    _aggregate,
     _parse_int_set,
     _parse_scenario_set,
     _validate_complete_matrix,
@@ -203,6 +204,43 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
         self.assertEqual(selected, ["V2-E0", "V2-E0R", "V2-E6"])
         with self.assertRaisesRegex(ValueError, "Unknown expected scenarios"):
             _parse_scenario_set("V2-E0,V2-E99", allowed)
+
+    def test_multicriterion_ranking_uses_operational_size_and_runtime_evidence(self) -> None:
+        def run(scenario, seed, map5095, operational, size, wall_time):
+            return {
+                "scenario": scenario,
+                "seed": seed,
+                "precision": 0.9,
+                "recall": 0.8,
+                "map50": 0.85,
+                "map5095": map5095,
+                "wall_time_seconds": wall_time,
+                "operational": {
+                    "confidence_sweep": {"selected": {"recall": operational}},
+                    "difficulty": {
+                        "strata": {
+                            f"size:{band}": {"recall": value}
+                            for band, value in zip(("small", "medium", "large"), size, strict=True)
+                        }
+                    },
+                },
+            }
+
+        runs = []
+        for seed in (1, 2, 3):
+            runs.extend(
+                [
+                    run("V2-E0", seed, 0.58, 0.30, (0.25, 0.35, 0.40), 100),
+                    run("V2-E0R", seed, 0.60, 0.32, (0.27, 0.37, 0.42), 150),
+                    run("V2-E5", seed, 0.61, 0.31, (0.24, 0.38, 0.43), 140),
+                    run("V2-E6", seed, 0.62, 0.36, (0.31, 0.41, 0.45), 170),
+                ]
+            )
+        report = _aggregate(runs)
+        self.assertEqual(report["recommended_confirmatory_scenarios"][:2], ["V2-E0", "V2-E0R"])
+        self.assertEqual(report["recommended_confirmatory_scenarios"][2], "V2-E6")
+        self.assertIn("worst_mean_delta_size_recall_vs_e0r", report["selection_scorecard"]["V2-E6"])
+        self.assertEqual(report["selection_method"]["status"], "engineering_rule_fixed_before_screening_results")
 
 
 if __name__ == "__main__":

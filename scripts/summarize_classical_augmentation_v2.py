@@ -194,8 +194,20 @@ def _aggregate(runs):
     for scenario in scenarios:
         selected = [run for run in runs if run["scenario"] == scenario]
         aggregate[scenario] = {metric: {"mean": statistics.mean(run[metric] for run in selected), "sd": statistics.stdev(run[metric] for run in selected) if len(selected) > 1 else 0.0} for metric in ("precision", "recall", "map50", "map5095")}
+        wall_times = [float(run["wall_time_seconds"]) for run in selected if run.get("wall_time_seconds") is not None]
+        aggregate[scenario]["wall_time_seconds"] = {
+            "mean": statistics.mean(wall_times) if wall_times else None,
+            "sd": statistics.stdev(wall_times) if len(wall_times) > 1 else 0.0,
+        }
         if all("operational" in run for run in selected):
             aggregate[scenario]["recall_at_precision_ge_098_mean"] = statistics.mean(run["operational"]["confidence_sweep"]["selected"]["recall"] for run in selected)
+            aggregate[scenario]["difficulty_recall_mean"] = {
+                label: statistics.mean(
+                    run["operational"]["difficulty"]["strata"][label]["recall"]
+                    for run in selected
+                )
+                for label in sorted(selected[0]["operational"]["difficulty"]["strata"])
+            }
     paired = {}
     for scenario in scenarios:
         paired[scenario] = {}
@@ -205,10 +217,109 @@ def _aggregate(runs):
                 match = next((item for item in runs if item["scenario"] == baseline and item["seed"] == run["seed"]), None)
                 if match:
                     differences.append(run["map5095"] - match["map5095"])
-            paired[scenario][baseline] = {"mean_delta_map5095": statistics.mean(differences) if differences else None, "positive_seeds": sum(value > 0 for value in differences), "pair_count": len(differences), "differences": differences}
-    ranking = sorted(scenarios, key=lambda scenario: (aggregate[scenario]["map5095"]["mean"], paired[scenario]["V2-E0R"]["positive_seeds"]), reverse=True)
-    finalists = [code for code in ranking if code not in {"V2-E0", "V2-E0R"}][:3]
-    return {"aggregate": aggregate, "paired": paired, "ranking": ranking, "recommended_confirmatory_scenarios": ["V2-E0", "V2-E0R", *finalists]}
+            operational_differences = []
+            size_differences = {f"size:{band}": [] for band in ("small", "medium", "large")}
+            for run in [item for item in runs if item["scenario"] == scenario and "operational" in item]:
+                match = next(
+                    (
+                        item
+                        for item in runs
+                        if item["scenario"] == baseline
+                        and item["seed"] == run["seed"]
+                        and "operational" in item
+                    ),
+                    None,
+                )
+                if match:
+                    operational_differences.append(
+                        run["operational"]["confidence_sweep"]["selected"]["recall"]
+                        - match["operational"]["confidence_sweep"]["selected"]["recall"]
+                    )
+                    for label in size_differences:
+                        size_differences[label].append(
+                            run["operational"]["difficulty"]["strata"][label]["recall"]
+                            - match["operational"]["difficulty"]["strata"][label]["recall"]
+                        )
+            paired[scenario][baseline] = {
+                "mean_delta_map5095": statistics.mean(differences) if differences else None,
+                "positive_seeds": sum(value > 0 for value in differences),
+                "pair_count": len(differences),
+                "differences": differences,
+                "mean_delta_operational_recall": statistics.mean(operational_differences) if operational_differences else None,
+                "operational_recall_differences": operational_differences,
+                "mean_delta_size_recall": {
+                    label: statistics.mean(values) if values else None
+                    for label, values in size_differences.items()
+                },
+            }
+    scorecard, ranking, finalists = _multi_criterion_selection(scenarios, aggregate, paired)
+    return {
+        "aggregate": aggregate,
+        "paired": paired,
+        "ranking": ranking,
+        "selection_method": {
+            "name": "unweighted_rank_sum_with_runtime_tiebreak",
+            "status": "engineering_rule_fixed_before_screening_results",
+            "descending_criteria": [
+                "mean_map5095",
+                "mean_delta_map5095_vs_e0r",
+                "positive_seed_count_vs_e0r",
+                "mean_delta_operational_recall_vs_e0r",
+                "worst_mean_delta_size_recall_vs_e0r",
+            ],
+            "tiebreak": "lower_mean_wall_time_seconds_then_higher_mean_map5095",
+            "maximum_recipe_finalists": 3,
+        },
+        "selection_scorecard": scorecard,
+        "recommended_confirmatory_scenarios": ["V2-E0", "V2-E0R", *finalists] if finalists else [],
+    }
+
+
+def _multi_criterion_selection(scenarios, aggregate, paired):
+    recipes = [scenario for scenario in scenarios if scenario not in {"V2-E0", "V2-E0R"}]
+    scorecard = {}
+    for scenario in recipes:
+        comparison = paired[scenario]["V2-E0R"]
+        size_deltas = [
+            value
+            for value in comparison["mean_delta_size_recall"].values()
+            if value is not None
+        ]
+        scorecard[scenario] = {
+            "mean_map5095": aggregate[scenario]["map5095"]["mean"],
+            "mean_delta_map5095_vs_e0r": comparison["mean_delta_map5095"],
+            "positive_seed_count_vs_e0r": comparison["positive_seeds"],
+            "mean_delta_operational_recall_vs_e0r": comparison["mean_delta_operational_recall"],
+            "worst_mean_delta_size_recall_vs_e0r": min(size_deltas) if size_deltas else None,
+            "mean_wall_time_seconds": aggregate[scenario]["wall_time_seconds"]["mean"],
+        }
+    criteria = (
+        "mean_map5095",
+        "mean_delta_map5095_vs_e0r",
+        "positive_seed_count_vs_e0r",
+        "mean_delta_operational_recall_vs_e0r",
+        "worst_mean_delta_size_recall_vs_e0r",
+    )
+    if not scorecard or any(scorecard[scenario][criterion] is None for scenario in scorecard for criterion in criteria):
+        fallback = sorted(scenarios, key=lambda scenario: aggregate[scenario]["map5095"]["mean"], reverse=True)
+        return scorecard, fallback, []
+    for criterion in criteria:
+        ordered_values = sorted({scorecard[scenario][criterion] for scenario in scorecard}, reverse=True)
+        for scenario in scorecard:
+            scorecard[scenario].setdefault("criterion_ranks", {})[criterion] = ordered_values.index(scorecard[scenario][criterion]) + 1
+    for scenario in scorecard:
+        scorecard[scenario]["rank_sum"] = sum(scorecard[scenario]["criterion_ranks"].values())
+    recipe_ranking = sorted(
+        recipes,
+        key=lambda scenario: (
+            scorecard[scenario]["rank_sum"],
+            scorecard[scenario]["mean_wall_time_seconds"] if scorecard[scenario]["mean_wall_time_seconds"] is not None else float("inf"),
+            -scorecard[scenario]["mean_map5095"],
+            scenario,
+        ),
+    )
+    controls = sorted((scenario for scenario in scenarios if scenario in {"V2-E0", "V2-E0R"}))
+    return scorecard, [*recipe_ranking, *controls], recipe_ranking[:3]
 
 
 def _read_simple_yaml(path: Path):
@@ -218,13 +329,33 @@ def _read_simple_yaml(path: Path):
 
 
 def _markdown(report):
-    lines = ["# Screening Classical Augmentation v2", "", "Selección realizada exclusivamente sobre `val`; `test` no fue consultado.", "", "| Escenario | mAP50-95 media | Δ vs E0R | Signos positivos |", "|---|---:|---:|---:|"]
+    lines = [
+        "# Screening Classical Augmentation v2",
+        "",
+        "Selección realizada exclusivamente sobre `val`; `test` no fue consultado.",
+        "",
+        "| Escenario | mAP50-95 media | Δ vs E0R | Signos + | Δ recall operacional | Peor Δ recall por tamaño | Tiempo medio (s) | Suma de rangos |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
     for scenario in report["ranking"]:
         aggregate = report["aggregate"][scenario]["map5095"]["mean"]
         paired = report["paired"][scenario]["V2-E0R"]
         delta = paired["mean_delta_map5095"]
-        lines.append(f"| {scenario} | {aggregate:.4f} | {delta if delta is not None else float('nan'):.4f} | {paired['positive_seeds']}/{paired['pair_count']} |")
-    lines.extend(["", "Finalistas recomendados: " + ", ".join(report["recommended_confirmatory_scenarios"]), ""])
+        size_values = [value for value in paired["mean_delta_size_recall"].values() if value is not None]
+        worst_size = min(size_values) if size_values else float("nan")
+        operational = paired["mean_delta_operational_recall"]
+        wall_time = report["aggregate"][scenario]["wall_time_seconds"]["mean"]
+        rank_sum = report["selection_scorecard"].get(scenario, {}).get("rank_sum")
+        lines.append(
+            f"| {scenario} | {aggregate:.4f} | {delta if delta is not None else float('nan'):.4f} "
+            f"| {paired['positive_seeds']}/{paired['pair_count']} "
+            f"| {operational if operational is not None else float('nan'):.4f} | {worst_size:.4f} "
+            f"| {wall_time if wall_time is not None else float('nan'):.1f} "
+            f"| {rank_sum if rank_sum is not None else 'n/a'} |"
+        )
+    finalists = report["recommended_confirmatory_scenarios"]
+    recommendation = ", ".join(finalists) if finalists else "ninguna; faltan métricas operacionales completas"
+    lines.extend(["", "Finalistas recomendados: " + recommendation, ""])
     return "\n".join(lines)
 
 
