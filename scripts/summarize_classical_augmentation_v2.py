@@ -242,7 +242,7 @@ def _aggregate(runs):
                 if match:
                     differences.append(run["map5095"] - match["map5095"])
             operational_differences = []
-            size_differences = {f"size:{band}": [] for band in ("small", "medium", "large")}
+            difficulty_differences = {}
             for run in [item for item in runs if item["scenario"] == scenario and "operational" in item]:
                 match = next(
                     (
@@ -259,11 +259,17 @@ def _aggregate(runs):
                         run["operational"]["confidence_sweep"]["selected"]["recall"]
                         - match["operational"]["confidence_sweep"]["selected"]["recall"]
                     )
-                    for label in size_differences:
-                        size_differences[label].append(
+                    run_strata = run["operational"]["difficulty"]["strata"]
+                    match_strata = match["operational"]["difficulty"]["strata"]
+                    for label in sorted(set(run_strata) & set(match_strata)):
+                        difficulty_differences.setdefault(label, []).append(
                             run["operational"]["difficulty"]["strata"][label]["recall"]
                             - match["operational"]["difficulty"]["strata"][label]["recall"]
                         )
+            mean_difficulty = {
+                label: statistics.mean(values) if values else None
+                for label, values in difficulty_differences.items()
+            }
             paired[scenario][baseline] = {
                 "mean_delta_map5095": statistics.mean(differences) if differences else None,
                 "positive_seeds": sum(value > 0 for value in differences),
@@ -271,9 +277,10 @@ def _aggregate(runs):
                 "differences": differences,
                 "mean_delta_operational_recall": statistics.mean(operational_differences) if operational_differences else None,
                 "operational_recall_differences": operational_differences,
+                "mean_delta_difficulty_recall": mean_difficulty,
                 "mean_delta_size_recall": {
-                    label: statistics.mean(values) if values else None
-                    for label, values in size_differences.items()
+                    label: mean_difficulty.get(label)
+                    for label in ("size:small", "size:medium", "size:large")
                 },
             }
     scorecard, ranking, finalists = _multi_criterion_selection(scenarios, aggregate, paired)

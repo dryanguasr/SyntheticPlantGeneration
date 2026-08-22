@@ -193,12 +193,22 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
                     "positive_seeds": 4,
                     "differences": [0.01, 0.02, 0.01, 0.01, -0.001],
                     "operational_recall_differences": [0.01] * 5,
+                    "mean_delta_difficulty_recall": {
+                        "size:small": 0.01,
+                        "clustered:True": 0.01,
+                        "border_contact:True": 0.0,
+                    },
                 },
                 "V2-E0R": {
                     "mean_delta_map5095": 0.01,
                     "positive_seeds": 4,
                     "differences": [0.01, 0.02, 0.01, 0.01, -0.001],
                     "operational_recall_differences": [0.01] * 5,
+                    "mean_delta_difficulty_recall": {
+                        "size:small": 0.01,
+                        "clustered:True": 0.01,
+                        "border_contact:True": 0.0,
+                    },
                 },
             }
         }
@@ -227,6 +237,11 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
             "positive_seeds": 1,
             "differences": [0.02, -0.01, -0.01, -0.01, -0.02],
             "operational_recall_differences": [-0.03] * 5,
+            "mean_delta_difficulty_recall": {
+                "size:small": -0.03,
+                "clustered:True": -0.03,
+                "border_contact:True": -0.03,
+            },
         }
         decision = confirmation_decisions(
             {
@@ -406,8 +421,13 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
                     "confidence_sweep": {"selected": {"recall": operational}},
                     "difficulty": {
                         "strata": {
-                            f"size:{band}": {"recall": value}
-                            for band, value in zip(("small", "medium", "large"), size, strict=True)
+                            **{
+                                f"size:{band}": {"recall": value}
+                                for band, value in zip(("small", "medium", "large"), size, strict=True)
+                            },
+                            "clustered:True": {"recall": size[0]},
+                            "border_contact:True": {"recall": size[1]},
+                            "object_count:high": {"recall": size[2]},
                         }
                     },
                 },
@@ -427,6 +447,10 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
         self.assertEqual(report["recommended_confirmatory_scenarios"][:2], ["V2-E0", "V2-E0R"])
         self.assertEqual(report["recommended_confirmatory_scenarios"][2], "V2-E6")
         self.assertIn("worst_mean_delta_size_recall_vs_e0r", report["selection_scorecard"]["V2-E6"])
+        self.assertIn(
+            "clustered:True",
+            report["paired"]["V2-E6"]["V2-E0R"]["mean_delta_difficulty_recall"],
+        )
         self.assertEqual(report["selection_scorecard"]["V2-E6"]["mean_active_time_seconds"], 165)
         self.assertEqual(report["selection_method"]["status"], "engineering_rule_fixed_before_screening_results")
 

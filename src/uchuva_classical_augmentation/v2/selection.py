@@ -108,7 +108,18 @@ def confirmation_decisions(report: dict[str, Any]) -> dict[str, Any]:
         mean_operational = statistics.mean(operational_deltas)
         positive_map = sum(value > 0 for value in map_deltas)
         positive_operational = sum(value > 0 for value in operational_deltas)
-        no_operational_degradation = mean_operational >= -MAX_OPERATIONAL_RECALL_DROP
+        difficulty = versus_e0r.get("mean_delta_difficulty_recall", {})
+        key_difficulty = {
+            label: difficulty.get(label)
+            for label in ("size:small", "clustered:True", "border_contact:True")
+        }
+        if any(value is None for value in key_difficulty.values()):
+            raise ValueError(f"{scenario}: incomplete key difficulty evidence.")
+        no_operational_degradation = (
+            mean_operational >= -MAX_OPERATIONAL_RECALL_DROP
+            and min(float(value) for value in key_difficulty.values())
+            >= -MAX_OPERATIONAL_RECALL_DROP
+        )
         global_case = (
             mean_map > 0
             and positive_map >= required_positive
@@ -118,6 +129,8 @@ def confirmation_decisions(report: dict[str, Any]) -> dict[str, Any]:
             mean_map >= -MAP_STABILITY_TOLERANCE
             and mean_operational > 0
             and positive_operational >= required_positive
+            and max(float(value) for value in key_difficulty.values()) > 0
+            and no_operational_degradation
         )
         comparison_extension = any(
             float(comparison["mean_delta_map5095"]) > 0
@@ -136,6 +149,7 @@ def confirmation_decisions(report: dict[str, Any]) -> dict[str, Any]:
             "positive_map_seeds_vs_e0r": positive_map,
             "positive_operational_seeds_vs_e0r": positive_operational,
             "required_positive_seed_count": required_positive,
+            "mean_delta_key_difficulty_recall_vs_e0r": key_difficulty,
         }
     return {
         "protocol_version": SELECTION_PROTOCOL_VERSION,
