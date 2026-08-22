@@ -31,6 +31,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--skip-operational", action="store_true")
     parser.add_argument("--expected-epochs", type=int, default=30)
     parser.add_argument("--expected-seeds", default="1,2,3")
+    parser.add_argument(
+        "--expected-scenarios",
+        help="Comma-separated scenario codes; defaults to the full nine-scenario screening matrix",
+    )
     return parser.parse_args()
 
 
@@ -40,7 +44,12 @@ def main() -> None:
     runs = _discover_runs(args.project)
     if not runs:
         raise RuntimeError(f"No complete runs found under {args.project}")
-    expected_scenarios = [item.code for item in default_campaign_config().scenarios]
+    configured_scenarios = [item.code for item in default_campaign_config().scenarios]
+    expected_scenarios = (
+        _parse_scenario_set(args.expected_scenarios, configured_scenarios)
+        if args.expected_scenarios
+        else configured_scenarios
+    )
     expected_seeds = _parse_int_set(args.expected_seeds)
     _validate_complete_matrix(
         runs,
@@ -96,6 +105,16 @@ def _parse_int_set(value: str) -> list[int]:
     result = [int(item.strip()) for item in value.split(",") if item.strip()]
     if not result or len(result) != len(set(result)) or min(result) < 0:
         raise ValueError("Expected seeds must be unique non-negative integers")
+    return result
+
+
+def _parse_scenario_set(value: str, allowed: list[str]) -> list[str]:
+    result = [item.strip().upper() for item in value.split(",") if item.strip()]
+    if not result or len(result) != len(set(result)):
+        raise ValueError("Expected scenarios must be unique non-empty codes")
+    unknown = sorted(set(result) - set(allowed))
+    if unknown:
+        raise ValueError(f"Unknown expected scenarios: {unknown}")
     return result
 
 

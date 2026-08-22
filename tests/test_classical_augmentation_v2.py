@@ -31,6 +31,7 @@ from uchuva_classical_augmentation.v2.validation import audit_scenario_dataset
 from uchuva_classical_augmentation.v2.training import _is_complete, balanced_scenario_order
 from scripts.summarize_classical_augmentation_v2 import (
     _parse_int_set,
+    _parse_scenario_set,
     _validate_complete_matrix,
 )
 
@@ -195,6 +196,13 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
             expected_seeds=_parse_int_set("1,2,3"),
             expected_epochs=30,
         )
+
+    def test_confirmatory_summary_accepts_selected_scenario_cohort(self) -> None:
+        allowed = ["V2-E0", "V2-E0R", "V2-E6", "V2-E7"]
+        selected = _parse_scenario_set("V2-E0,V2-E0R,V2-E6", allowed)
+        self.assertEqual(selected, ["V2-E0", "V2-E0R", "V2-E6"])
+        with self.assertRaisesRegex(ValueError, "Unknown expected scenarios"):
+            _parse_scenario_set("V2-E0,V2-E99", allowed)
 
 
 if __name__ == "__main__":
