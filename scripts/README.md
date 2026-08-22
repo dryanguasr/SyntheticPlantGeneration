@@ -62,6 +62,7 @@ datasets nuevos de manera reproducible.
 | `run_classical_augmentation_v2_campaign.py` | Ejecuta la confirmación congelada de escenarios seleccionados |
 | `summarize_classical_augmentation_v2.py` | Agrega mAP y calcula Recall sujeto a Precision ≥ 0,98 sobre val |
 | `lock_classical_augmentation_v2_selection.py` | Sella decisión, recetas, datasets, checkpoints y umbrales de val antes del test final |
+| `run_classical_augmentation_v2_final_test.py` | Ejecuta una sola fase final sobre test y únicamente con el lock validado |
 
 La configuración serializable vive en
 `configs/classical_augmentation_v2/campaign_v1.json`. El test permanece fuera

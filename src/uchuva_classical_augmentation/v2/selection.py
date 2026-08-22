@@ -251,6 +251,37 @@ def create_selection_lock(
     return payload
 
 
+def verify_selection_lock(lock_path: str | Path) -> dict[str, Any]:
+    """Verify the immutable lock and every file it authorizes."""
+    lock_path = Path(lock_path).resolve()
+    payload = json.loads(lock_path.read_text(encoding="utf-8"))
+    if payload.get("status") != "locked":
+        raise ValueError("Selection lock is not sealed.")
+    expected_hash = payload.get("lock_content_sha256")
+    content = dict(payload)
+    content.pop("lock_content_sha256", None)
+    if not expected_hash or _canonical_hash(content) != expected_hash:
+        raise ValueError("Selection lock content hash mismatch.")
+    protected_files = (
+        (payload["confirmatory_summary"], payload["confirmatory_summary_sha256"]),
+        (payload["campaign_config"], payload["campaign_config_sha256"]),
+    )
+    for path, expected in protected_files:
+        if file_sha256(Path(path)) != expected:
+            raise ValueError(f"Protected selection input changed: {path}")
+    for run in payload["locked_runs"]:
+        checks = (
+            (run["checkpoint"], run["checkpoint_sha256"]),
+            (run["data_yaml"], run["data_yaml_sha256"]),
+            (run["dataset_build_config"], run["dataset_build_config_sha256"]),
+            (str(Path(run["dataset_build_config"]).with_name("audit_report.json")), run["dataset_audit_sha256"]),
+        )
+        for path, expected in checks:
+            if file_sha256(Path(path)) != expected:
+                raise ValueError(f"Locked run input changed: {path}")
+    return payload
+
+
 def _canonical_hash(payload: dict[str, Any]) -> str:
     canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()

@@ -34,7 +34,13 @@ from uchuva_classical_augmentation.v2.profiles import (
 )
 from uchuva_classical_augmentation.v2.validation import audit_scenario_dataset
 from uchuva_classical_augmentation.v2.training import _is_complete, balanced_scenario_order
-from uchuva_classical_augmentation.v2.selection import confirmation_decisions, paired_interval
+from uchuva_classical_augmentation.v2.final_test import evaluate_locked_final_test
+from uchuva_classical_augmentation.v2.selection import (
+    _canonical_hash,
+    confirmation_decisions,
+    paired_interval,
+    verify_selection_lock,
+)
 from scripts.summarize_classical_augmentation_v2 import (
     _aggregate,
     _discover_runs,
@@ -201,6 +207,44 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
 
     def test_paired_interval_refuses_to_imply_precision_from_one_seed(self) -> None:
         self.assertIsNone(paired_interval([0.01])["ci95"])
+
+    def test_final_test_requires_intact_lock_and_skips_without_candidate(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            evidence = root / "confirmatory.json"
+            config = root / "campaign.json"
+            evidence.write_text("{}\n", encoding="utf-8")
+            config.write_text("{}\n", encoding="utf-8")
+            payload = {
+                "protocol_version": "classical_augmentation_v2_selection_v1.0.0",
+                "status": "locked",
+                "selection_split": "val",
+                "test_consulted": False,
+                "historical_test_caveat": "historically consulted",
+                "confirmatory_summary": str(evidence),
+                "confirmatory_summary_sha256": file_sha256(evidence),
+                "campaign_config": str(config),
+                "campaign_config_sha256": file_sha256(config),
+                "selected_scenarios": [],
+                "training_environment": {"training_config": {}},
+                "locked_runs": [],
+            }
+            payload["lock_content_sha256"] = _canonical_hash(payload)
+            lock_path = root / "selection.lock.json"
+            lock_path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
+            self.assertEqual(verify_selection_lock(lock_path)["status"], "locked")
+            result = evaluate_locked_final_test(
+                lock_path=lock_path,
+                output_dir=root / "final",
+                profile_path=root / "profile_not_needed.json",
+            )
+            self.assertFalse(result["test_consulted"])
+            self.assertEqual(result["status"], "skipped_no_validation_selected_candidate")
+            tampered = dict(payload)
+            tampered["selection_split"] = "test"
+            lock_path.write_text(json.dumps(tampered) + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "content hash mismatch"):
+                verify_selection_lock(lock_path)
 
     def test_manifest_round_trip_and_hash_verification(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
