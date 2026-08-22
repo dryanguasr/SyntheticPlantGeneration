@@ -22,6 +22,7 @@ from uchuva_classical_augmentation.v2.manifest import (
     write_jsonl,
 )
 from uchuva_classical_augmentation.v2.occlusion import GrabCutMaskError, estimate_object_mask
+from uchuva_classical_augmentation.v2.metrics import Prediction, match_predictions
 from uchuva_classical_augmentation.v2.profiles import (
     analyze_real_training_domain,
     area_within_robust_train_range,
@@ -94,6 +95,28 @@ class ClassicalAugmentationV2GeometryTests(unittest.TestCase):
         self.assertIsNotNone(result)
         assert result is not None
         self.assertEqual(len(result[1]), 2)
+
+    def test_operational_matching_prioritizes_detection_confidence(self) -> None:
+        truths = [YoloBox(0, 0.3, 0.5, 0.1, 0.1), YoloBox(0, 0.4, 0.5, 0.1, 0.1)]
+        predictions = [
+            Prediction(YoloBox(0, 0.1, 0.5, 0.1, 0.1), 0.9),
+            Prediction(YoloBox(0, 0.2, 0.5, 0.1, 0.1), 0.5),
+        ]
+        overlaps = {
+            (0.1, 0.3): 0.60,
+            (0.1, 0.4): 0.55,
+            (0.2, 0.3): 0.90,
+            (0.2, 0.4): 0.40,
+        }
+        with patch(
+            "uchuva_classical_augmentation.v2.metrics.pairwise_iou",
+            side_effect=lambda prediction, truth: overlaps[(prediction.x_center, truth.x_center)],
+        ):
+            matches, unmatched = match_predictions(truths, predictions)
+        self.assertEqual(len(matches), 1)
+        self.assertEqual(matches[0]["prediction_index"], 0)
+        self.assertEqual(matches[0]["truth_index"], 0)
+        self.assertEqual(len(unmatched), 1)
 
 
 class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):

@@ -42,22 +42,33 @@ def confidence_sweep(ground_truth_by_image: dict[str, list[YoloBox]], prediction
 
 
 def match_predictions(ground_truth: list[YoloBox], predictions: list[Prediction], *, iou_threshold: float = 0.5):
-    candidates = []
-    for prediction_index, prediction in enumerate(predictions):
-        for truth_index, truth in enumerate(ground_truth):
-            iou = pairwise_iou(prediction.box, truth)
-            if iou >= iou_threshold:
-                candidates.append((iou, prediction.confidence, prediction_index, truth_index))
-    candidates.sort(reverse=True)
-    used_predictions, used_truth = set(), set()
+    """Match detections by descending confidence, then best unmatched IoU.
+
+    This mirrors the ordering used by standard detector evaluation. A global
+    IoU-first greedy can give a low-confidence detection priority over a
+    higher-confidence one and distort a confidence sweep.
+    """
+    used_truth = set()
     matches = []
-    for iou, confidence, prediction_index, truth_index in candidates:
-        if prediction_index in used_predictions or truth_index in used_truth:
+    prediction_order = sorted(
+        range(len(predictions)),
+        key=lambda index: (-predictions[index].confidence, index),
+    )
+    for prediction_index in prediction_order:
+        prediction = predictions[prediction_index]
+        candidates = [
+            (pairwise_iou(prediction.box, truth), truth_index)
+            for truth_index, truth in enumerate(ground_truth)
+            if truth_index not in used_truth
+        ]
+        candidates = [item for item in candidates if item[0] >= iou_threshold]
+        if not candidates:
             continue
-        used_predictions.add(prediction_index)
+        iou, truth_index = max(candidates, key=lambda item: (item[0], -item[1]))
         used_truth.add(truth_index)
-        matches.append({"prediction_index": prediction_index, "truth_index": truth_index, "iou": iou, "confidence": confidence})
-    unmatched = [prediction for index, prediction in enumerate(predictions) if index not in used_predictions]
+        matches.append({"prediction_index": prediction_index, "truth_index": truth_index, "iou": iou, "confidence": prediction.confidence})
+    matched_predictions = {item["prediction_index"] for item in matches}
+    unmatched = [prediction for index, prediction in enumerate(predictions) if index not in matched_predictions]
     return matches, unmatched
 
 
