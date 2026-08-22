@@ -29,6 +29,10 @@ from uchuva_classical_augmentation.v2.profiles import (
 )
 from uchuva_classical_augmentation.v2.validation import audit_scenario_dataset
 from uchuva_classical_augmentation.v2.training import _is_complete, balanced_scenario_order
+from scripts.summarize_classical_augmentation_v2 import (
+    _parse_int_set,
+    _validate_complete_matrix,
+)
 
 
 class ClassicalAugmentationV2GeometryTests(unittest.TestCase):
@@ -165,6 +169,32 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
             self.assertFalse(_is_complete(run, 2))
             (run / "weights/best.pt").write_bytes(b"checkpoint")
             self.assertTrue(_is_complete(run, 2))
+
+    def test_screening_summary_refuses_incomplete_matrix(self) -> None:
+        runs = [
+            {"scenario": "V2-E0", "seed": 1, "epochs_completed": 30},
+            {"scenario": "V2-E0R", "seed": 1, "epochs_completed": 29},
+        ]
+        with self.assertRaisesRegex(RuntimeError, "refusing to rank"):
+            _validate_complete_matrix(
+                runs,
+                expected_scenarios=["V2-E0", "V2-E0R"],
+                expected_seeds=[1],
+                expected_epochs=30,
+            )
+
+    def test_screening_summary_accepts_exact_complete_matrix(self) -> None:
+        runs = [
+            {"scenario": scenario, "seed": seed, "epochs_completed": 30}
+            for scenario in ("V2-E0", "V2-E0R")
+            for seed in (1, 2, 3)
+        ]
+        _validate_complete_matrix(
+            runs,
+            expected_scenarios=["V2-E0", "V2-E0R"],
+            expected_seeds=_parse_int_set("1,2,3"),
+            expected_epochs=30,
+        )
 
 
 if __name__ == "__main__":

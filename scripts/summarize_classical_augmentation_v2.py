@@ -19,6 +19,7 @@ from uchuva_classical_augmentation.v2.labels import YoloBox, read_yolo_labels
 from uchuva_classical_augmentation.v2.manifest import file_sha256
 from uchuva_classical_augmentation.v2.metrics import Prediction, confidence_sweep, stratified_recall
 from uchuva_classical_augmentation.v2.profiles import read_profile
+from uchuva_classical_augmentation.v2.config import default_campaign_config
 
 
 def parse_args() -> argparse.Namespace:
@@ -28,6 +29,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--device", default="0")
     parser.add_argument("--skip-operational", action="store_true")
+    parser.add_argument("--expected-epochs", type=int, default=30)
+    parser.add_argument("--expected-seeds", default="1,2,3")
     return parser.parse_args()
 
 
@@ -37,6 +40,14 @@ def main() -> None:
     runs = _discover_runs(args.project)
     if not runs:
         raise RuntimeError(f"No complete runs found under {args.project}")
+    expected_scenarios = [item.code for item in default_campaign_config().scenarios]
+    expected_seeds = _parse_int_set(args.expected_seeds)
+    _validate_complete_matrix(
+        runs,
+        expected_scenarios=expected_scenarios,
+        expected_seeds=expected_seeds,
+        expected_epochs=args.expected_epochs,
+    )
     for run in runs:
         if not args.skip_operational:
             run["operational"] = _operational_metrics(run, profile, args.output_dir / "prediction_cache", args.device)
@@ -79,6 +90,51 @@ def _discover_runs(project: Path):
             "wall_time_seconds": event.get("wall_time_seconds"),
         })
     return sorted(runs, key=lambda item: (item["scenario"], item["seed"]))
+
+
+def _parse_int_set(value: str) -> list[int]:
+    result = [int(item.strip()) for item in value.split(",") if item.strip()]
+    if not result or len(result) != len(set(result)) or min(result) < 0:
+        raise ValueError("Expected seeds must be unique non-negative integers")
+    return result
+
+
+def _validate_complete_matrix(
+    runs,
+    *,
+    expected_scenarios: list[str],
+    expected_seeds: list[int],
+    expected_epochs: int,
+) -> None:
+    if expected_epochs <= 0:
+        raise ValueError("Expected epochs must be positive")
+    expected = {
+        (scenario, seed)
+        for scenario in expected_scenarios
+        for seed in expected_seeds
+    }
+    observed = {(run["scenario"], int(run["seed"])) for run in runs}
+    duplicates = len(observed) != len(runs)
+    missing = sorted(expected - observed)
+    unexpected = sorted(observed - expected)
+    wrong_epochs = sorted(
+        (run["scenario"], int(run["seed"]), int(run["epochs_completed"]))
+        for run in runs
+        if int(run["epochs_completed"]) != expected_epochs
+    )
+    if duplicates or missing or unexpected or wrong_epochs:
+        details = {
+            "duplicates": duplicates,
+            "missing": missing,
+            "unexpected": unexpected,
+            "wrong_epochs": wrong_epochs,
+            "expected_run_count": len(expected),
+            "observed_run_count": len(runs),
+        }
+        raise RuntimeError(
+            "Screening matrix is incomplete or inconsistent; refusing to rank: "
+            + json.dumps(details, sort_keys=True)
+        )
 
 
 def _operational_metrics(run, profile, cache_root: Path, device: str):
