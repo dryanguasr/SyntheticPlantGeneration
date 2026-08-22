@@ -40,6 +40,48 @@ python scripts/audit_classical_augmentation_v2.py --dataset-dir <dataset>
 python scripts/preview_classical_augmentation_v2.py --dataset-dir <dataset>
 ```
 
+Ejecución experimental, una fase a la vez:
+
+```powershell
+# Screening completo: 9 escenarios x 3 semillas x 30 épocas.
+python scripts/run_classical_augmentation_v2_screening.py `
+  --dataset-root outputs/classical_augmentation_v2/datasets/full `
+  --project outputs/classical_augmentation_v2/runs/screening `
+  --phase screening --device 0
+
+# Ranking y métricas operacionales/estratificadas, exclusivamente sobre val.
+python scripts/summarize_classical_augmentation_v2.py `
+  --project outputs/classical_augmentation_v2/runs/screening `
+  --output-dir outputs/classical_augmentation_v2/metrics/screening `
+  --device 0
+
+# Confirmación de los controles y hasta tres recetas seleccionadas.
+python scripts/run_classical_augmentation_v2_campaign.py `
+  --dataset-root outputs/classical_augmentation_v2/datasets/full `
+  --project outputs/classical_augmentation_v2/runs/confirmatory `
+  --scenarios V2-E0 V2-E0R <recetas-seleccionadas> `
+  --seeds 1-5 --epochs 50 --device 0
+
+python scripts/summarize_classical_augmentation_v2.py `
+  --project outputs/classical_augmentation_v2/runs/confirmatory `
+  --output-dir outputs/classical_augmentation_v2/metrics/confirmatory `
+  --expected-scenarios V2-E0,V2-E0R,<recetas-seleccionadas> `
+  --expected-seeds 1,2,3,4,5 --expected-epochs 50 --device 0
+
+# Este comando rehúsa sellar una cohorte de cinco semillas que deba extenderse.
+python scripts/lock_classical_augmentation_v2_selection.py `
+  --confirmatory-summary outputs/classical_augmentation_v2/metrics/confirmatory/screening_summary.json `
+  --project outputs/classical_augmentation_v2/runs/confirmatory
+
+# Único punto de entrada autorizado a test; exige un lock íntegro.
+python scripts/run_classical_augmentation_v2_final_test.py --device 0
+```
+
+El test no interviene en perfiles, recetas, ranking, checkpoints ni umbrales.
+El evaluador final vuelve a verificar hashes del split, aplica los umbrales
+escogidos en `val` y registra cada acceso. El test ya fue consultado en trabajo
+histórico, por lo que se mantiene congelado pero no se describe como virgen.
+
 Los datasets, manifiestos extensos, previews, checkpoints y métricas se guardan
 en `outputs/classical_augmentation_v2/` y no se versionan. Los reportes
 científicos resumidos se conservan bajo `docs/reports/`.
