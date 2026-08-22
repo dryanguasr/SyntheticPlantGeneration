@@ -31,6 +31,7 @@ from uchuva_classical_augmentation.v2.validation import audit_scenario_dataset
 from uchuva_classical_augmentation.v2.training import _is_complete, balanced_scenario_order
 from scripts.summarize_classical_augmentation_v2 import (
     _aggregate,
+    _discover_runs,
     _parse_int_set,
     _parse_scenario_set,
     _validate_complete_matrix,
@@ -215,6 +216,8 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
                 "map50": 0.85,
                 "map5095": map5095,
                 "wall_time_seconds": wall_time,
+                "ultralytics_active_time_seconds": wall_time - 5,
+                "timing_status": "wall_time_observed",
                 "operational": {
                     "confidence_sweep": {"selected": {"recall": operational}},
                     "difficulty": {
@@ -240,7 +243,39 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
         self.assertEqual(report["recommended_confirmatory_scenarios"][:2], ["V2-E0", "V2-E0R"])
         self.assertEqual(report["recommended_confirmatory_scenarios"][2], "V2-E6")
         self.assertIn("worst_mean_delta_size_recall_vs_e0r", report["selection_scorecard"]["V2-E6"])
+        self.assertEqual(report["selection_scorecard"]["V2-E6"]["mean_active_time_seconds"], 165)
         self.assertEqual(report["selection_method"]["status"], "engineering_rule_fixed_before_screening_results")
+
+    def test_summary_censors_wall_time_after_external_pause(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary)
+            run_name = "v2_e0_screening_yolo11n_e30_seed01"
+            run = project / run_name
+            (run / "weights").mkdir(parents=True)
+            (run / "weights/best.pt").write_bytes(b"checkpoint")
+            (run / "args.yaml").write_text("data: dataset/data.yaml\n", encoding="utf-8")
+            (run / "results.csv").write_text(
+                "epoch,time,metrics/precision(B),metrics/recall(B),metrics/mAP50(B),metrics/mAP50-95(B)\n"
+                "30,900,0.9,0.8,0.85,0.6\n",
+                encoding="utf-8",
+            )
+            (project / "execution_state.jsonl").write_text(
+                json.dumps(
+                    {
+                        "run": run_name,
+                        "status": "complete",
+                        "scenario": "V2-E0",
+                        "seed": 1,
+                        "run_order": 1,
+                        "wall_time_seconds": 72000,
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            discovered = _discover_runs(project)
+            self.assertEqual(discovered[0]["ultralytics_active_time_seconds"], 900)
+            self.assertEqual(discovered[0]["timing_status"], "wall_time_censored_external_pause")
 
 
 if __name__ == "__main__":

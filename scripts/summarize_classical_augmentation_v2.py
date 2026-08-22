@@ -90,13 +90,24 @@ def _discover_runs(project: Path):
             rows = list(csv.DictReader(handle))
         best = max(rows, key=lambda row: float(row["metrics/mAP50-95(B)"]))
         args_payload = _read_simple_yaml(run_dir / "args.yaml")
+        active_time = float(rows[-1]["time"]) if rows and rows[-1].get("time") else None
+        wall_time = event.get("wall_time_seconds")
+        wall_time_gap = float(wall_time) - active_time if wall_time is not None and active_time is not None else None
+        timing_status = (
+            "wall_time_censored_external_pause"
+            if wall_time_gap is not None and wall_time_gap > 1800.0
+            else "wall_time_observed"
+        )
         runs.append({
             "scenario": event["scenario"], "seed": int(event["seed"]), "run_order": int(event["run_order"]),
             "run_dir": str(run_dir.resolve()), "checkpoint": str(checkpoint.resolve()), "checkpoint_sha256": file_sha256(checkpoint),
             "data_yaml": str(Path(args_payload["data"]).resolve()), "epochs_completed": len(rows), "best_epoch": int(best["epoch"]),
             "precision": float(best["metrics/precision(B)"]), "recall": float(best["metrics/recall(B)"]),
             "map50": float(best["metrics/mAP50(B)"]), "map5095": float(best["metrics/mAP50-95(B)"]),
-            "wall_time_seconds": event.get("wall_time_seconds"),
+            "wall_time_seconds": wall_time,
+            "ultralytics_active_time_seconds": active_time,
+            "wall_time_minus_active_time_seconds": wall_time_gap,
+            "timing_status": timing_status,
         })
     return sorted(runs, key=lambda item: (item["scenario"], item["seed"]))
 
@@ -199,6 +210,19 @@ def _aggregate(runs):
             "mean": statistics.mean(wall_times) if wall_times else None,
             "sd": statistics.stdev(wall_times) if len(wall_times) > 1 else 0.0,
         }
+        active_times = [
+            float(run["ultralytics_active_time_seconds"])
+            for run in selected
+            if run.get("ultralytics_active_time_seconds") is not None
+        ]
+        aggregate[scenario]["ultralytics_active_time_seconds"] = {
+            "mean": statistics.mean(active_times) if active_times else None,
+            "sd": statistics.stdev(active_times) if len(active_times) > 1 else 0.0,
+        }
+        aggregate[scenario]["censored_wall_time_run_count"] = sum(
+            run.get("timing_status") == "wall_time_censored_external_pause"
+            for run in selected
+        )
         if all("operational" in run for run in selected):
             aggregate[scenario]["recall_at_precision_ge_098_mean"] = statistics.mean(run["operational"]["confidence_sweep"]["selected"]["recall"] for run in selected)
             aggregate[scenario]["difficulty_recall_mean"] = {
@@ -267,7 +291,7 @@ def _aggregate(runs):
                 "mean_delta_operational_recall_vs_e0r",
                 "worst_mean_delta_size_recall_vs_e0r",
             ],
-            "tiebreak": "lower_mean_wall_time_seconds_then_higher_mean_map5095",
+            "tiebreak": "lower_mean_ultralytics_active_time_seconds_then_higher_mean_map5095",
             "maximum_recipe_finalists": 3,
         },
         "selection_scorecard": scorecard,
@@ -291,7 +315,7 @@ def _multi_criterion_selection(scenarios, aggregate, paired):
             "positive_seed_count_vs_e0r": comparison["positive_seeds"],
             "mean_delta_operational_recall_vs_e0r": comparison["mean_delta_operational_recall"],
             "worst_mean_delta_size_recall_vs_e0r": min(size_deltas) if size_deltas else None,
-            "mean_wall_time_seconds": aggregate[scenario]["wall_time_seconds"]["mean"],
+            "mean_active_time_seconds": aggregate[scenario]["ultralytics_active_time_seconds"]["mean"],
         }
     criteria = (
         "mean_map5095",
@@ -313,7 +337,7 @@ def _multi_criterion_selection(scenarios, aggregate, paired):
         recipes,
         key=lambda scenario: (
             scorecard[scenario]["rank_sum"],
-            scorecard[scenario]["mean_wall_time_seconds"] if scorecard[scenario]["mean_wall_time_seconds"] is not None else float("inf"),
+            scorecard[scenario]["mean_active_time_seconds"] if scorecard[scenario]["mean_active_time_seconds"] is not None else float("inf"),
             -scorecard[scenario]["mean_map5095"],
             scenario,
         ),
@@ -344,13 +368,13 @@ def _markdown(report):
         size_values = [value for value in paired["mean_delta_size_recall"].values() if value is not None]
         worst_size = min(size_values) if size_values else float("nan")
         operational = paired["mean_delta_operational_recall"]
-        wall_time = report["aggregate"][scenario]["wall_time_seconds"]["mean"]
+        active_time = report["aggregate"][scenario]["ultralytics_active_time_seconds"]["mean"]
         rank_sum = report["selection_scorecard"].get(scenario, {}).get("rank_sum")
         lines.append(
             f"| {scenario} | {aggregate:.4f} | {delta if delta is not None else float('nan'):.4f} "
             f"| {paired['positive_seeds']}/{paired['pair_count']} "
             f"| {operational if operational is not None else float('nan'):.4f} | {worst_size:.4f} "
-            f"| {wall_time if wall_time is not None else float('nan'):.1f} "
+            f"| {active_time if active_time is not None else float('nan'):.1f} "
             f"| {rank_sum if rank_sum is not None else 'n/a'} |"
         )
     finalists = report["recommended_confirmatory_scenarios"]
