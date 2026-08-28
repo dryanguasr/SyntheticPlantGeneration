@@ -80,22 +80,34 @@ def confirmation_decisions(report: dict[str, Any]) -> dict[str, Any]:
     if report.get("test_consulted") is not False or report.get("selection_split") != "val":
         raise ValueError("Confirmatory decisions require validation-only evidence.")
     runs = report.get("runs", [])
-    seeds = sorted({int(run["seed"]) for run in runs})
-    if len(seeds) < 5:
-        raise ValueError("At least five paired confirmatory seeds are required.")
     if any(int(run.get("epochs_completed", 0)) != 50 for run in runs):
         raise ValueError("Every confirmatory run must contain exactly 50 epochs.")
     scenarios = {run["scenario"] for run in runs}
     if not {"V2-E0", "V2-E0R"}.issubset(scenarios):
         raise ValueError("Both V2-E0 and V2-E0R controls are required.")
-    expected_pairs = {(scenario, seed) for scenario in scenarios for seed in seeds}
     observed_pairs = {(run["scenario"], int(run["seed"])) for run in runs}
-    if observed_pairs != expected_pairs or len(runs) != len(expected_pairs):
-        raise ValueError("Confirmatory runs do not form an exact paired matrix.")
+    if len(observed_pairs) != len(runs):
+        raise ValueError("Confirmatory evidence contains duplicate scenario/seed runs.")
+    seeds_by_scenario = {
+        scenario: sorted(
+            int(run["seed"]) for run in runs if run["scenario"] == scenario
+        )
+        for scenario in scenarios
+    }
+    control_seeds = seeds_by_scenario["V2-E0"]
+    if seeds_by_scenario["V2-E0R"] != control_seeds or len(control_seeds) not in {5, 10}:
+        raise ValueError("Controls must share an exact five- or ten-seed cohort.")
+    for scenario in scenarios - {"V2-E0", "V2-E0R"}:
+        cohort = seeds_by_scenario[scenario]
+        if len(cohort) not in {5, 10} or not set(cohort).issubset(control_seeds):
+            raise ValueError(
+                f"{scenario}: recipe cohort must contain exactly 5 or 10 seeds paired with both controls."
+            )
 
     decisions: dict[str, Any] = {}
-    required_positive = math.ceil(GLOBAL_SIGN_FRACTION * len(seeds))
     for scenario in sorted(scenarios - {"V2-E0", "V2-E0R"}):
+        seeds = seeds_by_scenario[scenario]
+        required_positive = math.ceil(GLOBAL_SIGN_FRACTION * len(seeds))
         versus_e0r = report["paired"][scenario]["V2-E0R"]
         versus_e0 = report["paired"][scenario]["V2-E0"]
         map_deltas = [float(value) for value in versus_e0r["differences"]]
@@ -149,14 +161,20 @@ def confirmation_decisions(report: dict[str, Any]) -> dict[str, Any]:
             "positive_map_seeds_vs_e0r": positive_map,
             "positive_operational_seeds_vs_e0r": positive_operational,
             "required_positive_seed_count": required_positive,
+            "seed_count": len(seeds),
+            "seeds": seeds,
             "mean_delta_key_difficulty_recall_vs_e0r": key_difficulty,
         }
     return {
         "protocol_version": SELECTION_PROTOCOL_VERSION,
         "selection_split": "val",
         "test_consulted": False,
-        "seed_count": len(seeds),
-        "seeds": seeds,
+        "seed_count": len(control_seeds),
+        "seeds": control_seeds,
+        "scenario_cohorts": {
+            scenario: seeds_by_scenario[scenario]
+            for scenario in sorted(scenarios)
+        },
         "fixed_engineering_thresholds": {
             "majority_sign_fraction": GLOBAL_SIGN_FRACTION,
             "maximum_operational_recall_drop": MAX_OPERATIONAL_RECALL_DROP,

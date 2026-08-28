@@ -33,7 +33,11 @@ from uchuva_classical_augmentation.v2.profiles import (
     write_profile,
 )
 from uchuva_classical_augmentation.v2.validation import audit_scenario_dataset
-from uchuva_classical_augmentation.v2.training import _is_complete, balanced_scenario_order
+from uchuva_classical_augmentation.v2.training import (
+    _is_complete,
+    _validate_resumable_results,
+    balanced_scenario_order,
+)
 from uchuva_classical_augmentation.v2.final_test import evaluate_locked_final_test
 from uchuva_classical_augmentation.v2.selection import (
     _canonical_hash,
@@ -255,6 +259,47 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
         self.assertFalse(recipe["strong_candidate"])
         self.assertFalse(recipe["extend_to_ten_seeds"])
 
+    def test_confirmatory_decision_accepts_adaptive_mixed_cohorts(self) -> None:
+        runs = []
+        for scenario, seeds in {
+            "V2-E0": range(1, 11),
+            "V2-E0R": range(1, 11),
+            "V2-E6": range(1, 11),
+            "V2-E3": range(1, 6),
+        }.items():
+            runs.extend(
+                {"scenario": scenario, "seed": seed, "epochs_completed": 50}
+                for seed in seeds
+            )
+
+        def comparison(count: int, delta: float) -> dict:
+            return {
+                "mean_delta_map5095": delta,
+                "positive_seeds": count if delta > 0 else 0,
+                "differences": [delta] * count,
+                "operational_recall_differences": [0.01] * count,
+                "mean_delta_difficulty_recall": {
+                    "size:small": 0.01,
+                    "clustered:True": 0.01,
+                    "border_contact:True": 0.0,
+                },
+            }
+
+        decision = confirmation_decisions(
+            {
+                "test_consulted": False,
+                "selection_split": "val",
+                "runs": runs,
+                "paired": {
+                    "V2-E6": {"V2-E0": comparison(10, 0.01), "V2-E0R": comparison(10, 0.01)},
+                    "V2-E3": {"V2-E0": comparison(5, -0.01), "V2-E0R": comparison(5, -0.01)},
+                },
+            }
+        )
+        self.assertEqual(decision["decisions"]["V2-E6"]["seed_count"], 10)
+        self.assertFalse(decision["decisions"]["V2-E6"]["extend_to_ten_seeds"])
+        self.assertEqual(decision["decisions"]["V2-E3"]["seed_count"], 5)
+
     def test_paired_interval_refuses_to_imply_precision_from_one_seed(self) -> None:
         self.assertIsNone(paired_interval([0.01])["ci95"])
 
@@ -371,6 +416,13 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
             self.assertFalse(_is_complete(run, 2))
             (run / "weights/best.pt").write_bytes(b"checkpoint")
             self.assertTrue(_is_complete(run, 2))
+            (run / "results.csv").write_text(
+                "epoch,metrics/mAP50-95(B)\n1,0.1\n2,0.2\n1,0.3\n2,0.4\n",
+                encoding="utf-8",
+            )
+            self.assertFalse(_is_complete(run, 2))
+            with self.assertRaisesRegex(RuntimeError, "Non-resumable results history"):
+                _validate_resumable_results(run, 2)
 
     def test_screening_summary_refuses_incomplete_matrix(self) -> None:
         runs = [
@@ -383,6 +435,23 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
                 expected_scenarios=["V2-E0", "V2-E0R"],
                 expected_seeds=[1],
                 expected_epochs=30,
+            )
+
+    def test_summary_refuses_duplicate_epoch_sequence_even_at_expected_count(self) -> None:
+        runs = [
+            {
+                "scenario": "V2-E0",
+                "seed": 1,
+                "epochs_completed": 3,
+                "epoch_sequence_valid": False,
+            }
+        ]
+        with self.assertRaisesRegex(RuntimeError, "invalid_epoch_sequences"):
+            _validate_complete_matrix(
+                runs,
+                expected_scenarios=["V2-E0"],
+                expected_seeds=[1],
+                expected_epochs=3,
             )
 
     def test_screening_summary_accepts_exact_complete_matrix(self) -> None:
@@ -405,6 +474,41 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Unknown expected scenarios"):
             _parse_scenario_set("V2-E0,V2-E99", allowed)
 
+    def test_summary_accepts_complete_selective_adaptive_extension(self) -> None:
+        runs = []
+        for scenario, seeds in {
+            "V2-E0": range(1, 11),
+            "V2-E0R": range(1, 11),
+            "V2-E3": range(1, 6),
+            "V2-E6": range(1, 11),
+        }.items():
+            runs.extend(
+                {
+                    "scenario": scenario,
+                    "seed": seed,
+                    "epochs_completed": 50,
+                    "epoch_sequence_valid": True,
+                }
+                for seed in seeds
+            )
+        _validate_complete_matrix(
+            runs,
+            expected_scenarios=["V2-E0", "V2-E0R", "V2-E3", "V2-E6"],
+            expected_seeds=[1, 2, 3, 4, 5],
+            expected_epochs=50,
+            allow_adaptive_extension=True,
+        )
+
+        runs.pop()
+        with self.assertRaisesRegex(RuntimeError, "partial adaptive extension"):
+            _validate_complete_matrix(
+                runs,
+                expected_scenarios=["V2-E0", "V2-E0R", "V2-E3", "V2-E6"],
+                expected_seeds=[1, 2, 3, 4, 5],
+                expected_epochs=50,
+                allow_adaptive_extension=True,
+            )
+
     def test_multicriterion_ranking_uses_operational_size_and_runtime_evidence(self) -> None:
         def run(scenario, seed, map5095, operational, size, wall_time):
             return {
@@ -418,7 +522,16 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
                 "ultralytics_active_time_seconds": wall_time - 5,
                 "timing_status": "wall_time_observed",
                 "operational": {
-                    "confidence_sweep": {"selected": {"recall": operational}},
+                    "confidence_sweep": {
+                        "selection_rule": "maximum_recall_subject_to_precision_ge_0.98",
+                        "selected": {
+                            "precision": 0.98,
+                            "recall": operational,
+                            "f1": 2 * 0.98 * operational / (0.98 + operational),
+                            "fp": 2,
+                            "fn": 4,
+                        },
+                    },
                     "difficulty": {
                         "strata": {
                             **{
@@ -453,6 +566,9 @@ class ClassicalAugmentationV2ProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(report["selection_scorecard"]["V2-E6"]["mean_active_time_seconds"], 165)
         self.assertEqual(report["selection_method"]["status"], "engineering_rule_fixed_before_screening_results")
+        operational = report["aggregate"]["V2-E6"]["operational_at_selected_threshold"]
+        self.assertAlmostEqual(operational["recall"]["mean"], 0.36)
+        self.assertIn("fp", operational)
 
     def test_summary_censors_wall_time_after_external_pause(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -23,7 +23,7 @@ morfología serializable ───┤
 
 | Frente | Ruta principal | Estado |
 |---|---|---|
-| Aumentación clásica | `src/uchuva_classical_augmentation/` | E0/E1/E2 históricos preservados; campaña v2 reproducible en desarrollo |
+| Aumentación clásica | `src/uchuva_classical_augmentation/` | E0/E1/E2 preservados; campaña v2 cerrada sin receta promovida |
 | Generación sintética | `src/uchuva_lsystem/` | Implementación vigente y madura |
 | Gazebo | `src/uchuva_gazebo/` | Interfaz semántica por LOD; aún no emite SDF |
 | Contribuciones externas | `contributions/` | Snapshots atribuidos, separados del código vigente |
@@ -65,6 +65,12 @@ parámetros con procedencia
 | Validación humana | `outputs/human_validation/` |
 | Prototipos anteriores | `legacy/` |
 | Resultados históricos | `outputs/archive/` |
+
+La campaña Classical Augmentation v2 terminó con 40 corridas confirmatorias
+válidas. Ninguna receta cumplió el criterio predeclarado de mejora integral y
+`test` permaneció sin consultar. Véase el
+[informe confirmatorio](docs/reports/aumento_clasico_v2_confirmatory_2026-08-28.md)
+y la [guía del workstream](docs/workstreams/classical_augmentation.md).
 
 El código bajo `src/uchuva_lsystem/` es la única implementación vigente del
 modelo morfológico. Los archivos bajo `legacy/` se conservan como evidencia

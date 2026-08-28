@@ -28,9 +28,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--profile", type=Path, default=REPO_ROOT / "outputs/classical_augmentation_v2/domain_profile/real_train_profile.json")
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--device", default="0")
+    parser.add_argument(
+        "--phase",
+        choices=("screening", "confirmatory"),
+        default="screening",
+        help="Controls output names and whether the predeclared confirmation rule is applied.",
+    )
     parser.add_argument("--skip-operational", action="store_true")
     parser.add_argument("--expected-epochs", type=int, default=30)
     parser.add_argument("--expected-seeds", default="1,2,3")
+    parser.add_argument(
+        "--allow-adaptive-extension",
+        action="store_true",
+        help="Allow complete 6-10 seed extensions for controls and only the recipes that qualified at five seeds.",
+    )
     parser.add_argument(
         "--expected-scenarios",
         help="Comma-separated scenario codes; defaults to the full nine-scenario screening matrix",
@@ -56,6 +67,7 @@ def main() -> None:
         expected_scenarios=expected_scenarios,
         expected_seeds=expected_seeds,
         expected_epochs=args.expected_epochs,
+        allow_adaptive_extension=args.allow_adaptive_extension,
     )
     for run in runs:
         if not args.skip_operational:
@@ -63,11 +75,19 @@ def main() -> None:
     report = _aggregate(runs)
     report["test_consulted"] = False
     report["selection_split"] = "val"
+    report["phase"] = args.phase
     report["runs"] = runs
+    if args.phase == "confirmatory":
+        if args.skip_operational:
+            raise RuntimeError("Confirmatory decisions require operational validation metrics")
+        from uchuva_classical_augmentation.v2.selection import confirmation_decisions
+
+        report["confirmation_decision"] = confirmation_decisions(report)
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    (args.output_dir / "screening_summary.json").write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
-    (args.output_dir / "screening_summary.md").write_text(_markdown(report), encoding="utf-8", newline="\n")
-    print(args.output_dir.resolve() / "screening_summary.json")
+    stem = f"{args.phase}_summary"
+    (args.output_dir / f"{stem}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+    (args.output_dir / f"{stem}.md").write_text(_markdown(report), encoding="utf-8", newline="\n")
+    print(args.output_dir.resolve() / f"{stem}.json")
 
 
 def _discover_runs(project: Path):
@@ -88,6 +108,10 @@ def _discover_runs(project: Path):
             continue
         with results_path.open(encoding="utf-8-sig", newline="") as handle:
             rows = list(csv.DictReader(handle))
+        try:
+            epoch_sequence = [int(float(row["epoch"])) for row in rows]
+        except (KeyError, TypeError, ValueError) as error:
+            raise RuntimeError(f"Invalid epoch history in {results_path}") from error
         best = max(rows, key=lambda row: float(row["metrics/mAP50-95(B)"]))
         args_payload = _read_simple_yaml(run_dir / "args.yaml")
         active_time = float(rows[-1]["time"]) if rows and rows[-1].get("time") else None
@@ -102,6 +126,7 @@ def _discover_runs(project: Path):
             "scenario": event["scenario"], "seed": int(event["seed"]), "run_order": int(event["run_order"]),
             "run_dir": str(run_dir.resolve()), "checkpoint": str(checkpoint.resolve()), "checkpoint_sha256": file_sha256(checkpoint),
             "data_yaml": str(Path(args_payload["data"]).resolve()), "epochs_completed": len(rows), "best_epoch": int(best["epoch"]),
+            "epoch_sequence_valid": epoch_sequence == list(range(1, len(rows) + 1)),
             "precision": float(best["metrics/precision(B)"]), "recall": float(best["metrics/recall(B)"]),
             "map50": float(best["metrics/mAP50(B)"]), "map5095": float(best["metrics/mAP50-95(B)"]),
             "wall_time_seconds": wall_time,
@@ -135,6 +160,7 @@ def _validate_complete_matrix(
     expected_scenarios: list[str],
     expected_seeds: list[int],
     expected_epochs: int,
+    allow_adaptive_extension: bool = False,
 ) -> None:
     if expected_epochs <= 0:
         raise ValueError("Expected epochs must be positive")
@@ -147,17 +173,48 @@ def _validate_complete_matrix(
     duplicates = len(observed) != len(runs)
     missing = sorted(expected - observed)
     unexpected = sorted(observed - expected)
+    adaptive_issues: list[str] = []
+    if allow_adaptive_extension:
+        if expected_seeds != list(range(1, 6)):
+            adaptive_issues.append("adaptive extension requires base seeds 1..5")
+        extension_seeds = set(range(6, 11))
+        scenario_set = set(expected_scenarios)
+        invalid_extra = [
+            pair
+            for pair in unexpected
+            if pair[0] not in scenario_set or pair[1] not in extension_seeds
+        ]
+        if invalid_extra:
+            adaptive_issues.append(f"invalid extra pairs: {invalid_extra}")
+        valid_extra = set(unexpected) - set(invalid_extra)
+        if valid_extra:
+            for control in ("V2-E0", "V2-E0R"):
+                control_extra = {seed for scenario, seed in valid_extra if scenario == control}
+                if control_extra != extension_seeds:
+                    adaptive_issues.append(f"{control} lacks complete seeds 6..10")
+            for scenario in scenario_set - {"V2-E0", "V2-E0R"}:
+                recipe_extra = {seed for code, seed in valid_extra if code == scenario}
+                if recipe_extra not in (set(), extension_seeds):
+                    adaptive_issues.append(f"{scenario} has a partial adaptive extension")
+        unexpected = invalid_extra
     wrong_epochs = sorted(
         (run["scenario"], int(run["seed"]), int(run["epochs_completed"]))
         for run in runs
         if int(run["epochs_completed"]) != expected_epochs
     )
-    if duplicates or missing or unexpected or wrong_epochs:
+    invalid_epoch_sequences = sorted(
+        (run["scenario"], int(run["seed"]))
+        for run in runs
+        if run.get("epoch_sequence_valid") is False
+    )
+    if duplicates or missing or unexpected or wrong_epochs or invalid_epoch_sequences or adaptive_issues:
         details = {
             "duplicates": duplicates,
             "missing": missing,
             "unexpected": unexpected,
             "wrong_epochs": wrong_epochs,
+            "invalid_epoch_sequences": invalid_epoch_sequences,
+            "adaptive_extension_issues": adaptive_issues,
             "expected_run_count": len(expected),
             "observed_run_count": len(runs),
         }
@@ -224,7 +281,32 @@ def _aggregate(runs):
             for run in selected
         )
         if all("operational" in run for run in selected):
-            aggregate[scenario]["recall_at_precision_ge_098_mean"] = statistics.mean(run["operational"]["confidence_sweep"]["selected"]["recall"] for run in selected)
+            selected_points = [
+                run["operational"]["confidence_sweep"]["selected"]
+                for run in selected
+            ]
+            aggregate[scenario]["recall_at_precision_ge_098_mean"] = statistics.mean(
+                point["recall"] for point in selected_points
+            )
+            aggregate[scenario]["operational_at_selected_threshold"] = {
+                metric: {
+                    "mean": statistics.mean(float(point[metric]) for point in selected_points),
+                    "sd": statistics.stdev(float(point[metric]) for point in selected_points)
+                    if len(selected_points) > 1
+                    else 0.0,
+                }
+                for metric in ("precision", "recall", "f1", "fp", "fn")
+            }
+            aggregate[scenario]["operational_precision_ge_098_run_count"] = sum(
+                run["operational"]["confidence_sweep"]["selection_rule"]
+                == "maximum_recall_subject_to_precision_ge_0.98"
+                for run in selected
+            )
+            aggregate[scenario]["operational_fallback_run_count"] = sum(
+                run["operational"]["confidence_sweep"]["selection_rule"]
+                == "no_point_at_precision_ge_0.98; maximum_precision_available"
+                for run in selected
+            )
             aggregate[scenario]["difficulty_recall_mean"] = {
                 label: statistics.mean(
                     run["operational"]["difficulty"]["strata"][label]["recall"]
@@ -360,8 +442,10 @@ def _read_simple_yaml(path: Path):
 
 
 def _markdown(report):
+    phase = report.get("phase", "screening")
+    title = "Confirmación" if phase == "confirmatory" else "Screening"
     lines = [
-        "# Screening Classical Augmentation v2",
+        f"# {title} Classical Augmentation v2",
         "",
         "Selección realizada exclusivamente sobre `val`; `test` no fue consultado.",
         "",
@@ -386,7 +470,49 @@ def _markdown(report):
         )
     finalists = report["recommended_confirmatory_scenarios"]
     recommendation = ", ".join(finalists) if finalists else "ninguna; faltan métricas operacionales completas"
-    lines.extend(["", "Finalistas recomendados: " + recommendation, ""])
+    if phase == "screening":
+        lines.extend(["", "Finalistas recomendados: " + recommendation, ""])
+    else:
+        lines.extend(["", "## Decisión confirmatoria predeclarada", ""])
+        decisions = report["confirmation_decision"]["decisions"]
+        lines.extend(
+            [
+                "| Escenario | Candidato fuerte | Extender a 10 | Caso A | Caso B |",
+                "|---|---:|---:|---:|---:|",
+            ]
+        )
+        for scenario, decision in sorted(decisions.items()):
+            lines.append(
+                f"| {scenario} | {decision['strong_candidate']} | "
+                f"{decision['extend_to_ten_seeds']} | "
+                f"{decision['case_a_global_improvement']} | "
+                f"{decision['case_b_operational_improvement']} |"
+            )
+        lines.append("")
+    if all("operational_at_selected_threshold" in values for values in report["aggregate"].values()):
+        lines.extend(
+            [
+                "## Métrica operacional seleccionada en val",
+                "",
+                "| Escenario | Precisión | Recall | F1 | FP medios | FN medios | Corridas con P≥0.98 | Fallbacks |",
+                "|---|---:|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for scenario in report["ranking"]:
+            values = report["aggregate"][scenario]
+            operational = values["operational_at_selected_threshold"]
+            run_count = (
+                values["operational_precision_ge_098_run_count"]
+                + values["operational_fallback_run_count"]
+            )
+            lines.append(
+                f"| {scenario} | {operational['precision']['mean']:.4f} | "
+                f"{operational['recall']['mean']:.4f} | {operational['f1']['mean']:.4f} | "
+                f"{operational['fp']['mean']:.1f} | {operational['fn']['mean']:.1f} | "
+                f"{values['operational_precision_ge_098_run_count']}/{run_count} | "
+                f"{values['operational_fallback_run_count']} |"
+            )
+        lines.append("")
     return "\n".join(lines)
 
 

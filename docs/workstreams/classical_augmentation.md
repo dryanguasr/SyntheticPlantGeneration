@@ -65,12 +65,16 @@ python scripts/run_classical_augmentation_v2_campaign.py `
 python scripts/summarize_classical_augmentation_v2.py `
   --project outputs/classical_augmentation_v2/runs/confirmatory `
   --output-dir outputs/classical_augmentation_v2/metrics/confirmatory `
+  --phase confirmatory `
   --expected-scenarios V2-E0,V2-E0R,<recetas-seleccionadas> `
   --expected-seeds 1,2,3,4,5 --expected-epochs 50 --device 0
 
+# Tras una extensión selectiva a semillas 6-10, repetir el resumen anterior
+# añadiendo --allow-adaptive-extension; las recetas no promovidas permanecen en 5 semillas.
+
 # Este comando rehúsa sellar una cohorte de cinco semillas que deba extenderse.
 python scripts/lock_classical_augmentation_v2_selection.py `
-  --confirmatory-summary outputs/classical_augmentation_v2/metrics/confirmatory/screening_summary.json `
+  --confirmatory-summary outputs/classical_augmentation_v2/metrics/confirmatory/confirmatory_summary.json `
   --project outputs/classical_augmentation_v2/runs/confirmatory
 
 # Único punto de entrada autorizado a test; exige un lock íntegro.
@@ -81,6 +85,19 @@ El test no interviene en perfiles, recetas, ranking, checkpoints ni umbrales.
 El evaluador final vuelve a verificar hashes del split, aplica los umbrales
 escogidos en `val` y registra cada acceso. El test ya fue consultado en trabajo
 histórico, por lo que se mantiene congelado pero no se describe como virgen.
+
+### Cierre confirmatorio 2026-08-28
+
+El screening reproducible y su selección de finalistas están documentados en
+[`docs/reports/aumento_clasico_v2_screening_2026-08-25.md`](../reports/aumento_clasico_v2_screening_2026-08-25.md).
+
+La confirmación terminó con 40 corridas válidas. V2-E7 se extendió de forma
+adaptativa a 10 semillas junto con V2-E0 y V2-E0R; V2-E3 y V2-E6 permanecieron
+en cinco. Ninguna receta satisfizo el criterio predeclarado de candidato fuerte.
+El lock se selló sin candidatos y el evaluador final cerró sin consultar
+`test`. El resultado, las métricas operacionales y el diagnóstico de tiempos se
+documentan en
+[`docs/reports/aumento_clasico_v2_confirmatory_2026-08-28.md`](../reports/aumento_clasico_v2_confirmatory_2026-08-28.md).
 
 Los datasets, manifiestos extensos, previews, checkpoints y métricas se guardan
 en `outputs/classical_augmentation_v2/` y no se versionan. Los reportes

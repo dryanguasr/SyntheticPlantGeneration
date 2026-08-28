@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import csv
+from contextlib import contextmanager
 import hashlib
 import json
+import os
 import platform
 import subprocess
 import sys
@@ -60,31 +62,41 @@ def run_training_matrix(
 ) -> list[dict[str, Any]]:
     project = project.resolve()
     project.mkdir(parents=True, exist_ok=True)
-    model_path = model_path.resolve()
-    if not model_path.is_file():
-        raise FileNotFoundError(model_path)
-    _validate_dataset_gates(datasets)
-    seeds = list(seeds)
-    scenario_codes = list(datasets)
-    environment = _environment(model_path, datasets, seeds, config, phase)
-    (project / "execution_environment.json").write_text(json.dumps(environment, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
-    results = []
-    for seed in seeds:
-        order = balanced_scenario_order(scenario_codes, seed)
-        for run_order, scenario in enumerate(order, start=1):
-            results.append(
-                run_training(
-                    scenario,
-                    datasets[scenario],
-                    seed,
-                    run_order,
-                    project,
-                    model_path,
-                    config,
-                    phase=phase,
+    with _exclusive_campaign_lock(project):
+        model_path = model_path.resolve()
+        if not model_path.is_file():
+            raise FileNotFoundError(model_path)
+        _validate_dataset_gates(datasets)
+        seeds = list(seeds)
+        scenario_codes = list(datasets)
+        environment = _environment(model_path, datasets, seeds, config, phase)
+        environment_text = json.dumps(
+            environment, ensure_ascii=False, indent=2, sort_keys=True
+        ) + "\n"
+        (project / "execution_environment.json").write_text(
+            environment_text, encoding="utf-8", newline="\n"
+        )
+        with (project / "execution_environment_history.jsonl").open(
+            "a", encoding="utf-8", newline="\n"
+        ) as handle:
+            handle.write(json.dumps(environment, ensure_ascii=False, sort_keys=True) + "\n")
+        results = []
+        for seed in seeds:
+            order = balanced_scenario_order(scenario_codes, seed)
+            for run_order, scenario in enumerate(order, start=1):
+                results.append(
+                    run_training(
+                        scenario,
+                        datasets[scenario],
+                        seed,
+                        run_order,
+                        project,
+                        model_path,
+                        config,
+                        phase=phase,
+                    )
                 )
-            )
-    return results
+        return results
 
 
 def run_training(
@@ -106,6 +118,7 @@ def run_training(
     last = run_dir / "weights" / "last.pt"
     if _is_complete(run_dir, config.epochs):
         return _run_summary(run_dir, scenario, seed, run_order, "skipped_complete", phase)
+    _validate_resumable_results(run_dir, config.epochs)
     action = "resume" if last.is_file() else "new"
     started = datetime.now(timezone.utc)
     monotonic_start = time.perf_counter()
@@ -184,8 +197,72 @@ def _is_complete(run_dir: Path, epochs: int) -> bool:
     results = run_dir / "results.csv"
     if not results.is_file():
         return False
+    return _epoch_sequence(results) == list(range(1, epochs + 1)) and (run_dir / "weights" / "best.pt").is_file()
+
+
+def _validate_resumable_results(run_dir: Path, epochs: int) -> None:
+    """Reject shared/corrupt run directories instead of silently resuming them."""
+    results = run_dir / "results.csv"
+    if not results.is_file():
+        return
+    sequence = _epoch_sequence(results)
+    expected_prefix = list(range(1, len(sequence) + 1))
+    if len(sequence) >= epochs or sequence != expected_prefix:
+        raise RuntimeError(
+            f"Non-resumable results history in {results}: expected a unique epoch prefix "
+            f"1..N with N < {epochs}, observed {len(sequence)} rows ending in "
+            f"{sequence[-5:] if sequence else []}. Quarantine the run and restart it cleanly."
+        )
+
+
+def _epoch_sequence(results: Path) -> list[int]:
     with results.open(encoding="utf-8-sig", newline="") as handle:
-        return len(list(csv.DictReader(handle))) >= epochs and (run_dir / "weights" / "best.pt").is_file()
+        rows = list(csv.DictReader(handle))
+    try:
+        return [int(float(row["epoch"])) for row in rows]
+    except (KeyError, TypeError, ValueError) as error:
+        raise RuntimeError(f"Invalid epoch column in {results}") from error
+
+
+@contextmanager
+def _exclusive_campaign_lock(project: Path):
+    """Hold an OS-backed lock so suspensions or duplicate launchers cannot overlap."""
+    lock_path = project / ".campaign.lock"
+    lock_path.touch(exist_ok=True)
+    with lock_path.open("r+", encoding="utf-8") as handle:
+        try:
+            if os.name == "nt":
+                import msvcrt
+
+                if lock_path.stat().st_size == 0:
+                    handle.write("\n")
+                    handle.flush()
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError as error:
+            raise RuntimeError(
+                f"Another campaign launcher already holds {lock_path}; refusing a duplicate instance"
+            ) from error
+        handle.seek(0)
+        handle.truncate()
+        handle.write(json.dumps({"pid": os.getpid(), "started_utc": datetime.now(timezone.utc).isoformat()}) + "\n")
+        handle.flush()
+        try:
+            yield
+        finally:
+            handle.seek(0)
+            if os.name == "nt":
+                import msvcrt
+
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
 def _run_summary(run_dir: Path, scenario: str, seed: int, run_order: int, status: str, phase: str, wall_time: float | None = None) -> dict[str, Any]:
@@ -232,6 +309,8 @@ def _environment(model_path: Path, datasets: dict[str, Path], seeds: list[int], 
         "ultralytics": ultralytics.__version__, "opencv": cv2.__version__, "numpy": numpy.__version__,
         "gpus": [torch.cuda.get_device_name(index) for index in range(torch.cuda.device_count())],
         "git_commit": _git_commit(), "model": str(model_path), "model_sha256": _sha256(model_path),
+        "git_worktree_dirty": _git_worktree_dirty(),
+        "training_module_sha256": _sha256(Path(__file__)),
         "datasets": {code: str(path.resolve()) for code, path in datasets.items()}, "seeds": seeds,
         "training_config": asdict(config),
         "offline_augmentation_only": True,
@@ -258,6 +337,20 @@ def _gpu_telemetry():
 def _git_commit() -> str:
     try:
         return subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, timeout=5, check=True).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return "unknown_not_available"
+
+
+def _git_worktree_dirty() -> bool | str:
+    try:
+        output = subprocess.run(
+            ["git", "status", "--porcelain"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=True,
+        ).stdout
+        return bool(output.strip())
     except (OSError, subprocess.SubprocessError):
         return "unknown_not_available"
 
