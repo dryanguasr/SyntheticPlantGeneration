@@ -17,6 +17,11 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Guías operativas
 
+- [Aplicación móvil con ArUco](guides/aplicacion_movil_aruco.md): compilación,
+  requisitos de un clon nuevo, instalación, medidas aproximadas, capturas y
+  protocolo de prueba en teléfono; APK y pesos permanecen fuera de Git.
+- [Revisión de resultados de aumento clásico v2](guides/revision_resultados_aumento_clasico_v2.md):
+  acceso al paquete publicado con resultados, manifiestos, predicciones y previews.
 - `guides/biblioteca_texturas_uchuva.md`: generación, calibración y uso de
   texturas.
 - `guides/protocolo_validacion_humana.md`: matriz de validación, perfiles de
@@ -57,6 +62,10 @@ Consulte:
 
 ## Reportes con fecha de corte
 
+- [Aplicación Android con ArUco](reports/aplicacion_android_aruco_2026-09-02.md):
+  APK local, equivalencia del detector, verificación en emulador y límites de campo.
+- [Confirmación de aumento clásico v2](reports/aumento_clasico_v2_confirmatory_2026-08-28.md):
+  cierre de 40 corridas sin receta promovida, decisión operacional y tiempos.
 - `reports/estado_proyecto_2026-07-23.md`.
 - `reports/comparacion_multi_planta_2026-07-23.md`.
 - `reports/resultado_dataset_hibrido_2026-08-01.md`: dataset sintético,

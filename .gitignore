@@ -48,3 +48,19 @@ __pycache__/
 Thumbs.db
 .idea/
 .vscode/
+
+# Independent Android application and local build toolchain
+mobile/android/.gradle/
+mobile/android/.kotlin/
+mobile/android/**/build/
+mobile/android/local.properties
+mobile/android/app/src/main/assets/detector.onnx
+mobile/android/app/src/main/assets/model_manifest.json
+mobile/android/app/src/main/assets/detector.onnx.tmp
+mobile/android/app/src/main/assets/model_manifest.json.tmp
+mobile/android/app/src/androidTest/assets/mobile_validation_fixture.png
+mobile/android/app/src/androidTest/assets/mobile_validation_fixture.json
+*.apk
+*.aab
+*.jks
+*.keystore

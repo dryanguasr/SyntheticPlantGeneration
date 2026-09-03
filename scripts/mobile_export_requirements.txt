@@ -1,0 +1,8 @@
+# Install with .venv-training Python and --target outputs/mobile/python-deps --no-deps.
+# Existing training environment supplies torch, ultralytics 8.4.114, numpy and Pillow.
+onnx==1.17.0
+onnxruntime==1.22.0
+protobuf==5.29.4
+flatbuffers==25.2.10
+coloredlogs==15.0.1
+humanfriendly==10.0

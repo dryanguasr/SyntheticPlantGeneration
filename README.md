@@ -41,6 +41,15 @@ parámetros con procedencia
 
 ## Estado vigente
 
+La aplicación experimental Android en `mobile/android/` ejecuta el detector
+de capachos sin conexión y estima coordenadas sobre el plano de un ArUco.
+Consulte la [guía de instalación, impresión y validación](docs/guides/aplicacion_movil_aruco.md).
+Es un consumidor del detector híbrido previo; no cambia la arquitectura botánica
+ni promueve una receta clásica v2. Se publica el código, no el APK ni los pesos.
+Las pruebas en emulador están documentadas en el
+[informe de entrega](docs/reports/aplicacion_android_aruco_2026-09-02.md);
+la validación en teléfono físico permanece pendiente.
+
 | Componente | Versión o ruta actual |
 |---|---|
 | Modelo estructural | Variante `E_plus_contact_policy_clearance` |
@@ -54,6 +63,7 @@ parámetros con procedencia
 | Código del generador | `src/uchuva_lsystem/` |
 | Baseline clásico | `src/uchuva_classical_augmentation/protocol.py` |
 | Aumentación clásica reproducible | `src/uchuva_classical_augmentation/v2/` |
+| Aplicación Android experimental | `mobile/android/` — versión 0.1.0 |
 | Interfaz Gazebo | `src/uchuva_gazebo/` |
 | Entradas ejecutables | `scripts/` |
 | Escena para revisión | `outputs/current_review/` |
@@ -71,6 +81,8 @@ válidas. Ninguna receta cumplió el criterio predeclarado de mejora integral y
 `test` permaneció sin consultar. Véase el
 [informe confirmatorio](docs/reports/aumento_clasico_v2_confirmatory_2026-08-28.md)
 y la [guía del workstream](docs/workstreams/classical_augmentation.md).
+El [paquete de revisión publicado](docs/guides/revision_resultados_aumento_clasico_v2.md)
+permite consultar métricas, manifiestos y previews sin repetir la campaña.
 
 El código bajo `src/uchuva_lsystem/` es la única implementación vigente del
 modelo morfológico. Los archivos bajo `legacy/` se conservan como evidencia
@@ -85,6 +97,7 @@ SyntheticPlantGeneration/
 │   ├── uchuva_classical_augmentation/  contrato histórico + pipeline v2 reproducible
 │   └── uchuva_gazebo/                  interfaz semántica morphology → Gazebo
 ├── contributions/                      entregas externas preservadas y atribuidas
+├── mobile/android/                     consumidor Android: detector local + ArUco
 ├── scripts/                            comandos ejecutables
 ├── tests/                              regresiones Python puras
 ├── docs/

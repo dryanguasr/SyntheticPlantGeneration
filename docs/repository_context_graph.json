@@ -31,6 +31,48 @@
   },
   "nodes": [
     {
+      "id": "test.mobile_integration", "type": "test", "label": "Integracion Android nativa",
+      "summary": "Verifica CameraX y ciclo de vida, ArUco con captura coherente y equivalencia del detector Android sobre un ejemplo real de validacion preparado fuera de Git.",
+      "paths": ["mobile/android/app/src/androidTest/java/org/uchuva/aruco/CameraLifecycleTest.kt", "mobile/android/app/src/androidTest/java/org/uchuva/aruco/VisionSmokeTest.kt", "mobile/android/app/src/androidTest/java/org/uchuva/aruco/DetectorParityTest.kt"],
+      "evidence": [{"path": "mobile/android/app/src/androidTest/java/org/uchuva/aruco/DetectorParityTest.kt", "locator": "androidPreprocessingMatchesRealValidationReference"}]
+    },
+    {
+      "id": "module.mobile_vision", "type": "subsystem", "label": "Percepcion Android local",
+      "summary": "Consume el detector de capachos y ArUco sobre el mismo cuadro; conserva la referencia elegida y exporta estimaciones en el plano sin redefinir morfologia.",
+      "paths": ["mobile/android/app/src/main/java/org/uchuva/aruco/VisionEngine.kt", "mobile/android/app/src/main/java/org/uchuva/aruco/Geometry.kt"],
+      "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/VisionEngine.kt", "locator": "class VisionEngine"}]
+    },
+    {
+      "id": "entrypoint.export_mobile_detector", "type": "entrypoint", "label": "Exportar detector movil",
+      "summary": "Exporta el checkpoint calyx end2end a ONNX y exige equivalencia con PyTorch sobre validacion real antes de preparar assets Android.",
+      "paths": ["scripts/export_mobile_detector.py"],
+      "evidence": [{"path": "scripts/export_mobile_detector.py", "locator": "def match_predictions"}]
+    },
+    {
+      "id": "artifact.mobile_detector", "type": "artifact", "label": "Detector ONNX y manifiesto movil",
+      "summary": "ONNX FP32 640x640 y manifiesto con hashes, versiones, clase y contrato de tensores; archivos generados ignorados por Git.",
+      "paths": ["scripts/export_mobile_detector.py"],
+      "evidence": [{"path": "scripts/export_mobile_detector.py", "locator": "model_sha256"}]
+    },
+    {
+      "id": "artifact.mobile_capture", "type": "artifact", "label": "Captura Android anotada y JSON",
+      "summary": "Conserva imagen y resultado del mismo cuadro con coordenadas anulables, procedencia y hash de imagen.",
+      "paths": ["mobile/android/app/src/main/java/org/uchuva/aruco/CaptureStore.kt"],
+      "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/CaptureStore.kt", "locator": "image_sha256"}]
+    },
+    {
+      "id": "constraint.mobile_planar_estimate", "type": "constraint", "label": "Medidas moviles aproximadas en plano",
+      "summary": "La homografia del marcador estima el centro de caja sobre su plano; no mide profundidad ni corrige distorsion optica. Requiere confirmar el lado impreso.",
+      "paths": ["docs/guides/aplicacion_movil_aruco.md"],
+      "evidence": [{"path": "docs/guides/aplicacion_movil_aruco.md", "locator": "la app no mide profundidad ni distancia 3D"}]
+    },
+    {
+      "id": "test.mobile_geometry", "type": "test", "label": "Pruebas de geometria y referencia movil",
+      "summary": "Prueba homografia, perspectiva, escala, rotacion, transformaciones de imagen, seleccion, ambiguedad, ausencia y JSON anulable sin camara.",
+      "paths": ["mobile/android/app/src/test/java/org/uchuva/aruco/GeometryTest.kt"],
+      "evidence": [{"path": "mobile/android/app/src/test/java/org/uchuva/aruco/GeometryTest.kt", "locator": "class GeometryTest"}]
+    },
+    {
       "id": "module.public_api",
       "type": "subsystem",
       "label": "API publica del paquete",
@@ -1000,6 +1042,13 @@
     }
   ],
   "edges": [
+    {"source": "test.mobile_integration", "relation": "tests", "target": "module.mobile_vision", "evidence": [{"path": "mobile/android/app/src/androidTest/java/org/uchuva/aruco/VisionSmokeTest.kt", "locator": "VisionEngine(context)"}]},
+    {"source": "module.mobile_vision", "relation": "consumes", "target": "artifact.mobile_detector", "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/VisionEngine.kt", "locator": "detector.onnx"}]},
+    {"source": "entrypoint.export_mobile_detector", "relation": "produces", "target": "artifact.mobile_detector", "evidence": [{"path": "scripts/export_mobile_detector.py", "locator": "model_manifest.json"}]},
+    {"source": "module.mobile_vision", "relation": "must_preserve", "target": "constraint.single_class_calyx", "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/VisionEngine.kt", "locator": "calyx"}]},
+    {"source": "module.mobile_vision", "relation": "must_preserve", "target": "constraint.mobile_planar_estimate", "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/Analysis.kt", "locator": "object_depth_measured"}]},
+    {"source": "module.mobile_vision", "relation": "produces", "target": "artifact.mobile_capture", "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/CaptureStore.kt", "locator": "analysis.json"}]},
+    {"source": "test.mobile_geometry", "relation": "tests", "target": "module.mobile_vision", "evidence": [{"path": "mobile/android/app/src/test/java/org/uchuva/aruco/GeometryTest.kt", "locator": "selectionDoesNotJumpWhenSelectedMarkerDisappears"}]},
     {"source": "module.public_api", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .morphology import"}]},
     {"source": "module.public_api", "relation": "depends_on", "target": "module.grammar", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .grammar import"}]},
     {"source": "module.public_api", "relation": "depends_on", "target": "module.parameters", "evidence": [{"path": "src/uchuva_lsystem/__init__.py", "locator": "from .parameters import"}]},
