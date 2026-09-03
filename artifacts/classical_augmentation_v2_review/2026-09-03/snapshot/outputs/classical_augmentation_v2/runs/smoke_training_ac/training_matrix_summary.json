@@ -1,0 +1,110 @@
+[
+  {
+    "best_epoch": 7,
+    "best_metric": 0.59482,
+    "completion_status": "skipped_complete",
+    "epochs_completed": 8,
+    "phase": "smoke",
+    "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\smoke_training_ac\\v2_e0_smoke_yolo11n_e8_seed01",
+    "run_order": 1,
+    "scenario": "V2-E0",
+    "seed": 1,
+    "wall_time_seconds_current_segment": null
+  },
+  {
+    "best_epoch": 7,
+    "best_metric": 0.57299,
+    "completion_status": "skipped_complete",
+    "epochs_completed": 8,
+    "phase": "smoke",
+    "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\smoke_training_ac\\v2_e8_smoke_yolo11n_e8_seed01",
+    "run_order": 2,
+    "scenario": "V2-E8",
+    "seed": 1,
+    "wall_time_seconds_current_segment": null
+  },
+  {
+    "best_epoch": 8,
+    "best_metric": 0.57587,
+    "completion_status": "skipped_complete",
+    "epochs_completed": 8,
+    "phase": "smoke",
+    "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\smoke_training_ac\\v2_e0r_smoke_yolo11n_e8_seed01",
+    "run_order": 3,
+    "scenario": "V2-E0R",
+    "seed": 1,
+    "wall_time_seconds_current_segment": null
+  },
+  {
+    "best_epoch": 8,
+    "best_metric": 0.60256,
+    "completion_status": "skipped_complete",
+    "epochs_completed": 8,
+    "phase": "smoke",
+    "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\smoke_training_ac\\v2_e7_smoke_yolo11n_e8_seed01",
+    "run_order": 4,
+    "scenario": "V2-E7",
+    "seed": 1,
+    "wall_time_seconds_current_segment": null
+  },
+  {
+    "best_epoch": 8,
+    "best_metric": 0.58221,
+    "completion_status": "complete",
+    "epochs_completed": 8,
+    "phase": "smoke",
+    "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\smoke_training_ac\\v2_e2_smoke_yolo11n_e8_seed01",
+    "run_order": 5,
+    "scenario": "V2-E2",
+    "seed": 1,
+    "wall_time_seconds_current_segment": 257.7474765999941
+  },
+  {
+    "best_epoch": 8,
+    "best_metric": 0.60912,
+    "completion_status": "complete",
+    "epochs_completed": 8,
+    "phase": "smoke",
+    "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\smoke_training_ac\\v2_e6_smoke_yolo11n_e8_seed01",
+    "run_order": 6,
+    "scenario": "V2-E6",
+    "seed": 1,
+    "wall_time_seconds_current_segment": 298.17725559999235
+  },
+  {
+    "best_epoch": 8,
+    "best_metric": 0.58561,
+    "completion_status": "complete",
+    "epochs_completed": 8,
+    "phase": "smoke",
+    "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\smoke_training_ac\\v2_e3_smoke_yolo11n_e8_seed01",
+    "run_order": 7,
+    "scenario": "V2-E3",
+    "seed": 1,
+    "wall_time_seconds_current_segment": 289.2678644999396
+  },
+  {
+    "best_epoch": 8,
+    "best_metric": 0.60341,
+    "completion_status": "complete",
+    "epochs_completed": 8,
+    "phase": "smoke",
+    "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\smoke_training_ac\\v2_e5_smoke_yolo11n_e8_seed01",
+    "run_order": 8,
+    "scenario": "V2-E5",
+    "seed": 1,
+    "wall_time_seconds_current_segment": 297.6981887000147
+  },
+  {
+    "best_epoch": 8,
+    "best_metric": 0.56638,
+    "completion_status": "complete",
+    "epochs_completed": 8,
+    "phase": "smoke",
+    "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\smoke_training_ac\\v2_e4_smoke_yolo11n_e8_seed01",
+    "run_order": 9,
+    "scenario": "V2-E4",
+    "seed": 1,
+    "wall_time_seconds_current_segment": 332.4136679000221
+  }
+]

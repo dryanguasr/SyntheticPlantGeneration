@@ -1,0 +1,7 @@
+path: C:/dev/SyntheticPlantGeneration/outputs/classical_augmentation_v2/datasets/full/V2-E4_seed_20260821_n0532
+train: images/train
+val: images/val
+test: images/test
+names:
+  0: calyx
+nc: 1

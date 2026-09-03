@@ -1,0 +1,63 @@
+{
+  "created_utc": "2026-08-21T23:14:28.628640+00:00",
+  "cuda": "13.0",
+  "datasets": {
+    "V2-E0": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000",
+    "V2-E0R": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532",
+    "V2-E2": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E2_seed_20260821_n0532",
+    "V2-E3": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E3_seed_20260821_n0532",
+    "V2-E4": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E4_seed_20260821_n0532",
+    "V2-E5": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E5_seed_20260821_n0532",
+    "V2-E6": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E6_seed_20260821_n0532",
+    "V2-E7": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E7_seed_20260821_n0532",
+    "V2-E8": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E8_seed_20260821_n0532"
+  },
+  "git_commit": "23494e99b373e09584c60d44fd5189f4d0eff9c4",
+  "gpus": [
+    "NVIDIA GeForce RTX 4050 Laptop GPU"
+  ],
+  "model": "C:\\dev\\SyntheticPlantGeneration\\tmp\\classical_campaign\\yolo11n.pt",
+  "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "numpy": "2.4.4",
+  "offline_augmentation_only": true,
+  "opencv": "5.0.0",
+  "phase": "smoke",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]",
+  "seeds": [
+    1
+  ],
+  "torch": "2.12.1+cu130",
+  "training_config": {
+    "amp": false,
+    "batch": 8,
+    "deterministic": true,
+    "device": "0",
+    "epochs": 8,
+    "imgsz": 640,
+    "lr0": 0.001,
+    "lrf": 0.01,
+    "optimizer": "AdamW",
+    "rect": true,
+    "save_period": 5,
+    "weight_decay": 0.0005,
+    "workers": 4
+  },
+  "ultralytics": "8.4.114",
+  "ultralytics_augmentation_overrides": {
+    "auto_augment": null,
+    "copy_paste": 0.0,
+    "cutmix": 0.0,
+    "degrees": 0.0,
+    "erasing": 0.0,
+    "fliplr": 0.0,
+    "flipud": 0.0,
+    "hsv_h": 0.0,
+    "hsv_s": 0.0,
+    "hsv_v": 0.0,
+    "mixup": 0.0,
+    "mosaic": 0.0,
+    "scale": 0.0,
+    "translate": 0.0
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "attempt_count": 29,
+  "completion_status": "complete",
+  "dataset_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\smoke\\V2-E7_seed_20260821_n0025",
+  "derived_count": 25,
+  "rejection_count": 4,
+  "scenario": "V2-E7",
+  "seed": 20260821,
+  "test_image_count": 133,
+  "train_image_count": 1087,
+  "val_image_count": 133
+}

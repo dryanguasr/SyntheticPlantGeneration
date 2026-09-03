@@ -1,0 +1,603 @@
+{
+  "campaign_config": "C:\\dev\\SyntheticPlantGeneration\\configs\\classical_augmentation_v2\\campaign_v1.json",
+  "campaign_config_sha256": "097914c719ff76b4bcf82e2815e96d3b2843710a9779ffb46464eb21021df184",
+  "confirmatory_summary": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\metrics\\confirmatory\\confirmatory_summary.json",
+  "confirmatory_summary_sha256": "5b8adf095cd75776209c3e2e8b1e04f90da7a5dc88a49db4148c366e46ee621b",
+  "decision": {
+    "decisions": {
+      "V2-E3": {
+        "case_a_global_improvement": false,
+        "case_b_operational_improvement": false,
+        "extend_to_ten_seeds": false,
+        "mean_delta_key_difficulty_recall_vs_e0r": {
+          "border_contact:True": -0.05263157894736842,
+          "clustered:True": -0.10196078431372549,
+          "size:small": 0.02061855670103093
+        },
+        "paired_map5095_vs_e0r": {
+          "ci95": [
+            -0.018375365583530763,
+            0.023331365583530723
+          ],
+          "mean": 0.0024779999999999802,
+          "n": 5,
+          "sd": 0.016797385808512002
+        },
+        "paired_operational_recall_vs_e0r": {
+          "ci95": [
+            -0.37480803326476725,
+            0.2449605387113904
+          ],
+          "mean": -0.06492374727668844,
+          "n": 5,
+          "sd": 0.24961178985170385
+        },
+        "positive_map_seeds_vs_e0r": 3,
+        "positive_operational_seeds_vs_e0r": 3,
+        "required_positive_seed_count": 4,
+        "seed_count": 5,
+        "seeds": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "strong_candidate": false
+      },
+      "V2-E6": {
+        "case_a_global_improvement": false,
+        "case_b_operational_improvement": false,
+        "extend_to_ten_seeds": false,
+        "mean_delta_key_difficulty_recall_vs_e0r": {
+          "border_contact:True": -0.02807017543859649,
+          "clustered:True": 2.2204460492503132e-17,
+          "size:small": 2.2204460492503132e-17
+        },
+        "paired_map5095_vs_e0r": {
+          "ci95": [
+            0.009327682905954104,
+            0.024560317094045856
+          ],
+          "mean": 0.01694399999999998,
+          "n": 5,
+          "sd": 0.0061349433575217
+        },
+        "paired_operational_recall_vs_e0r": {
+          "ci95": [
+            -0.056243885581185295,
+            0.01964257839164283
+          ],
+          "mean": -0.018300653594771232,
+          "n": 5,
+          "sd": 0.030563273057516653
+        },
+        "positive_map_seeds_vs_e0r": 5,
+        "positive_operational_seeds_vs_e0r": 1,
+        "required_positive_seed_count": 4,
+        "seed_count": 5,
+        "seeds": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "strong_candidate": false
+      },
+      "V2-E7": {
+        "case_a_global_improvement": false,
+        "case_b_operational_improvement": false,
+        "extend_to_ten_seeds": false,
+        "mean_delta_key_difficulty_recall_vs_e0r": {
+          "border_contact:True": -0.02894736842105263,
+          "clustered:True": -0.011764705882352944,
+          "size:small": -0.018041237113402046
+        },
+        "paired_map5095_vs_e0r": {
+          "ci95": [
+            0.011339894544858283,
+            0.024982105455141703
+          ],
+          "mean": 0.018160999999999993,
+          "n": 10,
+          "sd": 0.009535910432558487
+        },
+        "paired_operational_recall_vs_e0r": {
+          "ci95": [
+            -0.11947400980520606,
+            0.08940865032808193
+          ],
+          "mean": -0.015032679738562071,
+          "n": 10,
+          "sd": 0.146009056086658
+        },
+        "positive_map_seeds_vs_e0r": 10,
+        "positive_operational_seeds_vs_e0r": 5,
+        "required_positive_seed_count": 8,
+        "seed_count": 10,
+        "seeds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "strong_candidate": false
+      }
+    },
+    "fixed_engineering_thresholds": {
+      "majority_sign_fraction": 0.8,
+      "map_stability_tolerance": 0.005,
+      "maximum_operational_recall_drop": 0.02
+    },
+    "protocol_version": "classical_augmentation_v2_selection_v1.0.0",
+    "scenario_cohorts": {
+      "V2-E0": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "V2-E0R": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "V2-E3": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "V2-E6": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "V2-E7": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    "seed_count": 10,
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "selection_split": "val",
+    "test_consulted": false
+  },
+  "historical_test_caveat": "Test was excluded from selection in this campaign but had been consulted in historical work, so it is not a virgin holdout.",
+  "lock_content_sha256": "e196445fe9903e3f7c4c7d41ca69ada9a1a303fe16b8e3a3522a409bd3c21d98",
+  "locked_at_utc": "2026-08-28T22:24:35.731888+00:00",
+  "locked_runs": [
+    {
+      "best_epoch": 14,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed01\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "f2dcd8824194c2f7148574fc122f13d92eda0a7aa93fb04d0427ee88261b3f63",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 1,
+      "validation_selected_confidence": 0.7473742961883545
+    },
+    {
+      "best_epoch": 18,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed02\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "6b8cf93e2b2e6ed9920dac34ae030d28f55437d991a382c61e21fcabde6756e5",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 2,
+      "validation_selected_confidence": 0.8046890497207642
+    },
+    {
+      "best_epoch": 11,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed03\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "919c7df95cbd045cbea0ccbf0d5b8485f5d749f9841e1432c68e171837e2e7a2",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 3,
+      "validation_selected_confidence": 0.9268990755081177
+    },
+    {
+      "best_epoch": 8,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed04\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "7c82feb0cdf1ae2e11f75b006204faee16a91b21eb9317e78e6a3240ab7988ae",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 4,
+      "validation_selected_confidence": 0.8189610242843628
+    },
+    {
+      "best_epoch": 11,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed05\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "2185eafe551e4611a89b70c6e9a4e8025481d885f23dccec2c87d48277bffb19",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 5,
+      "validation_selected_confidence": 0.7717622518539429
+    },
+    {
+      "best_epoch": 8,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed06\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "ed7a121a69469e9d6d5fd738f8906d8df3056ed37e2e4d9b89a3364e64491706",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 6,
+      "validation_selected_confidence": 0.7761741876602173
+    },
+    {
+      "best_epoch": 13,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed07\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "abe422e14fd78a289a487ad17c1c50ec729c83d92281e2976f14658a79f021b9",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 7,
+      "validation_selected_confidence": 0.7281168699264526
+    },
+    {
+      "best_epoch": 13,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed08\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "91bcdf2cd41b471f41617484be2a319b4c668c8449b19430e801c1384d6bf22d",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 8,
+      "validation_selected_confidence": 0.7361196875572205
+    },
+    {
+      "best_epoch": 10,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed09\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "010068082a32dbbec331d87dde4a8584cec4d7dbe89f707688b4b62598f82dee",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 9,
+      "validation_selected_confidence": 0.823599636554718
+    },
+    {
+      "best_epoch": 8,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed10\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "f3221df70aeabc29f6771d4716097dc618860cb84928d5b2f07fbfaa5429070d",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\data.yaml",
+      "data_yaml_sha256": "e54e819d4be715ba9a71c0ca4cf21d911ddf959fe0ce14ff5d150e6103f10bf8",
+      "dataset_audit_sha256": "09dd028433995f63e305f3ed70544ff92b8e8531beec3ad36df8d5a37f262db5",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000\\build_config.json",
+      "dataset_build_config_sha256": "9ead4e3f2b43e15be8d24ad891dbba1d9e315f197947c223326cf561d47c1cd7",
+      "role": "control",
+      "scenario": "V2-E0",
+      "seed": 10,
+      "validation_selected_confidence": 0.7896086573600769
+    },
+    {
+      "best_epoch": 35,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed01\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "40a7dc33bb492c6075485402d938c6c7ef1157b47d71e5f28a96b1b53eecfc25",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 1,
+      "validation_selected_confidence": 0.8164535760879517
+    },
+    {
+      "best_epoch": 13,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed02\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "604afa5645fcddc7268bdc85bbdb5f12a4ab757c2f59210103b713b05580c69a",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 2,
+      "validation_selected_confidence": 0.8013393878936768
+    },
+    {
+      "best_epoch": 28,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed03\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "01c106c0652e7dc7667540d683566ba61fb3ee85519526b7677cde51b9b56968",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 3,
+      "validation_selected_confidence": 0.8475791811943054
+    },
+    {
+      "best_epoch": 11,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed04\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "e475dafb3a69d4e111c83a1dcb7ad5b2fc11e757e09f0732a0de2c1dcc2401c9",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 4,
+      "validation_selected_confidence": 0.8106213212013245
+    },
+    {
+      "best_epoch": 18,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed05\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "90531413b3760ce4b3fbd2fc788d84b907352f0efb9838b93ab4fb5e4d2dcdab",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 5,
+      "validation_selected_confidence": 0.629012405872345
+    },
+    {
+      "best_epoch": 11,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed06\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "9b8f3a9084ec3378bca29f5b3ab7906cb1ffaf7b9ab38abe559673c87faff378",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 6,
+      "validation_selected_confidence": 0.7872149348258972
+    },
+    {
+      "best_epoch": 23,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed07\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "1fd407083f9e5e8d700ccd2a8636245f0743f22d716563d993110ab0041123f9",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 7,
+      "validation_selected_confidence": 0.8707600235939026
+    },
+    {
+      "best_epoch": 22,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed08\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "5cbef702408d8474e612f009bc20f757f79a36eb8302c24cf963a82840434a8a",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 8,
+      "validation_selected_confidence": 0.8139424920082092
+    },
+    {
+      "best_epoch": 7,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed09\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "65d95f0cc836a43016bfd3bd71e435dfe9f77831225672e3cbe4f9e1963a4862",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 9,
+      "validation_selected_confidence": 0.6470752358436584
+    },
+    {
+      "best_epoch": 18,
+      "checkpoint": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed10\\weights\\best.pt",
+      "checkpoint_rule": "maximum_validation_map50_95",
+      "checkpoint_sha256": "36c2debc38ced7b564626102241efff66ca99500cc34be626c2230c2c79d6084",
+      "confidence_threshold_rule": "maximum_recall_subject_to_precision_ge_0.98",
+      "data_yaml": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\data.yaml",
+      "data_yaml_sha256": "96f9ee350c086102ac16c9c98cfe8fdbe9b82ca369c96e9d89ef36cb81568787",
+      "dataset_audit_sha256": "7b82e6957818a4dd0e2918a67ae63a4b22fd55446bdca101854b90df4c3e3f0d",
+      "dataset_build_config": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532\\build_config.json",
+      "dataset_build_config_sha256": "65634d5229f06ee2c1f5b1b7abc8d7a941ca99b590d25a4e1d73c954e069313d",
+      "role": "control",
+      "scenario": "V2-E0R",
+      "seed": 10,
+      "validation_selected_confidence": 0.8811463117599487
+    }
+  ],
+  "protocol_version": "classical_augmentation_v2_selection_v1.0.0",
+  "selected_scenarios": [],
+  "selection_split": "val",
+  "status": "locked",
+  "test_consulted": false,
+  "test_policy": "single_evaluation_of_locked_controls_and_candidates_only",
+  "training_environment": {
+    "created_utc": "2026-08-28T00:57:06.565305+00:00",
+    "cuda": "13.0",
+    "datasets": {
+      "V2-E0": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0_seed_20260821_n0000",
+      "V2-E0R": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532",
+      "V2-E7": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E7_seed_20260821_n0532"
+    },
+    "git_commit": "01821bbb9593c5f652f3d08ec1efc10dd4eb76fe",
+    "git_worktree_dirty": true,
+    "gpus": [
+      "NVIDIA GeForce RTX 4050 Laptop GPU"
+    ],
+    "model": "C:\\dev\\SyntheticPlantGeneration\\tmp\\classical_campaign\\yolo11n.pt",
+    "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+    "numpy": "2.4.4",
+    "offline_augmentation_only": true,
+    "opencv": "5.0.0",
+    "phase": "confirmatory",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]",
+    "seeds": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "torch": "2.12.1+cu130",
+    "training_config": {
+      "amp": false,
+      "batch": 8,
+      "deterministic": true,
+      "device": "0",
+      "epochs": 50,
+      "imgsz": 640,
+      "lr0": 0.001,
+      "lrf": 0.01,
+      "optimizer": "AdamW",
+      "rect": true,
+      "save_period": 5,
+      "weight_decay": 0.0005,
+      "workers": 4
+    },
+    "training_module_sha256": "7a62bbc3417f53dfa8273c62ce6450fc41045e20307409ab98c222a0e0f0bf8e",
+    "ultralytics": "8.4.114",
+    "ultralytics_augmentation_overrides": {
+      "auto_augment": null,
+      "copy_paste": 0.0,
+      "cutmix": 0.0,
+      "degrees": 0.0,
+      "erasing": 0.0,
+      "fliplr": 0.0,
+      "flipud": 0.0,
+      "hsv_h": 0.0,
+      "hsv_s": 0.0,
+      "hsv_v": 0.0,
+      "mixup": 0.0,
+      "mosaic": 0.0,
+      "scale": 0.0,
+      "translate": 0.0
+    }
+  },
+  "training_environment_sha256": "45a09b3ad38a83048552a0e904229383191a39b4b81f42fd990f048325cebb6b"
+}

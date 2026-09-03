@@ -1,0 +1,50 @@
+{
+  "derived_count": 532,
+  "profile_path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\domain_profile\\real_train_profile.json",
+  "profile_sha256": "4b8d620948d25ad00c7727cf2aca55f69d057a9e83466b2fa2d7876ff425c206",
+  "scenario": {
+    "code": "V2-E3",
+    "derived_count": 532,
+    "name": "Real-matched photometric augmentation",
+    "parameters": {
+      "acceptance": "train_global_p01_p99_luminance_saturation_local_contrast",
+      "clahe_blend_range": [
+        0.18,
+        0.38
+      ],
+      "clahe_clip_limit_range": [
+        1.15,
+        1.55
+      ],
+      "exposure_factor_range": [
+        0.86,
+        1.14
+      ],
+      "max_transforms": 2,
+      "phenomena": [
+        "exposure",
+        "exposure+soft_directional_shadow",
+        "white_balance",
+        "local_contrast"
+      ],
+      "shadow_strength_range": [
+        0.1,
+        0.24
+      ],
+      "white_balance_bgr_gain_range": [
+        0.94,
+        1.06
+      ]
+    },
+    "recipe_id": "real_matched_photometric",
+    "transform_families": [
+      "photometric"
+    ]
+  },
+  "seed": 20260821,
+  "source_split_fingerprints": {
+    "test": "a5752614ab12239ae3104ee73331474c7598a589809a36dffdea4e11e68b0a9b",
+    "train": "568ab42f2246d696ee4cd5e2d1ea1fb6d7011c8cdce33ae6d8f3dd204477d952",
+    "val": "08b18a2f68cad0f6c6dc2ef51d0e67675135ec7ff258e9e30ae9ad1faeb8dd0f"
+  }
+}

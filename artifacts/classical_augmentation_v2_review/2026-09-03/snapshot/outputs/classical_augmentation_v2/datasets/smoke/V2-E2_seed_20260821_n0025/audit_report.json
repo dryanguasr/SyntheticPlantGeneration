@@ -1,0 +1,91 @@
+{
+  "bbox_size_band_delta_percentage_points": {
+    "large": -0.36052202971583736,
+    "medium": 0.18026101485792423,
+    "small": 0.18026101485792423
+  },
+  "bbox_size_band_threshold": {
+    "status": "engineering_heuristic",
+    "value": 5.0
+  },
+  "dataset_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\smoke\\V2-E2_seed_20260821_n0025",
+  "expected_derived_count": 25,
+  "issues": [],
+  "manifest_count": 25,
+  "recipe_diagnostics": {
+    "copy_paste_pairwise_overlap": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "copy_paste_scale_ratio": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "crop_bbox_area_after": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "crop_bbox_area_before": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "occlusion_visible_fraction": {
+      "count": 55,
+      "max": 1.0,
+      "mean": 0.9344272076553206,
+      "min": 0.5865207132882847
+    },
+    "photometry_augmented": {
+      "count": 20,
+      "means": {
+        "local_contrast": 0.05904306434094906,
+        "luminance_std": 0.2051621399819851,
+        "mean_luminance": 0.5102520599961281,
+        "percentile_05": 0.1600000043399632,
+        "percentile_95": 0.8290196180343627,
+        "saturation_mean": 0.3908323784774256
+      }
+    },
+    "photometry_source": {
+      "count": 20,
+      "means": {
+        "local_contrast": 0.060505551565438506,
+        "luminance_std": 0.21110675111413002,
+        "mean_luminance": 0.5318466395139694,
+        "percentile_05": 0.17154902433976532,
+        "percentile_95": 0.8615686357021332,
+        "saturation_mean": 0.3879030905157438
+      }
+    },
+    "rejections": {
+      "count": 6,
+      "reasons": {
+        "recipe_candidate_rejected": 6
+      }
+    }
+  },
+  "source_integrity_basis": "source files are hardlink-identical or SHA-256 identical; derived files are decoded and hash-verified",
+  "split_counts": {
+    "test": {
+      "images": 133,
+      "objects": 480
+    },
+    "train": {
+      "images": 1087,
+      "objects": 2964
+    },
+    "val": {
+      "images": 133,
+      "objects": 459
+    }
+  },
+  "status": "valid"
+}

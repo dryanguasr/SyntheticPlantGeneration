@@ -1,0 +1,28 @@
+{
+  "derived_count": 532,
+  "profile_path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\domain_profile\\real_train_profile.json",
+  "profile_sha256": "4b8d620948d25ad00c7727cf2aca55f69d057a9e83466b2fa2d7876ff425c206",
+  "scenario": {
+    "code": "V2-E2",
+    "derived_count": 532,
+    "name": "Failure-guided moderate combination",
+    "parameters": {
+      "max_transform_families": 2,
+      "occlusion_probability": 0.55,
+      "occlusion_spec": "V2-E4",
+      "photometric_probability": 0.65,
+      "photometric_spec": "V2-E3"
+    },
+    "recipe_id": "failure_guided_combination",
+    "transform_families": [
+      "photometric",
+      "object_aware_occlusion"
+    ]
+  },
+  "seed": 20260821,
+  "source_split_fingerprints": {
+    "test": "a5752614ab12239ae3104ee73331474c7598a589809a36dffdea4e11e68b0a9b",
+    "train": "568ab42f2246d696ee4cd5e2d1ea1fb6d7011c8cdce33ae6d8f3dd204477d952",
+    "val": "08b18a2f68cad0f6c6dc2ef51d0e67675135ec7ff258e9e30ae9ad1faeb8dd0f"
+  }
+}

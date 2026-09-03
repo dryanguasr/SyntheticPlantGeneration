@@ -1,0 +1,2969 @@
+{
+  "kind": "extracted_without_recalculation",
+  "source": "snapshot/outputs/classical_augmentation_v2/metrics/confirmatory/confirmatory_summary.json",
+  "source_sha256": "5b8adf095cd75776209c3e2e8b1e04f90da7a5dc88a49db4148c366e46ee621b",
+  "selection_split": "val",
+  "test_consulted": false,
+  "runs": [
+    {
+      "scenario": "V2-E0",
+      "seed": 1,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed01",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 130,
+            "ground_truth": 345,
+            "recall": 0.6231884057971014,
+            "true_positive": 215
+          },
+          "border_contact:True": {
+            "false_negative": 62,
+            "ground_truth": 114,
+            "recall": 0.45614035087719296,
+            "true_positive": 52
+          },
+          "clustered:False": {
+            "false_negative": 175,
+            "ground_truth": 408,
+            "recall": 0.571078431372549,
+            "true_positive": 233
+          },
+          "clustered:True": {
+            "false_negative": 17,
+            "ground_truth": 51,
+            "recall": 0.6666666666666666,
+            "true_positive": 34
+          },
+          "object_count:high": {
+            "false_negative": 128,
+            "ground_truth": 258,
+            "recall": 0.5038759689922481,
+            "true_positive": 130
+          },
+          "object_count:low": {
+            "false_negative": 2,
+            "ground_truth": 44,
+            "recall": 0.9545454545454546,
+            "true_positive": 42
+          },
+          "object_count:medium": {
+            "false_negative": 62,
+            "ground_truth": 157,
+            "recall": 0.6050955414012739,
+            "true_positive": 95
+          },
+          "size:large": {
+            "false_negative": 26,
+            "ground_truth": 132,
+            "recall": 0.803030303030303,
+            "true_positive": 106
+          },
+          "size:medium": {
+            "false_negative": 32,
+            "ground_truth": 133,
+            "recall": 0.7593984962406015,
+            "true_positive": 101
+          },
+          "size:small": {
+            "false_negative": 134,
+            "ground_truth": 194,
+            "recall": 0.30927835051546393,
+            "true_positive": 60
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0",
+      "seed": 2,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed02",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 139,
+            "ground_truth": 345,
+            "recall": 0.5971014492753624,
+            "true_positive": 206
+          },
+          "border_contact:True": {
+            "false_negative": 71,
+            "ground_truth": 114,
+            "recall": 0.37719298245614036,
+            "true_positive": 43
+          },
+          "clustered:False": {
+            "false_negative": 189,
+            "ground_truth": 408,
+            "recall": 0.5367647058823529,
+            "true_positive": 219
+          },
+          "clustered:True": {
+            "false_negative": 21,
+            "ground_truth": 51,
+            "recall": 0.5882352941176471,
+            "true_positive": 30
+          },
+          "object_count:high": {
+            "false_negative": 139,
+            "ground_truth": 258,
+            "recall": 0.46124031007751937,
+            "true_positive": 119
+          },
+          "object_count:low": {
+            "false_negative": 1,
+            "ground_truth": 44,
+            "recall": 0.9772727272727273,
+            "true_positive": 43
+          },
+          "object_count:medium": {
+            "false_negative": 70,
+            "ground_truth": 157,
+            "recall": 0.554140127388535,
+            "true_positive": 87
+          },
+          "size:large": {
+            "false_negative": 23,
+            "ground_truth": 132,
+            "recall": 0.8257575757575758,
+            "true_positive": 109
+          },
+          "size:medium": {
+            "false_negative": 43,
+            "ground_truth": 133,
+            "recall": 0.6766917293233082,
+            "true_positive": 90
+          },
+          "size:small": {
+            "false_negative": 144,
+            "ground_truth": 194,
+            "recall": 0.25773195876288657,
+            "true_positive": 50
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0",
+      "seed": 3,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed03",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 294,
+            "ground_truth": 345,
+            "recall": 0.14782608695652175,
+            "true_positive": 51
+          },
+          "border_contact:True": {
+            "false_negative": 105,
+            "ground_truth": 114,
+            "recall": 0.07894736842105263,
+            "true_positive": 9
+          },
+          "clustered:False": {
+            "false_negative": 350,
+            "ground_truth": 408,
+            "recall": 0.14215686274509803,
+            "true_positive": 58
+          },
+          "clustered:True": {
+            "false_negative": 49,
+            "ground_truth": 51,
+            "recall": 0.0392156862745098,
+            "true_positive": 2
+          },
+          "object_count:high": {
+            "false_negative": 248,
+            "ground_truth": 258,
+            "recall": 0.03875968992248062,
+            "true_positive": 10
+          },
+          "object_count:low": {
+            "false_negative": 12,
+            "ground_truth": 44,
+            "recall": 0.7272727272727273,
+            "true_positive": 32
+          },
+          "object_count:medium": {
+            "false_negative": 139,
+            "ground_truth": 157,
+            "recall": 0.11464968152866242,
+            "true_positive": 18
+          },
+          "size:large": {
+            "false_negative": 74,
+            "ground_truth": 132,
+            "recall": 0.4393939393939394,
+            "true_positive": 58
+          },
+          "size:medium": {
+            "false_negative": 131,
+            "ground_truth": 133,
+            "recall": 0.015037593984962405,
+            "true_positive": 2
+          },
+          "size:small": {
+            "false_negative": 194,
+            "ground_truth": 194,
+            "recall": 0.0,
+            "true_positive": 0
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0",
+      "seed": 4,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed04",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 183,
+            "ground_truth": 345,
+            "recall": 0.46956521739130436,
+            "true_positive": 162
+          },
+          "border_contact:True": {
+            "false_negative": 87,
+            "ground_truth": 114,
+            "recall": 0.23684210526315788,
+            "true_positive": 27
+          },
+          "clustered:False": {
+            "false_negative": 238,
+            "ground_truth": 408,
+            "recall": 0.4166666666666667,
+            "true_positive": 170
+          },
+          "clustered:True": {
+            "false_negative": 32,
+            "ground_truth": 51,
+            "recall": 0.37254901960784315,
+            "true_positive": 19
+          },
+          "object_count:high": {
+            "false_negative": 174,
+            "ground_truth": 258,
+            "recall": 0.32558139534883723,
+            "true_positive": 84
+          },
+          "object_count:low": {
+            "false_negative": 4,
+            "ground_truth": 44,
+            "recall": 0.9090909090909091,
+            "true_positive": 40
+          },
+          "object_count:medium": {
+            "false_negative": 92,
+            "ground_truth": 157,
+            "recall": 0.4140127388535032,
+            "true_positive": 65
+          },
+          "size:large": {
+            "false_negative": 35,
+            "ground_truth": 132,
+            "recall": 0.7348484848484849,
+            "true_positive": 97
+          },
+          "size:medium": {
+            "false_negative": 69,
+            "ground_truth": 133,
+            "recall": 0.48120300751879697,
+            "true_positive": 64
+          },
+          "size:small": {
+            "false_negative": 166,
+            "ground_truth": 194,
+            "recall": 0.14432989690721648,
+            "true_positive": 28
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0",
+      "seed": 5,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed05",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 148,
+            "ground_truth": 345,
+            "recall": 0.5710144927536231,
+            "true_positive": 197
+          },
+          "border_contact:True": {
+            "false_negative": 68,
+            "ground_truth": 114,
+            "recall": 0.40350877192982454,
+            "true_positive": 46
+          },
+          "clustered:False": {
+            "false_negative": 192,
+            "ground_truth": 408,
+            "recall": 0.5294117647058824,
+            "true_positive": 216
+          },
+          "clustered:True": {
+            "false_negative": 24,
+            "ground_truth": 51,
+            "recall": 0.5294117647058824,
+            "true_positive": 27
+          },
+          "object_count:high": {
+            "false_negative": 144,
+            "ground_truth": 258,
+            "recall": 0.4418604651162791,
+            "true_positive": 114
+          },
+          "object_count:low": {
+            "false_negative": 5,
+            "ground_truth": 44,
+            "recall": 0.8863636363636364,
+            "true_positive": 39
+          },
+          "object_count:medium": {
+            "false_negative": 67,
+            "ground_truth": 157,
+            "recall": 0.5732484076433121,
+            "true_positive": 90
+          },
+          "size:large": {
+            "false_negative": 26,
+            "ground_truth": 132,
+            "recall": 0.803030303030303,
+            "true_positive": 106
+          },
+          "size:medium": {
+            "false_negative": 43,
+            "ground_truth": 133,
+            "recall": 0.6766917293233082,
+            "true_positive": 90
+          },
+          "size:small": {
+            "false_negative": 147,
+            "ground_truth": 194,
+            "recall": 0.2422680412371134,
+            "true_positive": 47
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0",
+      "seed": 6,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed06",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 167,
+            "ground_truth": 345,
+            "recall": 0.5159420289855072,
+            "true_positive": 178
+          },
+          "border_contact:True": {
+            "false_negative": 83,
+            "ground_truth": 114,
+            "recall": 0.2719298245614035,
+            "true_positive": 31
+          },
+          "clustered:False": {
+            "false_negative": 226,
+            "ground_truth": 408,
+            "recall": 0.44607843137254904,
+            "true_positive": 182
+          },
+          "clustered:True": {
+            "false_negative": 24,
+            "ground_truth": 51,
+            "recall": 0.5294117647058824,
+            "true_positive": 27
+          },
+          "object_count:high": {
+            "false_negative": 170,
+            "ground_truth": 258,
+            "recall": 0.34108527131782945,
+            "true_positive": 88
+          },
+          "object_count:low": {
+            "false_negative": 2,
+            "ground_truth": 44,
+            "recall": 0.9545454545454546,
+            "true_positive": 42
+          },
+          "object_count:medium": {
+            "false_negative": 78,
+            "ground_truth": 157,
+            "recall": 0.5031847133757962,
+            "true_positive": 79
+          },
+          "size:large": {
+            "false_negative": 24,
+            "ground_truth": 132,
+            "recall": 0.8181818181818182,
+            "true_positive": 108
+          },
+          "size:medium": {
+            "false_negative": 53,
+            "ground_truth": 133,
+            "recall": 0.6015037593984962,
+            "true_positive": 80
+          },
+          "size:small": {
+            "false_negative": 173,
+            "ground_truth": 194,
+            "recall": 0.10824742268041238,
+            "true_positive": 21
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0",
+      "seed": 7,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed07",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 123,
+            "ground_truth": 345,
+            "recall": 0.6434782608695652,
+            "true_positive": 222
+          },
+          "border_contact:True": {
+            "false_negative": 68,
+            "ground_truth": 114,
+            "recall": 0.40350877192982454,
+            "true_positive": 46
+          },
+          "clustered:False": {
+            "false_negative": 170,
+            "ground_truth": 408,
+            "recall": 0.5833333333333334,
+            "true_positive": 238
+          },
+          "clustered:True": {
+            "false_negative": 21,
+            "ground_truth": 51,
+            "recall": 0.5882352941176471,
+            "true_positive": 30
+          },
+          "object_count:high": {
+            "false_negative": 123,
+            "ground_truth": 258,
+            "recall": 0.5232558139534884,
+            "true_positive": 135
+          },
+          "object_count:low": {
+            "false_negative": 0,
+            "ground_truth": 44,
+            "recall": 1.0,
+            "true_positive": 44
+          },
+          "object_count:medium": {
+            "false_negative": 68,
+            "ground_truth": 157,
+            "recall": 0.5668789808917197,
+            "true_positive": 89
+          },
+          "size:large": {
+            "false_negative": 21,
+            "ground_truth": 132,
+            "recall": 0.8409090909090909,
+            "true_positive": 111
+          },
+          "size:medium": {
+            "false_negative": 40,
+            "ground_truth": 133,
+            "recall": 0.6992481203007519,
+            "true_positive": 93
+          },
+          "size:small": {
+            "false_negative": 130,
+            "ground_truth": 194,
+            "recall": 0.32989690721649484,
+            "true_positive": 64
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0",
+      "seed": 8,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed08",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 127,
+            "ground_truth": 345,
+            "recall": 0.6318840579710145,
+            "true_positive": 218
+          },
+          "border_contact:True": {
+            "false_negative": 70,
+            "ground_truth": 114,
+            "recall": 0.38596491228070173,
+            "true_positive": 44
+          },
+          "clustered:False": {
+            "false_negative": 175,
+            "ground_truth": 408,
+            "recall": 0.571078431372549,
+            "true_positive": 233
+          },
+          "clustered:True": {
+            "false_negative": 22,
+            "ground_truth": 51,
+            "recall": 0.5686274509803921,
+            "true_positive": 29
+          },
+          "object_count:high": {
+            "false_negative": 130,
+            "ground_truth": 258,
+            "recall": 0.49612403100775193,
+            "true_positive": 128
+          },
+          "object_count:low": {
+            "false_negative": 1,
+            "ground_truth": 44,
+            "recall": 0.9772727272727273,
+            "true_positive": 43
+          },
+          "object_count:medium": {
+            "false_negative": 66,
+            "ground_truth": 157,
+            "recall": 0.5796178343949044,
+            "true_positive": 91
+          },
+          "size:large": {
+            "false_negative": 23,
+            "ground_truth": 132,
+            "recall": 0.8257575757575758,
+            "true_positive": 109
+          },
+          "size:medium": {
+            "false_negative": 41,
+            "ground_truth": 133,
+            "recall": 0.6917293233082706,
+            "true_positive": 92
+          },
+          "size:small": {
+            "false_negative": 133,
+            "ground_truth": 194,
+            "recall": 0.31443298969072164,
+            "true_positive": 61
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0",
+      "seed": 9,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed09",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 162,
+            "ground_truth": 345,
+            "recall": 0.5304347826086957,
+            "true_positive": 183
+          },
+          "border_contact:True": {
+            "false_negative": 80,
+            "ground_truth": 114,
+            "recall": 0.2982456140350877,
+            "true_positive": 34
+          },
+          "clustered:False": {
+            "false_negative": 212,
+            "ground_truth": 408,
+            "recall": 0.4803921568627451,
+            "true_positive": 196
+          },
+          "clustered:True": {
+            "false_negative": 30,
+            "ground_truth": 51,
+            "recall": 0.4117647058823529,
+            "true_positive": 21
+          },
+          "object_count:high": {
+            "false_negative": 163,
+            "ground_truth": 258,
+            "recall": 0.3682170542635659,
+            "true_positive": 95
+          },
+          "object_count:low": {
+            "false_negative": 4,
+            "ground_truth": 44,
+            "recall": 0.9090909090909091,
+            "true_positive": 40
+          },
+          "object_count:medium": {
+            "false_negative": 75,
+            "ground_truth": 157,
+            "recall": 0.5222929936305732,
+            "true_positive": 82
+          },
+          "size:large": {
+            "false_negative": 30,
+            "ground_truth": 132,
+            "recall": 0.7727272727272727,
+            "true_positive": 102
+          },
+          "size:medium": {
+            "false_negative": 55,
+            "ground_truth": 133,
+            "recall": 0.5864661654135338,
+            "true_positive": 78
+          },
+          "size:small": {
+            "false_negative": 157,
+            "ground_truth": 194,
+            "recall": 0.19072164948453607,
+            "true_positive": 37
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0",
+      "seed": 10,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0_confirmatory_yolo11n_e50_seed10",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 168,
+            "ground_truth": 345,
+            "recall": 0.5130434782608696,
+            "true_positive": 177
+          },
+          "border_contact:True": {
+            "false_negative": 85,
+            "ground_truth": 114,
+            "recall": 0.2543859649122807,
+            "true_positive": 29
+          },
+          "clustered:False": {
+            "false_negative": 225,
+            "ground_truth": 408,
+            "recall": 0.4485294117647059,
+            "true_positive": 183
+          },
+          "clustered:True": {
+            "false_negative": 28,
+            "ground_truth": 51,
+            "recall": 0.45098039215686275,
+            "true_positive": 23
+          },
+          "object_count:high": {
+            "false_negative": 161,
+            "ground_truth": 258,
+            "recall": 0.375968992248062,
+            "true_positive": 97
+          },
+          "object_count:low": {
+            "false_negative": 3,
+            "ground_truth": 44,
+            "recall": 0.9318181818181818,
+            "true_positive": 41
+          },
+          "object_count:medium": {
+            "false_negative": 89,
+            "ground_truth": 157,
+            "recall": 0.43312101910828027,
+            "true_positive": 68
+          },
+          "size:large": {
+            "false_negative": 30,
+            "ground_truth": 132,
+            "recall": 0.7727272727272727,
+            "true_positive": 102
+          },
+          "size:medium": {
+            "false_negative": 68,
+            "ground_truth": 133,
+            "recall": 0.48872180451127817,
+            "true_positive": 65
+          },
+          "size:small": {
+            "false_negative": 155,
+            "ground_truth": 194,
+            "recall": 0.20103092783505155,
+            "true_positive": 39
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 1,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed01",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 140,
+            "ground_truth": 345,
+            "recall": 0.5942028985507246,
+            "true_positive": 205
+          },
+          "border_contact:True": {
+            "false_negative": 66,
+            "ground_truth": 114,
+            "recall": 0.42105263157894735,
+            "true_positive": 48
+          },
+          "clustered:False": {
+            "false_negative": 184,
+            "ground_truth": 408,
+            "recall": 0.5490196078431373,
+            "true_positive": 224
+          },
+          "clustered:True": {
+            "false_negative": 22,
+            "ground_truth": 51,
+            "recall": 0.5686274509803921,
+            "true_positive": 29
+          },
+          "object_count:high": {
+            "false_negative": 137,
+            "ground_truth": 258,
+            "recall": 0.4689922480620155,
+            "true_positive": 121
+          },
+          "object_count:low": {
+            "false_negative": 2,
+            "ground_truth": 44,
+            "recall": 0.9545454545454546,
+            "true_positive": 42
+          },
+          "object_count:medium": {
+            "false_negative": 67,
+            "ground_truth": 157,
+            "recall": 0.5732484076433121,
+            "true_positive": 90
+          },
+          "size:large": {
+            "false_negative": 20,
+            "ground_truth": 132,
+            "recall": 0.8484848484848485,
+            "true_positive": 112
+          },
+          "size:medium": {
+            "false_negative": 45,
+            "ground_truth": 133,
+            "recall": 0.6616541353383458,
+            "true_positive": 88
+          },
+          "size:small": {
+            "false_negative": 141,
+            "ground_truth": 194,
+            "recall": 0.27319587628865977,
+            "true_positive": 53
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 2,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed02",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 167,
+            "ground_truth": 345,
+            "recall": 0.5159420289855072,
+            "true_positive": 178
+          },
+          "border_contact:True": {
+            "false_negative": 81,
+            "ground_truth": 114,
+            "recall": 0.2894736842105263,
+            "true_positive": 33
+          },
+          "clustered:False": {
+            "false_negative": 219,
+            "ground_truth": 408,
+            "recall": 0.4632352941176471,
+            "true_positive": 189
+          },
+          "clustered:True": {
+            "false_negative": 29,
+            "ground_truth": 51,
+            "recall": 0.43137254901960786,
+            "true_positive": 22
+          },
+          "object_count:high": {
+            "false_negative": 163,
+            "ground_truth": 258,
+            "recall": 0.3682170542635659,
+            "true_positive": 95
+          },
+          "object_count:low": {
+            "false_negative": 4,
+            "ground_truth": 44,
+            "recall": 0.9090909090909091,
+            "true_positive": 40
+          },
+          "object_count:medium": {
+            "false_negative": 81,
+            "ground_truth": 157,
+            "recall": 0.4840764331210191,
+            "true_positive": 76
+          },
+          "size:large": {
+            "false_negative": 28,
+            "ground_truth": 132,
+            "recall": 0.7878787878787878,
+            "true_positive": 104
+          },
+          "size:medium": {
+            "false_negative": 58,
+            "ground_truth": 133,
+            "recall": 0.5639097744360902,
+            "true_positive": 75
+          },
+          "size:small": {
+            "false_negative": 162,
+            "ground_truth": 194,
+            "recall": 0.16494845360824742,
+            "true_positive": 32
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 3,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed03",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 152,
+            "ground_truth": 345,
+            "recall": 0.5594202898550724,
+            "true_positive": 193
+          },
+          "border_contact:True": {
+            "false_negative": 69,
+            "ground_truth": 114,
+            "recall": 0.39473684210526316,
+            "true_positive": 45
+          },
+          "clustered:False": {
+            "false_negative": 198,
+            "ground_truth": 408,
+            "recall": 0.5147058823529411,
+            "true_positive": 210
+          },
+          "clustered:True": {
+            "false_negative": 23,
+            "ground_truth": 51,
+            "recall": 0.5490196078431373,
+            "true_positive": 28
+          },
+          "object_count:high": {
+            "false_negative": 149,
+            "ground_truth": 258,
+            "recall": 0.42248062015503873,
+            "true_positive": 109
+          },
+          "object_count:low": {
+            "false_negative": 3,
+            "ground_truth": 44,
+            "recall": 0.9318181818181818,
+            "true_positive": 41
+          },
+          "object_count:medium": {
+            "false_negative": 69,
+            "ground_truth": 157,
+            "recall": 0.5605095541401274,
+            "true_positive": 88
+          },
+          "size:large": {
+            "false_negative": 29,
+            "ground_truth": 132,
+            "recall": 0.7803030303030303,
+            "true_positive": 103
+          },
+          "size:medium": {
+            "false_negative": 48,
+            "ground_truth": 133,
+            "recall": 0.6390977443609023,
+            "true_positive": 85
+          },
+          "size:small": {
+            "false_negative": 144,
+            "ground_truth": 194,
+            "recall": 0.25773195876288657,
+            "true_positive": 50
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 4,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed04",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 162,
+            "ground_truth": 345,
+            "recall": 0.5304347826086957,
+            "true_positive": 183
+          },
+          "border_contact:True": {
+            "false_negative": 70,
+            "ground_truth": 114,
+            "recall": 0.38596491228070173,
+            "true_positive": 44
+          },
+          "clustered:False": {
+            "false_negative": 207,
+            "ground_truth": 408,
+            "recall": 0.49264705882352944,
+            "true_positive": 201
+          },
+          "clustered:True": {
+            "false_negative": 25,
+            "ground_truth": 51,
+            "recall": 0.5098039215686274,
+            "true_positive": 26
+          },
+          "object_count:high": {
+            "false_negative": 158,
+            "ground_truth": 258,
+            "recall": 0.3875968992248062,
+            "true_positive": 100
+          },
+          "object_count:low": {
+            "false_negative": 4,
+            "ground_truth": 44,
+            "recall": 0.9090909090909091,
+            "true_positive": 40
+          },
+          "object_count:medium": {
+            "false_negative": 70,
+            "ground_truth": 157,
+            "recall": 0.554140127388535,
+            "true_positive": 87
+          },
+          "size:large": {
+            "false_negative": 27,
+            "ground_truth": 132,
+            "recall": 0.7954545454545454,
+            "true_positive": 105
+          },
+          "size:medium": {
+            "false_negative": 49,
+            "ground_truth": 133,
+            "recall": 0.631578947368421,
+            "true_positive": 84
+          },
+          "size:small": {
+            "false_negative": 156,
+            "ground_truth": 194,
+            "recall": 0.1958762886597938,
+            "true_positive": 38
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 5,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed05",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 120,
+            "ground_truth": 345,
+            "recall": 0.6521739130434783,
+            "true_positive": 225
+          },
+          "border_contact:True": {
+            "false_negative": 67,
+            "ground_truth": 114,
+            "recall": 0.41228070175438597,
+            "true_positive": 47
+          },
+          "clustered:False": {
+            "false_negative": 170,
+            "ground_truth": 408,
+            "recall": 0.5833333333333334,
+            "true_positive": 238
+          },
+          "clustered:True": {
+            "false_negative": 17,
+            "ground_truth": 51,
+            "recall": 0.6666666666666666,
+            "true_positive": 34
+          },
+          "object_count:high": {
+            "false_negative": 125,
+            "ground_truth": 258,
+            "recall": 0.5155038759689923,
+            "true_positive": 133
+          },
+          "object_count:low": {
+            "false_negative": 2,
+            "ground_truth": 44,
+            "recall": 0.9545454545454546,
+            "true_positive": 42
+          },
+          "object_count:medium": {
+            "false_negative": 60,
+            "ground_truth": 157,
+            "recall": 0.6178343949044586,
+            "true_positive": 97
+          },
+          "size:large": {
+            "false_negative": 23,
+            "ground_truth": 132,
+            "recall": 0.8257575757575758,
+            "true_positive": 109
+          },
+          "size:medium": {
+            "false_negative": 38,
+            "ground_truth": 133,
+            "recall": 0.7142857142857143,
+            "true_positive": 95
+          },
+          "size:small": {
+            "false_negative": 126,
+            "ground_truth": 194,
+            "recall": 0.35051546391752575,
+            "true_positive": 68
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 6,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed06",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 165,
+            "ground_truth": 345,
+            "recall": 0.5217391304347826,
+            "true_positive": 180
+          },
+          "border_contact:True": {
+            "false_negative": 76,
+            "ground_truth": 114,
+            "recall": 0.3333333333333333,
+            "true_positive": 38
+          },
+          "clustered:False": {
+            "false_negative": 215,
+            "ground_truth": 408,
+            "recall": 0.4730392156862745,
+            "true_positive": 193
+          },
+          "clustered:True": {
+            "false_negative": 26,
+            "ground_truth": 51,
+            "recall": 0.49019607843137253,
+            "true_positive": 25
+          },
+          "object_count:high": {
+            "false_negative": 165,
+            "ground_truth": 258,
+            "recall": 0.36046511627906974,
+            "true_positive": 93
+          },
+          "object_count:low": {
+            "false_negative": 1,
+            "ground_truth": 44,
+            "recall": 0.9772727272727273,
+            "true_positive": 43
+          },
+          "object_count:medium": {
+            "false_negative": 75,
+            "ground_truth": 157,
+            "recall": 0.5222929936305732,
+            "true_positive": 82
+          },
+          "size:large": {
+            "false_negative": 28,
+            "ground_truth": 132,
+            "recall": 0.7878787878787878,
+            "true_positive": 104
+          },
+          "size:medium": {
+            "false_negative": 51,
+            "ground_truth": 133,
+            "recall": 0.6165413533834586,
+            "true_positive": 82
+          },
+          "size:small": {
+            "false_negative": 162,
+            "ground_truth": 194,
+            "recall": 0.16494845360824742,
+            "true_positive": 32
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 7,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed07",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 139,
+            "ground_truth": 345,
+            "recall": 0.5971014492753624,
+            "true_positive": 206
+          },
+          "border_contact:True": {
+            "false_negative": 69,
+            "ground_truth": 114,
+            "recall": 0.39473684210526316,
+            "true_positive": 45
+          },
+          "clustered:False": {
+            "false_negative": 185,
+            "ground_truth": 408,
+            "recall": 0.5465686274509803,
+            "true_positive": 223
+          },
+          "clustered:True": {
+            "false_negative": 23,
+            "ground_truth": 51,
+            "recall": 0.5490196078431373,
+            "true_positive": 28
+          },
+          "object_count:high": {
+            "false_negative": 134,
+            "ground_truth": 258,
+            "recall": 0.4806201550387597,
+            "true_positive": 124
+          },
+          "object_count:low": {
+            "false_negative": 7,
+            "ground_truth": 44,
+            "recall": 0.8409090909090909,
+            "true_positive": 37
+          },
+          "object_count:medium": {
+            "false_negative": 67,
+            "ground_truth": 157,
+            "recall": 0.5732484076433121,
+            "true_positive": 90
+          },
+          "size:large": {
+            "false_negative": 35,
+            "ground_truth": 132,
+            "recall": 0.7348484848484849,
+            "true_positive": 97
+          },
+          "size:medium": {
+            "false_negative": 35,
+            "ground_truth": 133,
+            "recall": 0.7368421052631579,
+            "true_positive": 98
+          },
+          "size:small": {
+            "false_negative": 138,
+            "ground_truth": 194,
+            "recall": 0.28865979381443296,
+            "true_positive": 56
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 8,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed08",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 154,
+            "ground_truth": 345,
+            "recall": 0.553623188405797,
+            "true_positive": 191
+          },
+          "border_contact:True": {
+            "false_negative": 75,
+            "ground_truth": 114,
+            "recall": 0.34210526315789475,
+            "true_positive": 39
+          },
+          "clustered:False": {
+            "false_negative": 206,
+            "ground_truth": 408,
+            "recall": 0.4950980392156863,
+            "true_positive": 202
+          },
+          "clustered:True": {
+            "false_negative": 23,
+            "ground_truth": 51,
+            "recall": 0.5490196078431373,
+            "true_positive": 28
+          },
+          "object_count:high": {
+            "false_negative": 140,
+            "ground_truth": 258,
+            "recall": 0.4573643410852713,
+            "true_positive": 118
+          },
+          "object_count:low": {
+            "false_negative": 14,
+            "ground_truth": 44,
+            "recall": 0.6818181818181818,
+            "true_positive": 30
+          },
+          "object_count:medium": {
+            "false_negative": 75,
+            "ground_truth": 157,
+            "recall": 0.5222929936305732,
+            "true_positive": 82
+          },
+          "size:large": {
+            "false_negative": 45,
+            "ground_truth": 132,
+            "recall": 0.6590909090909091,
+            "true_positive": 87
+          },
+          "size:medium": {
+            "false_negative": 48,
+            "ground_truth": 133,
+            "recall": 0.6390977443609023,
+            "true_positive": 85
+          },
+          "size:small": {
+            "false_negative": 136,
+            "ground_truth": 194,
+            "recall": 0.29896907216494845,
+            "true_positive": 58
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 9,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed09",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 145,
+            "ground_truth": 345,
+            "recall": 0.5797101449275363,
+            "true_positive": 200
+          },
+          "border_contact:True": {
+            "false_negative": 74,
+            "ground_truth": 114,
+            "recall": 0.3508771929824561,
+            "true_positive": 40
+          },
+          "clustered:False": {
+            "false_negative": 196,
+            "ground_truth": 408,
+            "recall": 0.5196078431372549,
+            "true_positive": 212
+          },
+          "clustered:True": {
+            "false_negative": 23,
+            "ground_truth": 51,
+            "recall": 0.5490196078431373,
+            "true_positive": 28
+          },
+          "object_count:high": {
+            "false_negative": 146,
+            "ground_truth": 258,
+            "recall": 0.43410852713178294,
+            "true_positive": 112
+          },
+          "object_count:low": {
+            "false_negative": 0,
+            "ground_truth": 44,
+            "recall": 1.0,
+            "true_positive": 44
+          },
+          "object_count:medium": {
+            "false_negative": 73,
+            "ground_truth": 157,
+            "recall": 0.535031847133758,
+            "true_positive": 84
+          },
+          "size:large": {
+            "false_negative": 31,
+            "ground_truth": 132,
+            "recall": 0.7651515151515151,
+            "true_positive": 101
+          },
+          "size:medium": {
+            "false_negative": 47,
+            "ground_truth": 133,
+            "recall": 0.6466165413533834,
+            "true_positive": 86
+          },
+          "size:small": {
+            "false_negative": 141,
+            "ground_truth": 194,
+            "recall": 0.27319587628865977,
+            "true_positive": 53
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E0R",
+      "seed": 10,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e0r_confirmatory_yolo11n_e50_seed10",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 168,
+            "ground_truth": 345,
+            "recall": 0.5130434782608696,
+            "true_positive": 177
+          },
+          "border_contact:True": {
+            "false_negative": 82,
+            "ground_truth": 114,
+            "recall": 0.2807017543859649,
+            "true_positive": 32
+          },
+          "clustered:False": {
+            "false_negative": 223,
+            "ground_truth": 408,
+            "recall": 0.4534313725490196,
+            "true_positive": 185
+          },
+          "clustered:True": {
+            "false_negative": 27,
+            "ground_truth": 51,
+            "recall": 0.47058823529411764,
+            "true_positive": 24
+          },
+          "object_count:high": {
+            "false_negative": 148,
+            "ground_truth": 258,
+            "recall": 0.4263565891472868,
+            "true_positive": 110
+          },
+          "object_count:low": {
+            "false_negative": 23,
+            "ground_truth": 44,
+            "recall": 0.4772727272727273,
+            "true_positive": 21
+          },
+          "object_count:medium": {
+            "false_negative": 79,
+            "ground_truth": 157,
+            "recall": 0.4968152866242038,
+            "true_positive": 78
+          },
+          "size:large": {
+            "false_negative": 59,
+            "ground_truth": 132,
+            "recall": 0.553030303030303,
+            "true_positive": 73
+          },
+          "size:medium": {
+            "false_negative": 50,
+            "ground_truth": 133,
+            "recall": 0.6240601503759399,
+            "true_positive": 83
+          },
+          "size:small": {
+            "false_negative": 141,
+            "ground_truth": 194,
+            "recall": 0.27319587628865977,
+            "true_positive": 53
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E3",
+      "seed": 1,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e3_confirmatory_yolo11n_e50_seed01",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 123,
+            "ground_truth": 345,
+            "recall": 0.6434782608695652,
+            "true_positive": 222
+          },
+          "border_contact:True": {
+            "false_negative": 66,
+            "ground_truth": 114,
+            "recall": 0.42105263157894735,
+            "true_positive": 48
+          },
+          "clustered:False": {
+            "false_negative": 167,
+            "ground_truth": 408,
+            "recall": 0.5906862745098039,
+            "true_positive": 241
+          },
+          "clustered:True": {
+            "false_negative": 22,
+            "ground_truth": 51,
+            "recall": 0.5686274509803921,
+            "true_positive": 29
+          },
+          "object_count:high": {
+            "false_negative": 122,
+            "ground_truth": 258,
+            "recall": 0.5271317829457365,
+            "true_positive": 136
+          },
+          "object_count:low": {
+            "false_negative": 2,
+            "ground_truth": 44,
+            "recall": 0.9545454545454546,
+            "true_positive": 42
+          },
+          "object_count:medium": {
+            "false_negative": 65,
+            "ground_truth": 157,
+            "recall": 0.5859872611464968,
+            "true_positive": 92
+          },
+          "size:large": {
+            "false_negative": 29,
+            "ground_truth": 132,
+            "recall": 0.7803030303030303,
+            "true_positive": 103
+          },
+          "size:medium": {
+            "false_negative": 36,
+            "ground_truth": 133,
+            "recall": 0.7293233082706767,
+            "true_positive": 97
+          },
+          "size:small": {
+            "false_negative": 124,
+            "ground_truth": 194,
+            "recall": 0.36082474226804123,
+            "true_positive": 70
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E3",
+      "seed": 2,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e3_confirmatory_yolo11n_e50_seed02",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 117,
+            "ground_truth": 345,
+            "recall": 0.6608695652173913,
+            "true_positive": 228
+          },
+          "border_contact:True": {
+            "false_negative": 63,
+            "ground_truth": 114,
+            "recall": 0.4473684210526316,
+            "true_positive": 51
+          },
+          "clustered:False": {
+            "false_negative": 161,
+            "ground_truth": 408,
+            "recall": 0.6053921568627451,
+            "true_positive": 247
+          },
+          "clustered:True": {
+            "false_negative": 19,
+            "ground_truth": 51,
+            "recall": 0.6274509803921569,
+            "true_positive": 32
+          },
+          "object_count:high": {
+            "false_negative": 119,
+            "ground_truth": 258,
+            "recall": 0.5387596899224806,
+            "true_positive": 139
+          },
+          "object_count:low": {
+            "false_negative": 1,
+            "ground_truth": 44,
+            "recall": 0.9772727272727273,
+            "true_positive": 43
+          },
+          "object_count:medium": {
+            "false_negative": 60,
+            "ground_truth": 157,
+            "recall": 0.6178343949044586,
+            "true_positive": 97
+          },
+          "size:large": {
+            "false_negative": 26,
+            "ground_truth": 132,
+            "recall": 0.803030303030303,
+            "true_positive": 106
+          },
+          "size:medium": {
+            "false_negative": 37,
+            "ground_truth": 133,
+            "recall": 0.7218045112781954,
+            "true_positive": 96
+          },
+          "size:small": {
+            "false_negative": 117,
+            "ground_truth": 194,
+            "recall": 0.39690721649484534,
+            "true_positive": 77
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E3",
+      "seed": 3,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e3_confirmatory_yolo11n_e50_seed03",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 177,
+            "ground_truth": 345,
+            "recall": 0.48695652173913045,
+            "true_positive": 168
+          },
+          "border_contact:True": {
+            "false_negative": 83,
+            "ground_truth": 114,
+            "recall": 0.2719298245614035,
+            "true_positive": 31
+          },
+          "clustered:False": {
+            "false_negative": 230,
+            "ground_truth": 408,
+            "recall": 0.4362745098039216,
+            "true_positive": 178
+          },
+          "clustered:True": {
+            "false_negative": 30,
+            "ground_truth": 51,
+            "recall": 0.4117647058823529,
+            "true_positive": 21
+          },
+          "object_count:high": {
+            "false_negative": 150,
+            "ground_truth": 258,
+            "recall": 0.4186046511627907,
+            "true_positive": 108
+          },
+          "object_count:low": {
+            "false_negative": 26,
+            "ground_truth": 44,
+            "recall": 0.4090909090909091,
+            "true_positive": 18
+          },
+          "object_count:medium": {
+            "false_negative": 84,
+            "ground_truth": 157,
+            "recall": 0.46496815286624205,
+            "true_positive": 73
+          },
+          "size:large": {
+            "false_negative": 64,
+            "ground_truth": 132,
+            "recall": 0.5151515151515151,
+            "true_positive": 68
+          },
+          "size:medium": {
+            "false_negative": 61,
+            "ground_truth": 133,
+            "recall": 0.5413533834586466,
+            "true_positive": 72
+          },
+          "size:small": {
+            "false_negative": 135,
+            "ground_truth": 194,
+            "recall": 0.30412371134020616,
+            "true_positive": 59
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E3",
+      "seed": 4,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e3_confirmatory_yolo11n_e50_seed04",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 139,
+            "ground_truth": 345,
+            "recall": 0.5971014492753624,
+            "true_positive": 206
+          },
+          "border_contact:True": {
+            "false_negative": 65,
+            "ground_truth": 114,
+            "recall": 0.4298245614035088,
+            "true_positive": 49
+          },
+          "clustered:False": {
+            "false_negative": 183,
+            "ground_truth": 408,
+            "recall": 0.5514705882352942,
+            "true_positive": 225
+          },
+          "clustered:True": {
+            "false_negative": 21,
+            "ground_truth": 51,
+            "recall": 0.5882352941176471,
+            "true_positive": 30
+          },
+          "object_count:high": {
+            "false_negative": 137,
+            "ground_truth": 258,
+            "recall": 0.4689922480620155,
+            "true_positive": 121
+          },
+          "object_count:low": {
+            "false_negative": 1,
+            "ground_truth": 44,
+            "recall": 0.9772727272727273,
+            "true_positive": 43
+          },
+          "object_count:medium": {
+            "false_negative": 66,
+            "ground_truth": 157,
+            "recall": 0.5796178343949044,
+            "true_positive": 91
+          },
+          "size:large": {
+            "false_negative": 21,
+            "ground_truth": 132,
+            "recall": 0.8409090909090909,
+            "true_positive": 111
+          },
+          "size:medium": {
+            "false_negative": 42,
+            "ground_truth": 133,
+            "recall": 0.6842105263157895,
+            "true_positive": 91
+          },
+          "size:small": {
+            "false_negative": 141,
+            "ground_truth": 194,
+            "recall": 0.27319587628865977,
+            "true_positive": 53
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E3",
+      "seed": 5,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e3_confirmatory_yolo11n_e50_seed05",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 304,
+            "ground_truth": 345,
+            "recall": 0.11884057971014493,
+            "true_positive": 41
+          },
+          "border_contact:True": {
+            "false_negative": 106,
+            "ground_truth": 114,
+            "recall": 0.07017543859649122,
+            "true_positive": 8
+          },
+          "clustered:False": {
+            "false_negative": 360,
+            "ground_truth": 408,
+            "recall": 0.11764705882352941,
+            "true_positive": 48
+          },
+          "clustered:True": {
+            "false_negative": 50,
+            "ground_truth": 51,
+            "recall": 0.0196078431372549,
+            "true_positive": 1
+          },
+          "object_count:high": {
+            "false_negative": 254,
+            "ground_truth": 258,
+            "recall": 0.015503875968992248,
+            "true_positive": 4
+          },
+          "object_count:low": {
+            "false_negative": 19,
+            "ground_truth": 44,
+            "recall": 0.5681818181818182,
+            "true_positive": 25
+          },
+          "object_count:medium": {
+            "false_negative": 137,
+            "ground_truth": 157,
+            "recall": 0.12738853503184713,
+            "true_positive": 20
+          },
+          "size:large": {
+            "false_negative": 99,
+            "ground_truth": 132,
+            "recall": 0.25,
+            "true_positive": 33
+          },
+          "size:medium": {
+            "false_negative": 119,
+            "ground_truth": 133,
+            "recall": 0.10526315789473684,
+            "true_positive": 14
+          },
+          "size:small": {
+            "false_negative": 192,
+            "ground_truth": 194,
+            "recall": 0.010309278350515464,
+            "true_positive": 2
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E6",
+      "seed": 1,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e6_confirmatory_yolo11n_e50_seed01",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 139,
+            "ground_truth": 345,
+            "recall": 0.5971014492753624,
+            "true_positive": 206
+          },
+          "border_contact:True": {
+            "false_negative": 71,
+            "ground_truth": 114,
+            "recall": 0.37719298245614036,
+            "true_positive": 43
+          },
+          "clustered:False": {
+            "false_negative": 187,
+            "ground_truth": 408,
+            "recall": 0.5416666666666666,
+            "true_positive": 221
+          },
+          "clustered:True": {
+            "false_negative": 23,
+            "ground_truth": 51,
+            "recall": 0.5490196078431373,
+            "true_positive": 28
+          },
+          "object_count:high": {
+            "false_negative": 141,
+            "ground_truth": 258,
+            "recall": 0.45348837209302323,
+            "true_positive": 117
+          },
+          "object_count:low": {
+            "false_negative": 3,
+            "ground_truth": 44,
+            "recall": 0.9318181818181818,
+            "true_positive": 41
+          },
+          "object_count:medium": {
+            "false_negative": 66,
+            "ground_truth": 157,
+            "recall": 0.5796178343949044,
+            "true_positive": 91
+          },
+          "size:large": {
+            "false_negative": 29,
+            "ground_truth": 132,
+            "recall": 0.7803030303030303,
+            "true_positive": 103
+          },
+          "size:medium": {
+            "false_negative": 44,
+            "ground_truth": 133,
+            "recall": 0.6691729323308271,
+            "true_positive": 89
+          },
+          "size:small": {
+            "false_negative": 137,
+            "ground_truth": 194,
+            "recall": 0.29381443298969073,
+            "true_positive": 57
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E6",
+      "seed": 2,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e6_confirmatory_yolo11n_e50_seed02",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 190,
+            "ground_truth": 345,
+            "recall": 0.4492753623188406,
+            "true_positive": 155
+          },
+          "border_contact:True": {
+            "false_negative": 88,
+            "ground_truth": 114,
+            "recall": 0.22807017543859648,
+            "true_positive": 26
+          },
+          "clustered:False": {
+            "false_negative": 249,
+            "ground_truth": 408,
+            "recall": 0.3897058823529412,
+            "true_positive": 159
+          },
+          "clustered:True": {
+            "false_negative": 29,
+            "ground_truth": 51,
+            "recall": 0.43137254901960786,
+            "true_positive": 22
+          },
+          "object_count:high": {
+            "false_negative": 176,
+            "ground_truth": 258,
+            "recall": 0.3178294573643411,
+            "true_positive": 82
+          },
+          "object_count:low": {
+            "false_negative": 19,
+            "ground_truth": 44,
+            "recall": 0.5681818181818182,
+            "true_positive": 25
+          },
+          "object_count:medium": {
+            "false_negative": 83,
+            "ground_truth": 157,
+            "recall": 0.4713375796178344,
+            "true_positive": 74
+          },
+          "size:large": {
+            "false_negative": 46,
+            "ground_truth": 132,
+            "recall": 0.6515151515151515,
+            "true_positive": 86
+          },
+          "size:medium": {
+            "false_negative": 64,
+            "ground_truth": 133,
+            "recall": 0.518796992481203,
+            "true_positive": 69
+          },
+          "size:small": {
+            "false_negative": 168,
+            "ground_truth": 194,
+            "recall": 0.13402061855670103,
+            "true_positive": 26
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E6",
+      "seed": 3,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e6_confirmatory_yolo11n_e50_seed03",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 159,
+            "ground_truth": 345,
+            "recall": 0.5391304347826087,
+            "true_positive": 186
+          },
+          "border_contact:True": {
+            "false_negative": 66,
+            "ground_truth": 114,
+            "recall": 0.42105263157894735,
+            "true_positive": 48
+          },
+          "clustered:False": {
+            "false_negative": 204,
+            "ground_truth": 408,
+            "recall": 0.5,
+            "true_positive": 204
+          },
+          "clustered:True": {
+            "false_negative": 21,
+            "ground_truth": 51,
+            "recall": 0.5882352941176471,
+            "true_positive": 30
+          },
+          "object_count:high": {
+            "false_negative": 137,
+            "ground_truth": 258,
+            "recall": 0.4689922480620155,
+            "true_positive": 121
+          },
+          "object_count:low": {
+            "false_negative": 19,
+            "ground_truth": 44,
+            "recall": 0.5681818181818182,
+            "true_positive": 25
+          },
+          "object_count:medium": {
+            "false_negative": 69,
+            "ground_truth": 157,
+            "recall": 0.5605095541401274,
+            "true_positive": 88
+          },
+          "size:large": {
+            "false_negative": 44,
+            "ground_truth": 132,
+            "recall": 0.6666666666666666,
+            "true_positive": 88
+          },
+          "size:medium": {
+            "false_negative": 41,
+            "ground_truth": 133,
+            "recall": 0.6917293233082706,
+            "true_positive": 92
+          },
+          "size:small": {
+            "false_negative": 140,
+            "ground_truth": 194,
+            "recall": 0.27835051546391754,
+            "true_positive": 54
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E6",
+      "seed": 4,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e6_confirmatory_yolo11n_e50_seed04",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 161,
+            "ground_truth": 345,
+            "recall": 0.5333333333333333,
+            "true_positive": 184
+          },
+          "border_contact:True": {
+            "false_negative": 83,
+            "ground_truth": 114,
+            "recall": 0.2719298245614035,
+            "true_positive": 31
+          },
+          "clustered:False": {
+            "false_negative": 217,
+            "ground_truth": 408,
+            "recall": 0.4681372549019608,
+            "true_positive": 191
+          },
+          "clustered:True": {
+            "false_negative": 27,
+            "ground_truth": 51,
+            "recall": 0.47058823529411764,
+            "true_positive": 24
+          },
+          "object_count:high": {
+            "false_negative": 164,
+            "ground_truth": 258,
+            "recall": 0.3643410852713178,
+            "true_positive": 94
+          },
+          "object_count:low": {
+            "false_negative": 2,
+            "ground_truth": 44,
+            "recall": 0.9545454545454546,
+            "true_positive": 42
+          },
+          "object_count:medium": {
+            "false_negative": 78,
+            "ground_truth": 157,
+            "recall": 0.5031847133757962,
+            "true_positive": 79
+          },
+          "size:large": {
+            "false_negative": 31,
+            "ground_truth": 132,
+            "recall": 0.7651515151515151,
+            "true_positive": 101
+          },
+          "size:medium": {
+            "false_negative": 57,
+            "ground_truth": 133,
+            "recall": 0.5714285714285714,
+            "true_positive": 76
+          },
+          "size:small": {
+            "false_negative": 156,
+            "ground_truth": 194,
+            "recall": 0.1958762886597938,
+            "true_positive": 38
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E6",
+      "seed": 5,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e6_confirmatory_yolo11n_e50_seed05",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 118,
+            "ground_truth": 345,
+            "recall": 0.6579710144927536,
+            "true_positive": 227
+          },
+          "border_contact:True": {
+            "false_negative": 61,
+            "ground_truth": 114,
+            "recall": 0.4649122807017544,
+            "true_positive": 53
+          },
+          "clustered:False": {
+            "false_negative": 163,
+            "ground_truth": 408,
+            "recall": 0.6004901960784313,
+            "true_positive": 245
+          },
+          "clustered:True": {
+            "false_negative": 16,
+            "ground_truth": 51,
+            "recall": 0.6862745098039216,
+            "true_positive": 35
+          },
+          "object_count:high": {
+            "false_negative": 120,
+            "ground_truth": 258,
+            "recall": 0.5348837209302325,
+            "true_positive": 138
+          },
+          "object_count:low": {
+            "false_negative": 0,
+            "ground_truth": 44,
+            "recall": 1.0,
+            "true_positive": 44
+          },
+          "object_count:medium": {
+            "false_negative": 59,
+            "ground_truth": 157,
+            "recall": 0.6242038216560509,
+            "true_positive": 98
+          },
+          "size:large": {
+            "false_negative": 16,
+            "ground_truth": 132,
+            "recall": 0.8787878787878788,
+            "true_positive": 116
+          },
+          "size:medium": {
+            "false_negative": 35,
+            "ground_truth": 133,
+            "recall": 0.7368421052631579,
+            "true_positive": 98
+          },
+          "size:small": {
+            "false_negative": 128,
+            "ground_truth": 194,
+            "recall": 0.3402061855670103,
+            "true_positive": 66
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 1,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed01",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 155,
+            "ground_truth": 345,
+            "recall": 0.5507246376811594,
+            "true_positive": 190
+          },
+          "border_contact:True": {
+            "false_negative": 78,
+            "ground_truth": 114,
+            "recall": 0.3157894736842105,
+            "true_positive": 36
+          },
+          "clustered:False": {
+            "false_negative": 206,
+            "ground_truth": 408,
+            "recall": 0.4950980392156863,
+            "true_positive": 202
+          },
+          "clustered:True": {
+            "false_negative": 27,
+            "ground_truth": 51,
+            "recall": 0.47058823529411764,
+            "true_positive": 24
+          },
+          "object_count:high": {
+            "false_negative": 158,
+            "ground_truth": 258,
+            "recall": 0.3875968992248062,
+            "true_positive": 100
+          },
+          "object_count:low": {
+            "false_negative": 1,
+            "ground_truth": 44,
+            "recall": 0.9772727272727273,
+            "true_positive": 43
+          },
+          "object_count:medium": {
+            "false_negative": 74,
+            "ground_truth": 157,
+            "recall": 0.5286624203821656,
+            "true_positive": 83
+          },
+          "size:large": {
+            "false_negative": 27,
+            "ground_truth": 132,
+            "recall": 0.7954545454545454,
+            "true_positive": 105
+          },
+          "size:medium": {
+            "false_negative": 49,
+            "ground_truth": 133,
+            "recall": 0.631578947368421,
+            "true_positive": 84
+          },
+          "size:small": {
+            "false_negative": 157,
+            "ground_truth": 194,
+            "recall": 0.19072164948453607,
+            "true_positive": 37
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 2,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed02",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 120,
+            "ground_truth": 345,
+            "recall": 0.6521739130434783,
+            "true_positive": 225
+          },
+          "border_contact:True": {
+            "false_negative": 66,
+            "ground_truth": 114,
+            "recall": 0.42105263157894735,
+            "true_positive": 48
+          },
+          "clustered:False": {
+            "false_negative": 167,
+            "ground_truth": 408,
+            "recall": 0.5906862745098039,
+            "true_positive": 241
+          },
+          "clustered:True": {
+            "false_negative": 19,
+            "ground_truth": 51,
+            "recall": 0.6274509803921569,
+            "true_positive": 32
+          },
+          "object_count:high": {
+            "false_negative": 118,
+            "ground_truth": 258,
+            "recall": 0.5426356589147286,
+            "true_positive": 140
+          },
+          "object_count:low": {
+            "false_negative": 1,
+            "ground_truth": 44,
+            "recall": 0.9772727272727273,
+            "true_positive": 43
+          },
+          "object_count:medium": {
+            "false_negative": 67,
+            "ground_truth": 157,
+            "recall": 0.5732484076433121,
+            "true_positive": 90
+          },
+          "size:large": {
+            "false_negative": 22,
+            "ground_truth": 132,
+            "recall": 0.8333333333333334,
+            "true_positive": 110
+          },
+          "size:medium": {
+            "false_negative": 37,
+            "ground_truth": 133,
+            "recall": 0.7218045112781954,
+            "true_positive": 96
+          },
+          "size:small": {
+            "false_negative": 127,
+            "ground_truth": 194,
+            "recall": 0.34536082474226804,
+            "true_positive": 67
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 3,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed03",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 142,
+            "ground_truth": 345,
+            "recall": 0.5884057971014492,
+            "true_positive": 203
+          },
+          "border_contact:True": {
+            "false_negative": 79,
+            "ground_truth": 114,
+            "recall": 0.30701754385964913,
+            "true_positive": 35
+          },
+          "clustered:False": {
+            "false_negative": 198,
+            "ground_truth": 408,
+            "recall": 0.5147058823529411,
+            "true_positive": 210
+          },
+          "clustered:True": {
+            "false_negative": 23,
+            "ground_truth": 51,
+            "recall": 0.5490196078431373,
+            "true_positive": 28
+          },
+          "object_count:high": {
+            "false_negative": 141,
+            "ground_truth": 258,
+            "recall": 0.45348837209302323,
+            "true_positive": 117
+          },
+          "object_count:low": {
+            "false_negative": 0,
+            "ground_truth": 44,
+            "recall": 1.0,
+            "true_positive": 44
+          },
+          "object_count:medium": {
+            "false_negative": 80,
+            "ground_truth": 157,
+            "recall": 0.49044585987261147,
+            "true_positive": 77
+          },
+          "size:large": {
+            "false_negative": 25,
+            "ground_truth": 132,
+            "recall": 0.8106060606060606,
+            "true_positive": 107
+          },
+          "size:medium": {
+            "false_negative": 53,
+            "ground_truth": 133,
+            "recall": 0.6015037593984962,
+            "true_positive": 80
+          },
+          "size:small": {
+            "false_negative": 143,
+            "ground_truth": 194,
+            "recall": 0.26288659793814434,
+            "true_positive": 51
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 4,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed04",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 135,
+            "ground_truth": 345,
+            "recall": 0.6086956521739131,
+            "true_positive": 210
+          },
+          "border_contact:True": {
+            "false_negative": 61,
+            "ground_truth": 114,
+            "recall": 0.4649122807017544,
+            "true_positive": 53
+          },
+          "clustered:False": {
+            "false_negative": 175,
+            "ground_truth": 408,
+            "recall": 0.571078431372549,
+            "true_positive": 233
+          },
+          "clustered:True": {
+            "false_negative": 21,
+            "ground_truth": 51,
+            "recall": 0.5882352941176471,
+            "true_positive": 30
+          },
+          "object_count:high": {
+            "false_negative": 128,
+            "ground_truth": 258,
+            "recall": 0.5038759689922481,
+            "true_positive": 130
+          },
+          "object_count:low": {
+            "false_negative": 0,
+            "ground_truth": 44,
+            "recall": 1.0,
+            "true_positive": 44
+          },
+          "object_count:medium": {
+            "false_negative": 68,
+            "ground_truth": 157,
+            "recall": 0.5668789808917197,
+            "true_positive": 89
+          },
+          "size:large": {
+            "false_negative": 20,
+            "ground_truth": 132,
+            "recall": 0.8484848484848485,
+            "true_positive": 112
+          },
+          "size:medium": {
+            "false_negative": 39,
+            "ground_truth": 133,
+            "recall": 0.706766917293233,
+            "true_positive": 94
+          },
+          "size:small": {
+            "false_negative": 137,
+            "ground_truth": 194,
+            "recall": 0.29381443298969073,
+            "true_positive": 57
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 5,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed05",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 152,
+            "ground_truth": 345,
+            "recall": 0.5594202898550724,
+            "true_positive": 193
+          },
+          "border_contact:True": {
+            "false_negative": 75,
+            "ground_truth": 114,
+            "recall": 0.34210526315789475,
+            "true_positive": 39
+          },
+          "clustered:False": {
+            "false_negative": 204,
+            "ground_truth": 408,
+            "recall": 0.5,
+            "true_positive": 204
+          },
+          "clustered:True": {
+            "false_negative": 23,
+            "ground_truth": 51,
+            "recall": 0.5490196078431373,
+            "true_positive": 28
+          },
+          "object_count:high": {
+            "false_negative": 142,
+            "ground_truth": 258,
+            "recall": 0.4496124031007752,
+            "true_positive": 116
+          },
+          "object_count:low": {
+            "false_negative": 6,
+            "ground_truth": 44,
+            "recall": 0.8636363636363636,
+            "true_positive": 38
+          },
+          "object_count:medium": {
+            "false_negative": 79,
+            "ground_truth": 157,
+            "recall": 0.4968152866242038,
+            "true_positive": 78
+          },
+          "size:large": {
+            "false_negative": 34,
+            "ground_truth": 132,
+            "recall": 0.7424242424242424,
+            "true_positive": 98
+          },
+          "size:medium": {
+            "false_negative": 56,
+            "ground_truth": 133,
+            "recall": 0.5789473684210527,
+            "true_positive": 77
+          },
+          "size:small": {
+            "false_negative": 137,
+            "ground_truth": 194,
+            "recall": 0.29381443298969073,
+            "true_positive": 57
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 6,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed06",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 127,
+            "ground_truth": 345,
+            "recall": 0.6318840579710145,
+            "true_positive": 218
+          },
+          "border_contact:True": {
+            "false_negative": 76,
+            "ground_truth": 114,
+            "recall": 0.3333333333333333,
+            "true_positive": 38
+          },
+          "clustered:False": {
+            "false_negative": 183,
+            "ground_truth": 408,
+            "recall": 0.5514705882352942,
+            "true_positive": 225
+          },
+          "clustered:True": {
+            "false_negative": 20,
+            "ground_truth": 51,
+            "recall": 0.6078431372549019,
+            "true_positive": 31
+          },
+          "object_count:high": {
+            "false_negative": 138,
+            "ground_truth": 258,
+            "recall": 0.46511627906976744,
+            "true_positive": 120
+          },
+          "object_count:low": {
+            "false_negative": 0,
+            "ground_truth": 44,
+            "recall": 1.0,
+            "true_positive": 44
+          },
+          "object_count:medium": {
+            "false_negative": 65,
+            "ground_truth": 157,
+            "recall": 0.5859872611464968,
+            "true_positive": 92
+          },
+          "size:large": {
+            "false_negative": 18,
+            "ground_truth": 132,
+            "recall": 0.8636363636363636,
+            "true_positive": 114
+          },
+          "size:medium": {
+            "false_negative": 44,
+            "ground_truth": 133,
+            "recall": 0.6691729323308271,
+            "true_positive": 89
+          },
+          "size:small": {
+            "false_negative": 141,
+            "ground_truth": 194,
+            "recall": 0.27319587628865977,
+            "true_positive": 53
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 7,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed07",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 154,
+            "ground_truth": 345,
+            "recall": 0.553623188405797,
+            "true_positive": 191
+          },
+          "border_contact:True": {
+            "false_negative": 77,
+            "ground_truth": 114,
+            "recall": 0.32456140350877194,
+            "true_positive": 37
+          },
+          "clustered:False": {
+            "false_negative": 205,
+            "ground_truth": 408,
+            "recall": 0.49754901960784315,
+            "true_positive": 203
+          },
+          "clustered:True": {
+            "false_negative": 26,
+            "ground_truth": 51,
+            "recall": 0.49019607843137253,
+            "true_positive": 25
+          },
+          "object_count:high": {
+            "false_negative": 161,
+            "ground_truth": 258,
+            "recall": 0.375968992248062,
+            "true_positive": 97
+          },
+          "object_count:low": {
+            "false_negative": 3,
+            "ground_truth": 44,
+            "recall": 0.9318181818181818,
+            "true_positive": 41
+          },
+          "object_count:medium": {
+            "false_negative": 67,
+            "ground_truth": 157,
+            "recall": 0.5732484076433121,
+            "true_positive": 90
+          },
+          "size:large": {
+            "false_negative": 27,
+            "ground_truth": 132,
+            "recall": 0.7954545454545454,
+            "true_positive": 105
+          },
+          "size:medium": {
+            "false_negative": 48,
+            "ground_truth": 133,
+            "recall": 0.6390977443609023,
+            "true_positive": 85
+          },
+          "size:small": {
+            "false_negative": 156,
+            "ground_truth": 194,
+            "recall": 0.1958762886597938,
+            "true_positive": 38
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 8,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed08",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 295,
+            "ground_truth": 345,
+            "recall": 0.14492753623188406,
+            "true_positive": 50
+          },
+          "border_contact:True": {
+            "false_negative": 105,
+            "ground_truth": 114,
+            "recall": 0.07894736842105263,
+            "true_positive": 9
+          },
+          "clustered:False": {
+            "false_negative": 354,
+            "ground_truth": 408,
+            "recall": 0.1323529411764706,
+            "true_positive": 54
+          },
+          "clustered:True": {
+            "false_negative": 46,
+            "ground_truth": 51,
+            "recall": 0.09803921568627451,
+            "true_positive": 5
+          },
+          "object_count:high": {
+            "false_negative": 251,
+            "ground_truth": 258,
+            "recall": 0.027131782945736434,
+            "true_positive": 7
+          },
+          "object_count:low": {
+            "false_negative": 8,
+            "ground_truth": 44,
+            "recall": 0.8181818181818182,
+            "true_positive": 36
+          },
+          "object_count:medium": {
+            "false_negative": 141,
+            "ground_truth": 157,
+            "recall": 0.10191082802547771,
+            "true_positive": 16
+          },
+          "size:large": {
+            "false_negative": 74,
+            "ground_truth": 132,
+            "recall": 0.4393939393939394,
+            "true_positive": 58
+          },
+          "size:medium": {
+            "false_negative": 132,
+            "ground_truth": 133,
+            "recall": 0.007518796992481203,
+            "true_positive": 1
+          },
+          "size:small": {
+            "false_negative": 194,
+            "ground_truth": 194,
+            "recall": 0.0,
+            "true_positive": 0
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 9,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed09",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 137,
+            "ground_truth": 345,
+            "recall": 0.6028985507246377,
+            "true_positive": 208
+          },
+          "border_contact:True": {
+            "false_negative": 72,
+            "ground_truth": 114,
+            "recall": 0.3684210526315789,
+            "true_positive": 42
+          },
+          "clustered:False": {
+            "false_negative": 186,
+            "ground_truth": 408,
+            "recall": 0.5441176470588235,
+            "true_positive": 222
+          },
+          "clustered:True": {
+            "false_negative": 23,
+            "ground_truth": 51,
+            "recall": 0.5490196078431373,
+            "true_positive": 28
+          },
+          "object_count:high": {
+            "false_negative": 142,
+            "ground_truth": 258,
+            "recall": 0.4496124031007752,
+            "true_positive": 116
+          },
+          "object_count:low": {
+            "false_negative": 1,
+            "ground_truth": 44,
+            "recall": 0.9772727272727273,
+            "true_positive": 43
+          },
+          "object_count:medium": {
+            "false_negative": 66,
+            "ground_truth": 157,
+            "recall": 0.5796178343949044,
+            "true_positive": 91
+          },
+          "size:large": {
+            "false_negative": 23,
+            "ground_truth": 132,
+            "recall": 0.8257575757575758,
+            "true_positive": 109
+          },
+          "size:medium": {
+            "false_negative": 39,
+            "ground_truth": 133,
+            "recall": 0.706766917293233,
+            "true_positive": 94
+          },
+          "size:small": {
+            "false_negative": 147,
+            "ground_truth": 194,
+            "recall": 0.2422680412371134,
+            "true_positive": 47
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    },
+    {
+      "scenario": "V2-E7",
+      "seed": 10,
+      "run_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\runs\\confirmatory\\v2_e7_confirmatory_yolo11n_e50_seed10",
+      "difficulty": {
+        "strata": {
+          "border_contact:False": {
+            "false_negative": 131,
+            "ground_truth": 345,
+            "recall": 0.6202898550724638,
+            "true_positive": 214
+          },
+          "border_contact:True": {
+            "false_negative": 73,
+            "ground_truth": 114,
+            "recall": 0.35964912280701755,
+            "true_positive": 41
+          },
+          "clustered:False": {
+            "false_negative": 188,
+            "ground_truth": 408,
+            "recall": 0.5392156862745098,
+            "true_positive": 220
+          },
+          "clustered:True": {
+            "false_negative": 16,
+            "ground_truth": 51,
+            "recall": 0.6862745098039216,
+            "true_positive": 35
+          },
+          "object_count:high": {
+            "false_negative": 138,
+            "ground_truth": 258,
+            "recall": 0.46511627906976744,
+            "true_positive": 120
+          },
+          "object_count:low": {
+            "false_negative": 0,
+            "ground_truth": 44,
+            "recall": 1.0,
+            "true_positive": 44
+          },
+          "object_count:medium": {
+            "false_negative": 66,
+            "ground_truth": 157,
+            "recall": 0.5796178343949044,
+            "true_positive": 91
+          },
+          "size:large": {
+            "false_negative": 19,
+            "ground_truth": 132,
+            "recall": 0.8560606060606061,
+            "true_positive": 113
+          },
+          "size:medium": {
+            "false_negative": 42,
+            "ground_truth": 133,
+            "recall": 0.6842105263157895,
+            "true_positive": 91
+          },
+          "size:small": {
+            "false_negative": 143,
+            "ground_truth": 194,
+            "recall": 0.26288659793814434,
+            "true_positive": 51
+          }
+        },
+        "thresholds": {
+          "border_contact_normalized": 0.01,
+          "cluster_iou": 0.05,
+          "status": "engineering_heuristic"
+        }
+      }
+    }
+  ]
+}

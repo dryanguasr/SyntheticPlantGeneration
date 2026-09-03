@@ -1,0 +1,77 @@
+{
+  "bbox_size_band_delta_percentage_points": {
+    "large": -3.6730173447887706,
+    "medium": 1.1397139282176005,
+    "small": 2.5333034165711754
+  },
+  "bbox_size_band_threshold": {
+    "status": "engineering_heuristic",
+    "value": 5.0
+  },
+  "dataset_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E8_seed_20260821_n0532",
+  "expected_derived_count": 532,
+  "issues": [],
+  "manifest_count": 532,
+  "recipe_diagnostics": {
+    "copy_paste_pairwise_overlap": {
+      "count": 532,
+      "max": 0.34798677268261413,
+      "mean": 0.17854178165789308,
+      "min": 0.020160558357625858
+    },
+    "copy_paste_scale_ratio": {
+      "count": 532,
+      "max": 0.9200376847435672,
+      "mean": 0.7909254261345386,
+      "min": 0.649655212434863
+    },
+    "crop_bbox_area_after": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "crop_bbox_area_before": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "occlusion_visible_fraction": {
+      "count": 684,
+      "max": 1.0,
+      "mean": 0.8475074325198956,
+      "min": 0.5508515891613066
+    },
+    "photometry_augmented": {
+      "count": 0,
+      "means": {}
+    },
+    "photometry_source": {
+      "count": 0,
+      "means": {}
+    },
+    "rejections": {
+      "count": 122,
+      "reasons": {
+        "recipe_candidate_rejected": 122
+      }
+    }
+  },
+  "source_integrity_basis": "source files are hardlink-identical or SHA-256 identical; derived files are decoded and hash-verified",
+  "split_counts": {
+    "test": {
+      "images": 133,
+      "objects": 480
+    },
+    "train": {
+      "images": 1594,
+      "objects": 5023
+    },
+    "val": {
+      "images": 133,
+      "objects": 459
+    }
+  },
+  "status": "valid"
+}

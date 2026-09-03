@@ -1,0 +1,12 @@
+{
+  "attempt_count": 532,
+  "completion_status": "complete",
+  "dataset_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\full\\V2-E0R_seed_20260821_n0532",
+  "derived_count": 532,
+  "rejection_count": 0,
+  "scenario": "V2-E0R",
+  "seed": 20260821,
+  "test_image_count": 133,
+  "train_image_count": 1594,
+  "val_image_count": 133
+}

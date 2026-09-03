@@ -1,0 +1,8 @@
+{
+  "historical_test_caveat": "Test was excluded from selection in this campaign but had been consulted in historical work, so it is not a virgin holdout.",
+  "protocol_version": "classical_augmentation_v2_selection_v1.0.0",
+  "selection_lock": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\selection.lock.json",
+  "selection_lock_sha256": "20abf6df67c0ab27d82982be3a13cb38b486101ee873df983a4d088de3b99a75",
+  "status": "skipped_no_validation_selected_candidate",
+  "test_consulted": false
+}

@@ -1,0 +1,89 @@
+{
+  "bbox_size_band_delta_percentage_points": {
+    "large": 0.010873492055624157,
+    "medium": -0.12448436507542793,
+    "small": 0.11361087301980932
+  },
+  "bbox_size_band_threshold": {
+    "status": "engineering_heuristic",
+    "value": 5.0
+  },
+  "dataset_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\smoke\\V2-E3_seed_20260821_n0025",
+  "expected_derived_count": 25,
+  "issues": [],
+  "manifest_count": 25,
+  "recipe_diagnostics": {
+    "copy_paste_pairwise_overlap": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "copy_paste_scale_ratio": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "crop_bbox_area_after": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "crop_bbox_area_before": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "occlusion_visible_fraction": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "photometry_augmented": {
+      "count": 25,
+      "means": {
+        "local_contrast": 0.05409912370145321,
+        "luminance_std": 0.2054182755947113,
+        "mean_luminance": 0.5338634693622589,
+        "percentile_05": 0.18196078941226004,
+        "percentile_95": 0.856627459526062,
+        "saturation_mean": 0.35954852850291497
+      }
+    },
+    "photometry_source": {
+      "count": 25,
+      "means": {
+        "local_contrast": 0.05284669131040573,
+        "luminance_std": 0.20573732256889343,
+        "mean_luminance": 0.5450428974628448,
+        "percentile_05": 0.19200000569224357,
+        "percentile_95": 0.8682353019714355,
+        "saturation_mean": 0.3568626968526881
+      }
+    },
+    "rejections": {
+      "count": 0,
+      "reasons": {}
+    }
+  },
+  "source_integrity_basis": "source files are hardlink-identical or SHA-256 identical; derived files are decoded and hash-verified",
+  "split_counts": {
+    "test": {
+      "images": 133,
+      "objects": 480
+    },
+    "train": {
+      "images": 1087,
+      "objects": 2940
+    },
+    "val": {
+      "images": 133,
+      "objects": 459
+    }
+  },
+  "status": "valid"
+}

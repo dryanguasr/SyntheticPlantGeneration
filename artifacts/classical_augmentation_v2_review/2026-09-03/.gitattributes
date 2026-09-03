@@ -1,0 +1,4 @@
+# Preserve evidence bytes and SHA-256 across Windows/Linux checkouts.
+** -text whitespace=cr-at-eol
+# Historical whitespace is evidence too: do not reformat copied files.
+snapshot/** -whitespace

@@ -1,0 +1,650 @@
+[
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/quarantine_2026-08-27_duplicate_launcher/v2_e0_confirmatory_yolo11n_e50_seed05/results.csv",
+    "rows": 99,
+    "unique_epoch_prefix": false,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/quarantine_2026-08-27_duplicate_launcher/v2_e3_confirmatory_yolo11n_e50_seed05/results.csv",
+    "rows": 82,
+    "unique_epoch_prefix": false,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed01/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed02/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed03/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed04/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed05/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed06/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed07/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed08/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed09/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0_confirmatory_yolo11n_e50_seed10/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed01/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed02/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed03/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed04/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed05/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed06/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed07/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed08/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed09/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e0r_confirmatory_yolo11n_e50_seed10/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e3_confirmatory_yolo11n_e50_seed01/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e3_confirmatory_yolo11n_e50_seed02/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e3_confirmatory_yolo11n_e50_seed03/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e3_confirmatory_yolo11n_e50_seed04/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e3_confirmatory_yolo11n_e50_seed05/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e6_confirmatory_yolo11n_e50_seed01/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e6_confirmatory_yolo11n_e50_seed02/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e6_confirmatory_yolo11n_e50_seed03/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e6_confirmatory_yolo11n_e50_seed04/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e6_confirmatory_yolo11n_e50_seed05/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed01/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed02/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed03/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed04/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed05/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed06/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed07/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed08/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed09/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/confirmatory/v2_e7_confirmatory_yolo11n_e50_seed10/results.csv",
+    "rows": 50,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "confirmatory",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/runtime_benchmark_workers4_ac/v2_e8_runtime_benchmark_workers4_ac_yolo11n_e1_seed96/results.csv",
+    "rows": 1,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e0_screening_yolo11n_e30_seed01/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e0_screening_yolo11n_e30_seed02/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e0_screening_yolo11n_e30_seed03/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e0r_screening_yolo11n_e30_seed01/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e0r_screening_yolo11n_e30_seed02/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e0r_screening_yolo11n_e30_seed03/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e2_screening_yolo11n_e30_seed01/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e2_screening_yolo11n_e30_seed02/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e2_screening_yolo11n_e30_seed03/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e3_screening_yolo11n_e30_seed01/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e3_screening_yolo11n_e30_seed02/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e3_screening_yolo11n_e30_seed03/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e4_screening_yolo11n_e30_seed01/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e4_screening_yolo11n_e30_seed02/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e4_screening_yolo11n_e30_seed03/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e5_screening_yolo11n_e30_seed01/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e5_screening_yolo11n_e30_seed02/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e5_screening_yolo11n_e30_seed03/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e6_screening_yolo11n_e30_seed01/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e6_screening_yolo11n_e30_seed02/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e6_screening_yolo11n_e30_seed03/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e7_screening_yolo11n_e30_seed01/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e7_screening_yolo11n_e30_seed02/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e7_screening_yolo11n_e30_seed03/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e8_screening_yolo11n_e30_seed01/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e8_screening_yolo11n_e30_seed02/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/screening/v2_e8_screening_yolo11n_e30_seed03/results.csv",
+    "rows": 30,
+    "unique_epoch_prefix": true,
+    "included_in_summary": "screening",
+    "interpretation": "included",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training/v2_e0_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training/v2_e8_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 6,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training_ac/v2_e0_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training_ac/v2_e0r_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training_ac/v2_e2_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training_ac/v2_e3_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training_ac/v2_e4_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training_ac/v2_e5_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training_ac/v2_e6_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training_ac/v2_e7_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  },
+  {
+    "source": "outputs/classical_augmentation_v2/runs/smoke_training_ac/v2_e8_smoke_yolo11n_e8_seed01/results.csv",
+    "rows": 8,
+    "unique_epoch_prefix": true,
+    "included_in_summary": null,
+    "interpretation": "diagnostic_or_excluded_attempt",
+    "best_pt_present_at_export_not_distributed": true
+  }
+]

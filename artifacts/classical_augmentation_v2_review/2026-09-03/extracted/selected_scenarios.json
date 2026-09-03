@@ -1,0 +1,209 @@
+{
+  "kind": "extracted_without_recalculation",
+  "source": "snapshot/outputs/classical_augmentation_v2/selection.lock.json",
+  "source_sha256": "20abf6df67c0ab27d82982be3a13cb38b486101ee873df983a4d088de3b99a75",
+  "selected_scenarios": [],
+  "decision": {
+    "decisions": {
+      "V2-E3": {
+        "case_a_global_improvement": false,
+        "case_b_operational_improvement": false,
+        "extend_to_ten_seeds": false,
+        "mean_delta_key_difficulty_recall_vs_e0r": {
+          "border_contact:True": -0.05263157894736842,
+          "clustered:True": -0.10196078431372549,
+          "size:small": 0.02061855670103093
+        },
+        "paired_map5095_vs_e0r": {
+          "ci95": [
+            -0.018375365583530763,
+            0.023331365583530723
+          ],
+          "mean": 0.0024779999999999802,
+          "n": 5,
+          "sd": 0.016797385808512002
+        },
+        "paired_operational_recall_vs_e0r": {
+          "ci95": [
+            -0.37480803326476725,
+            0.2449605387113904
+          ],
+          "mean": -0.06492374727668844,
+          "n": 5,
+          "sd": 0.24961178985170385
+        },
+        "positive_map_seeds_vs_e0r": 3,
+        "positive_operational_seeds_vs_e0r": 3,
+        "required_positive_seed_count": 4,
+        "seed_count": 5,
+        "seeds": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "strong_candidate": false
+      },
+      "V2-E6": {
+        "case_a_global_improvement": false,
+        "case_b_operational_improvement": false,
+        "extend_to_ten_seeds": false,
+        "mean_delta_key_difficulty_recall_vs_e0r": {
+          "border_contact:True": -0.02807017543859649,
+          "clustered:True": 2.2204460492503132e-17,
+          "size:small": 2.2204460492503132e-17
+        },
+        "paired_map5095_vs_e0r": {
+          "ci95": [
+            0.009327682905954104,
+            0.024560317094045856
+          ],
+          "mean": 0.01694399999999998,
+          "n": 5,
+          "sd": 0.0061349433575217
+        },
+        "paired_operational_recall_vs_e0r": {
+          "ci95": [
+            -0.056243885581185295,
+            0.01964257839164283
+          ],
+          "mean": -0.018300653594771232,
+          "n": 5,
+          "sd": 0.030563273057516653
+        },
+        "positive_map_seeds_vs_e0r": 5,
+        "positive_operational_seeds_vs_e0r": 1,
+        "required_positive_seed_count": 4,
+        "seed_count": 5,
+        "seeds": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "strong_candidate": false
+      },
+      "V2-E7": {
+        "case_a_global_improvement": false,
+        "case_b_operational_improvement": false,
+        "extend_to_ten_seeds": false,
+        "mean_delta_key_difficulty_recall_vs_e0r": {
+          "border_contact:True": -0.02894736842105263,
+          "clustered:True": -0.011764705882352944,
+          "size:small": -0.018041237113402046
+        },
+        "paired_map5095_vs_e0r": {
+          "ci95": [
+            0.011339894544858283,
+            0.024982105455141703
+          ],
+          "mean": 0.018160999999999993,
+          "n": 10,
+          "sd": 0.009535910432558487
+        },
+        "paired_operational_recall_vs_e0r": {
+          "ci95": [
+            -0.11947400980520606,
+            0.08940865032808193
+          ],
+          "mean": -0.015032679738562071,
+          "n": 10,
+          "sd": 0.146009056086658
+        },
+        "positive_map_seeds_vs_e0r": 10,
+        "positive_operational_seeds_vs_e0r": 5,
+        "required_positive_seed_count": 8,
+        "seed_count": 10,
+        "seeds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "strong_candidate": false
+      }
+    },
+    "fixed_engineering_thresholds": {
+      "majority_sign_fraction": 0.8,
+      "map_stability_tolerance": 0.005,
+      "maximum_operational_recall_drop": 0.02
+    },
+    "protocol_version": "classical_augmentation_v2_selection_v1.0.0",
+    "scenario_cohorts": {
+      "V2-E0": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "V2-E0R": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "V2-E3": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "V2-E6": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "V2-E7": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    "seed_count": 10,
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "selection_split": "val",
+    "test_consulted": false
+  },
+  "test_consulted": false
+}

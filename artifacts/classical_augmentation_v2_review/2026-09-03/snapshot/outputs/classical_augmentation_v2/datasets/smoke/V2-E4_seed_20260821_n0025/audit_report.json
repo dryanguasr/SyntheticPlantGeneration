@@ -1,0 +1,77 @@
+{
+  "bbox_size_band_delta_percentage_points": {
+    "large": -0.07967561768325027,
+    "medium": 0.05679846013063594,
+    "small": 0.022877157552619876
+  },
+  "bbox_size_band_threshold": {
+    "status": "engineering_heuristic",
+    "value": 5.0
+  },
+  "dataset_dir": "C:\\dev\\SyntheticPlantGeneration\\outputs\\classical_augmentation_v2\\datasets\\smoke\\V2-E4_seed_20260821_n0025",
+  "expected_derived_count": 25,
+  "issues": [],
+  "manifest_count": 25,
+  "recipe_diagnostics": {
+    "copy_paste_pairwise_overlap": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "copy_paste_scale_ratio": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "crop_bbox_area_after": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "crop_bbox_area_before": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "occlusion_visible_fraction": {
+      "count": 67,
+      "max": 1.0,
+      "mean": 0.9074668264865996,
+      "min": 0.6420719911106783
+    },
+    "photometry_augmented": {
+      "count": 0,
+      "means": {}
+    },
+    "photometry_source": {
+      "count": 0,
+      "means": {}
+    },
+    "rejections": {
+      "count": 10,
+      "reasons": {
+        "recipe_candidate_rejected": 10
+      }
+    }
+  },
+  "source_integrity_basis": "source files are hardlink-identical or SHA-256 identical; derived files are decoded and hash-verified",
+  "split_counts": {
+    "test": {
+      "images": 133,
+      "objects": 480
+    },
+    "train": {
+      "images": 1087,
+      "objects": 2948
+    },
+    "val": {
+      "images": 133,
+      "objects": 459
+    }
+  },
+  "status": "valid"
+}
