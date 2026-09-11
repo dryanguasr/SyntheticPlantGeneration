@@ -153,8 +153,14 @@ Actualizar esta sección al cerrar cada intervención: fecha, HEAD/diff, comando
 | 2026-09-08 | Grafo e instrucciones | Corrección de autoridad externa y rutas; cuatro tests del grafo OK; validador 130 nodos/237 aristas. Permisos históricos alineados con encargo |
 | 2026-09-08 | Verificación de cierre | Suite completa: 140 tests OK en 112,319 s. Los once archivos ajenos fuera del grafo conservan SHA-256; reconstruir el grafo sin nuestras tres ediciones coincide con su hash inicial. Evidencia en `final_tests.log` y `preexisting_preservation_check.json` |
 | Siguiente | **M1** más preparación de **M2/M3** | No pedir entrevista general. Obtener anotación/captura humana solo al llegar a dependencia indispensable; avanzar fixtures/procedencia en paralelo lógico, sin delegación requerida |
+| 2026-09-11 | Publicación e integración autorizadas por el usuario | Auditoría publicada en `5f9787c`; se prepara integración de aplicaciones y base M0 en `main`. Suite del núcleo: 140 tests OK en 64,718 s; PC: 9 OK; Android build/lint correctos, tests JVM vigentes; RTMP local verificado. M1 y validación científica siguen pendientes |
 
 La intervención termina con auditoría y primera base implementadas, validación técnica ejecutada y campaña científica pendiente. No se ha confirmado la hipótesis, migrado el entrenamiento a multiclase ni aprobado visualmente el cultivo. No se han fusionado ni publicado los cambios.
+
+La frase anterior registra el cierre del 8 de septiembre. El 11 de septiembre
+el usuario autorizó publicar los avances actuales e integrarlos en `main`;
+verificar el estado Git real al retomar, sin asumir que sigue activa la rama de
+intervención. Esa integración no cambia el estado científico ni completa M1.
 
 ## Texto exacto de arranque
 

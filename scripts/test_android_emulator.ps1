@@ -23,7 +23,7 @@ $startedHere = -not ($existing -match 'emulator-5580\s')
 if ($startedHere) {
     $logRoot = Join-Path $repoRoot 'outputs/mobile/emulator'
     New-Item -ItemType Directory -Path $logRoot -Force | Out-Null
-    Start-Process -FilePath $emulator -WindowStyle Hidden -ArgumentList @('-avd','uchuva_api29','-port','5580','-no-window','-no-audio','-no-snapshot','-gpu','swiftshader_indirect','-camera-back','emulated','-camera-front','none','-memory','2048','-cores','2') -RedirectStandardOutput (Join-Path $logRoot 'stdout.log') -RedirectStandardError (Join-Path $logRoot 'stderr.log') | Out-Null
+    Start-Process -FilePath $emulator -WindowStyle Hidden -ArgumentList @('-avd','uchuva_api29','-port','5580','-no-window','-no-audio','-no-snapshot','-gpu','swiftshader_indirect','-camera-back','virtualscene','-camera-front','none','-memory','2048','-cores','2') -RedirectStandardOutput (Join-Path $logRoot 'stdout.log') -RedirectStandardError (Join-Path $logRoot 'stderr.log') | Out-Null
 }
 try {
     $deadline = (Get-Date).AddMinutes(4)

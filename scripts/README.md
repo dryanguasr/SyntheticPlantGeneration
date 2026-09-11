@@ -16,6 +16,8 @@ reemplazados están en `legacy/scripts/`.
 | `audit_literature_cohort_morphologies.py` | Audita cohortes y contrato crítico sin Blender |
 | `analyze_detection_errors.py` | Diagnostica TP/FP/FN y localización solo sobre `val` real |
 | `audit_virtual_fidelity_pilot.py` | Aplica los criterios de aceptación y bloqueo del piloto v2 |
+| `audit_scientific_evidence.py` | Recalcula resultados históricos y verifica hashes locales sin reentrenar; requiere `--output` bajo `outputs/` |
+| `prepare_instance_observation_review.py` | Crea observaciones pendientes desde un manifest sintético, sin asignar madurez real ni cambiar YOLO; requiere `--manifest` y `--output` nuevo |
 | `create_dataset_sample_sheet.py` | Genera una lámina determinista de revisión visual |
 | `calibrate_synthetic_scale.py` | Deriva un dataset con escala aparente ajustada usando solo train/val reales |
 | `prepare_hybrid_experiments.py` | Prepara baseline y mezclas real/sintético con val/test reales |
@@ -34,6 +36,7 @@ reemplazados están en `legacy/scripts/`.
 | `render_structural_diagnostics.py` | Siete vistas estructurales comparables |
 | `generate_annotation_pilot.py` | Piloto RGB/anotable |
 | `generate_annotation_dataset.py` | Dataset YOLO por escenas |
+| `blender_annotation_contract_smoke.py` | Fixture de dos máscaras 128×128 que separa ocupación de caja y oclusión; salidas bajo `outputs/audits/scientific_route_20260908/blender_smoke/` |
 | `generate_virtual_fidelity_pairs.py` | Comparaciones v1/v2 con condiciones pareadas |
 | `generate_human_validation_suite.py` | Diez casos antes/después con EEVEE estándar y Cycles opcional |
 | `example_run_blender_background.ps1` | Ejemplo Windows |
@@ -69,6 +72,14 @@ La configuración serializable vive en
 de cualquier selección y sólo puede consultarse después de congelar la campaña.
 
 ## Activos y mantenimiento
+
+### Aplicaciones de video y RTMP
+
+- `build_desktop_app.ps1`: prepara el ejecutable Windows independiente y su modelo.
+- `setup_rtmp_server.ps1` / `start_rtmp_server.ps1`: prepara y ejecuta MediaMTX local.
+- `test_rtmp_video.py`: comprueba recepción continua, desconexión, captura y exportación de un video local.
+
+Instrucciones: [Video del dron y PC](../docs/guides/video_dron_pc_rtmp.md).
 
 | Script | Propósito |
 |---|---|

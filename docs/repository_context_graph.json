@@ -31,14 +31,50 @@
   },
   "nodes": [
     {
+      "id": "module.rtmp_video", "type": "subsystem", "label": "Recepcion de video RTMP",
+      "summary": "DJI Fly publica a un servidor local; Android decodifica a fotogramas inmutables y PC drena el directo independientemente de la inferencia. No implementa el control ni el protocolo de radio del Neo.",
+      "paths": ["mobile/android/app/src/main/java/org/uchuva/aruco/RtmpFrames.kt", "desktop/uchuva_aruco/video.py", "desktop/mediamtx.yml"],
+      "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/RtmpFrames.kt", "locator": "class RtmpFrames"}, {"path": "desktop/uchuva_aruco/video.py", "locator": "class VideoReader"}]
+    },
+    {
+      "id": "entrypoint.desktop_vision", "type": "entrypoint", "label": "Percepcion Windows de capachos y ArUco",
+      "summary": "Aplicacion Tk independiente para RTMP, videos locales, posicion planar multipunto en centimetros confirmados, parejas JPEG/JSON y exportacion MP4/JSONL por cuadro.",
+      "paths": ["desktop/run_app.py", "desktop/uchuva_aruco/app.py", "desktop/uchuva_aruco/vision.py", "desktop/uchuva_aruco/storage.py", "desktop/uchuva_aruco/export_video.py", "scripts/build_desktop_app.ps1"],
+      "evidence": [{"path": "desktop/uchuva_aruco/app.py", "locator": "class Application"}, {"path": "desktop/uchuva_aruco/export_video.py", "locator": "output_frame_index"}]
+    },
+    {
+      "id": "test.rtmp_desktop", "type": "test", "label": "Validacion local RTMP y PC",
+      "summary": "Pruebas de geometria, paridad sobre val, Tk, guardado atomico y FFmpeg/MediaMTX local. Android comprueba decodificacion con dos ArUco, hash y ciclo de vida; no sustituye una prueba fisica con DJI Neo.",
+      "paths": ["desktop/tests/test_vision.py", "desktop/tests/test_app.py", "scripts/test_rtmp_video.py", "mobile/android/app/src/androidTest/java/org/uchuva/aruco/RtmpIntegrationTest.kt"],
+      "evidence": [{"path": "scripts/test_rtmp_video.py", "locator": "local_ffmpeg_fixture_not_drone"}, {"path": "mobile/android/app/src/androidTest/java/org/uchuva/aruco/RtmpIntegrationTest.kt", "locator": "streamDecodesAnalyzesSavesAndResumes"}]
+    },
+    {
+      "id": "guide.drone_rtmp", "type": "document", "label": "Conexion DJI Fly y aplicaciones de video",
+      "summary": "Topologia emisor-servidor-receptor, alcance de red con Neo conectado por Wi-Fi, almacenamiento accesible y limites de tiempos de recepcion, escala y estimacion planar.",
+      "paths": ["docs/guides/video_dron_pc_rtmp.md"],
+      "evidence": [{"path": "docs/guides/video_dron_pc_rtmp.md", "locator": "no la hora de exposición del dron"}]
+    },
+    {
+      "id": "module.annotation_observation", "type": "subsystem", "label": "Contrato de observacion por instancia",
+      "summary": "Sidecar versionado separa apariencia sintetica candidata, observacion pendiente, madurez agronomica desconocida y oclusion medida; preserva YOLO monoclase.",
+      "paths": ["src/uchuva_lsystem/annotation_contract.py", "scripts/prepare_instance_observation_review.py"],
+      "evidence": [{"path": "src/uchuva_lsystem/annotation_contract.py", "locator": "OBSERVATION_SCHEMA"}]
+    },
+    {
+      "id": "test.annotation_observation", "type": "test", "label": "Validez de observacion y oclusion",
+      "summary": "Pruebas puras evitan inferir madurez real; fixture Blender verifica cajas visibles e independencia entre ocupacion y oclusion.",
+      "paths": ["tests/test_annotation_contract.py", "scripts/blender_annotation_contract_smoke.py"],
+      "evidence": [{"path": "tests/test_annotation_contract.py", "locator": "class AnnotationContractTests"}]
+    },
+    {
       "id": "test.mobile_integration", "type": "test", "label": "Integracion Android nativa",
-      "summary": "Verifica CameraX y ciclo de vida, ArUco con captura coherente y equivalencia del detector Android sobre un ejemplo real de validacion preparado fuera de Git.",
+      "summary": "Verifica CameraX y ciclo de vida, multiples ArUco con pareja MediaStore coherente y equivalencia del detector Android sobre un ejemplo real de validacion preparado fuera de Git.",
       "paths": ["mobile/android/app/src/androidTest/java/org/uchuva/aruco/CameraLifecycleTest.kt", "mobile/android/app/src/androidTest/java/org/uchuva/aruco/VisionSmokeTest.kt", "mobile/android/app/src/androidTest/java/org/uchuva/aruco/DetectorParityTest.kt"],
       "evidence": [{"path": "mobile/android/app/src/androidTest/java/org/uchuva/aruco/DetectorParityTest.kt", "locator": "androidPreprocessingMatchesRealValidationReference"}]
     },
     {
       "id": "module.mobile_vision", "type": "subsystem", "label": "Percepcion Android local",
-      "summary": "Consume el detector de capachos y ArUco sobre el mismo cuadro; conserva la referencia elegida y exporta estimaciones en el plano sin redefinir morfologia.",
+      "summary": "Consume el detector y ArUco sobre el mismo cuadro; extiende rejillas al fotograma y solicita el lado fisico antes de estimar posiciones por marcador exclusivamente en centimetros.",
       "paths": ["mobile/android/app/src/main/java/org/uchuva/aruco/VisionEngine.kt", "mobile/android/app/src/main/java/org/uchuva/aruco/Geometry.kt"],
       "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/VisionEngine.kt", "locator": "class VisionEngine"}]
     },
@@ -56,7 +92,7 @@
     },
     {
       "id": "artifact.mobile_capture", "type": "artifact", "label": "Captura Android anotada y JSON",
-      "summary": "Conserva imagen y resultado del mismo cuadro con coordenadas anulables, procedencia y hash de imagen.",
+      "summary": "Publica en Galeria y Descargas la imagen y el JSON del mismo cuadro, con coordenadas por marcador, procedencia, identificador comun y hash.",
       "paths": ["mobile/android/app/src/main/java/org/uchuva/aruco/CaptureStore.kt"],
       "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/CaptureStore.kt", "locator": "image_sha256"}]
     },
@@ -68,7 +104,7 @@
     },
     {
       "id": "test.mobile_geometry", "type": "test", "label": "Pruebas de geometria y referencia movil",
-      "summary": "Prueba homografia, perspectiva, escala, rotacion, transformaciones de imagen, seleccion, ambiguedad, ausencia y JSON anulable sin camara.",
+      "summary": "Prueba homografia directa e inversa, cuadricula, escala, rotacion, tarjetas, resolucion multipunto, ambiguedad y JSON anulable sin camara.",
       "paths": ["mobile/android/app/src/test/java/org/uchuva/aruco/GeometryTest.kt"],
       "evidence": [{"path": "mobile/android/app/src/test/java/org/uchuva/aruco/GeometryTest.kt", "locator": "class GeometryTest"}]
     },
@@ -974,7 +1010,7 @@
       "label": "Protocolo clasico trazable",
       "summary": "Definicion serializable de condiciones E0, E1 y E2 con procedencia y estado de reproducibilidad de recetas.",
       "paths": ["src/uchuva_classical_augmentation/protocol.py", "contributions/diego_amaya/yolo11n_multiseed_v1/CONTRIBUTION.md"],
-      "evidence": [{"path": "contributions/diego_amaya/yolo11n_multiseed_v1/CONTRIBUTION.md", "locator": "sus recetas son reproducibles"}]
+      "evidence": [{"path": "src/uchuva_classical_augmentation/protocol.py", "locator": "RECIPE_STATUS_PRECOMPUTED_ONLY"}]
     },
     {
       "id": "artifact.classical_augmentation_v2_profile",
@@ -1041,7 +1077,14 @@
       "evidence": [{"path": "tests/test_gazebo_interfaces.py", "locator": "class GazeboInterfaceTests"}]
     }
   ],
-  "edges": [
+    "edges": [
+      {"source": "entrypoint.desktop_vision", "relation": "consumes", "target": "artifact.mobile_detector", "evidence": [{"path": "desktop/uchuva_aruco/vision.py", "locator": "model_manifest.json"}]},
+      {"source": "entrypoint.desktop_vision", "relation": "depends_on", "target": "module.rtmp_video", "evidence": [{"path": "desktop/uchuva_aruco/app.py", "locator": "VideoReader"}]},
+      {"source": "module.mobile_vision", "relation": "depends_on", "target": "module.rtmp_video", "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/MainActivity.kt", "locator": "RtmpFrames"}]},
+      {"source": "test.rtmp_desktop", "relation": "tests", "target": "module.rtmp_video", "evidence": [{"path": "scripts/test_rtmp_video.py", "locator": "VideoReader"}]},
+      {"source": "test.rtmp_desktop", "relation": "tests", "target": "entrypoint.desktop_vision", "evidence": [{"path": "desktop/tests/test_app.py", "locator": "ApplicationTests"}]},
+      {"source": "entrypoint.desktop_vision", "relation": "must_preserve", "target": "constraint.mobile_planar_estimate", "evidence": [{"path": "desktop/uchuva_aruco/vision.py", "locator": "object_depth_measured=False"}]},
+    {"source": "test.annotation_observation", "relation": "tests", "target": "module.annotation_observation", "evidence": [{"path": "tests/test_annotation_contract.py", "locator": "class AnnotationContractTests"}]},
     {"source": "test.mobile_integration", "relation": "tests", "target": "module.mobile_vision", "evidence": [{"path": "mobile/android/app/src/androidTest/java/org/uchuva/aruco/VisionSmokeTest.kt", "locator": "VisionEngine(context)"}]},
     {"source": "module.mobile_vision", "relation": "consumes", "target": "artifact.mobile_detector", "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/VisionEngine.kt", "locator": "detector.onnx"}]},
     {"source": "entrypoint.export_mobile_detector", "relation": "produces", "target": "artifact.mobile_detector", "evidence": [{"path": "scripts/export_mobile_detector.py", "locator": "model_manifest.json"}]},

@@ -40,6 +40,13 @@ class RepositoryContextGraphTests(unittest.TestCase):
         }
         self.assertIn(("decision.morphology_first", "decision.legacy_prototype"), superseding)
 
+    def test_rejects_external_and_noncanonical_authority_paths(self) -> None:
+        for path in ("contributions/student/a.py", "legacy/prototype.py", "./outputs/a.json",
+                     "Outputs\\a.json", "output/a.json", "src/../outputs/a.json",
+                     "C:\\outside\\file.py", "/outside/file.py", "docs/drafts/note.md"):
+            with self.subTest(path=path):
+                self.assertFalse(is_authoritative_evidence(path))
+
 
 if __name__ == "__main__":
     unittest.main()

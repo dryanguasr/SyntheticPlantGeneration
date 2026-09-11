@@ -24,7 +24,7 @@ morfología serializable ───┤
 | Frente | Ruta principal | Estado |
 |---|---|---|
 | Aumentación clásica | `src/uchuva_classical_augmentation/` | E0/E1/E2 preservados; campaña v2 cerrada sin receta promovida |
-| Generación sintética | `src/uchuva_lsystem/` | Implementación vigente y madura |
+| Generación sintética | `src/uchuva_lsystem/` | Pipeline implementado; transferencia científica y maduración por validar |
 | Gazebo | `src/uchuva_gazebo/` | Interfaz semántica por LOD; aún no emite SDF |
 | Contribuciones externas | `contributions/` | Snapshots atribuidos, separados del código vigente |
 
@@ -40,6 +40,13 @@ parámetros con procedencia
 ```
 
 ## Estado vigente
+
+La [auditoría científica del 8 de septiembre de 2026](docs/reports/auditoria_cientifica_blender_2026-09-08.md)
+contrasta los reportes con artefactos locales: en el estudio híbrido posterior de
+tres semillas, el delta medio sobre el test histórico fue +0,00153 mAP50–95,
+con dos semillas negativas. El piloto visual v2 sigue rechazado para escalado.
+El [plan de continuidad](docs/plan_auditoria_cientifica_blender_2026-09-08.md)
+define los próximos experimentos y la migración versionada de etiquetas.
 
 La aplicación experimental Android en `mobile/android/` ejecuta el detector
 de capachos sin conexión y estima coordenadas sobre el plano de un ArUco.

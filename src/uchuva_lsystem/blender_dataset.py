@@ -393,6 +393,8 @@ def generate_annotation_dataset(config: DatasetConfig) -> dict[str, Any]:
         raise FileExistsError(
             f"Dataset manifest already exists: {manifest_path}. Use --resume or a new output directory."
         )
+    if manifest_path.exists() and config.resume:
+        _validate_resume_configuration(root, config)
     root.mkdir(parents=True, exist_ok=True)
     write_dataset_descriptor(root)
     reference_profile = load_reference_profile(config.reference_profile_path)
@@ -1424,6 +1426,28 @@ def _validate_dataset(
             "unknown_visible_reproductive_instance_count": unknown_visible_count,
         },
     }
+
+
+def _validate_resume_configuration(root: Path, config: DatasetConfig) -> None:
+    """Reject mixed generation settings before overwriting any existing metadata.
+
+    This checks the recorded configuration, not the contents of referenced
+    files or the source revision. Those require a separate provenance lock.
+    """
+    path = root / "generation_config.json"
+    if not path.is_file():
+        raise ValueError("Cannot resume without generation_config.json; use a new output directory.")
+    previous = json.loads(path.read_text(encoding="utf-8-sig"))
+    operational = {"resume", "output_dir", "max_seed_candidates", "inspection_blend_path"}
+    changed = sorted(
+        key for key, value in config.to_dict().items()
+        if key not in operational and (key not in previous or previous[key] != value)
+    )
+    if changed:
+        raise ValueError(
+            "Resume configuration changed: " + ", ".join(changed)
+            + ". Use a new output directory to preserve the existing experiment."
+        )
 
 
 def _prepare_resume_records(root: Path, config: DatasetConfig) -> list[dict[str, Any]]:

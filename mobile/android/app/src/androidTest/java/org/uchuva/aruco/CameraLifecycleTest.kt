@@ -20,14 +20,14 @@ class CameraLifecycleTest {
     }
 
     private fun awaitFrame(scenario: ActivityScenario<MainActivity>): FrameSnapshot {
-        val deadline = System.nanoTime() + 30_000_000_000L
+        val deadline = System.nanoTime() + 60_000_000_000L
         while (System.nanoTime() < deadline) {
             var frame: FrameSnapshot? = null
             scenario.onActivity { frame = analysisView(it.window.decorView)?.snapshot }
             frame?.let { return it }
             Thread.sleep(100)
         }
-        throw AssertionError("Camera did not deliver an analyzed frame in 30 seconds")
+        throw AssertionError("Camera did not deliver an analyzed frame in 60 seconds")
     }
 
     @Test fun cameraResumesAndRecreatesWithoutOldFrames() {

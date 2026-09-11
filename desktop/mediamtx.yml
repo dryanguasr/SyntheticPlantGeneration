@@ -1,0 +1,17 @@
+# Local RTMP relay. Publish and read the same path from devices on a trusted LAN.
+# No cloud service and no video recording by this server.
+logLevel: info
+rtsp: no
+rtmp: yes
+rtmpAddress: :1935
+hls: no
+webrtc: no
+srt: no
+moq: no
+api: no
+metrics: no
+pprof: no
+playback: no
+paths:
+  neo:
+    source: publisher

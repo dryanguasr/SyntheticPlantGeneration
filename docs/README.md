@@ -17,6 +17,9 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Guías operativas
 
+- [Video del DJI Neo en Android y PC](guides/video_dron_pc_rtmp.md): recepción
+  RTMP, servidor local, red del teléfono emisor y exportación de videos y datos.
+
 - [Aplicación móvil con ArUco](guides/aplicacion_movil_aruco.md): compilación,
   requisitos de un clon nuevo, instalación, medidas aproximadas, capturas y
   protocolo de prueba en teléfono; APK y pesos permanecen fuera de Git.
@@ -29,6 +32,10 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Gobernanza y evidencia
 
+- [Auditoría científica de Blender y maduración](reports/auditoria_cientifica_blender_2026-09-08.md):
+  resultados históricos contrastados, límites de las etiquetas y ruta científica elegida.
+- [Plan de continuidad en Codex](plan_auditoria_cientifica_blender_2026-09-08.md):
+  primera intervención ejecutada, hitos, criterios, costes y texto exacto de arranque.
 - `governance/decisiones_tecnicas.md`: decisiones cronológicas.
 - `governance/registro_evidencia.md`: procedencia, incertidumbre y estado
   epistemológico de parámetros y resultados.
@@ -61,6 +68,9 @@ Consulte:
 - `references/README_articulos_recomendados.md`: selección comentada de lecturas.
 
 ## Reportes con fecha de corte
+
+- [RTMP Android y aplicación PC](reports/video_rtmp_android_pc_2026-09-11.md):
+  pruebas de transmisión local, referencias multipunto y paquetes 0.3.0.
 
 - [Aplicación Android con ArUco](reports/aplicacion_android_aruco_2026-09-02.md):
   APK local, equivalencia del detector, verificación en emulador y límites de campo.

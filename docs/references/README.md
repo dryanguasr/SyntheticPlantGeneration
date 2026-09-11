@@ -25,6 +25,8 @@ ligero y trazable.
 ## Contenido versionado
 
 - `referencias_uchuva_lsystem.bib`: bibliografía estructurada con DOI y URL;
+- [auditoria_blender_2026-09-08.bib](auditoria_blender_2026-09-08.bib): ampliación
+  de síntesis/adaptación agrícola, con estatus editorial y límites de consulta;
 - `README_articulos_recomendados.md`: selección comentada de trabajos
   especialmente relevantes;
 - este `README.md`: política de referencias.

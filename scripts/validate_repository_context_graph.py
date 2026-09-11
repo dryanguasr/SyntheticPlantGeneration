@@ -3,18 +3,27 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 GRAPH_PATH = REPO_ROOT / "docs/repository_context_graph.json"
-GENERATED_EVIDENCE_PREFIXES = ("outputs/", "generated_specs/", "tmp/")
+GENERATED_EVIDENCE_PREFIXES = (
+    "outputs/", "output/", "generated_specs/", "tmp/", "artifacts/",
+    "contributions/", "legacy/", "dataset original/", "docs/drafts/",
+    "docs/references/raw/",
+)
 
 
 def is_authoritative_evidence(relative_path: str) -> bool:
     """Return false when generated output cannot be authoritative evidence."""
-    normalized = relative_path.replace("\\", "/")
-    return not normalized.startswith(GENERATED_EVIDENCE_PREFIXES)
+    normalized = relative_path.replace("\\", "/").casefold()
+    path = PurePosixPath(normalized)
+    if path.is_absolute() or PureWindowsPath(relative_path).drive or ".." in path.parts:
+        return False
+    normalized = path.as_posix()
+    return not any(normalized == prefix.rstrip("/") or normalized.startswith(prefix)
+                   for prefix in GENERATED_EVIDENCE_PREFIXES)
 
 
 def main() -> None:

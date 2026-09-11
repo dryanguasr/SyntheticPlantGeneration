@@ -204,17 +204,27 @@ visual occlusion           # potentially useful for synthetic data
 out-of-range morphology    # botanically suspicious
 ```
 
-## Expected initial migration task
+## Scientific intervention and continuity (2026-09-08)
 
-If the repository only contains `planta_procedural_v05.py` and related notes:
+The initial migration is complete. Do not recreate empty modules or repeat it.
+For the authorized Blender research intervention, read
+`docs/plan_auditoria_cientifica_blender_2026-09-08.md` and its progress register.
+The user explicitly authorized scientific reformulation within synthetic crop
+scenes, multiclass migration and justified deep refactors. These do not require
+another general approval. The remaining safeguards below still apply.
 
-1. Create the recommended folder structure.
-2. Move `planta_procedural_v05.py` to `legacy/`.
-3. Create empty but documented modules under `src/uchuva_lsystem/`.
-4. Create or update `.gitignore`.
-5. Version project-authored documentation and bibliographic metadata; keep drafts, downloaded articles, and local checkpoints outside version control.
-6. Do not rewrite the entire generator yet.
-7. Do not implement a full L-System before the morphology dataclasses exist.
+Prioritize image instance localization and defensible maturation labels.
+Classical augmentation publication remains with the students; Gazebo is secondary.
+Preserve the historical single-class baseline while a versioned observation
+contract is validated. Calyx appearance is not validated fruit maturity. Unknown
+and human-review-pending values must remain explicit; synthetic metadata cannot
+be promoted to real ground truth. A box mask fill ratio is not an occlusion rate.
+
+Historical real test images were evaluated during development. A new selection
+lock cannot make them an untouched external holdout. Keep experimental artifacts
+and negative results, and distinguish static inspection, recovered metrics,
+new executions and human validation. Work on an intervention branch and protect
+unrelated local changes; do not retire untracked material assuming Git preserves it.
 
 ## Testing and sanity checks
 
@@ -278,9 +288,9 @@ model weights, or reference articles. Preserve authorship and original terms.
 Ask the user before:
 
 - adding external dependencies;
-- changing the scientific scope;
+- changing the scientific scope outside the authorized Blender intervention;
 - converting the project to a package with build tooling;
 - deleting legacy scripts;
 - generating large batches of renders;
-- changing annotation classes;
+- changing annotation classes outside the authorized versioned migration;
 - replacing Spanish docs with English docs.
