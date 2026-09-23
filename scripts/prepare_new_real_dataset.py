@@ -1,0 +1,9 @@
+"""Prepare a provisional real-image annotation hand-off, independently of Blender."""
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from uchuva_dataset_curation import main
+
+if __name__ == "__main__":
+    main()

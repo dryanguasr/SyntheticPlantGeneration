@@ -30,6 +30,40 @@
     ]
   },
   "nodes": [
+{
+  "id": "entrypoint.new_real_dataset",
+  "type": "entrypoint",
+  "label": "Curación de nuevas capturas reales sin etiquetas",
+  "summary": "Inventario inmutable, extracción por tiempo de decodificador, propuestas de grupos completos y reservas perceptuales; entrega provisional hasta revisión humana de grupos y escalas. Independiente de Blender y del histórico. Reducción de frames por correspondencias geométricas directas con representantes conservados, sin cuotas temporales fijas.",
+  "paths": [
+    "src/uchuva_dataset_curation.py",
+    "scripts/prepare_new_real_dataset.py",
+    "docs/guides/nuevo_dataset_real.md",
+    "docs/reports/curacion_nuevo_dataset_2026-09-22.md",
+    "docs/reports/nuevas_imagenes_revision_chat_2026-09-23.md",
+    "tests/test_dataset_curation.py",
+    "scripts/reduce_video_redundancy.py",
+    "scripts/select_dataset_budget.py",
+    "scripts/export_mirror_dataset.py",
+    "docs/reviews/real_dataset_visual_selection_2026-09-22.json",
+    "tests/test_video_redundancy.py"
+  ],
+  "evidence": [
+    {
+      "path": "src/uchuva_dataset_curation.py",
+      "locator": "Image similarity proposes relationships"
+    },
+    {
+      "path": "docs/guides/nuevo_dataset_real.md",
+      "locator": "provisional"
+    },
+    {
+      "path": "tests/test_dataset_curation.py",
+      "locator": "test_video_timestamps_and_whole_source_group"
+    }
+  ]
+},
+
     {
       "id": "module.rtmp_video", "type": "subsystem", "label": "Recepcion de video RTMP",
       "summary": "DJI Fly publica a un servidor local; Android decodifica a fotogramas inmutables y PC drena el directo independientemente de la inferencia. No implementa el control ni el protocolo de radio del Neo.",
@@ -1078,6 +1112,7 @@
     }
   ],
     "edges": [
+
       {"source": "entrypoint.desktop_vision", "relation": "consumes", "target": "artifact.mobile_detector", "evidence": [{"path": "desktop/uchuva_aruco/vision.py", "locator": "model_manifest.json"}]},
       {"source": "entrypoint.desktop_vision", "relation": "depends_on", "target": "module.rtmp_video", "evidence": [{"path": "desktop/uchuva_aruco/app.py", "locator": "VideoReader"}]},
       {"source": "module.mobile_vision", "relation": "depends_on", "target": "module.rtmp_video", "evidence": [{"path": "mobile/android/app/src/main/java/org/uchuva/aruco/MainActivity.kt", "locator": "RtmpFrames"}]},

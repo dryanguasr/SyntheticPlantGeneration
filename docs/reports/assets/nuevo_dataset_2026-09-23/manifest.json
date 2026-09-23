@@ -1,0 +1,89 @@
+{
+  "purpose": "Illustrative review sample; not a representative statistical sample or training dataset",
+  "images": [
+    {
+      "file": "01_plano_general.jpg",
+      "image_id": "35447d7cab412fec_photo",
+      "source": "RecolecciÃ³n de datos 12-09-2026/20260912_083804.jpg",
+      "frame_index": null,
+      "timestamp_seconds": null,
+      "split": "train",
+      "group_id": "g_0b8b001996207837",
+      "selection": "include",
+      "candidate_sha256": "164a6a4cb9e30ebb3b950203340776ce59a4896255a27a61c61906649e791f98",
+      "illustration": "JPEG reduced to maximum 960 pixels, not original training asset"
+    },
+    {
+      "file": "02_detalle_conservado.jpg",
+      "image_id": "56150c6cc73d63c2_photo",
+      "source": "RecolecciÃ³n de datos 12-09-2026/20260912_083833.jpg",
+      "frame_index": null,
+      "timestamp_seconds": null,
+      "split": "train",
+      "group_id": "g_0b8b001996207837",
+      "selection": "include",
+      "candidate_sha256": "0207ca234249dc9a660f4c6f7d0061668bab2f62a2af6040cc39ae2ff0fa4ced",
+      "illustration": "JPEG reduced to maximum 960 pixels, not original training asset"
+    },
+    {
+      "file": "03_toma_en_reserva.jpg",
+      "image_id": "be31bc47642600a2_photo",
+      "source": "RecolecciÃ³n de datos 12-09-2026/20260912_083825.jpg",
+      "frame_index": null,
+      "timestamp_seconds": null,
+      "split": "train",
+      "group_id": "g_0b8b001996207837",
+      "selection": "reserve",
+      "candidate_sha256": "c4de1d9e9a699fc3526e380c630df9d5b17ad9c0b2280608997f838006079c56",
+      "illustration": "JPEG reduced to maximum 960 pixels, not original training asset"
+    },
+    {
+      "file": "04_perspectiva_baja.jpg",
+      "image_id": "54b14999deb5ce89_f000005920",
+      "source": "RecolecciÃ³n de datos 12-09-2026/dji_fly_20260912_090830_0017_1789409511229_video_beautify-006.mp4",
+      "frame_index": 5920,
+      "timestamp_seconds": 197.530667,
+      "split": "train",
+      "group_id": "g_54b14999deb5ce89",
+      "selection": "include",
+      "candidate_sha256": "df8a9da290f651bd6775e57a660b80cf640cf7317ca5b847b979570be3dfedb3",
+      "illustration": "JPEG reduced to maximum 960 pixels, not original training asset"
+    },
+    {
+      "file": "05_oclusion.jpg",
+      "image_id": "7deb6f46bf9ba74b_photo",
+      "source": "RecolecciÃ³n de datos 12-09-2026/IMG_20260912_082009.jpg",
+      "frame_index": null,
+      "timestamp_seconds": null,
+      "split": "test",
+      "group_id": "g_17f38f1da4880318",
+      "selection": "include",
+      "candidate_sha256": "bc06689847c36a6228ff910ec80bd9e70db6adc4935ee3b5c4b52a9d737bed7f",
+      "illustration": "JPEG reduced to maximum 960 pixels, not original training asset"
+    },
+    {
+      "file": "06_plano_medio.jpg",
+      "image_id": "3829a2c22e990a5d_photo",
+      "source": "RecolecciÃ³n de datos 12-09-2026/IMG_20260912_083804.jpg",
+      "frame_index": null,
+      "timestamp_seconds": null,
+      "split": "train",
+      "group_id": "g_01056fa125e2c2e9",
+      "selection": "include",
+      "candidate_sha256": "4cbe6037fbc47b9813d588e103812ee1bfa0345982656108c005d045000afaf5",
+      "illustration": "JPEG reduced to maximum 960 pixels, not original training asset"
+    },
+    {
+      "file": "07_espejo_lateral.jpg",
+      "image_id": "35447d7cab412fec_photo",
+      "illustration": "JPEG preview of 640px mirror derivative",
+      "source_sha256": "7f43d1b4b6826d9ce10ae1692de52fa19ea9eecf42bb38c4c25e0b149bfb6f3b"
+    },
+    {
+      "file": "08_espejo_inferior_gris_superior.jpg",
+      "image_id": "54b14999deb5ce89_f000005920",
+      "illustration": "JPEG preview of 640px mirror derivative",
+      "source_sha256": "d8fbacc7d14af66d863ad7003c3b2b80ca0997b646854d4b48bb1d2e19ef9d03"
+    }
+  ]
+}
