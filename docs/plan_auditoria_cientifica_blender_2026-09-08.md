@@ -164,6 +164,23 @@ intervención. Esa integración no cambia el estado científico ni completa M1.
 
 ## Texto exacto de arranque
 
+Continuidad del 23 de septiembre: por encargo explícito del usuario se añadió
+el piloto disperso 6 × 6, tutorado superior, dos ArUco por arbusto y anotación
+dual de cuatro clases sintéticas. Ver
+[registro de intervención](reports/piloto_cultivo_disperso_2026-09-23.md).
+La auditoría de mallas sigue detectando conflictos; no se habilitó entrenamiento
+ni se declaró validación agronómica. M1 y la aprobación física/científica no se
+consideran completados por esta entrega técnica.
+
+Revisión densa v7: completadas 48 capturas en cuatro escenas de 6 × 6, con
+ambas caras por escena y 4,24 veces más hojas en conjunto que v4. Las 15.894
+anotaciones pasan la correspondencia RLE/máscara, cajas y clases. Se verifican
+1.440 rayos de reversos opacos. La auditoría de mallas reclasifica los cruces
+foliares como geometría blanda, sin confundirlos con oclusión visual. Persisten
+7.171 conflictos físicos y 4.895 separaciones insuficientes; M1 y la aceptación
+física siguen pendientes. No se entrenó. Resultados locales y límites quedan
+en `outputs/sparse_overhead_pilot_v7/INFORME.md` y en el registro enlazado.
+
 Copiar este texto en una tarea de Codex abierta sobre el repositorio:
 
 ```text

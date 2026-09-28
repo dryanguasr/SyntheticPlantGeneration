@@ -6,7 +6,10 @@ import org.json.JSONObject
 const val ESTIMATION_LABEL = "Estimación sobre el plano del ArUco"
 data class Detection(val box: Box, val confidence: Float, val classId: Int = 0)
 data class MarkerObservation(val id: Int, val corners: List<Point2>)
-data class AnalysisSettings(val markerSideCm: Double = 10.0, val confidence: Float = 0.25f, val sizeConfirmed: Boolean = false)
+data class AnalysisSettings(val markerSideCm: Double = 10.0, val confidence: Float = 0.25f, val sizeConfirmed: Boolean = false,
+                            val dictionary: String = "DICT_4X4_50") {
+    init { require(dictionary in setOf("DICT_4X4_50", "DICT_4X4_100")) }
+}
 enum class ReferenceState { VALID, SIZE_UNCONFIRMED, NO_SELECTION, MISSING, AMBIGUOUS, DEGENERATE }
 data class ReferenceResolution(val selectedId: Int?, val state: ReferenceState, val mapping: PlanarMapping?)
 data class MarkerReference(
@@ -100,7 +103,7 @@ data class FrameAnalysis(
         put("confidence_threshold", settings.confidence)
         put("analysis_ms", analysisMs)
         put("reference", JSONObject().apply {
-            put("dictionary", "DICT_4X4_50")
+            put("dictionary", settings.dictionary)
             put("selected_id", selectedMarkerId ?: JSONObject.NULL)
             put("side_cm", if (settings.sizeConfirmed) settings.markerSideCm else JSONObject.NULL)
             put("size_confirmed", settings.sizeConfirmed)

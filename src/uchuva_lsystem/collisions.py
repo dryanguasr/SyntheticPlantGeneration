@@ -71,6 +71,7 @@ def resolve_global_collisions(
     *,
     iterations: int = DEFAULT_ITERATIONS,
     include_contact_audit: bool = True,
+    optimize_poses: bool = True,
 ) -> dict[str, Any]:
     """Resolve non-exempt organ intersections by changing morphology joints."""
     adjustments: list[dict[str, Any]] = []
@@ -103,32 +104,34 @@ def resolve_global_collisions(
                 adjustments.append(change)
                 resolved_keys.add(tuple(sorted((collision["proxy_a"].proxy_id, collision["proxy_b"].proxy_id))))
 
-    preliminary_proxies = build_scene_proxies(scene, plants_by_id)
-    preliminary_collisions = _collisions_from_pairs(_candidate_pairs(preliminary_proxies))
-    adjustments.extend(
-        _optimise_remaining_organ_poses(
-            scene,
-            plants_by_id,
-            preliminary_collisions,
+    micro_lift_report = {"status": "not_run_iterative_preview"}
+    if optimize_poses:
+        preliminary_proxies = build_scene_proxies(scene, plants_by_id)
+        preliminary_collisions = _collisions_from_pairs(_candidate_pairs(preliminary_proxies))
+        adjustments.extend(
+            _optimise_remaining_organ_poses(
+                scene,
+                plants_by_id,
+                preliminary_collisions,
+            )
         )
-    )
-    # After organ poses settle, choose a fixed vertical corridor for every
-    # rectangular stake.  Sampling at the end prevents a later leaf response
-    # from rotating a blade back through an already cleared support.
-    adjustments.extend(_optimise_support_corridors(scene, plants_by_id))
-    post_support_proxies = build_scene_proxies(scene, plants_by_id)
-    post_support_collisions = _collisions_from_pairs(_candidate_pairs(post_support_proxies))
-    adjustments.extend(
-        _optimise_remaining_organ_poses(
-            scene,
-            plants_by_id,
-            post_support_collisions,
+        # After organ poses settle, choose a fixed vertical corridor for every
+        # rectangular stake.  Sampling at the end prevents a later leaf response
+        # from rotating a blade back through an already cleared support.
+        adjustments.extend(_optimise_support_corridors(scene, plants_by_id))
+        post_support_proxies = build_scene_proxies(scene, plants_by_id)
+        post_support_collisions = _collisions_from_pairs(_candidate_pairs(post_support_proxies))
+        adjustments.extend(
+            _optimise_remaining_organ_poses(
+                scene,
+                plants_by_id,
+                post_support_collisions,
+            )
         )
-    )
-    micro_lift_adjustments, micro_lift_report = (
-        _apply_leaf_calyx_micro_clearance_lifts(scene, plants_by_id)
-    )
-    adjustments.extend(micro_lift_adjustments)
+        micro_lift_adjustments, micro_lift_report = (
+            _apply_leaf_calyx_micro_clearance_lifts(scene, plants_by_id)
+        )
+        adjustments.extend(micro_lift_adjustments)
     final_proxies = build_scene_proxies(scene, plants_by_id)
     final_pairs = _candidate_pairs(final_proxies)
     final_collisions = _collisions_from_pairs(final_pairs)
@@ -151,6 +154,7 @@ def resolve_global_collisions(
     return {
         "version": GLOBAL_COLLISION_VERSION,
         "iterations": iterations,
+        "pose_optimization": "full" if optimize_poses else "not_run_iterative_preview",
         "proxy_count": len(final_proxies),
         "candidate_pair_count": total_candidates,
         "detected_pair_count": total_detected,
@@ -1267,6 +1271,8 @@ def _resolve_collision(
                 target.insertion_angle_deg = 52.0 if direction_sign < 0.0 else 78.0
             else:
                 target.insertion_angle_deg = 72.0
+            if target.provenance.get("pose_constraint") == "drooping_110_155_manual_initial_guess":
+                target.insertion_angle_deg = max(110.0,min(155.0,180.0-target.insertion_angle_deg))
             target.curl = 0.0
             target.twist_deg = 0.0
             after = (target.azimuth_deg, target.insertion_angle_deg)

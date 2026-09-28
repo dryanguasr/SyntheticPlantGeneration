@@ -30,6 +30,19 @@
     ]
   },
   "nodes": [
+    {"id": "entrypoint.annotation_packages", "type": "entrypoint", "label": "Cinco paquetes reales trazables y devoluciones pendientes", "paths": ["scripts/prepare_annotation_packages.py", "src/uchuva_annotation_packages.py", "tests/test_annotation_packages.py", "docs/guides/paquetes_anotacion_trazables.md", "docs/reports/paquetes_anotacion_2026-09-25.md"], "evidence": [{"path": "src/uchuva_annotation_packages.py", "locator": "def partition_audit"}, {"path": "tests/test_annotation_packages.py", "locator": "test_doubt_unknown_maturity_preserved_and_no_duplicate_sample"}]},
+    {
+      "id": "entrypoint.sparse_overhead_pilot",
+      "type": "entrypoint",
+      "label": "Piloto disperso 6x6 con ArUco y anotación dual",
+      "summary": "Cuatro escenas morfológicas de copas densas, 48 vistas por ambas caras, 72 ArUco con reverso opaco por escena y clases sintéticas agrupadas por el usuario. Las capturas usan una copia de geometría agrupada sin fusionar capachos. Cajas y COCO RLE comparten instancias. La madurez real sigue sin validación; no entrena ni evalúa el test histórico.",
+      "paths": ["src/uchuva_lsystem/sparse_pilot.py", "scripts/prepare_sparse_pilot.py", "scripts/render_sparse_pilot.py", "scripts/run_sparse_pilot.py", "scripts/capture_saved_sparse.py", "scripts/export_sparse_pilot.py", "scripts/validate_sparse_exports.py", "scripts/report_sparse_pilot.py", "scripts/repair_sparse_masks.py", "scripts/review_sparse_density.py", "scripts/compare_sparse_crowns.py", "scripts/blender_sparse_geometry_smoke.py", "scripts/check_sparse_mask_projection.py", "tests/test_sparse_pilot.py", "docs/guides/piloto_cultivo_disperso.md", "docs/reports/piloto_cultivo_disperso_2026-09-23.md"],
+      "evidence": [
+        {"path": "src/uchuva_lsystem/sparse_pilot.py", "locator": "class SparseConfig"},
+        {"path": "scripts/export_sparse_pilot.py", "locator": "agronomic_maturity"},
+        {"path": "docs/guides/piloto_cultivo_disperso.md", "locator": "no una equivalencia normativa verificada"}
+      ]
+    },
 {
   "id": "entrypoint.new_real_dataset",
   "type": "entrypoint",
@@ -762,9 +775,9 @@
       "id": "constraint.collision_taxonomy",
       "type": "constraint",
       "label": "Colision distinta de oclusion",
-      "summary": "La validacion distingue colision geometrica, oclusion visual y morfologia fuera de rango.",
-      "paths": ["AGENTS.md", "src/uchuva_lsystem/validation.py"],
-      "evidence": [{"path": "AGENTS.md", "locator": "geometric collision"}]
+      "summary": "La validacion distingue colision geometrica, oclusion visual y morfologia fuera de rango. Las intersecciones de mallas foliares son ocupacion blanda no validada fisicamente; la auditoria de mallas no mide oclusion visual.",
+      "paths": ["AGENTS.md", "src/uchuva_lsystem/validation.py", "src/uchuva_lsystem/blender_geometry.py"],
+      "evidence": [{"path": "AGENTS.md", "locator": "geometric collision"}, {"path": "src/uchuva_lsystem/blender_geometry.py", "locator": "visual_occlusion_measurement"}]
     },
     {
       "id": "constraint.reproducible_seeds",
@@ -1112,6 +1125,10 @@
     }
   ],
     "edges": [
+    {"source": "entrypoint.annotation_packages", "relation": "depends_on", "target": "entrypoint.new_real_dataset", "evidence": [{"path": "src/uchuva_annotation_packages.py", "locator": "from uchuva_dataset_curation import"}]},
+      {"source": "entrypoint.sparse_overhead_pilot", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "scripts/prepare_sparse_pilot.py", "locator": "generate_morphology_tree"}]},
+      {"source": "entrypoint.sparse_overhead_pilot", "relation": "depends_on", "target": "module.blender_annotations", "evidence": [{"path": "scripts/render_sparse_pilot.py", "locator": "render_crisp_calyx_annotations"}]},
+      {"source": "entrypoint.sparse_overhead_pilot", "relation": "depends_on", "target": "module.annotation_observation", "evidence": [{"path": "scripts/export_sparse_pilot.py", "locator": "agronomic_maturity"}]},
 
       {"source": "entrypoint.desktop_vision", "relation": "consumes", "target": "artifact.mobile_detector", "evidence": [{"path": "desktop/uchuva_aruco/vision.py", "locator": "model_manifest.json"}]},
       {"source": "entrypoint.desktop_vision", "relation": "depends_on", "target": "module.rtmp_video", "evidence": [{"path": "desktop/uchuva_aruco/app.py", "locator": "VideoReader"}]},

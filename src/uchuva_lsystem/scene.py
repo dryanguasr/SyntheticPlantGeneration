@@ -172,6 +172,11 @@ def create_cultivation_scene(
     support_mode: str | None = None,
 ) -> CultivationScene:
     """Create a deterministic multi-plant cultivation scene layout."""
+    if preset_name == "sparse_overhead_strings_v1":
+        if support_mode not in {None, "overhead_strings"}:
+            raise ValueError("Sparse pilot requires overhead_strings")
+        from .sparse_pilot import create_sparse_scene
+        return create_sparse_scene(seed)
     if support_mode not in {
         None,
         "continuous_trellis",

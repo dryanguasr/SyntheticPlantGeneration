@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import math
 import random
+from functools import lru_cache
+from collections import OrderedDict
 from typing import Any
 
 from .blender_annotations import tag_annotation_object
@@ -41,11 +43,13 @@ def build_geometry_from_morphology(
     rotation_deg: float = 0.0,
     plant_scale: float = 1.0,
     add_ground: bool = True,
+    defer_scene_update: bool = False,
 ) -> dict[str, Any]:
     """Build a Blender preview scene from a generated morphology tree."""
     bpy, Vector = _blender_modules()
     from mathutils import Matrix
     instance_transform = Matrix.Identity(4)
+    source_collection = bpy.context.collection
 
     collection = None
     parent_empty = None
@@ -95,6 +99,8 @@ def build_geometry_from_morphology(
         )
 
     if parent_empty is not None:
+        if not defer_scene_update:
+            bpy.context.view_layer.update()
         transform = (
             Matrix.Translation(Vector(position))
             @ Matrix.Rotation(math.radians(rotation_deg), 4, "Z")
@@ -102,8 +108,19 @@ def build_geometry_from_morphology(
         )
         instance_transform = transform
         for obj in objects_created:
-            _move_to_collection(obj, collection)
-            obj.matrix_world = transform @ obj.matrix_world
+            if defer_scene_update:
+                # All helpers above link to this known source collection.
+                # Object.users_collection scans every collection in Blender.
+                source_collection.objects.unlink(obj)
+                collection.objects.link(obj)
+                # These generated objects are unparented. matrix_basis reads the
+                # transform channels immediately, without evaluating the scene.
+                if obj.parent is not None:
+                    raise ValueError("Deferred morphology objects must be unparented")
+                obj.matrix_basis = transform @ obj.matrix_basis
+            else:
+                _move_to_collection(obj, collection)
+                obj.matrix_world = transform @ obj.matrix_world
         parent_empty.location = position
         parent_empty.rotation_euler = (0.0, 0.0, math.radians(rotation_deg))
         parent_empty.scale = (plant_scale, plant_scale, plant_scale)
@@ -196,9 +213,10 @@ def _build_axis_geometry(
             radius=stem_radius,
             material=stem_material,
             sag_factor=(
-                0.012 + axis.reproductive_load * 0.025
-                if axis.order == 0
-                else 0.045 + axis.reproductive_load * 0.115
+                0.0 if axis.training_phase == "overhead_strings_manual_initial_guess"
+                else (0.012 + axis.reproductive_load * 0.025
+                      if axis.order == 0
+                      else 0.045 + axis.reproductive_load * 0.115)
             ),
         )
         _append_if_created(objects_created, stem)
@@ -1102,18 +1120,27 @@ def _assign_calyx_uvs(
 ) -> None:
     """Unwrap the inflated husk as a seamless cylindrical vascular sheet."""
     uv_layer = mesh.uv_layers.new(name="calyx_uv")
+    polygons = tuple(tuple(p.vertices) for p in mesh.polygons)
+    coordinates = _calyx_uv_coordinates(rings,segments,top_center,bottom_center,polygons)
+    uv_layer.data.foreach_set("uv",coordinates)
+
+
+@lru_cache(maxsize=8)
+def _calyx_uv_coordinates(rings,segments,top_center,bottom_center,polygons):
+    """Pure topology cache; UVs do not depend on organ size, grade or pose."""
+    coordinates = []
     surface_vertex_count = (rings + 1) * segments
-    for polygon in mesh.polygons:
+    for vertices in polygons:
         surface_segments = [
             vertex_index % segments
-            for vertex_index in polygon.vertices
+            for vertex_index in vertices
             if vertex_index < surface_vertex_count
         ]
         crosses_seam = bool(surface_segments) and (
             max(surface_segments) - min(surface_segments) > segments // 2
         )
         surface_uvs: list[tuple[float, float]] = []
-        for vertex_index in polygon.vertices:
+        for vertex_index in vertices:
             if vertex_index >= surface_vertex_count:
                 continue
             ring_index = vertex_index // segments
@@ -1131,8 +1158,7 @@ def _assign_calyx_uvs(
             if surface_uvs
             else 0.5
         )
-        for loop_index in polygon.loop_indices:
-            vertex_index = mesh.loops[loop_index].vertex_index
+        for vertex_index in vertices:
             if vertex_index == top_center:
                 uv = (center_u, 0.0)
             elif vertex_index == bottom_center:
@@ -1149,7 +1175,8 @@ def _assign_calyx_uvs(
                     adjusted_segment / segments,
                     ring_index / max(1, rings),
                 )
-            uv_layer.data[loop_index].uv = uv
+            coordinates.extend(uv)
+    return tuple(coordinates)
 
 
 def _create_cylinder_between(
@@ -1168,15 +1195,17 @@ def _create_cylinder_between(
     if length < 1e-6:
         return None
 
-    bpy.ops.mesh.primitive_cylinder_add(
-        vertices=vertices,
-        radius=radius,
-        depth=length,
-        location=(start + end) / 2.0,
-    )
-    cylinder = bpy.context.object
-    cylinder.name = name
-    cylinder.data.name = f"{name}_mesh"
+    # Data API avoids a full-scene dependency update per organ in large crops.
+    import bmesh
+    data = bpy.data.meshes.new(f"{name}_mesh")
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=vertices,
+                         radius1=radius, radius2=radius, depth=length)
+    bm.to_mesh(data)
+    bm.free()
+    cylinder = bpy.data.objects.new(name, data)
+    bpy.context.collection.objects.link(cylinder)
+    cylinder.location = (start + end) / 2.0
     cylinder.rotation_euler = direction.to_track_quat("Z", "Y").to_euler()
     cylinder.data.materials.append(material)
     _shade_smooth(cylinder)
@@ -1232,15 +1261,15 @@ def _create_uv_sphere(
     visible: bool = True,
 ) -> object:
     bpy, _ = _blender_modules()
-    bpy.ops.mesh.primitive_uv_sphere_add(
-        segments=32,
-        ring_count=16,
-        radius=radius,
-        location=location,
-    )
-    sphere = bpy.context.object
-    sphere.name = name
-    sphere.data.name = f"{name}_mesh"
+    import bmesh
+    data = bpy.data.meshes.new(f"{name}_mesh")
+    bm = bmesh.new()
+    bmesh.ops.create_uvsphere(bm, u_segments=32, v_segments=16, radius=radius)
+    bm.to_mesh(data)
+    bm.free()
+    sphere = bpy.data.objects.new(name, data)
+    bpy.context.collection.objects.link(sphere)
+    sphere.location = location
     sphere.scale = scale_tuple
     sphere.data.materials.append(material)
     if not visible:
@@ -1649,6 +1678,10 @@ def create_cultivation_supports(
                 points_count=5,
             )
             if tie_object is not None:
+                if support_system.mode == "overhead_strings":
+                    contact = next((c for c in support_system.contacts if c.id == tie.id), None)
+                    if contact:
+                        tie_object["uchuva_support_attachment_node_id"] = contact.organ_id
                 created.append(tie_object)
                 tag_annotation_object(
                     tie_object,
@@ -2065,16 +2098,17 @@ def _create_rectangular_stake(
     """Create a flat-shaded timber stake with a restrained edge bevel."""
     bpy, Vector = _blender_modules()
     start = Vector(start)
-    bpy.ops.mesh.primitive_cube_add(
-        size=1.0,
-        location=(start.x, start.y, start.z + height * 0.5),
-    )
-    stake = bpy.context.object
-    stake.name = name
-    stake.data.name = f"{name}_mesh"
-    stake.dimensions = (width, depth, height)
+    import bmesh
+    from mathutils import Matrix
+    data = bpy.data.meshes.new(f"{name}_mesh")
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Diagonal((width, depth, height, 1)))
+    bm.to_mesh(data)
+    bm.free()
+    stake = bpy.data.objects.new(name, data)
+    bpy.context.collection.objects.link(stake)
+    stake.location = (start.x, start.y, start.z + height * .5)
     stake.rotation_euler[2] = math.radians(rotation_deg)
-    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     stake.data.materials.append(material)
     bevel = stake.modifiers.new(name="wood_edge_softening", type="BEVEL")
     bevel.width = min(width, depth) * 0.025
@@ -2094,6 +2128,8 @@ def audit_scene_mesh_collisions(
     *,
     epsilon: float = 0.0005,
     near_contact_distance: float = 0.055,
+    max_bvh_cache_objects: int | None = None,
+    limit_clearance_search: bool = False,
 ) -> dict[str, Any]:
     """Audit intersections and pair-specific mesh clearance in world space."""
     bpy, Vector = _blender_modules()
@@ -2113,17 +2149,18 @@ def audit_scene_mesh_collisions(
         elif role == "support":
             audited.append(obj)
 
+    padding = max(near_contact_distance,0.024,epsilon)
     boxes: list[tuple[tuple[float, float, float], tuple[float, float, float]]] = []
     for obj in audited:
         corners = [obj.matrix_world @ Vector(corner) for corner in obj.bound_box]
         boxes.append(
             (
                 tuple(
-                    min(point[index] for point in corners) - near_contact_distance
+                    min(point[index] for point in corners) - padding
                     for index in range(3)
                 ),
                 tuple(
-                    max(point[index] for point in corners) + near_contact_distance
+                    max(point[index] for point in corners) + padding
                     for index in range(3)
                 ),
             )
@@ -2144,16 +2181,24 @@ def audit_scene_mesh_collisions(
                     grid.setdefault(cell, []).append(index)
 
     depsgraph = bpy.context.evaluated_depsgraph_get()
-    bvh_cache: dict[int, object] = {}
+    if max_bvh_cache_objects is not None and max_bvh_cache_objects < 2:
+        raise ValueError("BVH cache must hold at least both objects of a pair")
+    bvh_cache = OrderedDict()
     vertex_cache: dict[int, list[tuple[float, float, float]]] = {}
 
     def object_bvh(index: int) -> object | None:
         if index in bvh_cache:
+            bvh_cache.move_to_end(index)
             return bvh_cache[index]
         evaluated = audited[index].evaluated_get(depsgraph)
         mesh = evaluated.to_mesh()
         if mesh is None or not mesh.polygons:
+            evaluated.to_mesh_clear()
             bvh_cache[index] = None
+            if max_bvh_cache_objects is not None:
+                while len(bvh_cache) > max_bvh_cache_objects:
+                    evicted, _ = bvh_cache.popitem(last=False)
+                    vertex_cache.pop(evicted, None)
             return None
         matrix = evaluated.matrix_world
         vertices = [tuple(matrix @ vertex.co) for vertex in mesh.vertices]
@@ -2162,6 +2207,10 @@ def audit_scene_mesh_collisions(
         evaluated.to_mesh_clear()
         bvh_cache[index] = bvh
         vertex_cache[index] = vertices
+        if max_bvh_cache_objects is not None:
+            while len(bvh_cache) > max_bvh_cache_objects:
+                evicted,_ = bvh_cache.popitem(last=False)
+                vertex_cache.pop(evicted,None)
         return bvh
 
     collisions: list[dict[str, Any]] = []
@@ -2172,6 +2221,10 @@ def audit_scene_mesh_collisions(
     near_contacts: list[dict[str, Any]] = []
     tested = 0
     for left_index, right_index in sorted(candidate_indices):
+        left_bounds,right_bounds=boxes[left_index],boxes[right_index]
+        if any(left_bounds[1][axis] < right_bounds[0][axis] or
+               right_bounds[1][axis] < left_bounds[0][axis] for axis in range(3)):
+            continue  # Expanded AABBs cover every required clearance and epsilon.
         left, right = audited[left_index], audited[right_index]
         if _mesh_collision_exempt(left, right):
             continue
@@ -2214,6 +2267,7 @@ def audit_scene_mesh_collisions(
             right_bvh,
             vertex_cache.get(left_index, []),
             vertex_cache.get(right_index, []),
+            max_distance=max(required_clearance,near_contact_distance) if limit_clearance_search else None,
         )
         if clearance is None:
             continue
@@ -2233,7 +2287,10 @@ def audit_scene_mesh_collisions(
             near_contacts.append(item)
 
     return {
-        "version": "0.2.0-pair-clearance",
+        "version": "0.3.0-leaf-mesh-contact",
+        "visual_occlusion_measurement": "not_measured_by_mesh_audit",
+        "soft_occupancy_note": "leaf_mesh_intersection_not_visual_occlusion_or_verified_physical_contact",
+        "max_bvh_cache_objects": max_bvh_cache_objects,
         "status": (
             "valid"
             if not collisions and not clearance_violations
@@ -2274,22 +2331,25 @@ def _bvh_surface_clearance(
     right_bvh: object,
     left_vertices: list[tuple[float, float, float]],
     right_vertices: list[tuple[float, float, float]],
+    *, max_distance: float | None = None,
 ) -> float | None:
     """Estimate exact-surface clearance from evaluated-mesh vertices."""
     _, Vector = _blender_modules()
     distances: list[float] = []
     for vertex in left_vertices:
-        nearest = right_bvh.find_nearest(Vector(vertex))
-        if nearest is not None:
+        nearest = right_bvh.find_nearest(Vector(vertex)) if max_distance is None else right_bvh.find_nearest(Vector(vertex),max_distance)
+        if nearest is not None and nearest[3] is not None:
             distances.append(float(nearest[3]))
     for vertex in right_vertices:
-        nearest = left_bvh.find_nearest(Vector(vertex))
-        if nearest is not None:
+        nearest = left_bvh.find_nearest(Vector(vertex)) if max_distance is None else left_bvh.find_nearest(Vector(vertex),max_distance)
+        if nearest is not None and nearest[3] is not None:
             distances.append(float(nearest[3]))
     return min(distances) if distances else None
 
 
 def _mesh_pair_required_clearance(left: object, right: object) -> float:
+    if _declared_string_attachment(left, right):
+        return 0.0
     kinds = sorted((_mesh_contact_kind(left), _mesh_contact_kind(right)))
     requirements = {
         ("calyx", "calyx"): 0.022,
@@ -2310,6 +2370,8 @@ def _mesh_contact_kind(obj: object) -> str:
 
 def _mesh_intersection_classification(left: object, right: object) -> str:
     """Classify evaluated-mesh overlap without conflating contact types."""
+    if _declared_string_attachment(left, right):
+        return "intentional_support"
     kind_left = _mesh_contact_kind(left)
     kind_right = _mesh_contact_kind(right)
     role_left = str(left.get("uchuva_plant_role", ""))
@@ -2341,11 +2403,25 @@ def _mesh_intersection_classification(left: object, right: object) -> str:
         ):
             return "intentional_support"
 
-    if kind_left == kind_right == "leaf":
-        return "visual_occlusion"
     if "leaf" in {kind_left, kind_right}:
         return "soft_occupancy"
     return "physical_collision"
+
+
+def _declared_string_attachment(left: object, right: object) -> bool:
+    """Only the declared nodal stem attachment is intentional, never a fruit crossing."""
+    for support, organ in ((left,right),(right,left)):
+        node = support.get("uchuva_support_attachment_node_id")
+        if not node or support.get("uchuva_plant_id") != organ.get("uchuva_plant_id"):
+            continue
+        if organ.get("uchuva_semantic_class") != "stem":
+            continue
+        if organ.get("uchuva_parent_node_id") == node:
+            return True
+        if _node_matches_axis_neighbourhood(node,str(organ.get("uchuva_axis_id", "")),
+                    int(organ.get("uchuva_internode_index", -1)),str(organ.get("uchuva_organ_kind", ""))):
+            return True
+    return False
 
 
 def _aabb_overlap(

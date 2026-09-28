@@ -7,6 +7,19 @@ from uchuva_lsystem.blender_dataset import DatasetConfig, generate_annotation_da
 
 
 class DatasetResumeContractTests(unittest.TestCase):
+    def test_old_palette_configuration_cannot_mix_with_new_masks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            old = DatasetConfig(output_dir=root).to_dict()
+            del old["annotation_palette_version"]
+            original = json.dumps(old)
+            (root / "generation_config.json").write_text(original)
+            (root / "manifest.jsonl").write_text("historical record\n")
+            with self.assertRaisesRegex(ValueError,"annotation_palette_version"):
+                generate_annotation_dataset(DatasetConfig(output_dir=root,resume=True))
+            self.assertEqual((root / "generation_config.json").read_text(),original)
+            self.assertEqual((root / "manifest.jsonl").read_text(),"historical record\n")
+
     def test_changed_configuration_fails_before_metadata_write_or_blender(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

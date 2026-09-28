@@ -29,7 +29,7 @@ class VisionEngine(context: Context) : AutoCloseable {
     private val inputName: String
     val modelHash: String
     val modelVersion: String
-    private val aruco: ArucoDetector
+    private val arucos: Map<String, ArucoDetector>
     private val pixels = ByteArray(640 * 640 * 3)
     private val inputBuffer = ByteBuffer.allocateDirect(640 * 640 * 3 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
 
@@ -57,10 +57,12 @@ class VisionEngine(context: Context) : AutoCloseable {
         }
         check((session.inputInfo[inputName]?.info as? TensorInfo)?.shape?.contentEquals(longArrayOf(1, 3, 640, 640)) == true)
         val parameters = DetectorParameters().apply { set_cornerRefinementMethod(Objdetect.CORNER_REFINE_SUBPIX) }
-        aruco = ArucoDetector(Objdetect.getPredefinedDictionary(Objdetect.DICT_4X4_50), parameters)
+        arucos = mapOf("DICT_4X4_50" to Objdetect.DICT_4X4_50, "DICT_4X4_100" to Objdetect.DICT_4X4_100)
+            .mapValues { (_, id) -> ArucoDetector(Objdetect.getPredefinedDictionary(id), parameters) }
     }
 
-    fun analyze(bitmap: Bitmap, confidence: Float): Pair<List<Detection>, List<MarkerObservation>> {
+    fun analyze(bitmap: Bitmap, confidence: Float, dictionary: String = "DICT_4X4_50"): Pair<List<Detection>, List<MarkerObservation>> {
+        val aruco = requireNotNull(arucos[dictionary]) { "Diccionario ArUco no compatible" }
         val rgba = Mat(); val rgb = Mat(); val gray = Mat(); val resized = Mat(); val padded = Mat()
         val corners = ArrayList<Mat>(); val rejected = ArrayList<Mat>(); val ids = Mat()
         try {

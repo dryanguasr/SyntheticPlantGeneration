@@ -54,7 +54,7 @@ from .yolo_export import (
 )
 
 
-DATASET_VERSION = "0.7.0-virtual-fidelity-v2"
+DATASET_VERSION = "0.7.1-virtual-fidelity-v2-unique-instance-palette"
 
 # The source profile reports box-level proportions. Scheduling those numbers
 # directly as image-level camera proportions produced roughly twice too many
@@ -101,8 +101,11 @@ class DatasetConfig:
     resume: bool = False
     keep_masks: bool = False
     inspection_blend_path: str | Path | None = None
+    annotation_palette_version: str = "rgb_lattice_4095_v1"
 
     def validate(self) -> None:
+        if self.annotation_palette_version != "rgb_lattice_4095_v1":
+            raise ValueError("Unsupported annotation palette version")
         if self.image_count <= 0 or self.captures_per_scene <= 0:
             raise ValueError("image_count and captures_per_scene must be positive.")
         if self.image_count % self.captures_per_scene:

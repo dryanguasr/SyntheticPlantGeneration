@@ -47,7 +47,7 @@ class Application:
         ttk.Button(inputs, text="Abrir video", command=self.open_file).pack(side="left")
         controls = ttk.Frame(root); controls.pack(fill="x", padx=12, pady=8)
         for label, command in [("Pausar / continuar", self.pause), ("Desconectar", self.disconnect),
-                               ("Medida del ArUco", self.configure), ("Carpeta de guardado", self.choose_folder),
+                               ("Medida del ArUco", self.configure), ("Diccionario ArUco", self.dictionary), ("Carpeta de guardado", self.choose_folder),
                                ("Abrir guardadas", self.open_folder)]:
             ttk.Button(controls, text=label, command=command).pack(side="left", padx=2)
         self.save_button = ttk.Button(controls, text="Guardar JPEG + JSON", command=self.save, state="disabled")
@@ -110,7 +110,7 @@ class Application:
         if side is None:
             return
         try:
-            self.settings = Settings(float(side.replace(",", ".")), self.settings.confidence)
+            self.settings = Settings(float(side.replace(",", ".")), self.settings.confidence, self.settings.dictionary)
             self.invalidate()
         except ValueError as error:
             messagebox.showerror("Medida", str(error))
@@ -120,10 +120,20 @@ class Application:
         if folder:
             self.save_directory = Path(folder)
 
+    def dictionary(self):
+        value = simpledialog.askinteger("Diccionario ArUco", "Número de códigos: 50 (histórico) o 100 (piloto)",
+                                        initialvalue=int(self.settings.dictionary.rsplit("_", 1)[1]))
+        if value in (50, 100):
+            self.settings = Settings(self.settings.side_cm, self.settings.confidence, f"DICT_4X4_{value}")
+            self.selected = None
+            self.invalidate()
+        elif value is not None:
+            messagebox.showerror("Diccionario", "Elige 50 o 100")
+
     def threshold(self):
         value = simpledialog.askfloat("Detector", "Confianza mínima (0.05–0.95)", initialvalue=self.settings.confidence, minvalue=.05, maxvalue=.95)
         if value is not None:
-            self.settings = Settings(self.settings.side_cm, value)
+            self.settings = Settings(self.settings.side_cm, value, self.settings.dictionary)
             self.invalidate()
 
     def export(self):

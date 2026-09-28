@@ -7,6 +7,7 @@ this_file. The spheres are annotation fixtures, not a botanical model.
 from __future__ import annotations
 
 import json
+import argparse
 from pathlib import Path
 import sys
 import time
@@ -22,7 +23,10 @@ from uchuva_lsystem.yolo_export import detections_from_mask_items
 
 def main() -> None:
     start = time.perf_counter()
-    output = ROOT / "outputs/audits/scientific_route_20260908/blender_smoke"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=ROOT / "outputs/audits/scientific_route_20260908/blender_smoke")
+    argv = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else []
+    output = parser.parse_args(argv).output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(use_global=False)

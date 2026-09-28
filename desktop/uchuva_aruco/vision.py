@@ -20,8 +20,11 @@ from . import APP_VERSION
 class Settings:
     side_cm: float | None = None
     confidence: float = 0.25
+    dictionary: str = "DICT_4X4_50"
 
     def __post_init__(self):
+        if self.dictionary not in {"DICT_4X4_50", "DICT_4X4_100"}:
+            raise ValueError("Diccionario ArUco no compatible")
         if self.side_cm is not None and not (math.isfinite(self.side_cm) and 0.1 <= self.side_cm <= 1000):
             raise ValueError("Introduce el lado negro real entre 0.1 y 1000 cm")
         if not 0.05 <= self.confidence <= 0.95:
@@ -135,7 +138,8 @@ class VisionEngine:
             raise ValueError("Se requiere entrada FP32 1x3x640x640")
         params = cv2.aruco.DetectorParameters()
         params.cornerRefinementMethod = cv2.aruco.CORNER_REFINE_SUBPIX
-        self.aruco = cv2.aruco.ArucoDetector(cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50), params)
+        self.arucos = {name: cv2.aruco.ArucoDetector(cv2.aruco.getPredefinedDictionary(getattr(cv2.aruco, name)), params)
+                       for name in ("DICT_4X4_50", "DICT_4X4_100")}
 
     def analyze(self, image, settings: Settings, frame_id=0, source_kind="file", selected=None,
                 received_at=None, media_time_ms=None):
@@ -145,7 +149,7 @@ class VisionEngine:
         rows = self.session.run(None, {self.input_name: tensor})[0]
         if rows.ndim != 3 or rows.shape[0] != 1 or rows.shape[2] != 6:
             raise ValueError("Salida end2end incompatible")
-        corners, ids, _ = self.aruco.detectMarkers(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY))
+        corners, ids, _ = self.arucos[settings.dictionary].detectMarkers(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY))
         markers = [] if ids is None else [{"id": int(i), "corners_px": p.reshape(4, 2).tolist()} for p, i in zip(corners, ids.ravel())]
         if selected is None and len(markers) == 1:
             selected = markers[0]["id"]
@@ -181,7 +185,7 @@ class VisionEngine:
                                   drone_capture_time_known=False, timestamp_basis="receiver_clock"),
                       image=dict(width=width, height=height, rotation_applied_degrees=0, coordinates="upright_analysis_pixels"),
                       confidence_threshold=settings.confidence, markers=markers, references=refs, detections=detections,
-                      reference=dict(dictionary="DICT_4X4_50", selected_id=selected, side_cm=settings.side_cm,
+                      reference=dict(dictionary=settings.dictionary, selected_id=selected, side_cm=settings.side_cm,
                                      size_confirmed=settings.side_cm is not None, state=ref_state,
                                      origin="marker_center", axes="x_marker_right_y_marker_up"),
                       estimation=dict(method="marker_plane_homography", status="estimated", label="Estimación sobre el plano del ArUco",

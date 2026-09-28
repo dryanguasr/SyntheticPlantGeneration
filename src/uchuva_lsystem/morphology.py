@@ -160,6 +160,7 @@ class ReproductiveUnit(SerializableMixin):
     bbch_principal_stage: int | None = None
     ontogenetic_rank: float | None = None
     parameter_status: str = "manual_initial_guess"
+    synthetic_reference_grade: int | None = None
     provenance: dict[str, Any] = field(default_factory=dict)
 
 

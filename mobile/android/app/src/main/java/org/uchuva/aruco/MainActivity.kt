@@ -81,7 +81,8 @@ class MainActivity : ComponentActivity() {
         streamAddress = savedInstanceState?.getString("stream_address")
         selectedId = savedInstanceState?.takeIf { it.containsKey("selected_id") }?.getInt("selected_id")
         val preferences = getSharedPreferences("analysis", MODE_PRIVATE)
-        settings = AnalysisSettings(preferences.getFloat("side", 10f).toDouble(), preferences.getFloat("confidence", 0.25f), preferences.getBoolean("confirmed", false))
+        settings = AnalysisSettings(preferences.getFloat("side", 10f).toDouble(), preferences.getFloat("confidence", 0.25f), preferences.getBoolean("confirmed", false),
+            preferences.getString("dictionary", "DICT_4X4_50") ?: "DICT_4X4_50")
         createLayout()
         analysisView.onMarkerTapped = { id ->
             selectedId = id; revision++
@@ -183,7 +184,7 @@ class MainActivity : ComponentActivity() {
                     if (streamGeneration != generation) { bitmap.recycle(); return@execute }
                     val start = SystemClock.elapsedRealtimeNanos()
                     val detector = checkNotNull(engine)
-                    val (detections, markers) = detector.analyze(bitmap, frameSettings.confidence)
+                    val (detections, markers) = detector.analyze(bitmap, frameSettings.confidence, frameSettings.dictionary)
                     val refs = ReferenceResolver.resolveAll(markers, frameSelected, frameSettings)
                     val selected = ReferenceResolver.resolve(markers, frameSelected, frameSettings)
                     val result = FrameAnalysis(++frameId, receivedAt, timestamp, bitmap.width, bitmap.height, 0,
@@ -241,7 +242,7 @@ class MainActivity : ComponentActivity() {
                             val matrix = Matrix().apply { postRotate(rotation.toFloat()) }
                             val upright = Bitmap.createBitmap(original, crop.left, crop.top, crop.width(), crop.height(), matrix, false)
                             if (upright !== original) original.recycle()
-                            val (detections, markers) = checkNotNull(engine).analyze(upright, frameSettings.confidence)
+                            val (detections, markers) = checkNotNull(engine).analyze(upright, frameSettings.confidence, frameSettings.dictionary)
                             val referenceSet = ReferenceResolver.resolveAll(markers, frameSelectedId, frameSettings)
                             val reference = ReferenceResolver.resolve(markers, frameSelectedId, frameSettings)
                             val result = FrameAnalysis(++frameId, capturedAt, timestampNs, upright.width, upright.height, rotation,
@@ -352,7 +353,12 @@ class MainActivity : ComponentActivity() {
         }
         val side = field("¿Cuánto mide el lado negro del ArUco, en cm?", if (settings.sizeConfirmed) settings.markerSideCm.toString() else "")
         val confidence = field("Confianza mínima (0.05–0.95)", settings.confidence.toString())
-        fields.addView(TextView(this).apply { text = "DICT_4X4_50 · mide el cuadrado negro, sin el margen blanco. La escala configurada se aplica a todos los marcadores visibles." })
+        val dictionary = android.widget.CheckBox(this).apply {
+            text = "DICT_4X4_100 (piloto); desmarcado: DICT_4X4_50"
+            isChecked = settings.dictionary == "DICT_4X4_100"
+            fields.addView(this)
+        }
+        fields.addView(TextView(this).apply { text = "Mide el cuadrado negro, sin el margen blanco. La escala configurada se aplica a todos los marcadores visibles." })
         val dialog = AlertDialog.Builder(this).setTitle("Medida del ArUco").setView(fields)
             .setNegativeButton("Cancelar", null).setPositiveButton("Confirmar medida", null).create()
         dialog.setOnShowListener {
@@ -361,8 +367,10 @@ class MainActivity : ComponentActivity() {
                 val threshold = confidence.text.toString().replace(',', '.').toFloatOrNull()
                 if (cm == null || !cm.isFinite() || cm !in 0.1..1000.0) { side.error = "Introduce un lado válido (0.1–1000 cm)"; return@setOnClickListener }
                 if (threshold == null || !threshold.isFinite() || threshold !in 0.05f..0.95f) { confidence.error = "Usa un valor entre 0.05 y 0.95"; return@setOnClickListener }
-                settings = AnalysisSettings(cm, threshold, true); revision++
-                getSharedPreferences("analysis", MODE_PRIVATE).edit().putFloat("side", cm.toFloat()).putFloat("confidence", threshold).putBoolean("confirmed", true).apply()
+                settings = AnalysisSettings(cm, threshold, true, if (dictionary.isChecked) "DICT_4X4_100" else "DICT_4X4_50"); revision++
+                selectedId = null
+                getSharedPreferences("analysis", MODE_PRIVATE).edit().putFloat("side", cm.toFloat()).putFloat("confidence", threshold).putBoolean("confirmed", true)
+                    .putString("dictionary", settings.dictionary).apply()
                 analysisView.snapshot = null; captureButton.isEnabled = false
                 dialog.dismiss()
             }

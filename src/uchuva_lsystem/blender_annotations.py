@@ -197,6 +197,65 @@ def render_reproductive_annotations(
     return results["reproductive_instance"]
 
 
+def render_crisp_calyx_annotations(camera: object, output_dir: str | Path, *, width: int, height: int) -> dict[str, Any]:
+    """Rasterize single-sample IDs without blended colors becoming other instances.
+
+Workbench flat object colors do not depend on lights/materials. Anti-aliasing
+is disabled explicitly; RGB rendering stays EEVEE. All non-target objects
+remain present as black depth occluders.
+    """
+    bpy = _blender_modules()
+    scene = bpy.context.scene
+    registry = annotation_registry()
+    spec = _annotation_pass_definitions(registry)["reproductive_instance"]
+    previous = _capture_render_state(scene)
+    shading = scene.display.shading
+    shading_keys = ("light","color_type","show_shadows","show_cavity","show_specular_highlight","background_type","background_color","show_object_outline","show_xray","show_backface_culling")
+    old_shading = {k: tuple(getattr(shading,k)) if k=="background_color" else getattr(shading,k) for k in shading_keys}
+    old_aa = scene.display.render_aa
+    colors = {obj.name:tuple(obj.color) for obj in scene.objects}
+    folder = Path(output_dir).resolve()
+    raw, final = folder/".crisp_raw.png",folder/"mask_calyx_crisp_v2.png"
+    try:
+        scene.camera = camera
+        scene.render.engine = "BLENDER_WORKBENCH"
+        scene.display.render_aa = "OFF"
+        shading.light = "FLAT"
+        shading.color_type = "OBJECT"
+        shading.show_shadows = shading.show_cavity = shading.show_specular_highlight = False
+        shading.show_object_outline = shading.show_xray = shading.show_backface_culling = False
+        shading.background_type = "VIEWPORT"
+        shading.background_color = (0,0,0)
+        for obj in scene.objects:
+            obj.color = (0,0,0,1)
+        for obj in registry["objects"]:
+            obj.color = _linear_rgba(spec["object_color"](obj)) if obj.get("uchuva_semantic_class")=="calyx" else (0,0,0,1)
+        scene.render.resolution_x,scene.render.resolution_y = width,height
+        scene.render.resolution_percentage = 100
+        scene.render.image_settings.file_format = "PNG"
+        scene.render.image_settings.color_mode = "RGBA"
+        scene.render.image_settings.color_depth = "8"
+        scene.render.film_transparent = True
+        scene.render.dither_intensity = 0
+        scene.view_settings.view_transform = "Standard"
+        scene.view_settings.look = "None"
+        scene.view_settings.exposure = 0
+        scene.view_settings.gamma = 1
+        scene.render.filepath = str(raw)
+        bpy.ops.render.render(write_still=True)
+        stats = _snap_and_save_image(raw, final, spec["palette"],width,height)
+        raw.unlink()
+        return {"path":str(final),"engine":"BLENDER_WORKBENCH","anti_aliasing":"OFF",
+                "palette_version":"rgb_lattice_4095_v1", "palette":{str(k):list(v) for k,v in spec["palette"].items()},
+                "items":_enrich_mask_stats("reproductive_instance",stats,registry)}
+    finally:
+        for obj in scene.objects:
+            if obj.name in colors: obj.color = colors[obj.name]
+        for key,value in old_shading.items(): setattr(shading,key,value)
+        scene.display.render_aa = old_aa
+        _restore_render_state(scene,previous)
+
+
 def camera_metadata(camera: object, width: int, height: int) -> dict[str, Any]:
     """Return camera pose and a compact pinhole intrinsic matrix."""
     lens_mm = float(camera.data.lens)
@@ -405,6 +464,7 @@ def _render_annotation_masks(
             )
             raw_path.unlink(missing_ok=True)
             results[pass_name] = {
+                "palette_version": "rgb_lattice_4095_v1",
                 "path": str(mask_path),
                 "palette": {
                     str(identifier): list(color)
@@ -638,6 +698,8 @@ def _snap_and_save_image(
             _normalized_channel_to_byte(pixels[offset + 1]),
             _normalized_channel_to_byte(pixels[offset + 2]),
         )
+        if pixels[offset + 3] < 0.5:
+            rgb8 = (0, 0, 0)
         matched = quantized_cache.get(rgb8)
         if matched is None:
             identifier = _nearest_palette_identifier(rgb8, palette_items)
@@ -646,7 +708,8 @@ def _snap_and_save_image(
         identifier, _ = matched
         identifiers[pixel_index] = identifier
 
-    _remove_tiny_annotation_components(identifiers, width, height)
+    if not bpy.context.scene.get("uchuva_preserve_mask_components", False):
+        _remove_tiny_annotation_components(identifiers, width, height)
     for pixel_index, identifier in enumerate(identifiers):
         offset = pixel_index * 4
         snapped[offset : offset + 4] = output_palette[identifier]
@@ -890,11 +953,11 @@ def _restore_render_state(scene: object, state: dict[str, Any]) -> None:
 def _instance_color(identifier: int) -> tuple[int, int, int]:
     if identifier <= 0:
         return (0, 0, 0)
-    return (
-        40 + (identifier * 67) % 200,
-        40 + (identifier * 109) % 200,
-        40 + (identifier * 149) % 200,
-    )
+    if identifier >= 4096:
+        raise ValueError("Instance palette supports at most 4095 foreground IDs per scene")
+    # A bijection over a 16^3 lattice; old palette collided every 200 IDs.
+    code = (identifier * 1597) % 4096
+    return ((code & 15)*17, ((code >> 4) & 15)*17, ((code >> 8) & 15)*17)
 
 
 def _linear_rgba(color: tuple[int, int, int]) -> tuple[float, float, float, float]:

@@ -1,5 +1,12 @@
 # Nuevo dataset real: extracción y entrega para etiquetado
 
+**Actualización 25/09/2026:** la campaña vigente para estudiantes usa los
+[cinco paquetes trazables](paquetes_anotacion_trazables.md): tres clases,
+segmentación de primer plano, letterbox gris y una tabla de selección simple.
+Las secciones siguientes conservan el procedimiento histórico de curación;
+sus tablas de revisión y el espejo experimental no son obligaciones ni el
+preprocesamiento de la nueva campaña.
+
 ## Contrato y límites
 
 El conjunto es independiente de `Dataset Original`. Se preparan imágenes sin

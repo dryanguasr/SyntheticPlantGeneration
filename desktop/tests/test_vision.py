@@ -17,6 +17,11 @@ ASSETS = ROOT / "mobile/android/app/src/main/assets"
 
 
 class GeometryTests(unittest.TestCase):
+    def test_dictionary_selection_preserves_historical_default(self):
+        self.assertEqual(Settings().dictionary, "DICT_4X4_50")
+        self.assertEqual(Settings(dictionary="DICT_4X4_100").dictionary, "DICT_4X4_100")
+        with self.assertRaises(ValueError):
+            Settings(dictionary="unknown")
     def test_signs_scale_rotation_and_perspective(self):
         corners = np.array([[100, 100], [200, 100], [200, 200], [100, 200]], float)
         self.assertAlmostEqual(project(mapping(corners, 10), [250, 50])["x"], 10)
@@ -101,6 +106,14 @@ class ModelTests(unittest.TestCase):
         self.assertEqual({r["marker_id"] for r in result["references"]}, {0, 1})
         self.assertTrue(all(r["state"] == "size_unconfirmed" for r in result["references"]))
         self.assertFalse(np.array_equal(image, annotated))
+
+    def test_pilot_dictionary_detects_id_71(self):
+        image = np.full((480,640,3),255,np.uint8)
+        marker = cv2.aruco.generateImageMarker(cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_100),71,160)
+        image[100:260,100:260] = cv2.cvtColor(marker,cv2.COLOR_GRAY2BGR)
+        _, result = self.engine.analyze(image,Settings(10,dictionary="DICT_4X4_100"))
+        self.assertEqual(result["reference"]["dictionary"],"DICT_4X4_100")
+        self.assertEqual([m["marker_id"] for m in result["references"]],[71])
 
     def test_detection_has_metric_positions_for_both_markers(self):
         image = np.full((480, 640, 3), 255, np.uint8)
