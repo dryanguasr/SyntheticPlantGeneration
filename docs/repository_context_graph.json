@@ -30,6 +30,7 @@
     ]
   },
   "nodes": [
+    {"id":"entrypoint.gazebo_field","type":"entrypoint","label":"Campo estático Gazebo con uchuvas y ArUcos","summary":"Interpreta JSON morfológico mediante Blender para mallas métricas; SDF puro con suelo, tutorado, 72 ArUcos y cámaras. Sin plántulas contextuales ni control de vuelo o cosecha validado.","paths":["src/uchuva_gazebo/field.py","scripts/export_gazebo_field.py","scripts/check_gazebo_field.py","scripts/gazebo_capture.py","tests/test_gazebo_field.py","docs/guides/campo_gazebo.md"],"evidence":[{"path":"src/uchuva_gazebo/field.py","locator":"def build_world"},{"path":"scripts/export_gazebo_field.py","locator":"build_geometry_from_morphology"}]},
     {"id": "entrypoint.annotation_packages", "type": "entrypoint", "label": "Cinco paquetes reales trazables y devoluciones pendientes", "paths": ["scripts/prepare_annotation_packages.py", "src/uchuva_annotation_packages.py", "tests/test_annotation_packages.py", "docs/guides/paquetes_anotacion_trazables.md", "docs/reports/paquetes_anotacion_2026-09-25.md"], "evidence": [{"path": "src/uchuva_annotation_packages.py", "locator": "def partition_audit"}, {"path": "tests/test_annotation_packages.py", "locator": "test_doubt_unknown_maturity_preserved_and_no_duplicate_sample"}]},
     {
       "id": "entrypoint.sparse_overhead_pilot",
@@ -1125,6 +1126,8 @@
     }
   ],
     "edges": [
+      {"source":"entrypoint.gazebo_field","relation":"depends_on","target":"module.morphology","evidence":[{"path":"scripts/export_gazebo_field.py","locator":"from uchuva_lsystem.morphology import Plant"}]},
+      {"source":"entrypoint.gazebo_field","relation":"depends_on","target":"module.blender_geometry","evidence":[{"path":"scripts/export_gazebo_field.py","locator":"build_geometry_from_morphology"}]},
     {"source": "entrypoint.annotation_packages", "relation": "depends_on", "target": "entrypoint.new_real_dataset", "evidence": [{"path": "src/uchuva_annotation_packages.py", "locator": "from uchuva_dataset_curation import"}]},
       {"source": "entrypoint.sparse_overhead_pilot", "relation": "depends_on", "target": "module.morphology", "evidence": [{"path": "scripts/prepare_sparse_pilot.py", "locator": "generate_morphology_tree"}]},
       {"source": "entrypoint.sparse_overhead_pilot", "relation": "depends_on", "target": "module.blender_annotations", "evidence": [{"path": "scripts/render_sparse_pilot.py", "locator": "render_crisp_calyx_annotations"}]},

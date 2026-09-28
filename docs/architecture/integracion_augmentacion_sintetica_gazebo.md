@@ -35,6 +35,14 @@ el estudio lo requiera.
 
 ## Puente de Gazebo
 
+Desde 2026-09-28 existe además un adaptador explícito de exportación visual en
+`scripts/export_gazebo_field.py`: consume el JSON de escena y sus plantas,
+invoca el intérprete geométrico de Blender y entrega mallas en metros al
+ensamblador puro `uchuva_gazebo.field`. El runtime consume SDF y OBJ; no importa
+Blender. El núcleo morfológico y el plan semántico original siguen independientes.
+Este campo estático con ArUcos habilita pruebas de percepción; aún no implementa
+dinámica del drón ni contacto de cosecha. Véase `docs/guides/campo_gazebo.md`.
+
 `uchuva_gazebo` no importa `bpy`, `gz`, ROS 2 ni Gazebo. Su interfaz estable
 es `build_gazebo_export_plan(plant, config)`. El plan conserva IDs de
 internodos, hojas, pedicelos y capachos para sensores, segmentacion y futuros

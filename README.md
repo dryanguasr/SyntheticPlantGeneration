@@ -25,7 +25,7 @@ morfología serializable ───┤
 |---|---|---|
 | Aumentación clásica | `src/uchuva_classical_augmentation/` | E0/E1/E2 preservados; campaña v2 cerrada sin receta promovida |
 | Generación sintética | `src/uchuva_lsystem/` | Pipeline implementado; transferencia científica y maduración por validar |
-| Gazebo | `src/uchuva_gazebo/` | Interfaz semántica por LOD; aún no emite SDF |
+| Gazebo | `src/uchuva_gazebo/` | Plan semántico por LOD y [campo SDF con uchuvas, tutorado y ArUcos](docs/guides/campo_gazebo.md); control de vuelo y cosecha pendientes |
 | Contribuciones externas | `contributions/` | Snapshots atribuidos, separados del código vigente |
 
 La implementación vigente del generador sigue este contrato:
