@@ -7,6 +7,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 
 def percent(value):return 'no disponible' if value is None else f'{100*value:.2f} %'
@@ -23,6 +24,11 @@ def main():
     with (evaluation/'plants.csv').open(encoding='utf-8-sig') as f:plants=list(csv.DictReader(f))
     with (evaluation/'passes.csv').open(encoding='utf-8-sig') as f:passes=list(csv.DictReader(f))
     with (evaluation/'planar_xy.csv').open(encoding='utf-8-sig') as f:planar=list(csv.DictReader(f))
+    if (evaluation/'multiview_3d.csv').stat().st_size==0:
+        (evaluation/'multiview_3d.csv').write_text(
+            'track_id,marker_id,plant_id,calyx_id,target,observations,estimated_x_m,estimated_y_m,estimated_z_m,'
+            'true_x_m,true_y_m,true_z_m,error_3d_m,map_world_x_m,map_world_y_m,map_world_z_m,'
+            'map_transform_source,parallax_deg,height_m,median_visible_pixels\n',encoding='utf-8')
     marker_ids=sorted({int(r['marker_id']) for r in planar})
     if marker_ids:
         columns=min(3,len(marker_ids));rows=math.ceil(len(marker_ids)/columns)
@@ -32,6 +38,8 @@ def main():
             ax.scatter([float(r['true_x_m']) for r in subset],[float(r['true_y_m']) for r in subset],s=12,c='#167c70',label='Centro verdadero')
             ax.scatter([float(r['estimated_x_m']) for r in subset],[float(r['estimated_y_m']) for r in subset],s=14,marker='x',c='#c5532e',label='Homografía de caja')
             ax.set(title=f'ArUco {identifier} · {len(subset)} estimaciones',xlabel='X marcador (m)',ylabel='Y marcador (m)')
+            ax.set_aspect('equal',adjustable='datalim')
+            ax.xaxis.set_major_locator(MaxNLocator(4));ax.yaxis.set_major_locator(MaxNLocator(4))
             ax.grid(alpha=.2);ax.legend(fontsize=8)
         for ax in list(axes.flat)[len(marker_ids):]:ax.set_visible(False)
         fig.suptitle('Comparación planar: marcos independientes por marcador; profundidad desconocida')
@@ -46,7 +54,7 @@ def main():
 
 ## Resultado del ensayo
 
-Ejecución completa: **{result['completed']}**. Validación posterior: **{validation['passed']}**.
+Ejecución completa: **{'sí' if result['completed'] else 'no'}**. Validación posterior: **{'aprobada' if validation['passed'] else 'no aprobada'}**.
 Duración: {result['simulation_seconds']:.2f} s simulados; {result['wall_seconds']:.1f} s de ejecución.
 Se conservaron las 36 plantas y los 2.280 capachos originales; el inventario objetivo
 de `plant_12` a `plant_23` contiene **747 capachos**.
@@ -138,6 +146,9 @@ desconocida; su error no es un error 3D. La cobertura planar respecto al
 inventario es {percent(summary['localization_coverage_existing_planar'])};
 la cobertura 3D es {percent(summary['localization_coverage_existing_3d'])}.
 Las estimaciones sin posición permanecen en los denominadores de cobertura.
+Las {xy['n']} estimaciones planares son combinaciones detección/marcador, no
+capachos distintos; incluyen referencias lejanas. El video muestra la referencia
+válida más cercana en píxeles para facilitar su lectura, sin elegir por error verdadero.
 
 IPPE usa solo esquinas observadas y escala métrica. Cada reconstrucción conserva
 el marco de su marcador. Se exigen ≥3 observaciones, paralaje ≥3°, profundidad
@@ -150,6 +161,13 @@ mapa mundial. El estimador se ejecutó con el paquete RGB, sellos, calibración 
 dimensiones del ArUco, sin máscaras, inventario ni odometría de Gazebo.
 
 ## Congelación y archivos
+
+Pasaron 33 pruebas de software: transformaciones, escala, triangulación con
+posición conocida, falta de paralaje, marcador ausente, asociaciones ambiguas,
+oclusión, conteo sin duplicados, corrección lateral y catálogos de materiales.
+Los tres MP4 finales pasaron decodificación completa y tienen 1280 × 720 a 15 fps.
+Los videos anotados repiten exposiciones de 5 Hz solo para presentación;
+esas repeticiones no se cuentan como observaciones.
 
 - Modelo: `natural_hybrid_alpha_045`, clase capacho, confianza 0,25, letterbox
   640², end-to-end sin NMS adicional. SHA-256: `{config['model_sha256']}`.
