@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import xml.etree.ElementTree as ET
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -14,11 +15,22 @@ def main():
     if not validation['passed']:raise RuntimeError('Technical gate failed')
     files=[package/'mission.json',package/'flight.sdf',package/'preflight.json',
            ROOT/'scripts/run_low_flight.py',ROOT/'scripts/estimate_low_flight.py',
+           ROOT/'scripts/run_neo_flight.py',
            ROOT/'src/uchuva_gazebo/multiview.py',ROOT/'desktop/uchuva_aruco/vision.py',
            ROOT/'src/uchuva_gazebo/low_flight_control.py',
            ROOT/'scripts/evaluate_low_flight.py',ROOT/'src/uchuva_gazebo/evaluation.py',
            ROOT/'scripts/validate_low_capture.py',
            ROOT/'mobile/android/app/src/main/assets/detector.onnx']
+    files.extend(sorted(p for p in (package/'meshes').iterdir() if p.is_file()))
+    files.extend(sorted(p for p in (package/'neo_visual').rglob('*') if p.is_file()))
+    files.append(ROOT/'scripts/prepare_low_flight.py')
+    for uri in ET.parse(package/'flight.sdf').findall('.//mesh/uri'):
+        mesh=(package/uri.text).resolve();files.append(mesh)
+        if mesh.suffix.lower()=='.obj':
+            with mesh.open() as stream:
+                for line in stream:
+                    if line.startswith('mtllib '):files.append(mesh.parent/line.strip()[7:]);break
+    files=sorted(set(path.resolve() for path in files))
     config=json.loads((package/'mission.json').read_text())
     payload={k:config[k] for k in ('script_version','seed','parameter_preset')}
     payload.update({'sha256':{p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in files},

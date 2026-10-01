@@ -19,6 +19,13 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def write_calyx_materials(directory, inventory):
+    """One material per imported mesh, avoiding quadratic Assimp catalog loading."""
+    for o in inventory:
+        (directory/f'{o["model_name"]}.mtl').write_text(
+            f'newmtl {o["model_name"]}\nKa {" ".join(map(str,o["color"][:3]))}\nKd {" ".join(map(str,o["color"][:3]))}\n')
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--field', type=Path, required=True)
@@ -53,7 +60,7 @@ def main():
                     row=mapping[(uri,line.strip()[9:])]
                     row['color']=colors[uri]
                     dest=(out/row['uri']).open('w')
-                    dest.write(f'mtllib surface.mtl\nusemtl {row["model_name"]}\no {row["model_name"]}\n')
+                    dest.write(f'mtllib {row["model_name"]}.mtl\nusemtl {row["model_name"]}\no {row["model_name"]}\n')
                     start_v,start_n=vertices,normals
                 elif line.startswith('v '): vertices+=1; dest.write(line)
                 elif line.startswith('vn '): normals+=1; dest.write(line)
@@ -61,9 +68,10 @@ def main():
                     indices=[v.split('//') for v in line.split()[1:]]
                     dest.write('f '+' '.join(f'{int(v)-start_v}//{int(n)-start_n}' for v,n in indices)+'\n')
         if dest: dest.close()
-    (out/'meshes/surface.mtl').write_text(''.join(
-        f'newmtl {o["model_name"]}\nKa {" ".join(map(str,o["color"][:3]))}\nKd {" ".join(map(str,o["color"][:3]))}\n'
-        for o in inventory))
+    # Assimp loads the referenced catalog for each mesh. A shared 2280-entry
+    # catalog replicated millions of unused material records and exhausted WSL.
+    # Each file now declares only its identical original material.
+    write_calyx_materials(out/'meshes',inventory)
     tree=ET.parse(args.field/'field.sdf'); world=tree.getroot().find('world')
     for model in list(world.findall('model')):
         if model.attrib['name']!='field': world.remove(model)

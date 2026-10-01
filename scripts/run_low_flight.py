@@ -86,7 +86,7 @@ def main():
             path=ROOT/name
             if hashlib.sha256(path.read_bytes()).hexdigest()!=sha:raise RuntimeError(f'Frozen file changed: {name}')
     output=package/(args.name or ('technical' if args.technical else 'flight')); output.mkdir(exist_ok=False)
-    images=Images(output); videos=[Recorder(output,n) for n in ('onboard','chase')]
+    images=Images(output); videos=[Recorder(output,n,threads=2) for n in ('onboard','chase')]
     os.environ['GZ_PARTITION']=f'low_flight_{os.getpid()}'
     os.environ['GZ_SIM_RESOURCE_PATH']=str(package)
     os.environ['GALLIUM_DRIVER']='d3d12'; os.environ['MESA_D3D12_DEFAULT_ADAPTER_NAME']='NVIDIA'
@@ -103,13 +103,24 @@ def main():
     with (output/'server.log').open('w') as log:
         server=subprocess.Popen(['gz','sim','-s','-v','3',str(package/'flight.sdf')],stdout=log,stderr=subprocess.STDOUT)
         try:
-            request=WorldControl(); request.pause=False
+            request=WorldControl(); request.pause=True
             deadline=time.monotonic()+300
             while time.monotonic()<deadline:
                 ok,response=node.request('/world/uchuva_field/control',request,WorldControl,Boolean,1000)
                 if ok and response.data:break
                 time.sleep(.2)
             else:raise RuntimeError('World control unavailable')
+            # Enable hover thrust before the first physics step. Waiting for the
+            # first odometry message allowed a transport handshake to become a
+            # variable-duration free fall during a suspended initialization.
+            deadline=time.monotonic()+120
+            while not publisher.has_connections():
+                if time.monotonic()>deadline:raise RuntimeError('Velocity controller subscriber unavailable')
+                time.sleep(.05)
+            for _ in range(20):publisher.publish(Twist());time.sleep(.05)
+            request.pause=False
+            ok,response=node.request('/world/uchuva_field/control',request,WorldControl,Boolean,5000)
+            if not ok or not response.data:raise RuntimeError('Cannot unpause initialized controller')
             print('Low-flight simulation started',flush=True)
             while time.monotonic()-began<args.wall_timeout:
                 if server.poll() is not None:raise RuntimeError('Gazebo stopped')

@@ -17,9 +17,10 @@ reproductivos del generador morfológico. No usa el campo agrupado del vuelo alt
    para certificar el segmento continuo. El límite de exclusión espacial de
    triángulos también se registra. No es una comprobación de vértices aislados.
 3. `scripts/run_low_flight.py --technical` ejecuta 10 segundos. Al crear el
-   vehículo suspendido hay un transitorio de arranque de motores en el extremo
-   exterior. El avance comienza cuando recupera la altura. El arranque queda
-   registrado y separado de las pasadas evaluadas.
+   vehículo suspendido se espera la conexión del controlador y se publica la
+   orden de sustentación con la física pausada. Se estabiliza en el extremo
+   exterior antes de avanzar. El arranque queda registrado y separado de las
+   pasadas evaluadas.
 4. `scripts/validate_low_capture.py` comprueba sellos, proyección de etiquetas,
    altura, velocidad y separación de las poses ejecutadas. Usa la propiedad
    Lipschitz de distancia a obstáculos y las muestras de la auditoría original
@@ -42,6 +43,13 @@ Normalizar todo el vector hacia un punto lejano reducía demasiado la correcció
 de deriva lateral; el primer ensayo completo se abortó por ese motivo y se
 preservó en `outputs/gazebo/low_pilot_v1/flight`. La segunda variante usa
 `src/uchuva_gazebo/low_flight_control.py`, con una prueba de regresión específica.
+
+El segundo ensayo se interrumpió por memoria. La tercera variante usa un MTL
+individual por capacho para evitar cargar millones de materiales no utilizados.
+`scripts/verify_low_material_equivalence.py` confirma igualdad de geometría,
+normales, colores, inventario y SDF frente al paquete anterior. El grabador usa
+dos hilos de codificación por cámara. Ningún cambio altera el RGB de análisis
+para mejorar las métricas.
 
 ## Canales de datos
 
@@ -95,13 +103,16 @@ La cantidad de píxeles visibles no se denomina fracción de oclusión.
 ## Comandos del paquete preparado
 
 ```powershell
-.venv-training/Scripts/python.exe scripts/validate_low_capture.py outputs/gazebo/low_pilot_v2
-.venv-training/Scripts/python.exe scripts/freeze_low_pilot.py outputs/gazebo/low_pilot_v2
-wsl -d Ubuntu-24.04 -- bash -lc 'cd /mnt/c/dev/SyntheticPlantGeneration && python3 scripts/run_low_flight.py outputs/gazebo/low_pilot_v2'
-.venv-training/Scripts/python.exe scripts/validate_low_capture.py outputs/gazebo/low_pilot_v2 --run flight
-.venv-training/Scripts/python.exe scripts/export_low_rgb_inputs.py outputs/gazebo/low_pilot_v2
-outputs/desktop/venv/Scripts/python.exe scripts/estimate_low_flight.py --rgb outputs/gazebo/low_pilot_v2/flight/rgb --frames outputs/gazebo/low_pilot_v2/flight/rgb_frames.json --config outputs/gazebo/low_pilot_v2/flight/estimator_config.json --output outputs/gazebo/low_pilot_v2/flight/estimates
-.venv-training/Scripts/python.exe scripts/evaluate_low_flight.py outputs/gazebo/low_pilot_v2 --estimates outputs/gazebo/low_pilot_v2/flight/estimates
+.venv-training/Scripts/python.exe scripts/validate_low_capture.py outputs/gazebo/low_pilot_v3
+.venv-training/Scripts/python.exe scripts/freeze_low_pilot.py outputs/gazebo/low_pilot_v3
+wsl -d Ubuntu-24.04 -- bash -lc 'cd /mnt/c/dev/SyntheticPlantGeneration && python3 scripts/run_low_flight.py outputs/gazebo/low_pilot_v3'
+.venv-training/Scripts/python.exe scripts/validate_low_capture.py outputs/gazebo/low_pilot_v3 --run flight
+.venv-training/Scripts/python.exe scripts/export_low_rgb_inputs.py outputs/gazebo/low_pilot_v3
+outputs/desktop/venv/Scripts/python.exe scripts/estimate_low_flight.py --rgb outputs/gazebo/low_pilot_v3/flight/rgb --frames outputs/gazebo/low_pilot_v3/flight/rgb_frames.json --config outputs/gazebo/low_pilot_v3/flight/estimator_config.json --output outputs/gazebo/low_pilot_v3/flight/estimates
+.venv-training/Scripts/python.exe scripts/evaluate_low_flight.py outputs/gazebo/low_pilot_v3 --estimates outputs/gazebo/low_pilot_v3/flight/estimates
+outputs/desktop/venv/Scripts/python.exe scripts/render_low_flight_video.py --run outputs/gazebo/low_pilot_v3/flight --estimates outputs/gazebo/low_pilot_v3/flight/estimates --output outputs/gazebo/low_pilot_v3/flight/anotado_5hz.mp4
+wsl -d Ubuntu-24.04 -- bash -lc 'cd /mnt/c/dev/SyntheticPlantGeneration && python3 scripts/compose_low_flight_videos.py outputs/gazebo/low_pilot_v3/flight'
+.venv-training/Scripts/python.exe scripts/report_low_flight.py outputs/gazebo/low_pilot_v3 --report docs/reports/piloto_vuelo_bajo_2026-10-01.md
 ```
 
 Las salidas son locales e ignoradas por Git. Las pruebas técnicas fallidas se

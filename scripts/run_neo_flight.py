@@ -18,8 +18,9 @@ def yaw_of(q):
 
 
 class Recorder:
-    def __init__(self, output, name, fps=15):
+    def __init__(self, output, name, fps=15, threads=None):
         self.output,self.name,self.fps=output,name,fps
+        self.encoding_threads=threads
         self.queue=queue.Queue(maxsize=120); self.count=0; self.received=0
         self.first=None; self.last=None; self.error=None; self.process=None
         self.worker=threading.Thread(target=self.run); self.worker.start()
@@ -45,6 +46,7 @@ class Recorder:
                     self.process=subprocess.Popen(['ffmpeg','-hide_banner','-loglevel','error','-y',
                         '-f','rawvideo','-pixel_format','rgb24','-video_size',f'{width}x{height}',
                         '-framerate',str(self.fps),'-i','-','-an','-c:v','libx264','-preset','veryfast',
+                        *(['-threads',str(self.encoding_threads)] if self.encoding_threads else []),
                         '-crf','20','-pix_fmt','yuv420p','-movflags','+faststart',
                         str(self.output/f'{self.name}.mp4')],stdin=subprocess.PIPE)
                 # Resample by simulation timestamp, never by slower wall-clock arrivals.
