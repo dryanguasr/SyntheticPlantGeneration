@@ -3,7 +3,7 @@ import math
 import xml.etree.ElementTree as ET
 from .field import element as e, box, material, numbers
 
-VERSION = 'neo-flight/0.1'
+VERSION = 'neo-flight/0.2'
 LENGTH, WIDTH, HEIGHT, MASS = .130, .157, .0485, .135
 SOURCE = 'https://www.dji.com/neo/specs'
 FORCE_CONSTANT = 1e-7  # engineering_heuristic, not measured DJI propulsion
@@ -30,25 +30,38 @@ def sensor(link, name, pose, width=1280,height=720):
     clip=e(cam,'clip'); e(clip,'near',.01); e(clip,'far',100)
 
 
-def neo_model(start=(-5.2,-5.6,.08), cameras=True):
+def neo_model(start=(-5.2,-5.6,.08), cameras=True, visual_assets=None):
     model=ET.Element('model',name='neo_approx'); e(model,'pose',numbers((*start,0,0,0)))
     base=e(model,'link',name='base_link')
     inertial(base,MASS-.004,(LENGTH,WIDTH,HEIGHT))
-    box(base,'body',(0,0,0),(.095,.044,HEIGHT),(.62,.65,.66,1))
-    box(base,'battery',(-.019,0,.018),(.046,.041,.01),(.32,.34,.35,1))
-    box(base,'camera',(.056,0,-.006),(.018,.023,.021),(.04,.045,.05,1))
+    if visual_assets:
+        for index,asset in enumerate(visual_assets):
+            if asset.get('link','base_link')!='base_link':continue
+            visual=e(base,'visual',name=f'imported_neo_{index}')
+            mesh=e(e(visual,'geometry'),'mesh'); e(mesh,'uri',asset['uri'])
+            material(visual,asset['color'])
+    else:
+        box(base,'body',(0,0,0),(.095,.044,HEIGHT),(.62,.65,.66,1))
+        box(base,'battery',(-.019,0,.018),(.046,.041,.01),(.32,.34,.35,1))
+        box(base,'camera',(.056,0,-.006),(.018,.023,.021),(.04,.045,.05,1))
     box(base,'envelope',(0,0,0),(LENGTH,WIDTH,HEIGHT),collision=True)
     rotors=[]
     for index,(x,y,spin) in enumerate(((.0315,.045,1),(-.0315,-.045,1),(.0315,-.045,-1),(-.0315,.045,-1))):
         # Open guard ring, approximated by short tangential bars within envelope.
-        for segment in range(24):
+        for segment in range(0 if visual_assets else 24):
             a=2*math.pi*segment/24
             visual=box(base,f'guard_{index}_{segment}',(x+.0315*math.cos(a),y+.0315*math.sin(a),.009),
                        (.0083,.003,.008),(.54,.57,.58,1))
             visual.find('pose').text=numbers((x+.0315*math.cos(a),y+.0315*math.sin(a),.009,0,0,a+math.pi/2))
         link=e(model,'link',name=f'rotor_{index}'); e(link,'pose',numbers((x,y,.01,0,0,0)))
         inertial(link,.001,(.055,.008,.003))
-        box(link,f'propeller_{index}',(0,0,0),(.057,.006,.002),(.13,.14,.15,1))
+        for asset_index,asset in enumerate(visual_assets or []):
+            if asset.get('link')!=f'rotor_{index}':continue
+            visual=e(link,'visual',name=f'imported_rotor_{asset_index}')
+            mesh=e(e(visual,'geometry'),'mesh');e(mesh,'uri',asset['uri'])
+            material(visual,asset['color'])
+        if not visual_assets:
+            box(link,f'propeller_{index}',(0,0,0),(.057,.006,.002),(.13,.14,.15,1))
         joint=e(model,'joint',name=f'rotor_{index}_joint',type='revolute')
         e(joint,'parent','base_link'); e(joint,'child',f'rotor_{index}')
         axis=e(joint,'axis'); e(axis,'xyz','0 0 1')
@@ -62,7 +75,10 @@ def neo_model(start=(-5.2,-5.6,.08), cameras=True):
         rotors.append((index,spin))
     control=plugin(model,'multicopter-control','MulticopterVelocityControl',{
         'robotNamespace':'neo','commandSubTopic':'cmd_vel','enableSubTopic':'enable',
-        'comLinkName':'base_link','velocityGain':'3 3 4','attitudeGain':'.008 .008 .003',
+        # LeeVelocityController divides velocityGain by mass. These yield
+        # 2, 2, 4 s^-1, not the former 22.2, 22.2, 29.6 s^-1.
+        'comLinkName':'base_link','velocityGain':numbers((MASS*2,MASS*2,MASS*4)),
+        'attitudeGain':'.008 .008 .003',
         'angularRateGain':'.001 .001 .0005','maximumLinearAcceleration':'1 1 1',
         'maximumLinearVelocity':'1.2 1.2 .7','maximumAngularVelocity':'1 1 .8'})
     config=e(control,'rotorConfiguration')

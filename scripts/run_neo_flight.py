@@ -8,6 +8,9 @@ import queue
 import subprocess
 import threading
 import time
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
+from uchuva_gazebo.flight_control import world_to_body, bounded_command, flight_metrics, angular_rate_from_poses
 
 
 def yaw_of(q):
@@ -77,8 +80,11 @@ def main():
     parser.add_argument('package',type=Path)
     parser.add_argument('--probe-seconds',type=float,default=0)
     parser.add_argument('--wall-timeout',type=float,default=1800)
+    parser.add_argument('--no-video',action='store_true',help='Run full mission without RGB recording')
     parser.add_argument('--graphics',choices=('egl','wsl-d3d12'),default='egl')
     args=parser.parse_args(); package=args.package.resolve()
+    if args.probe_seconds and args.probe_seconds<10:
+        parser.error('Hover validation requires at least 10 simulation seconds')
     output=package/('probe' if args.probe_seconds else 'flight')
     output.mkdir(exist_ok=False)
     mission=json.loads((package/'mission.json').read_text())
@@ -98,12 +104,13 @@ def main():
         with lock:state['odom']=msg
     node.subscribe(Odometry,'/neo/odometry',odometry)
     recorders=[]
-    if not args.probe_seconds:
+    if not args.probe_seconds and not args.no_video:
         for name in ('onboard','chase'):
             recorder=Recorder(output,name); recorders.append(recorder)
             node.subscribe(Image,f'/neo/{name}',recorder.callback)
     began=time.monotonic(); index=0; reached=[]; trace=[]; last_t=-1; first_t=None
     waypoints=mission['waypoints']; failure=None; success=False
+    previous_command=(0,0,0,0)
     with (output/'server.log').open('w') as log:
         graphics_args=['--headless-rendering'] if args.graphics=='egl' else []
         server=subprocess.Popen(['gz','sim','-s',*graphics_args,'-v','3',str(package/'flight.sdf')],
@@ -124,17 +131,25 @@ def main():
                     publisher.publish(Twist()); time.sleep(.03);continue
                 t=msg.header.stamp.sec+msg.header.stamp.nsec*1e-9
                 if t==last_t:time.sleep(.005);continue
+                dt=.034 if last_t<0 else t-last_t
                 last_t=t
                 if first_t is None:first_t=t
                 pos=(msg.pose.position.x,msg.pose.position.y,msg.pose.position.z)
                 yaw=yaw_of(msg.pose.orientation)
+                q=msg.pose.orientation
+                roll=math.atan2(2*(q.w*q.x+q.y*q.z),1-2*(q.x*q.x+q.y*q.y))
+                pitch=math.asin(max(-1,min(1,2*(q.w*q.y-q.z*q.x))))
+                quaternion=[q.x,q.y,q.z,q.w]
+                rates=angular_rate_from_poses(trace[-1]['quaternion_xyzw'],quaternion,dt) if trace else (0,0,0)
+                tilt=math.acos(max(-1,min(1,math.cos(roll)*math.cos(pitch))))
+                if tilt>math.radians(25):raise RuntimeError('Attitude exceeded 25 degree test abort limit')
                 if not all(math.isfinite(v) for v in (*pos,yaw)) or pos[2]<-.1 or pos[2]>8:
                     raise RuntimeError(f'Flight left vertical test bounds: {pos}')
                 if abs(pos[0])>10 or abs(pos[1])>10:raise RuntimeError('Flight left field test bounds')
                 if args.probe_seconds:
                     target={'position':[-5.2,-5.6,1.2],'yaw':0,'phase':'hover_probe'}
                     if t-first_t>=args.probe_seconds:
-                        success=abs(pos[2]-1.2)<.15
+                        success=flight_metrics(trace)['hover_settled']
                         if not success:raise RuntimeError(f'Hover probe did not converge: {pos}')
                         break
                 else:
@@ -146,14 +161,18 @@ def main():
                 delta=[a-b for a,b in zip(target['position'],pos)]
                 error=math.sqrt(sum(v*v for v in delta))
                 yaw_error=math.atan2(math.sin(target['yaw']-yaw),math.cos(target['yaw']-yaw))
-                velocity=[max(-.85,min(.85,1.3*v)) for v in delta]
-                velocity[2]=max(-.5,min(.6,velocity[2]))
+                previous_command=bounded_command(delta,yaw_error,previous_command,dt)
                 cmd=Twist()
-                cmd.linear.x=math.cos(yaw)*velocity[0]+math.sin(yaw)*velocity[1]
-                cmd.linear.y=-math.sin(yaw)*velocity[0]+math.cos(yaw)*velocity[1]
-                cmd.linear.z=velocity[2];cmd.angular.z=max(-.65,min(.65,1.5*yaw_error))
+                cmd.linear.x,cmd.linear.y,cmd.linear.z=world_to_body(previous_command[:3],(q.x,q.y,q.z,q.w))
+                cmd.angular.z=previous_command[3]
                 publisher.publish(cmd)
                 trace.append({'t':t,'position':pos,'yaw':yaw,'target':target['position'],
+                              'roll':roll,'pitch':pitch,
+                              'quaternion_xyzw':quaternion,
+                              'linear_velocity':[msg.twist.linear.x,msg.twist.linear.y,msg.twist.linear.z],
+                              'angular_velocity':rates,
+                              'angular_velocity_raw_odom':[msg.twist.angular.x,msg.twist.angular.y,msg.twist.angular.z],
+                              'command_body':[cmd.linear.x,cmd.linear.y,cmd.linear.z,cmd.angular.z],
                               'phase':target['phase'],'position_error_m':error})
                 if not args.probe_seconds and target['phase']!='sensor_warmup' and error<.13 and abs(yaw_error)<.15:
                     reached.append({'index':index,'phase':target['phase'],'t':t,'position':pos})
@@ -161,6 +180,8 @@ def main():
                     index+=1
                     if index==len(waypoints):success=True;break
             if not success:raise TimeoutError('Mission did not complete within wall timeout')
+            if not flight_metrics(trace)['attitude_envelope_pass']:
+                success=False;raise RuntimeError('Flight exceeded 15 degree attitude acceptance limit')
         except KeyboardInterrupt:
             failure='operator_interrupted'
         except Exception as error:
@@ -177,6 +198,8 @@ def main():
             result={**provenance,'completed':success,'failure':failure,'waypoints_reached':len(reached),
                 'waypoints_expected':len(waypoints),'wall_seconds':time.monotonic()-began,
                 'simulation_seconds':None if first_t is None else last_t-first_t,
+                'stability':flight_metrics(trace),
+                'angular_velocity_source':'shortest_quaternion_interval_body_estimate; raw odometry retained',
                 'motion':'dynamic_rotor_thrust_no_pose_teleportation','graphics':args.graphics,
                 'videos':{r.name:{'encoded_frames':r.count,'received_frames':r.received,'fps':r.fps} for r in recorders}}
             (output/'result.json').write_text(json.dumps(result,indent=2));print(json.dumps(result),flush=True)
