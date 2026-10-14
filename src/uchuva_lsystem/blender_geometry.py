@@ -213,7 +213,7 @@ def _build_axis_geometry(
             radius=stem_radius,
             material=stem_material,
             sag_factor=(
-                0.0 if axis.training_phase == "overhead_strings_manual_initial_guess"
+                0.0 if axis.training_phase in {"overhead_strings_manual_initial_guess", "bouquet_open_and_lift_v4"}
                 else (0.012 + axis.reproductive_load * 0.025
                       if axis.order == 0
                       else 0.045 + axis.reproductive_load * 0.115)
@@ -2130,6 +2130,7 @@ def audit_scene_mesh_collisions(
     near_contact_distance: float = 0.055,
     max_bvh_cache_objects: int | None = None,
     limit_clearance_search: bool = False,
+    tolerate_only_leaf_leaf: bool = False,
 ) -> dict[str, Any]:
     """Audit intersections and pair-specific mesh clearance in world space."""
     bpy, Vector = _blender_modules()
@@ -2250,6 +2251,9 @@ def audit_scene_mesh_collisions(
                     for pair in overlap[:32]
                 ],
             }
+            if tolerate_only_leaf_leaf and classification == "soft_occupancy" and not item['semantic_a'] == item['semantic_b'] == 'leaf':
+                classification = "physical_collision"
+                item['classification'] = classification
             if classification == "intentional_support":
                 intentional_contacts.append(item)
             elif classification == "soft_occupancy":
@@ -2288,6 +2292,7 @@ def audit_scene_mesh_collisions(
 
     return {
         "version": "0.3.0-leaf-mesh-contact",
+        "tolerate_only_leaf_leaf": tolerate_only_leaf_leaf,
         "visual_occlusion_measurement": "not_measured_by_mesh_audit",
         "soft_occupancy_note": "leaf_mesh_intersection_not_visual_occlusion_or_verified_physical_contact",
         "max_bvh_cache_objects": max_bvh_cache_objects,

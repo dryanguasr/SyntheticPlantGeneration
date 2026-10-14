@@ -1,0 +1,31 @@
+{
+  "consulted": "2026-10-08",
+  "scope": "Fuentes primarias para la metodologia; no validan los resultados del simulador ni la precision agronomica",
+  "references": [
+    {
+      "authors": "Bruce D. Lucas y Takeo Kanade",
+      "year": 1981,
+      "title": "An Iterative Image Registration Technique with an Application to Stereo Vision",
+      "url": "https://publications.ri.cmu.edu/an-iterative-image-registration-technique-with-an-application-to-stereo-vision-ijcai",
+      "use": "Fundamento de registro por flujo optico; la implementacion concreta usa OpenCV piramidal con comprobacion inversa"
+    },
+    {
+      "authors": "OpenCV",
+      "title": "Perspective-n-Point (PnP) pose computation",
+      "url": "https://docs.opencv.org/4.13.0/d5/d1f/calib3d_solvePnP.html",
+      "use": "Convencion de ejes y estimacion IPPE_SQUARE para marcadores planos; soluciones multiples"
+    },
+    {
+      "authors": "OpenCV",
+      "title": "Detection of ArUco Markers",
+      "url": "https://docs.opencv.org/4.13.0/d5/dae/tutorial_aruco_detection.html",
+      "use": "Deteccion de codigos y correspondencias de esquinas desde RGB"
+    },
+    {
+      "authors": "Ultralytics",
+      "title": "utils.metrics API Reference",
+      "url": "https://docs.ultralytics.com/reference/utils/metrics",
+      "use": "Implementacion de AP; registrar version local usada, no asumir que coincide con la pagina mas reciente"
+    }
+  ]
+}

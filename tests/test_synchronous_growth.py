@@ -188,7 +188,8 @@ class SynchronousGrowthTests(unittest.TestCase):
         )
         self.assertEqual(
             _mesh_intersection_classification(leaf, dict(leaf)),
-            "visual_occlusion",
+            # Mesh overlap alone does not measure camera-dependent occlusion.
+            "soft_occupancy",
         )
         self.assertEqual(
             _mesh_intersection_classification(stem, foreign_stem),

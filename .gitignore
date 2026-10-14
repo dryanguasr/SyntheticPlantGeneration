@@ -9,6 +9,7 @@ docs/references/raw/
 docs/references/**/*.pdf
 
 # Generated renders, training runs, reports and temporary artifacts
+runs/
 outputs/*
 !outputs/README.md
 output/

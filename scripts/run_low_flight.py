@@ -18,11 +18,13 @@ ROOT=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(ROOT/'src'))
 from uchuva_gazebo.flight_control import world_to_body, angular_rate_from_poses
 from uchuva_gazebo.low_flight_control import desired_velocity
 from run_neo_flight import Recorder, yaw_of
+from uchuva_gazebo.capture_pairs import select_pairs
 
 
 class Images:
-    def __init__(self, output):
+    def __init__(self, output, pair_rate_hz=5):
         self.output=output; self.queue=queue.Queue(maxsize=180); self.error=None
+        self.pair_rate_hz=pair_rate_hz
         self.index={'rgb':{},'mask':{}}; self.bins=set()
         for name in self.index: (output/name).mkdir()
         self.worker=threading.Thread(target=self.run); self.worker.start()
@@ -46,18 +48,13 @@ class Images:
         except Exception as exc:self.error=str(exc)
 
     def close(self):
-        self.queue.put(None); self.worker.join()
-        stamps=sorted(set(self.index['rgb']) & set(self.index['mask']),key=int)
-        # Choose the nearest original synchronized exposure to each 5 Hz grid time.
-        chosen={}
-        for s in stamps:
-            bucket=round(int(s)/200_000_000)
-            if bucket not in chosen or abs(int(s)-bucket*200_000_000)<abs(int(chosen[bucket])-bucket*200_000_000):
-                chosen[bucket]=s
-        pairs=[{'stamp_ns':int(s),'rgb':self.index['rgb'][s],'mask':self.index['mask'][s]} for s in chosen.values()]
-        missing=[{'stamp_ns':int(s),'missing':'mask' if s in self.index['rgb'] else 'rgb'}
-                 for s in set(self.index['rgb']) ^ set(self.index['mask'])]
-        (self.output/'pairs.json').write_text(json.dumps({'pairs':pairs,'excluded':missing,'error':self.error},indent=2))
+        if self.worker.is_alive():
+            try:self.queue.put(None,timeout=10)
+            except queue.Full:self.error=self.error or 'Raw image writer did not drain'
+        self.worker.join(timeout=60)
+        if self.worker.is_alive():raise RuntimeError('Raw image writer failed to stop safely')
+        pairs,missing=select_pairs(self.index,self.pair_rate_hz)
+        (self.output/'pairs.json').write_text(json.dumps({'pairs':pairs,'excluded':missing,'error':self.error,'pair_rate_hz':self.pair_rate_hz,'selection':'all_exact_pairs' if self.pair_rate_hz is None else 'nearest_grid'},indent=2))
 
 
 def main():

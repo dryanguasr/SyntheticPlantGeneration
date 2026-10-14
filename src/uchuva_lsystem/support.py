@@ -14,6 +14,19 @@ from .provenance import ParameterProvenance
 Vec3 = tuple[float, float, float]
 
 
+def outward_tie_anchor(point: Vec3, plant_center: Vec3, line_start: Vec3,
+                       line_end: Vec3, horizontal_offset: float) -> Vec3:
+    """Outward row-plane anchor; geometric heuristic, not measured tension."""
+    if horizontal_offset <= 0:
+        raise ValueError('Outward offset must be positive')
+    sign = 1 if point[0] >= plant_center[0] else -1
+    lower, upper = sorted((line_start[0], line_end[0]))
+    x = min(upper, max(lower, point[0] + sign * horizontal_offset))
+    if sign * (x - point[0]) <= 0:
+        raise ValueError('Support cable cannot provide an outward anchor')
+    return (x, line_start[1], line_start[2])
+
+
 @dataclass
 class SupportPost(SerializableMixin):
     id: str

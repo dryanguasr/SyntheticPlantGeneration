@@ -103,7 +103,7 @@ def walk_axes(axes):
         yield from walk_axes(axis.child_axes)
 
 
-def sparse_morphology_parameters():
+def sparse_morphology_parameters(preset="sparse_overhead_dense_crown_v2"):
     """Dense individual crowns, independent of the sparse field layout.
 
     Qualitative manual revision against train frames 54b14999...14626 and
@@ -130,6 +130,19 @@ def sparse_morphology_parameters():
     for order, scale in enumerate((1.0,1.0,.95,.90)):
         params["growth"]["leaf_length_scale_by_order"][str(order)].update(value=scale,status="manual_initial_guess")
     update("reproduction", "target_reproductive_units_range", min=40, max=65)
+    if preset == "individual_dense_crown_v3":
+        params["preset_name"] = preset
+        update("axis", "branch_node_count_range", min=6, max=8)
+        for order, probability in enumerate((.85, .70, .48)):
+            params["growth"]["branch_probability_by_order"][str(order)].update(value=probability)
+        update("growth", "vigor_decay_by_order", value=.86)
+        update("growth", "apical_dominance", value=.25)
+        for order, count in enumerate((16, 8, 7, 6)):
+            params["growth"]["max_internodes_by_order"][str(order)].update(value=count)
+        for order, scale in enumerate((1.0, .85, .72, .62)):
+            params["growth"]["internode_length_scale_by_order"][str(order)].update(value=scale)
+    elif preset != "sparse_overhead_dense_crown_v2":
+        raise ValueError(f"Unknown crown preset: {preset}")
     return params
 
 
@@ -139,11 +152,14 @@ def prepare_plant(plant, config: SparseConfig | None = None):
     config = config or SparseConfig()
     units = []
     for axis in walk_axes(plant.axes):
+        factor = config.axis_length_factor
+        if plant.parameter_preset == "individual_dense_crown_v3" and axis.order:
+            factor = 1.2
         for internode in axis.internodes:
-            internode.length_cm *= config.axis_length_factor
-            internode.provenance["sparse_axis_length_factor"] = config.axis_length_factor
-        axis.growth_budget_length_cm *= config.axis_length_factor
-        axis.remaining_budget_length_cm *= config.axis_length_factor
+            internode.length_cm *= factor
+            internode.provenance["sparse_axis_length_factor"] = factor
+        axis.growth_budget_length_cm *= factor
+        axis.remaining_budget_length_cm *= factor
         axis.mechanical_deflection_deg = 0
         axis.reproductive_load = 0
         if axis.order:
@@ -151,7 +167,7 @@ def prepare_plant(plant, config: SparseConfig | None = None):
         axis.resolved_direction = None
         axis.training_phase = "overhead_strings_manual_initial_guess"
         for node in axis.nodes:
-            if node.leaf and plant.parameter_preset == "sparse_overhead_dense_crown_v2":
+            if node.leaf and plant.parameter_preset in {"individual_dense_crown_v3", "sparse_overhead_dense_crown_v2"}:
                 angle = rng.uniform(110,155)
                 node.leaf.insertion_angle_deg = angle
                 node.leaf.preferred_insertion_angle_deg = angle

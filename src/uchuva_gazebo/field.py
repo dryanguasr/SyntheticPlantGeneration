@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 VERSION = "gazebo-field/0.1"
 
 
-def prepare_mesh_assets(directory, meshes):
+def prepare_mesh_assets(directory, meshes, *, individual_material_files=False):
     """Keep one OBJ submesh per material batch, avoiding thousands of draw calls.
 
     Source organ names remain comments and in the identity sidecar. MTL and SDF
@@ -22,11 +22,17 @@ def prepare_mesh_assets(directory, meshes):
             rgb = numbers(color[:3])
             material_file.write(f"newmtl {name}\nKa {rgb}\nKd {rgb}\nd {color[3]}\n")
     for path in sorted(directory.glob("*.obj")):
+        catalog = "surface.mtl"
+        if individual_material_files:
+            catalog = path.stem + '.mtl'
+            color = colors[path.stem]
+            rgb = numbers(color[:3])
+            (directory/catalog).write_text(f'newmtl {path.stem}\nKa {rgb}\nKd {rgb}\nd {color[3]}\n',encoding='utf-8')
         temporary = path.with_suffix(".obj.tmp")
         with path.open(encoding="utf-8") as source, temporary.open("w",encoding="utf-8") as target:
             if path.stem not in colors:
                 raise ValueError(f"Missing mesh color: {path.name}")
-            target.write(f"mtllib surface.mtl\nusemtl {path.stem}\no merged\n")
+            target.write(f"mtllib {catalog}\nusemtl {path.stem}\no merged\n")
             vertices = []
             normal_index = 0
             for line in source:
@@ -35,7 +41,8 @@ def prepare_mesh_assets(directory, meshes):
                 if line.startswith("v "):
                     vertices.append(tuple(float(v) for v in line.split()[1:4]))
                 if line.startswith("f "):
-                    indices = [int(v.split('/')[0]) for v in line.split()[1:]]
+                    tokens = [v.split('/') for v in line.split()[1:]]
+                    indices = [int(v[0]) for v in tokens]
                     if len(indices) != 3:
                         raise ValueError("Expected evaluated triangular mesh faces")
                     a,b,c = [vertices[i-1] for i in indices]
@@ -46,7 +53,7 @@ def prepare_mesh_assets(directory, meshes):
                     normal = tuple(x/length for x in normal) if length else (0,0,1)
                     normal_index += 1
                     target.write("vn " + numbers(normal) + "\n")
-                    target.write("f " + " ".join(f"{i}//{normal_index}" for i in indices) + "\n")
+                    target.write("f " + " ".join(f"{i}/{t[1] if len(t)>1 else ''}/{normal_index}" for i,t in zip(indices,tokens)) + "\n")
                     continue
                 target.write("# source " + line[2:] if line.startswith("o ") else line)
         temporary.replace(path)

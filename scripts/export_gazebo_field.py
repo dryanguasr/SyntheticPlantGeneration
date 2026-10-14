@@ -8,11 +8,15 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import time
+import shutil
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 import bpy
+from mathutils import Vector
 from uchuva_gazebo.field import VERSION, write_world, prepare_mesh_assets
 from uchuva_lsystem.morphology import Plant
 from uchuva_lsystem.scene import CultivationScene
@@ -22,11 +26,11 @@ from uchuva_lsystem.blender_scene import cleanup_scene, create_project_materials
 from uchuva_lsystem.collisions import build_scene_proxies
 
 
-def export_objects(objects, output, prefix):
+def export_objects(objects, output, prefix, individual_calyces=False, textures=False):
     """Stream OBJ meshes grouped by material; preserve source object identity in sidecar."""
     bpy.context.view_layer.update()
     deps = bpy.context.evaluated_depsgraph_get()
-    streams, entries, offsets, identities = {}, {}, {}, []
+    streams, entries, offsets, identities, uv_offsets = {}, {}, {}, [], {}
     try:
         for obj in objects:
             if obj.hide_render or obj.type not in {"MESH", "CURVE"}:
@@ -42,12 +46,21 @@ def export_objects(objects, output, prefix):
                 for slot, triangles in by_material.items():
                     mat = mesh.materials[slot] if slot < len(mesh.materials) else None
                     key = mat.name if mat else "default"
+                    if individual_calyces and obj.get("uchuva_semantic_class") == "calyx":
+                        key = obj.name
                     if key not in streams:
                         name = f"{prefix}_{len(streams):02d}.obj"
                         streams[key] = (output / "meshes" / name).open("w", encoding="utf-8")
                         offsets[key] = 1
+                        uv_offsets[key] = 1
                         color = tuple(mat.diffuse_color) if mat else (.15,.3,.05,1)
                         entries[key] = {"uri": f"meshes/{name}", "color": color, "triangles": 0}
+                        if textures and mat:
+                            preset = mat.get('uchuva_texture_preset')
+                            if mat.name.startswith('calyx_ntc_'):
+                                grade = int(mat.name.split('_')[-1])
+                                preset = ('calyx_green_v0','calyx_green_v1','calyx_transition_v0','calyx_transition_v1','calyx_straw_v0','calyx_straw_v1','calyx_dry_v0')[grade]
+                            if preset: entries[key]['texture_preset'] = preset
                     stream = streams[key]
                     start = offsets[key]
                     used = sorted({v for tri in triangles for v in tri.vertices})
@@ -57,7 +70,15 @@ def export_objects(objects, output, prefix):
                         point = (evaluated.matrix_world @ mesh.vertices[vertex_id].co) / U
                         stream.write("v " + " ".join(f"{v:.8f}" for v in point) + "\n")
                     for tri in triangles:
-                        stream.write("f " + " ".join(str(mapping[v]) for v in tri.vertices) + "\n")
+                        uv = mesh.uv_layers.active if textures else None
+                        if uv:
+                            start_uv = uv_offsets[key]
+                            for loop in tri.loops:
+                                stream.write('vt '+' '.join(str(v) for v in uv.data[loop].uv)+'\n')
+                            stream.write('f '+' '.join(f'{mapping[v]}/{start_uv+i}' for i,v in enumerate(tri.vertices))+'\n')
+                            uv_offsets[key] += 3
+                        else:
+                            stream.write("f " + " ".join(str(mapping[v]) for v in tri.vertices) + "\n")
                     offsets[key] += len(used)
                     entries[key]["triangles"] += len(triangles)
                     ids.append(entries[key]["uri"])
@@ -65,7 +86,8 @@ def export_objects(objects, output, prefix):
                     "plant_id": obj.get("uchuva_plant_id"),
                     "organ_id": obj.get("uchuva_organ_id"),
                     "reproductive_id": obj.get("uchuva_reproductive_instance_id"),
-                    "semantic_class": obj.get("uchuva_semantic_class")})
+                    "semantic_class": obj.get("uchuva_semantic_class"),
+                    "center_world_m": [sum((obj.matrix_world @ Vector(v))[i] for v in obj.bound_box)/8/U for i in range(3)]})
             finally:
                 evaluated.to_mesh_clear()
     finally:
@@ -79,7 +101,14 @@ def main():
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--markers", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--individual-calyces", action="store_true")
+    parser.add_argument('--textures', action='store_true')
+    parser.add_argument('--normal-maps', action='store_true', help='Opt-in tangent-space normals; historical export stays unchanged')
+    parser.add_argument('--visual-lod', action='store_true', help='Visual-only mesh decimation; organs and morphology remain intact')
     args = parser.parse_args(sys.argv[sys.argv.index("--")+1:])
+    if args.normal_maps and not args.textures:
+        parser.error('--normal-maps requires --textures')
+    started = time.perf_counter()
     payload = json.loads(args.input.read_text(encoding="utf-8"))
     scene = CultivationScene.from_dict(payload["scene"])
     if scene.metadata.get("units_per_metre") != U:
@@ -109,7 +138,16 @@ def main():
             if obj.get("uchuva_semantic_class") == "fruit" and grade is not None:
                 obj.data.materials.clear()
                 obj.data.materials.append(materials[f"fruit_ntc_{grade}"])
-        batch, mapping = export_objects(objects, args.output, instance.plant_id)
+        if args.visual_lod:
+            for obj in objects:
+                if obj.type=='CURVE':
+                    obj.data.resolution_u=1
+                    obj.data.bevel_resolution=0
+                elif obj.type=='MESH' and len(obj.data.polygons)>96:
+                    modifier=obj.modifiers.new('inspection_visual_lod','DECIMATE')
+                    modifier.ratio=max(.15,48/len(obj.data.polygons))
+                    modifier.use_collapse_triangulate=True
+        batch, mapping = export_objects(objects, args.output, instance.plant_id, args.individual_calyces, args.textures)
         meshes.extend(batch)
         identities.extend(mapping)
         for obj in objects:
@@ -140,18 +178,62 @@ def main():
                           "end_m":[post.position[0]/U,post.position[1]/U,(post.position[2]+post.height)/U],
                           "radius_m":max(post.section_width,post.section_depth)/U/2})
     patterns = {str(spec["id"]):json.loads((args.markers / f"{spec['id']}.json").read_text()) for spec in payload["markers"]}
-    prepare_mesh_assets(args.output / "meshes", meshes)
+    prepare_mesh_assets(args.output / "meshes", meshes, individual_material_files=args.individual_calyces)
     write_world(args.output / "field.sdf", meshes, payload["markers"], patterns, colliders)
+    if args.textures:
+        source=ROOT/'assets/textures/current'
+        texture_manifest=json.loads((source/'manifest.json').read_text())
+        (args.output/'textures').mkdir()
+        tree=ET.parse(args.output/'field.sdf')
+        lookup={m['uri']:m for m in meshes}
+        for visual in tree.findall('.//visual'):
+            entry=lookup.get(visual.findtext('geometry/mesh/uri'),{})
+            preset=entry.get('texture_preset')
+            if not preset:continue
+            files=texture_manifest['texture_sets'][preset]['files']
+            mat=visual.find('material')
+            mat.find('diffuse').text='1 1 1 1'
+            mat.find('ambient').text='1 1 1 1'
+            metal=ET.SubElement(ET.SubElement(mat,'pbr'),'metal')
+            ET.SubElement(metal,'metalness').text='0'
+            ET.SubElement(metal,'roughness').text='.95'
+            for kind in (('albedo','roughness','normal') if args.normal_maps else ('albedo','roughness')):
+                filename=files[kind]
+                shutil.copy2(source/filename,args.output/'textures'/filename)
+                element=ET.SubElement(metal,kind+'_map')
+                element.text='textures/'+filename
+                if kind=='normal':element.set('type','tangent')
+        ET.indent(tree);tree.write(args.output/'field.sdf',encoding='utf-8',xml_declaration=True)
+    if args.individual_calyces:
+        tree=ET.parse(args.output/'field.sdf');world=tree.getroot().find('world')
+        link=world.find("model[@name='field']/link")
+        calyces=[o for o in identities if o['semantic_class']=='calyx']
+        lookup={uri:o for o in calyces for uri in o['meshes']}
+        for visual in list(link.findall('visual')):
+            uri=visual.findtext('geometry/mesh/uri')
+            if uri not in lookup: continue
+            organ=lookup[uri];name='calyx_'+str(calyces.index(organ)).zfill(5)
+            model=ET.SubElement(world,'model',name=name);ET.SubElement(model,'static').text='true'
+            child=ET.SubElement(model,'link',name='link');link.remove(visual);child.append(visual)
+            plugin=ET.SubElement(model,'plugin',filename='gz-sim-label-system',name='gz::sim::systems::Label')
+            ET.SubElement(plugin,'label').text='1';organ['model_name']=name
+        ET.indent(tree);tree.write(args.output/'field.sdf',encoding='utf-8',xml_declaration=True)
+        (args.output/'inventory.json').write_text(json.dumps({'seed':scene.seed,'script_version':VERSION,
+            'parameter_preset':payload['preset'],'calyces':calyces},indent=2))
     manifest = {"script_version": VERSION, "seed":scene.seed, "parameter_preset":scene.preset_name,
         "source_sha256":hashlib.sha256(args.input.read_bytes()).hexdigest(),
         "source_input":str(args.input.resolve()), "units":"metres", "source_units_per_metre":U,
+        "crown_preset":payload['preset'], "export_seconds":time.perf_counter()-started,
+        "individual_calyces":args.individual_calyces,
+        "texture_maps_exported":args.textures, "inspection_visual_lod":args.visual_lod,
+        "exporter_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "parameter_status":"manual_initial_guess", "physics_status":"engineering_heuristic",
         "plant_count":len(plants), "markers":payload["markers"], "meshes":meshes,
         "colliders":colliders, "organs":identities, "context_seedlings":False,
         "agronomic_maturity":None, "human_validation":"pending",
         "limitations":["Static crop; no wind, detachment or measured contact mechanics",
             "Only primary stems and supports collide; canopy is visual-only",
-            "Flat material colors; procedural Blender shaders are not exported",
+            "UV albedo and roughness maps exported; full Blender shader not reproduced" if args.textures else "Flat material colors; procedural Blender shaders are not exported",
             "Camera rigs are not a drone flight controller or harvester",
             "Source morphology warnings remain unresolved; no new collision validation"]}
     (args.output / "manifest.json").write_text(json.dumps(manifest,indent=2,ensure_ascii=False),encoding="utf-8")

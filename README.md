@@ -127,6 +127,7 @@ SyntheticPlantGeneration/
 Índices detallados:
 
 - [Documentación](docs/README.md)
+- [Piloto de reconstrucción real y prueba de importación a Gazebo](docs/guides/reconstruccion_piloto.md)
 - [Scripts actuales](scripts/README.md)
 - [Activos](assets/README.md)
 - [Resultados](outputs/README.md)

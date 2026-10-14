@@ -72,12 +72,15 @@ def resolve_global_collisions(
     iterations: int = DEFAULT_ITERATIONS,
     include_contact_audit: bool = True,
     optimize_poses: bool = True,
+    allow_leaf_leaf_overlap: bool = False,
 ) -> dict[str, Any]:
     """Resolve non-exempt organ intersections by changing morphology joints."""
     adjustments: list[dict[str, Any]] = []
     total_candidates = 0
     total_detected = 0
     resolved_keys: set[tuple[str, str]] = set()
+    if allow_leaf_leaf_overlap and optimize_poses:
+        raise ValueError("Soft foliage policy requires bounded joint resolution (optimize_poses=False)")
 
     for iteration in range(iterations):
         proxies = build_scene_proxies(scene, plants_by_id)
@@ -93,6 +96,8 @@ def resolve_global_collisions(
             collisions,
             key=lambda item: (-item["penetration"], item["proxy_a"].proxy_id, item["proxy_b"].proxy_id),
         ):
+            if allow_leaf_leaf_overlap and collision["proxy_a"].kind == collision["proxy_b"].kind == "leaf":
+                continue
             change = _resolve_collision(
                 collision,
                 iteration=iteration,
@@ -153,6 +158,8 @@ def resolve_global_collisions(
     )
     return {
         "version": GLOBAL_COLLISION_VERSION,
+        "allow_leaf_leaf_overlap": allow_leaf_leaf_overlap,
+        "tolerated_leaf_proxy_pairs": sum(c["proxy_a"].kind == c["proxy_b"].kind == "leaf" for c in final_collisions) if allow_leaf_leaf_overlap else 0,
         "iterations": iterations,
         "pose_optimization": "full" if optimize_poses else "not_run_iterative_preview",
         "proxy_count": len(final_proxies),
@@ -191,7 +198,7 @@ def resolve_global_collisions(
         # BVH audit; unresolved proxies remain fail-closed pipeline evidence.
         "physical_collisions": [],
         "status": "valid" if not unresolved else "proxy_unresolved_pending_mesh_audit",
-        "policy": "strict_3d_intersection_projected_occlusion_allowed",
+        "policy": "leaf_leaf_proxy_overlap_allowed_other_pairs_corrected" if allow_leaf_leaf_overlap else "strict_3d_intersection_projected_occlusion_allowed",
     }
 
 

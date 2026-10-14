@@ -32,6 +32,8 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Gobernanza y evidencia
 
+- [Informe del componente virtual para Karen y Caroline](reports/informe_virtual_karen_caroline_2026-10-14.md):
+  experimentos, resultados, pendientes y referencias para la tesis, sin detalles del generador.
 - [Auditoría científica de Blender y maduración](reports/auditoria_cientifica_blender_2026-09-08.md):
   resultados históricos contrastados, límites de las etiquetas y ruta científica elegida.
 - [Plan de continuidad en Codex](plan_auditoria_cientifica_blender_2026-09-08.md):

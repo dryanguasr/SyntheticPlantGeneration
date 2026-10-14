@@ -1,0 +1,39 @@
+{
+  "script_version": "reconstruction-pilot/0.1",
+  "seed": 20261001,
+  "parameter_preset": "pilot_2h",
+  "budget_seconds": 7200,
+  "budget_start_epoch": 1790902181,
+  "deadline_epoch": 1790909381,
+  "closeout_reserve_seconds": 1500,
+  "source_expected_basename": "dji_fly_20260912_090830_0017_1789409511229_video_beautify.mp4",
+  "source_confirmed_basename": "dji_fly_20260912_090830_0017_1789409511229_video_beautify-006.mp4",
+  "alternate_authorization": "Explicit user confirmation in this chat on 2026-10-01",
+  "output_relative": "outputs/reconstruction/pilot_20261001",
+  "resource_limits": {
+    "aggregate_ram_requested_gb": 24,
+    "preventive_ram_requested_gb": 22,
+    "wsl_stage_memory_max_gib": 10,
+    "wsl_stage_memory_swap_max_bytes": 0,
+    "parallel_reconstructions": 1
+  },
+  "selection": {
+    "start_seconds": 32,
+    "end_seconds": 360,
+    "probe_step_seconds": 1,
+    "long_side_pixels": 960,
+    "analysis_width_pixels": 480,
+    "median_flow_threshold_pixels": 18,
+    "max_gap_seconds": 4,
+    "threshold_provenance": "engineering_heuristic",
+    "intent": "Sparse connectivity pilot across outward, connecting and return views; dense reconstruction should use a smaller verified segment."
+  },
+  "physical_scale": {
+    "status": "uncalibrated",
+    "post_separation_range_m": [3.15, 3.5],
+    "identified_post_pair": null,
+    "statistical_confidence_interval": false
+  },
+  "benchmark_status": "pilot_not_comparative_benchmark",
+  "independent_evaluation_split": false
+}
