@@ -1,0 +1,3264 @@
+{
+  "version": "multiscale-camera-only/1",
+  "scenes": [
+    {
+      "name": "train_a",
+      "split": "train",
+      "plants": [
+        {
+          "sample": "C01",
+          "seed": 814200,
+          "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C01.json",
+          "sha256": "50ddb116292cd7f6af6a42ecac8e613a7fdb233dc1e908e5dfbbfeccec65a34b",
+          "instance_id": "C01",
+          "position": [
+            -7.2,
+            0,
+            0
+          ]
+        },
+        {
+          "sample": "C02",
+          "seed": 814201,
+          "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C02.json",
+          "sha256": "d5ff43f4d0626ce4d342a77ad2055cc97c7cde8b8b89eba1cf4fcda763265870",
+          "instance_id": "C02",
+          "position": [
+            7.2,
+            0,
+            0
+          ]
+        }
+      ],
+      "views": 96,
+      "seed": 18100,
+      "kind": "static",
+      "camera_samples": [
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C01",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C02",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        }
+      ]
+    },
+    {
+      "name": "train_b",
+      "split": "train",
+      "plants": [
+        {
+          "sample": "C03",
+          "seed": 814202,
+          "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C03.json",
+          "sha256": "4ea445d93f32b0069c17d4f836a941633f7895d8a0dd147962ec4a05e5648e85",
+          "instance_id": "C03",
+          "position": [
+            -7.2,
+            0,
+            0
+          ]
+        },
+        {
+          "sample": "C04",
+          "seed": 814203,
+          "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C04.json",
+          "sha256": "2e73f9146c1d9ed525212faff1a59c777dcc5c877d26d726bf0957b63ffbdb6d",
+          "instance_id": "C04",
+          "position": [
+            7.2,
+            0,
+            0
+          ]
+        }
+      ],
+      "views": 96,
+      "seed": 18101,
+      "kind": "static",
+      "camera_samples": [
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C03",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C04",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        }
+      ]
+    },
+    {
+      "name": "validation",
+      "split": "val",
+      "plants": [
+        {
+          "sample": "C06",
+          "seed": 814205,
+          "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C06.json",
+          "sha256": "d22f87ac969833f21a99e3b6679c9b10f0b957a87f591adecd03705dfc907c11",
+          "instance_id": "C06",
+          "position": [
+            -7.2,
+            0,
+            0
+          ]
+        },
+        {
+          "sample": "C07",
+          "seed": 814206,
+          "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C07.json",
+          "sha256": "33ea8e066c5a64aee1ed646f3c3b2362d01023b3e77428d0ebc340d7716f9e6b",
+          "instance_id": "C07",
+          "position": [
+            7.2,
+            0,
+            0
+          ]
+        }
+      ],
+      "views": 96,
+      "seed": 18102,
+      "kind": "static",
+      "camera_samples": [
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C06",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C07",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        }
+      ]
+    },
+    {
+      "name": "test",
+      "split": "test",
+      "plants": [
+        {
+          "sample": "C09",
+          "seed": 814208,
+          "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C09.json",
+          "sha256": "f601d931726dab31bbfe3f8d00b28f25c1a588f844523f909051d8caba25fc8e",
+          "instance_id": "C09",
+          "position": [
+            -7.2,
+            0,
+            0
+          ]
+        },
+        {
+          "sample": "C10",
+          "seed": 814209,
+          "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C10.json",
+          "sha256": "477280c6a3ec4bfb6449ee74d26a849d5b8ad4e8adfb713220fe6fcbede4a771",
+          "instance_id": "C10",
+          "position": [
+            7.2,
+            0,
+            0
+          ]
+        }
+      ],
+      "views": 96,
+      "seed": 18103,
+      "kind": "static",
+      "camera_samples": [
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C09",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 0,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -150,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -105,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -60,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": -15,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 30,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 75,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 120,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "near",
+          "distance_m": 1.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "middle",
+          "distance_m": 2.2,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        },
+        {
+          "target_plant": "C10",
+          "distance_bin": "far",
+          "distance_m": 3.6,
+          "yaw_deg": 165,
+          "elevation_deg": 18,
+          "target_height_bu": 3.2
+        }
+      ]
+    }
+  ],
+  "total_images": 384,
+  "image_size": [
+    1280,
+    720
+  ],
+  "distances_m": [
+    1.2,
+    2.2,
+    3.6
+  ],
+  "distance_definition": "camera to aim point, not canopy stand-off",
+  "camera_parameters_status": "engineering_heuristic; smoke review before full queue",
+  "near_camera_clearance_m": 0.2,
+  "lens_mm": 35,
+  "plant_changes": false,
+  "source_pilot": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019",
+  "confidence": 0.25,
+  "native_evaluation_iou": 0.5,
+  "eligible_pixels": 100,
+  "eligible_bbox_side": 8,
+  "training_input_size": 960,
+  "candidate_native_patch_sizes": [
+    384,
+    640
+  ],
+  "primary_patch_size": 640,
+  "stride": 448,
+  "training_patch_cap": 1600,
+  "training_epochs": 10,
+  "native_augmentation": {
+    "hsv_h": 0,
+    "hsv_s": 0,
+    "hsv_v": 0.1,
+    "fliplr": 0.5,
+    "flipud": 0,
+    "mosaic": 0,
+    "mixup": 0,
+    "copy_paste": 0
+  },
+  "augmentation_reason": "Native HSV-value and horizontal flip preserve calyx appearance class and exact disconnected raster masks. No hue/class-changing transform.",
+  "training_gate": "All image/mask/class/split/hash and native augmentation alignment audits must pass; no training during render",
+  "shared_topology_limitation": "V142 samples share D topology; split by plant parameter seed and scene, not independent botanical families",
+  "test_status": "Historically inspected development test; not independent holdout",
+  "reserved_seeds_used": false,
+  "initialization": "C:/dev/SyntheticPlantGeneration/outputs/frozen_field_pilot_20261019/training_runs/training/weights/last.pt",
+  "no_generator_or_environment_refinement": true,
+  "initialization_sha256": "79c3dad74e7cf9caab3c82a3e37ea72235352568d7dfacbd5c9e8284cb190073"
+}

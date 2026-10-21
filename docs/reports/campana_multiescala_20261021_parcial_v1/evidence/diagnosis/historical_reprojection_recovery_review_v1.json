@@ -1,0 +1,86 @@
+{
+  "version": "historical-reprojection-readonly-review/1",
+  "created_utc": "2026-10-21T11:23:27.871147+00:00",
+  "historical_queue_resumed": false,
+  "programs_rerun": false,
+  "review_type": "static evidence, not new localization validation",
+  "cause": "V1 observations omitted marker_id; triangulate raised KeyError. V2 supplied marker_id and exited0.",
+  "recovery": {
+    "elapsed_seconds": 6.23865,
+    "rgb_refit": 32,
+    "legacy_fused_refit": 0,
+    "preserve_rgb_refit": 32,
+    "total": 32,
+    "interpretation": "API recovery only; selected RGB-estimate compatibility is not absolute pose accuracy"
+  },
+  "later_evidence": {
+    "v84_refit": 23,
+    "v85_refit": 24,
+    "total": 32,
+    "seven_private_low_parallax_deg": [
+      0.0667,
+      0.2469
+    ],
+    "eighth_residual_pixels": 4.281,
+    "do_not_relax_gates": true
+  },
+  "reuse_requirements": [
+    "Explicit coded marker size0.20m; multiview default0.10m must not be accepted.",
+    "Recover marker_id from pose-stream key when materializing triangulation observations.",
+    "New relative-motion adapter must use actual0.25s intervals; legacy export uses0.5s noise and cannot be reused unchanged.",
+    "Generate noisy relative increments and covariance privately; exact trajectory, masks, true IDs and3D truth never enter public estimator.",
+    "Only actually decoded ArUco observations may anchor pose. C07 has no independent marker."
+  ],
+  "not_yet_validated": [
+    "Physical calibration of synthetic noise",
+    "New-route localization accuracy",
+    "Localization with currently fragmented tracked IDs",
+    "Independent acquisition of C07"
+  ],
+  "files": [
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\integral_diagnosis_20261014\\execution_jobs\\audit_pose_reprojection_v1.log",
+      "sha256": "bfd78fee437ca9d8e911d1a785d6f42625a842fcedf186de953cabf2475f33c6"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\scripts\\audit_integral_pose_reprojection.py",
+      "sha256": "81921032ee1967b735f234e8561f7e87fc00d63395fdf023b3f705ffda09feb9"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\integral_diagnosis_20261014\\execution_jobs\\audit_pose_reprojection_v2.json",
+      "sha256": "3bf17b9dd1278e21b6c2b3f4cac3bc48eebe6b987d2a07136b834680ddd94b53"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\integral_diagnosis_20261014\\pose_reprojection_audit_v2.json",
+      "sha256": "941e8b9471ada556cc0b1f8b8ffa10d6b5ea32e8cd4c13b184166798167fca82"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\integral_diagnosis_20261014\\private_parallax_audit_v87.json",
+      "sha256": "e295dfb73015c5e41b2c82be7993697f6c20e7564b6f5941504facaea158f6c8"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\integral_diagnosis_20261014\\last_object_residual_v88.json",
+      "sha256": "d0bdfdd117ce8698efb3f6340651dff5d0abe2eb2c8758496c89ed643be29601"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\motion_observations.py",
+      "sha256": "be1ff23f70ebd0e5b1063364eebc969a68cc0607ed206f07d273ac916651c77b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\multiview.py",
+      "sha256": "14c7b2405839339909b34394ef20643d97db6524cc67d2b2449eabc37e51e4c0"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\marker_motion_fusion.py",
+      "sha256": "88e1a4050de82c8d3d4b9d5a97497236b42afe6d1851caa645e33212c86fdcf2"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\public_pose_stream.py",
+      "sha256": "797fdfd71edd025cc21c7137e1eca2deb99425cfa429e360151b7dc2c8802200"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\export_flight.py",
+      "sha256": "f64204e2c2c17dea5785d96c15ced7ebe3eb3ff8562863633e3f53c7cb3f3bb6"
+    }
+  ]
+}

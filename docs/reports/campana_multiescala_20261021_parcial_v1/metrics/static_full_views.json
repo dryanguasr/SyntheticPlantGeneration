@@ -1,0 +1,2406 @@
+{
+  "version": "multiscale-full-view-evaluator/1",
+  "run_binding": {
+    "evaluator_sha256": "111f4359578dae14adaef24626b82bc94b644efef82d1b4076d54a7906b34527",
+    "protocol_sha256": "969af3b6457a6d0fc7fd09e214ac734eef6a76804f27cc2f32366cbd890823bb",
+    "manifest_sha256": "2f38aec78c7c92b02b8dda812521a558d987a7d9938207b064c32d4bacc19426",
+    "weights": {
+      "reference": "79c3dad74e7cf9caab3c82a3e37ea72235352568d7dfacbd5c9e8284cb190073",
+      "new": "9c660824319f2c436321d2545cf9b267348c7be64d7780a396d8382555eb05cd"
+    }
+  },
+  "models": {
+    "reference": {
+      "val": {
+        "all_distances": {
+          "all": {
+            "tp": 8192,
+            "fp": 3984,
+            "fn": 10962,
+            "precision": 0.6727989487516426,
+            "recall": 0.42769134384462776,
+            "f1": 0.5229492499202043,
+            "confusion": [
+              [
+                1999,
+                661,
+                7,
+                3404
+              ],
+              [
+                161,
+                3949,
+                52,
+                4439
+              ],
+              [
+                1,
+                5,
+                2244,
+                2232
+              ],
+              [
+                548,
+                1496,
+                1053,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 1999,
+                "fp": 710,
+                "fn": 4072,
+                "precision": 0.7379106681432263,
+                "recall": 0.3292703014330423,
+                "f1": 0.45535307517084284
+              },
+              "madura": {
+                "tp": 3949,
+                "fp": 2162,
+                "fn": 4652,
+                "precision": 0.6462117493045328,
+                "recall": 0.4591326589931403,
+                "f1": 0.5368406742794998
+              },
+              "sobremadura": {
+                "tp": 2244,
+                "fp": 1112,
+                "fn": 2238,
+                "precision": 0.6686531585220501,
+                "recall": 0.500669344042838,
+                "f1": 0.5725950497575912
+              }
+            },
+            "images": 96,
+            "ignored_small_predictions": 0,
+            "truth_total": 19154,
+            "truth_in_scope": 19154,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 5605,
+            "fp": 3663,
+            "fn": 1767,
+            "precision": 0.6047690979715149,
+            "recall": 0.7603092783505154,
+            "f1": 0.6736778846153846,
+            "confusion": [
+              [
+                1555,
+                432,
+                1,
+                511
+              ],
+              [
+                127,
+                2661,
+                5,
+                439
+              ],
+              [
+                1,
+                0,
+                1389,
+                251
+              ],
+              [
+                548,
+                1496,
+                1053,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 1555,
+                "fp": 676,
+                "fn": 944,
+                "precision": 0.6969968623935455,
+                "recall": 0.6222488995598239,
+                "f1": 0.6575052854122622
+              },
+              "madura": {
+                "tp": 2661,
+                "fp": 1928,
+                "fn": 571,
+                "precision": 0.5798648943124863,
+                "recall": 0.8233292079207921,
+                "f1": 0.6804756425009589
+              },
+              "sobremadura": {
+                "tp": 1389,
+                "fp": 1059,
+                "fn": 252,
+                "precision": 0.5674019607843137,
+                "recall": 0.8464351005484461,
+                "f1": 0.6793837123991195
+              }
+            },
+            "images": 96,
+            "ignored_small_predictions": 2908,
+            "truth_total": 19154,
+            "truth_in_scope": 7372,
+            "truth_excluded_small": 11782
+          }
+        },
+        "near": {
+          "all": {
+            "tp": 2478,
+            "fp": 1880,
+            "fn": 2601,
+            "precision": 0.5686094538779256,
+            "recall": 0.48789131718842293,
+            "f1": 0.5251668962594045,
+            "confusion": [
+              [
+                592,
+                209,
+                1,
+                792
+              ],
+              [
+                50,
+                1188,
+                8,
+                1052
+              ],
+              [
+                1,
+                1,
+                698,
+                487
+              ],
+              [
+                307,
+                831,
+                472,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 592,
+                "fp": 358,
+                "fn": 1002,
+                "precision": 0.6231578947368421,
+                "recall": 0.3713927227101631,
+                "f1": 0.46540880503144655
+              },
+              "madura": {
+                "tp": 1188,
+                "fp": 1041,
+                "fn": 1110,
+                "precision": 0.5329744279946165,
+                "recall": 0.5169712793733682,
+                "f1": 0.5248508946322068
+              },
+              "sobremadura": {
+                "tp": 698,
+                "fp": 481,
+                "fn": 489,
+                "precision": 0.5920271416454622,
+                "recall": 0.5880370682392586,
+                "f1": 0.5900253592561285
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 5079,
+            "truth_in_scope": 5079,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 2026,
+            "fp": 1827,
+            "fn": 888,
+            "precision": 0.5258240332208669,
+            "recall": 0.6952642415923129,
+            "f1": 0.5987882370326585,
+            "confusion": [
+              [
+                521,
+                171,
+                0,
+                277
+              ],
+              [
+                43,
+                957,
+                2,
+                261
+              ],
+              [
+                1,
+                0,
+                548,
+                133
+              ],
+              [
+                307,
+                831,
+                472,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 521,
+                "fp": 351,
+                "fn": 448,
+                "precision": 0.5974770642201835,
+                "recall": 0.5376676986584107,
+                "f1": 0.5659967409016838
+              },
+              "madura": {
+                "tp": 957,
+                "fp": 1002,
+                "fn": 306,
+                "precision": 0.4885145482388974,
+                "recall": 0.7577197149643705,
+                "f1": 0.5940409683426443
+              },
+              "sobremadura": {
+                "tp": 548,
+                "fp": 474,
+                "fn": 134,
+                "precision": 0.5362035225048923,
+                "recall": 0.8035190615835777,
+                "f1": 0.6431924882629108
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 505,
+            "truth_total": 5079,
+            "truth_in_scope": 2914,
+            "truth_excluded_small": 2165
+          }
+        },
+        "middle": {
+          "all": {
+            "tp": 2880,
+            "fp": 1010,
+            "fn": 3243,
+            "precision": 0.7403598971722365,
+            "recall": 0.47035766780989713,
+            "f1": 0.575252172176171,
+            "confusion": [
+              [
+                726,
+                228,
+                4,
+                989
+              ],
+              [
+                48,
+                1377,
+                16,
+                1297
+              ],
+              [
+                0,
+                3,
+                777,
+                658
+              ],
+              [
+                117,
+                339,
+                255,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 726,
+                "fp": 165,
+                "fn": 1221,
+                "precision": 0.8148148148148148,
+                "recall": 0.3728813559322034,
+                "f1": 0.5116279069767442
+              },
+              "madura": {
+                "tp": 1377,
+                "fp": 570,
+                "fn": 1361,
+                "precision": 0.7072419106317411,
+                "recall": 0.5029218407596786,
+                "f1": 0.5878335112059765
+              },
+              "sobremadura": {
+                "tp": 777,
+                "fp": 275,
+                "fn": 661,
+                "precision": 0.7385931558935361,
+                "recall": 0.5403337969401947,
+                "f1": 0.6240963855421687
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 6123,
+            "truth_in_scope": 6123,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 2057,
+            "fp": 905,
+            "fn": 475,
+            "precision": 0.6944632005401755,
+            "recall": 0.8124012638230648,
+            "f1": 0.7488168911539862,
+            "confusion": [
+              [
+                597,
+                152,
+                1,
+                114
+              ],
+              [
+                39,
+                964,
+                2,
+                102
+              ],
+              [
+                0,
+                0,
+                496,
+                65
+              ],
+              [
+                117,
+                339,
+                255,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 597,
+                "fp": 156,
+                "fn": 267,
+                "precision": 0.7928286852589641,
+                "recall": 0.6909722222222222,
+                "f1": 0.738404452690167
+              },
+              "madura": {
+                "tp": 964,
+                "fp": 491,
+                "fn": 143,
+                "precision": 0.6625429553264605,
+                "recall": 0.8708220415537489,
+                "f1": 0.7525370804059328
+              },
+              "sobremadura": {
+                "tp": 496,
+                "fp": 258,
+                "fn": 65,
+                "precision": 0.6578249336870027,
+                "recall": 0.8841354723707665,
+                "f1": 0.7543726235741445
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 928,
+            "truth_total": 6123,
+            "truth_in_scope": 2532,
+            "truth_excluded_small": 3591
+          }
+        },
+        "far": {
+          "all": {
+            "tp": 2834,
+            "fp": 1094,
+            "fn": 5118,
+            "precision": 0.7214867617107943,
+            "recall": 0.3563883299798793,
+            "f1": 0.4771043771043771,
+            "confusion": [
+              [
+                681,
+                224,
+                2,
+                1623
+              ],
+              [
+                63,
+                1384,
+                28,
+                2090
+              ],
+              [
+                0,
+                1,
+                769,
+                1087
+              ],
+              [
+                124,
+                326,
+                326,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 681,
+                "fp": 187,
+                "fn": 1849,
+                "precision": 0.7845622119815668,
+                "recall": 0.2691699604743083,
+                "f1": 0.4008240141259564
+              },
+              "madura": {
+                "tp": 1384,
+                "fp": 551,
+                "fn": 2181,
+                "precision": 0.7152454780361757,
+                "recall": 0.388218793828892,
+                "f1": 0.5032727272727273
+              },
+              "sobremadura": {
+                "tp": 769,
+                "fp": 356,
+                "fn": 1088,
+                "precision": 0.6835555555555556,
+                "recall": 0.4141087775982768,
+                "f1": 0.5157612340710932
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 7952,
+            "truth_in_scope": 7952,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 1522,
+            "fp": 931,
+            "fn": 404,
+            "precision": 0.6204647370566653,
+            "recall": 0.7902388369678089,
+            "f1": 0.6951358757707239,
+            "confusion": [
+              [
+                437,
+                109,
+                0,
+                120
+              ],
+              [
+                45,
+                740,
+                1,
+                76
+              ],
+              [
+                0,
+                0,
+                345,
+                53
+              ],
+              [
+                124,
+                326,
+                326,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 437,
+                "fp": 169,
+                "fn": 229,
+                "precision": 0.7211221122112211,
+                "recall": 0.6561561561561562,
+                "f1": 0.6871069182389937
+              },
+              "madura": {
+                "tp": 740,
+                "fp": 435,
+                "fn": 122,
+                "precision": 0.6297872340425532,
+                "recall": 0.8584686774941995,
+                "f1": 0.7265586647029946
+              },
+              "sobremadura": {
+                "tp": 345,
+                "fp": 327,
+                "fn": 53,
+                "precision": 0.5133928571428571,
+                "recall": 0.8668341708542714,
+                "f1": 0.6448598130841121
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 1475,
+            "truth_total": 7952,
+            "truth_in_scope": 1926,
+            "truth_excluded_small": 6026
+          }
+        }
+      },
+      "test": {
+        "all_distances": {
+          "all": {
+            "tp": 9572,
+            "fp": 4540,
+            "fn": 13603,
+            "precision": 0.6782879818594104,
+            "recall": 0.41303128371089537,
+            "f1": 0.5134229087885859,
+            "confusion": [
+              [
+                2375,
+                838,
+                9,
+                5218
+              ],
+              [
+                172,
+                4692,
+                36,
+                5224
+              ],
+              [
+                0,
+                3,
+                2505,
+                2103
+              ],
+              [
+                628,
+                1892,
+                962,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 2375,
+                "fp": 800,
+                "fn": 6065,
+                "precision": 0.7480314960629921,
+                "recall": 0.28139810426540285,
+                "f1": 0.4089539388721481
+              },
+              "madura": {
+                "tp": 4692,
+                "fp": 2733,
+                "fn": 5432,
+                "precision": 0.6319191919191919,
+                "recall": 0.46345318056104307,
+                "f1": 0.5347313237221494
+              },
+              "sobremadura": {
+                "tp": 2505,
+                "fp": 1007,
+                "fn": 2106,
+                "precision": 0.7132687927107062,
+                "recall": 0.5432661027976577,
+                "f1": 0.6167672042348886
+              }
+            },
+            "images": 96,
+            "ignored_small_predictions": 0,
+            "truth_total": 23175,
+            "truth_in_scope": 23175,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 6839,
+            "fp": 4128,
+            "fn": 2197,
+            "precision": 0.6235980669280569,
+            "recall": 0.7568614431164232,
+            "f1": 0.6837974303854422,
+            "confusion": [
+              [
+                1871,
+                510,
+                2,
+                764
+              ],
+              [
+                129,
+                3350,
+                6,
+                560
+              ],
+              [
+                0,
+                0,
+                1618,
+                226
+              ],
+              [
+                628,
+                1891,
+                962,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 1871,
+                "fp": 757,
+                "fn": 1276,
+                "precision": 0.7119482496194824,
+                "recall": 0.5945344772799491,
+                "f1": 0.647965367965368
+              },
+              "madura": {
+                "tp": 3350,
+                "fp": 2401,
+                "fn": 695,
+                "precision": 0.5825073900191271,
+                "recall": 0.8281829419035847,
+                "f1": 0.6839526337280523
+              },
+              "sobremadura": {
+                "tp": 1618,
+                "fp": 970,
+                "fn": 226,
+                "precision": 0.625193199381762,
+                "recall": 0.8774403470715835,
+                "f1": 0.73014440433213
+              }
+            },
+            "images": 96,
+            "ignored_small_predictions": 3145,
+            "truth_total": 23175,
+            "truth_in_scope": 9036,
+            "truth_excluded_small": 14139
+          }
+        },
+        "near": {
+          "all": {
+            "tp": 2844,
+            "fp": 2105,
+            "fn": 3128,
+            "precision": 0.5746615477874318,
+            "recall": 0.47622237106496984,
+            "f1": 0.5208314256936178,
+            "confusion": [
+              [
+                720,
+                236,
+                0,
+                1211
+              ],
+              [
+                36,
+                1403,
+                6,
+                1157
+              ],
+              [
+                0,
+                1,
+                721,
+                481
+              ],
+              [
+                366,
+                999,
+                461,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 720,
+                "fp": 402,
+                "fn": 1447,
+                "precision": 0.6417112299465241,
+                "recall": 0.33225657591139823,
+                "f1": 0.4378230465186987
+              },
+              "madura": {
+                "tp": 1403,
+                "fp": 1236,
+                "fn": 1199,
+                "precision": 0.5316407730200834,
+                "recall": 0.5392006149116064,
+                "f1": 0.535394008776951
+              },
+              "sobremadura": {
+                "tp": 721,
+                "fp": 467,
+                "fn": 482,
+                "precision": 0.6069023569023569,
+                "recall": 0.5993349958437241,
+                "f1": 0.6030949393559181
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 5972,
+            "truth_in_scope": 5972,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 2394,
+            "fp": 2038,
+            "fn": 1102,
+            "precision": 0.5401624548736462,
+            "recall": 0.6847826086956522,
+            "f1": 0.6039354187689203,
+            "confusion": [
+              [
+                629,
+                179,
+                0,
+                417
+              ],
+              [
+                31,
+                1182,
+                2,
+                338
+              ],
+              [
+                0,
+                0,
+                583,
+                135
+              ],
+              [
+                366,
+                999,
+                461,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 629,
+                "fp": 397,
+                "fn": 596,
+                "precision": 0.6130604288499025,
+                "recall": 0.5134693877551021,
+                "f1": 0.5588627276765882
+              },
+              "madura": {
+                "tp": 1182,
+                "fp": 1178,
+                "fn": 371,
+                "precision": 0.5008474576271187,
+                "recall": 0.7611075338055376,
+                "f1": 0.6041400460005111
+              },
+              "sobremadura": {
+                "tp": 583,
+                "fp": 463,
+                "fn": 135,
+                "precision": 0.5573613766730402,
+                "recall": 0.8119777158774373,
+                "f1": 0.6609977324263039
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 517,
+            "truth_total": 5972,
+            "truth_in_scope": 3496,
+            "truth_excluded_small": 2476
+          }
+        },
+        "middle": {
+          "all": {
+            "tp": 3333,
+            "fp": 1110,
+            "fn": 4099,
+            "precision": 0.75016880486158,
+            "recall": 0.4484660925726588,
+            "f1": 0.5613473684210526,
+            "confusion": [
+              [
+                867,
+                284,
+                2,
+                1564
+              ],
+              [
+                51,
+                1614,
+                11,
+                1569
+              ],
+              [
+                0,
+                0,
+                852,
+                618
+              ],
+              [
+                124,
+                416,
+                222,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 867,
+                "fp": 175,
+                "fn": 1850,
+                "precision": 0.8320537428023033,
+                "recall": 0.319101950680898,
+                "f1": 0.461292897047087
+              },
+              "madura": {
+                "tp": 1614,
+                "fp": 700,
+                "fn": 1631,
+                "precision": 0.6974935177182369,
+                "recall": 0.49738058551617875,
+                "f1": 0.5806799784133837
+              },
+              "sobremadura": {
+                "tp": 852,
+                "fp": 235,
+                "fn": 618,
+                "precision": 0.7838086476540939,
+                "recall": 0.5795918367346938,
+                "f1": 0.6664059444661713
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 7432,
+            "truth_in_scope": 7432,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 2511,
+            "fp": 986,
+            "fn": 599,
+            "precision": 0.7180440377466399,
+            "recall": 0.807395498392283,
+            "f1": 0.7601029211442409,
+            "confusion": [
+              [
+                711,
+                178,
+                0,
+                195
+              ],
+              [
+                43,
+                1210,
+                3,
+                131
+              ],
+              [
+                0,
+                0,
+                590,
+                49
+              ],
+              [
+                124,
+                416,
+                222,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 711,
+                "fp": 167,
+                "fn": 373,
+                "precision": 0.8097949886104784,
+                "recall": 0.6559040590405905,
+                "f1": 0.7247706422018348
+              },
+              "madura": {
+                "tp": 1210,
+                "fp": 594,
+                "fn": 177,
+                "precision": 0.6707317073170732,
+                "recall": 0.8723864455659697,
+                "f1": 0.758382952052648
+              },
+              "sobremadura": {
+                "tp": 590,
+                "fp": 225,
+                "fn": 49,
+                "precision": 0.7239263803680982,
+                "recall": 0.9233176838810642,
+                "f1": 0.811554332874828
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 946,
+            "truth_total": 7432,
+            "truth_in_scope": 3110,
+            "truth_excluded_small": 4322
+          }
+        },
+        "far": {
+          "all": {
+            "tp": 3395,
+            "fp": 1325,
+            "fn": 6376,
+            "precision": 0.7192796610169492,
+            "recall": 0.34745675979940643,
+            "f1": 0.468566696570285,
+            "confusion": [
+              [
+                788,
+                318,
+                7,
+                2443
+              ],
+              [
+                85,
+                1675,
+                19,
+                2498
+              ],
+              [
+                0,
+                2,
+                932,
+                1004
+              ],
+              [
+                138,
+                477,
+                279,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 788,
+                "fp": 223,
+                "fn": 2768,
+                "precision": 0.7794263105835806,
+                "recall": 0.2215973003374578,
+                "f1": 0.345084300416028
+              },
+              "madura": {
+                "tp": 1675,
+                "fp": 797,
+                "fn": 2602,
+                "precision": 0.6775889967637541,
+                "recall": 0.3916296469487959,
+                "f1": 0.4963698325677878
+              },
+              "sobremadura": {
+                "tp": 932,
+                "fp": 305,
+                "fn": 1006,
+                "precision": 0.7534357316087308,
+                "recall": 0.4809081527347781,
+                "f1": 0.5870866141732284
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 9771,
+            "truth_in_scope": 9771,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 1934,
+            "fp": 1104,
+            "fn": 496,
+            "precision": 0.6366030283080975,
+            "recall": 0.7958847736625514,
+            "f1": 0.7073884418434528,
+            "confusion": [
+              [
+                531,
+                153,
+                2,
+                152
+              ],
+              [
+                55,
+                958,
+                1,
+                91
+              ],
+              [
+                0,
+                0,
+                445,
+                42
+              ],
+              [
+                138,
+                476,
+                279,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 531,
+                "fp": 193,
+                "fn": 307,
+                "precision": 0.7334254143646409,
+                "recall": 0.6336515513126492,
+                "f1": 0.6798975672215108
+              },
+              "madura": {
+                "tp": 958,
+                "fp": 629,
+                "fn": 147,
+                "precision": 0.6036546943919344,
+                "recall": 0.8669683257918552,
+                "f1": 0.711738484398217
+              },
+              "sobremadura": {
+                "tp": 445,
+                "fp": 282,
+                "fn": 42,
+                "precision": 0.6121045392022009,
+                "recall": 0.9137577002053389,
+                "f1": 0.7331136738056013
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 1682,
+            "truth_total": 9771,
+            "truth_in_scope": 2430,
+            "truth_excluded_small": 7341
+          }
+        }
+      }
+    },
+    "new": {
+      "val": {
+        "all_distances": {
+          "all": {
+            "tp": 9669,
+            "fp": 3182,
+            "fn": 9485,
+            "precision": 0.7523928098980625,
+            "recall": 0.5048031742716926,
+            "f1": 0.6042180909232933,
+            "confusion": [
+              [
+                2812,
+                436,
+                5,
+                2818
+              ],
+              [
+                252,
+                4400,
+                18,
+                3931
+              ],
+              [
+                1,
+                12,
+                2457,
+                2012
+              ],
+              [
+                618,
+                1113,
+                727,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 2812,
+                "fp": 871,
+                "fn": 3259,
+                "precision": 0.7635080097746403,
+                "recall": 0.4631856366331741,
+                "f1": 0.5765839655525938
+              },
+              "madura": {
+                "tp": 4400,
+                "fp": 1561,
+                "fn": 4201,
+                "precision": 0.7381311860426103,
+                "recall": 0.5115684222764795,
+                "f1": 0.6043125944238429
+              },
+              "sobremadura": {
+                "tp": 2457,
+                "fp": 750,
+                "fn": 2025,
+                "precision": 0.7661365762394762,
+                "recall": 0.5481927710843374,
+                "f1": 0.6390948107686305
+              }
+            },
+            "images": 96,
+            "ignored_small_predictions": 0,
+            "truth_total": 19154,
+            "truth_in_scope": 19154,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 6236,
+            "fp": 2846,
+            "fn": 1136,
+            "precision": 0.6866329002422374,
+            "recall": 0.8459034183396635,
+            "f1": 0.7579919776346177,
+            "confusion": [
+              [
+                2023,
+                209,
+                2,
+                265
+              ],
+              [
+                173,
+                2767,
+                0,
+                292
+              ],
+              [
+                1,
+                3,
+                1446,
+                191
+              ],
+              [
+                618,
+                1113,
+                727,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 2023,
+                "fp": 792,
+                "fn": 476,
+                "precision": 0.7186500888099467,
+                "recall": 0.8095238095238095,
+                "f1": 0.7613850207000377
+              },
+              "madura": {
+                "tp": 2767,
+                "fp": 1325,
+                "fn": 465,
+                "precision": 0.6761974584555229,
+                "recall": 0.8561262376237624,
+                "f1": 0.755598033861278
+              },
+              "sobremadura": {
+                "tp": 1446,
+                "fp": 729,
+                "fn": 195,
+                "precision": 0.6648275862068965,
+                "recall": 0.8811700182815356,
+                "f1": 0.7578616352201258
+              }
+            },
+            "images": 96,
+            "ignored_small_predictions": 3769,
+            "truth_total": 19154,
+            "truth_in_scope": 7372,
+            "truth_excluded_small": 11782
+          }
+        },
+        "near": {
+          "all": {
+            "tp": 2909,
+            "fp": 891,
+            "fn": 2170,
+            "precision": 0.7655263157894737,
+            "recall": 0.5727505414451664,
+            "f1": 0.6552539700416714,
+            "confusion": [
+              [
+                846,
+                130,
+                1,
+                617
+              ],
+              [
+                76,
+                1316,
+                0,
+                906
+              ],
+              [
+                1,
+                4,
+                747,
+                435
+              ],
+              [
+                159,
+                335,
+                185,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 846,
+                "fp": 236,
+                "fn": 748,
+                "precision": 0.7818853974121996,
+                "recall": 0.5307402760351317,
+                "f1": 0.6322869955156951
+              },
+              "madura": {
+                "tp": 1316,
+                "fp": 469,
+                "fn": 982,
+                "precision": 0.7372549019607844,
+                "recall": 0.5726718885987816,
+                "f1": 0.6446240509429341
+              },
+              "sobremadura": {
+                "tp": 747,
+                "fp": 186,
+                "fn": 440,
+                "precision": 0.8006430868167203,
+                "recall": 0.6293176074136478,
+                "f1": 0.7047169811320755
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 5079,
+            "truth_in_scope": 5079,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 2390,
+            "fp": 834,
+            "fn": 524,
+            "precision": 0.7413151364764268,
+            "recall": 0.820178448867536,
+            "f1": 0.7787552948843272,
+            "confusion": [
+              [
+                739,
+                94,
+                1,
+                135
+              ],
+              [
+                57,
+                1058,
+                0,
+                148
+              ],
+              [
+                1,
+                2,
+                593,
+                86
+              ],
+              [
+                159,
+                335,
+                185,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 739,
+                "fp": 217,
+                "fn": 230,
+                "precision": 0.7730125523012552,
+                "recall": 0.762641898864809,
+                "f1": 0.7677922077922078
+              },
+              "madura": {
+                "tp": 1058,
+                "fp": 431,
+                "fn": 205,
+                "precision": 0.7105439892545332,
+                "recall": 0.8376880443388757,
+                "f1": 0.7688953488372093
+              },
+              "sobremadura": {
+                "tp": 593,
+                "fp": 186,
+                "fn": 89,
+                "precision": 0.7612323491655969,
+                "recall": 0.8695014662756598,
+                "f1": 0.811772758384668
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 576,
+            "truth_total": 5079,
+            "truth_in_scope": 2914,
+            "truth_excluded_small": 2165
+          }
+        },
+        "middle": {
+          "all": {
+            "tp": 3219,
+            "fp": 984,
+            "fn": 2904,
+            "precision": 0.7658815132048536,
+            "recall": 0.5257226849583537,
+            "f1": 0.6234747239976758,
+            "confusion": [
+              [
+                968,
+                124,
+                4,
+                851
+              ],
+              [
+                87,
+                1437,
+                4,
+                1210
+              ],
+              [
+                0,
+                3,
+                814,
+                621
+              ],
+              [
+                206,
+                322,
+                234,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 968,
+                "fp": 293,
+                "fn": 979,
+                "precision": 0.767644726407613,
+                "recall": 0.4971751412429379,
+                "f1": 0.6034912718204489
+              },
+              "madura": {
+                "tp": 1437,
+                "fp": 449,
+                "fn": 1301,
+                "precision": 0.7619300106044539,
+                "recall": 0.5248356464572681,
+                "f1": 0.6215397923875432
+              },
+              "sobremadura": {
+                "tp": 814,
+                "fp": 242,
+                "fn": 624,
+                "precision": 0.7708333333333334,
+                "recall": 0.5660639777468707,
+                "f1": 0.652766639935846
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 6123,
+            "truth_in_scope": 6123,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 2190,
+            "fp": 892,
+            "fn": 342,
+            "precision": 0.7105775470473719,
+            "recall": 0.8649289099526066,
+            "f1": 0.7801923762023513,
+            "confusion": [
+              [
+                739,
+                59,
+                1,
+                65
+              ],
+              [
+                69,
+                951,
+                0,
+                87
+              ],
+              [
+                0,
+                1,
+                500,
+                60
+              ],
+              [
+                206,
+                322,
+                234,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 739,
+                "fp": 275,
+                "fn": 125,
+                "precision": 0.7287968441814595,
+                "recall": 0.8553240740740741,
+                "f1": 0.7870074547390842
+              },
+              "madura": {
+                "tp": 951,
+                "fp": 382,
+                "fn": 156,
+                "precision": 0.7134283570892723,
+                "recall": 0.8590785907859079,
+                "f1": 0.7795081967213114
+              },
+              "sobremadura": {
+                "tp": 500,
+                "fp": 235,
+                "fn": 61,
+                "precision": 0.6802721088435374,
+                "recall": 0.8912655971479501,
+                "f1": 0.7716049382716049
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 1121,
+            "truth_total": 6123,
+            "truth_in_scope": 2532,
+            "truth_excluded_small": 3591
+          }
+        },
+        "far": {
+          "all": {
+            "tp": 3541,
+            "fp": 1307,
+            "fn": 4411,
+            "precision": 0.7304042904290429,
+            "recall": 0.4452967806841046,
+            "f1": 0.55328125,
+            "confusion": [
+              [
+                998,
+                182,
+                0,
+                1350
+              ],
+              [
+                89,
+                1647,
+                14,
+                1815
+              ],
+              [
+                0,
+                5,
+                896,
+                956
+              ],
+              [
+                253,
+                456,
+                308,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 998,
+                "fp": 342,
+                "fn": 1532,
+                "precision": 0.744776119402985,
+                "recall": 0.39446640316205533,
+                "f1": 0.5157622739018087
+              },
+              "madura": {
+                "tp": 1647,
+                "fp": 643,
+                "fn": 1918,
+                "precision": 0.7192139737991267,
+                "recall": 0.46199158485273495,
+                "f1": 0.5625960717335611
+              },
+              "sobremadura": {
+                "tp": 896,
+                "fp": 322,
+                "fn": 961,
+                "precision": 0.735632183908046,
+                "recall": 0.4824986537425956,
+                "f1": 0.5827642276422764
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 7952,
+            "truth_in_scope": 7952,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 1656,
+            "fp": 1120,
+            "fn": 270,
+            "precision": 0.5965417867435159,
+            "recall": 0.8598130841121495,
+            "f1": 0.704381114419396,
+            "confusion": [
+              [
+                545,
+                56,
+                0,
+                65
+              ],
+              [
+                47,
+                758,
+                0,
+                57
+              ],
+              [
+                0,
+                0,
+                353,
+                45
+              ],
+              [
+                253,
+                456,
+                308,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 545,
+                "fp": 300,
+                "fn": 121,
+                "precision": 0.6449704142011834,
+                "recall": 0.8183183183183184,
+                "f1": 0.7213765718067505
+              },
+              "madura": {
+                "tp": 758,
+                "fp": 512,
+                "fn": 104,
+                "precision": 0.5968503937007874,
+                "recall": 0.8793503480278422,
+                "f1": 0.7110694183864915
+              },
+              "sobremadura": {
+                "tp": 353,
+                "fp": 308,
+                "fn": 45,
+                "precision": 0.5340393343419062,
+                "recall": 0.8869346733668342,
+                "f1": 0.6666666666666666
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 2072,
+            "truth_total": 7952,
+            "truth_in_scope": 1926,
+            "truth_excluded_small": 6026
+          }
+        }
+      },
+      "test": {
+        "all_distances": {
+          "all": {
+            "tp": 11487,
+            "fp": 3716,
+            "fn": 11688,
+            "precision": 0.7555745576530948,
+            "recall": 0.495663430420712,
+            "f1": 0.5986242117880035,
+            "confusion": [
+              [
+                3535,
+                538,
+                4,
+                4363
+              ],
+              [
+                297,
+                5226,
+                14,
+                4587
+              ],
+              [
+                2,
+                8,
+                2726,
+                1875
+              ],
+              [
+                736,
+                1557,
+                560,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 3535,
+                "fp": 1035,
+                "fn": 4905,
+                "precision": 0.7735229759299781,
+                "recall": 0.4188388625592417,
+                "f1": 0.5434281322059954
+              },
+              "madura": {
+                "tp": 5226,
+                "fp": 2103,
+                "fn": 4898,
+                "precision": 0.7130577159230455,
+                "recall": 0.5161991307783484,
+                "f1": 0.598865524551653
+              },
+              "sobremadura": {
+                "tp": 2726,
+                "fp": 578,
+                "fn": 1885,
+                "precision": 0.8250605326876513,
+                "recall": 0.5911949685534591,
+                "f1": 0.688818698673405
+              }
+            },
+            "images": 96,
+            "ignored_small_predictions": 0,
+            "truth_total": 23175,
+            "truth_in_scope": 23175,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 7697,
+            "fp": 3265,
+            "fn": 1339,
+            "precision": 0.7021528918080642,
+            "recall": 0.8518149623727312,
+            "f1": 0.7697769776977698,
+            "confusion": [
+              [
+                2496,
+                231,
+                1,
+                419
+              ],
+              [
+                179,
+                3498,
+                1,
+                367
+              ],
+              [
+                2,
+                0,
+                1703,
+                139
+              ],
+              [
+                736,
+                1555,
+                560,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 2496,
+                "fp": 917,
+                "fn": 651,
+                "precision": 0.731321418107237,
+                "recall": 0.7931363203050524,
+                "f1": 0.7609756097560976
+              },
+              "madura": {
+                "tp": 3498,
+                "fp": 1786,
+                "fn": 547,
+                "precision": 0.661998485995458,
+                "recall": 0.8647713226205191,
+                "f1": 0.7499196055311395
+              },
+              "sobremadura": {
+                "tp": 1703,
+                "fp": 562,
+                "fn": 141,
+                "precision": 0.7518763796909492,
+                "recall": 0.9235357917570499,
+                "f1": 0.828912144073984
+              }
+            },
+            "images": 96,
+            "ignored_small_predictions": 4241,
+            "truth_total": 23175,
+            "truth_in_scope": 9036,
+            "truth_excluded_small": 14139
+          }
+        },
+        "near": {
+          "all": {
+            "tp": 3380,
+            "fp": 1071,
+            "fn": 2592,
+            "precision": 0.7593799146259268,
+            "recall": 0.565974547890154,
+            "f1": 0.6485656720713806,
+            "confusion": [
+              [
+                1049,
+                137,
+                0,
+                981
+              ],
+              [
+                73,
+                1539,
+                4,
+                986
+              ],
+              [
+                1,
+                1,
+                792,
+                409
+              ],
+              [
+                234,
+                470,
+                151,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 1049,
+                "fp": 308,
+                "fn": 1118,
+                "precision": 0.7730287398673544,
+                "recall": 0.4840793724042455,
+                "f1": 0.5953461975028377
+              },
+              "madura": {
+                "tp": 1539,
+                "fp": 608,
+                "fn": 1063,
+                "precision": 0.7168141592920354,
+                "recall": 0.5914681014604151,
+                "f1": 0.6481364497789008
+              },
+              "sobremadura": {
+                "tp": 792,
+                "fp": 155,
+                "fn": 411,
+                "precision": 0.8363252375923971,
+                "recall": 0.6583541147132169,
+                "f1": 0.7367441860465116
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 5972,
+            "truth_in_scope": 5972,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 2837,
+            "fp": 1014,
+            "fn": 659,
+            "precision": 0.7366917683718515,
+            "recall": 0.8114988558352403,
+            "f1": 0.7722880087110385,
+            "confusion": [
+              [
+                901,
+                95,
+                0,
+                229
+              ],
+              [
+                63,
+                1287,
+                0,
+                203
+              ],
+              [
+                1,
+                0,
+                649,
+                68
+              ],
+              [
+                234,
+                470,
+                151,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 901,
+                "fp": 298,
+                "fn": 324,
+                "precision": 0.7514595496246872,
+                "recall": 0.7355102040816327,
+                "f1": 0.7433993399339934
+              },
+              "madura": {
+                "tp": 1287,
+                "fp": 565,
+                "fn": 266,
+                "precision": 0.6949244060475162,
+                "recall": 0.8287186091435931,
+                "f1": 0.7559471365638767
+              },
+              "sobremadura": {
+                "tp": 649,
+                "fp": 151,
+                "fn": 69,
+                "precision": 0.81125,
+                "recall": 0.903899721448468,
+                "f1": 0.855072463768116
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 600,
+            "truth_total": 5972,
+            "truth_in_scope": 3496,
+            "truth_excluded_small": 2476
+          }
+        },
+        "middle": {
+          "all": {
+            "tp": 3841,
+            "fp": 1092,
+            "fn": 3591,
+            "precision": 0.7786336914656395,
+            "recall": 0.5168191603875134,
+            "f1": 0.6212697128993125,
+            "confusion": [
+              [
+                1222,
+                155,
+                0,
+                1340
+              ],
+              [
+                105,
+                1719,
+                2,
+                1419
+              ],
+              [
+                0,
+                4,
+                900,
+                566
+              ],
+              [
+                217,
+                466,
+                143,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 1222,
+                "fp": 322,
+                "fn": 1495,
+                "precision": 0.7914507772020726,
+                "recall": 0.44976076555023925,
+                "f1": 0.5735742783384182
+              },
+              "madura": {
+                "tp": 1719,
+                "fp": 625,
+                "fn": 1526,
+                "precision": 0.7333617747440273,
+                "recall": 0.5297380585516178,
+                "f1": 0.6151368760064412
+              },
+              "sobremadura": {
+                "tp": 900,
+                "fp": 145,
+                "fn": 570,
+                "precision": 0.861244019138756,
+                "recall": 0.6122448979591837,
+                "f1": 0.7157057654075547
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 7432,
+            "truth_in_scope": 7432,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 2711,
+            "fp": 969,
+            "fn": 399,
+            "precision": 0.7366847826086956,
+            "recall": 0.8717041800643087,
+            "f1": 0.7985272459499264,
+            "confusion": [
+              [
+                903,
+                72,
+                0,
+                109
+              ],
+              [
+                72,
+                1212,
+                0,
+                103
+              ],
+              [
+                0,
+                0,
+                596,
+                43
+              ],
+              [
+                217,
+                465,
+                143,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 903,
+                "fp": 289,
+                "fn": 181,
+                "precision": 0.7575503355704698,
+                "recall": 0.8330258302583026,
+                "f1": 0.7934973637961336
+              },
+              "madura": {
+                "tp": 1212,
+                "fp": 537,
+                "fn": 175,
+                "precision": 0.692967409948542,
+                "recall": 0.8738284066330209,
+                "f1": 0.7729591836734694
+              },
+              "sobremadura": {
+                "tp": 596,
+                "fp": 143,
+                "fn": 43,
+                "precision": 0.8064952638700947,
+                "recall": 0.9327073552425665,
+                "f1": 0.865021770682148
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 1253,
+            "truth_total": 7432,
+            "truth_in_scope": 3110,
+            "truth_excluded_small": 4322
+          }
+        },
+        "far": {
+          "all": {
+            "tp": 4266,
+            "fp": 1553,
+            "fn": 5505,
+            "precision": 0.7331156556109297,
+            "recall": 0.43659809640773717,
+            "f1": 0.5472738935214881,
+            "confusion": [
+              [
+                1264,
+                246,
+                4,
+                2042
+              ],
+              [
+                119,
+                1968,
+                8,
+                2182
+              ],
+              [
+                1,
+                3,
+                1034,
+                900
+              ],
+              [
+                285,
+                621,
+                266,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 1264,
+                "fp": 405,
+                "fn": 2292,
+                "precision": 0.7573397243858598,
+                "recall": 0.35545556805399325,
+                "f1": 0.4838277511961723
+              },
+              "madura": {
+                "tp": 1968,
+                "fp": 870,
+                "fn": 2309,
+                "precision": 0.693446088794926,
+                "recall": 0.4601356090717793,
+                "f1": 0.5531974701335207
+              },
+              "sobremadura": {
+                "tp": 1034,
+                "fp": 278,
+                "fn": 904,
+                "precision": 0.788109756097561,
+                "recall": 0.5335397316821465,
+                "f1": 0.6363076923076924
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 0,
+            "truth_total": 9771,
+            "truth_in_scope": 9771,
+            "truth_excluded_small": 0
+          },
+          "eligible": {
+            "tp": 2149,
+            "fp": 1282,
+            "fn": 281,
+            "precision": 0.6263480034975226,
+            "recall": 0.8843621399176955,
+            "f1": 0.7333219587101177,
+            "confusion": [
+              [
+                692,
+                64,
+                1,
+                81
+              ],
+              [
+                44,
+                999,
+                1,
+                61
+              ],
+              [
+                1,
+                0,
+                458,
+                28
+              ],
+              [
+                285,
+                620,
+                266,
+                0
+              ]
+            ],
+            "rows": "truth",
+            "columns": "prediction",
+            "classes": [
+              "pintona",
+              "madura",
+              "sobremadura",
+              "background/unmatched"
+            ],
+            "per_class": {
+              "pintona": {
+                "tp": 692,
+                "fp": 330,
+                "fn": 146,
+                "precision": 0.6771037181996086,
+                "recall": 0.8257756563245824,
+                "f1": 0.7440860215053764
+              },
+              "madura": {
+                "tp": 999,
+                "fp": 684,
+                "fn": 106,
+                "precision": 0.5935828877005348,
+                "recall": 0.9040723981900453,
+                "f1": 0.7166427546628408
+              },
+              "sobremadura": {
+                "tp": 458,
+                "fp": 268,
+                "fn": 29,
+                "precision": 0.6308539944903582,
+                "recall": 0.9404517453798767,
+                "f1": 0.7551525144270403
+              }
+            },
+            "images": 32,
+            "ignored_small_predictions": 2388,
+            "truth_total": 9771,
+            "truth_in_scope": 2430,
+            "truth_excluded_small": 7341
+          }
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Validation/test plants have been historically inspected; this is not an external untouched holdout.",
+    "Shared V142 D topology; instance/seed split disjoint but not independent botanical families.",
+    "Distance stratification is camera-to-aim-point per complete view; background plants may be at other distances.",
+    "Native patch resizing adds no optical detail; camera captures provide the different scale.",
+    "Eligible filtering is not a universal YOLO limit and must always be accompanied by all-object metrics.",
+    "Class labels describe calyx appearance, not internal fruit maturity.",
+    "Source dataset currently contains no complete negative views or empty crops.",
+    "Fixed-threshold precision/recall/F1, not AP; wrong-class spatial matches count as FP andFN.",
+    "max_det=300 per tile is identical and fixed for both models. Some dataset crops contain more than300true instances (observed maximum342); the prediction cap can limit dense-scene recall. It is not raised based on test results."
+  ],
+  "complete": true
+}

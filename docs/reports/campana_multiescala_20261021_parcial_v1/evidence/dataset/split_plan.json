@@ -1,0 +1,27 @@
+{
+  "source_hashes": {
+    "train": [
+      "2e73f9146c1d9ed525212faff1a59c777dcc5c877d26d726bf0957b63ffbdb6d",
+      "4ea445d93f32b0069c17d4f836a941633f7895d8a0dd147962ec4a05e5648e85",
+      "50ddb116292cd7f6af6a42ecac8e613a7fdb233dc1e908e5dfbbfeccec65a34b",
+      "d5ff43f4d0626ce4d342a77ad2055cc97c7cde8b8b89eba1cf4fcda763265870"
+    ],
+    "val": [
+      "33ea8e066c5a64aee1ed646f3c3b2362d01023b3e77428d0ebc340d7716f9e6b",
+      "d22f87ac969833f21a99e3b6679c9b10f0b957a87f591adecd03705dfc907c11"
+    ],
+    "test": [
+      "477280c6a3ec4bfb6449ee74d26a849d5b8ad4e8adfb713220fe6fcbede4a771",
+      "f601d931726dab31bbfe3f8d00b28f25c1a588f844523f909051d8caba25fc8e"
+    ]
+  },
+  "neighbors": "Only clones of same-scene plants; split follows source SHA256",
+  "augmentation_train_only": true,
+  "patches_inherit_source_split": true,
+  "forbidden_sources": [
+    "cancelled row-flight mixed validation/test scenes"
+  ],
+  "topology_independent": false,
+  "test_is_development": true,
+  "reserved_seeds_used": false
+}

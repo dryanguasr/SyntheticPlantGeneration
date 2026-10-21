@@ -1,0 +1,488 @@
+{
+  "version": "two-route-comparison-selection/1",
+  "plan_sha256": "efdcb03eb1e93db70f42e6cc4a20f9c38c45a7d8143740d26badf03fa39b1bf7",
+  "summaries": {
+    "legacy": "788912083ccf0903449ab270bb4649a25b6d242f3a9c14c14286454e2db3bd32",
+    "vertical": "c4e0afbf68c6780bf67e0d2f13192098ece82683e6903458c572bcc0b6a899f1"
+  },
+  "selected": {
+    "legacy": {
+      "worst": {
+        "frame": 104,
+        "target": "C06",
+        "side": "back",
+        "metrics": {
+          "tp": 15,
+          "fp": 12,
+          "fn": 32,
+          "precision": 0.5555555555555556,
+          "recall": 0.3191489361702128,
+          "f1": 0.40540540540540543,
+          "confusion": [
+            [
+              3,
+              2,
+              0,
+              8
+            ],
+            [
+              0,
+              7,
+              0,
+              12
+            ],
+            [
+              0,
+              0,
+              5,
+              10
+            ],
+            [
+              3,
+              4,
+              3,
+              0
+            ]
+          ],
+          "rows": "truth",
+          "columns": "prediction",
+          "classes": [
+            "pintona",
+            "madura",
+            "sobremadura",
+            "background/unmatched"
+          ],
+          "per_class": {
+            "pintona": {
+              "tp": 3,
+              "fp": 3,
+              "fn": 10,
+              "precision": 0.5,
+              "recall": 0.23076923076923078,
+              "f1": 0.3157894736842105
+            },
+            "madura": {
+              "tp": 7,
+              "fp": 6,
+              "fn": 12,
+              "precision": 0.5384615384615384,
+              "recall": 0.3684210526315789,
+              "f1": 0.4375
+            },
+            "sobremadura": {
+              "tp": 5,
+              "fp": 3,
+              "fn": 10,
+              "precision": 0.625,
+              "recall": 0.3333333333333333,
+              "f1": 0.43478260869565216
+            }
+          },
+          "truth_total": 47,
+          "truth_in_scope": 47,
+          "truth_excluded_small": 0,
+          "ignored_small_predictions": 0,
+          "ignored_neighbor_predictions": 134,
+          "ignored_unmatched_outside_target": 17
+        }
+      },
+      "lower_median": {
+        "frame": 22,
+        "target": "C07",
+        "side": "front",
+        "metrics": {
+          "tp": 47,
+          "fp": 21,
+          "fn": 42,
+          "precision": 0.6911764705882353,
+          "recall": 0.5280898876404494,
+          "f1": 0.5987261146496815,
+          "confusion": [
+            [
+              16,
+              4,
+              0,
+              8
+            ],
+            [
+              1,
+              21,
+              1,
+              21
+            ],
+            [
+              0,
+              0,
+              10,
+              7
+            ],
+            [
+              8,
+              2,
+              5,
+              0
+            ]
+          ],
+          "rows": "truth",
+          "columns": "prediction",
+          "classes": [
+            "pintona",
+            "madura",
+            "sobremadura",
+            "background/unmatched"
+          ],
+          "per_class": {
+            "pintona": {
+              "tp": 16,
+              "fp": 9,
+              "fn": 12,
+              "precision": 0.64,
+              "recall": 0.5714285714285714,
+              "f1": 0.6037735849056604
+            },
+            "madura": {
+              "tp": 21,
+              "fp": 6,
+              "fn": 23,
+              "precision": 0.7777777777777778,
+              "recall": 0.4772727272727273,
+              "f1": 0.5915492957746479
+            },
+            "sobremadura": {
+              "tp": 10,
+              "fp": 6,
+              "fn": 7,
+              "precision": 0.625,
+              "recall": 0.5882352941176471,
+              "f1": 0.6060606060606061
+            }
+          },
+          "truth_total": 89,
+          "truth_in_scope": 89,
+          "truth_excluded_small": 0,
+          "ignored_small_predictions": 0,
+          "ignored_neighbor_predictions": 104,
+          "ignored_unmatched_outside_target": 32
+        }
+      },
+      "best": {
+        "frame": 17,
+        "target": "C06",
+        "side": "front",
+        "metrics": {
+          "tp": 50,
+          "fp": 10,
+          "fn": 34,
+          "precision": 0.8333333333333334,
+          "recall": 0.5952380952380952,
+          "f1": 0.6944444444444444,
+          "confusion": [
+            [
+              15,
+              4,
+              0,
+              9
+            ],
+            [
+              0,
+              21,
+              0,
+              12
+            ],
+            [
+              0,
+              0,
+              14,
+              9
+            ],
+            [
+              0,
+              3,
+              3,
+              0
+            ]
+          ],
+          "rows": "truth",
+          "columns": "prediction",
+          "classes": [
+            "pintona",
+            "madura",
+            "sobremadura",
+            "background/unmatched"
+          ],
+          "per_class": {
+            "pintona": {
+              "tp": 15,
+              "fp": 0,
+              "fn": 13,
+              "precision": 1.0,
+              "recall": 0.5357142857142857,
+              "f1": 0.6976744186046512
+            },
+            "madura": {
+              "tp": 21,
+              "fp": 7,
+              "fn": 12,
+              "precision": 0.75,
+              "recall": 0.6363636363636364,
+              "f1": 0.6885245901639344
+            },
+            "sobremadura": {
+              "tp": 14,
+              "fp": 3,
+              "fn": 9,
+              "precision": 0.8235294117647058,
+              "recall": 0.6086956521739131,
+              "f1": 0.7
+            }
+          },
+          "truth_total": 84,
+          "truth_in_scope": 84,
+          "truth_excluded_small": 0,
+          "ignored_small_predictions": 0,
+          "ignored_neighbor_predictions": 136,
+          "ignored_unmatched_outside_target": 58
+        }
+      }
+    },
+    "vertical": {
+      "worst": {
+        "frame": 15,
+        "target": "C06",
+        "side": "front",
+        "metrics": {
+          "tp": 49,
+          "fp": 37,
+          "fn": 38,
+          "precision": 0.5697674418604651,
+          "recall": 0.5632183908045977,
+          "f1": 0.5664739884393064,
+          "confusion": [
+            [
+              13,
+              4,
+              0,
+              10
+            ],
+            [
+              0,
+              20,
+              0,
+              15
+            ],
+            [
+              0,
+              0,
+              16,
+              9
+            ],
+            [
+              5,
+              19,
+              9,
+              0
+            ]
+          ],
+          "rows": "truth",
+          "columns": "prediction",
+          "classes": [
+            "pintona",
+            "madura",
+            "sobremadura",
+            "background/unmatched"
+          ],
+          "per_class": {
+            "pintona": {
+              "tp": 13,
+              "fp": 5,
+              "fn": 14,
+              "precision": 0.7222222222222222,
+              "recall": 0.48148148148148145,
+              "f1": 0.5777777777777777
+            },
+            "madura": {
+              "tp": 20,
+              "fp": 23,
+              "fn": 15,
+              "precision": 0.46511627906976744,
+              "recall": 0.5714285714285714,
+              "f1": 0.5128205128205128
+            },
+            "sobremadura": {
+              "tp": 16,
+              "fp": 9,
+              "fn": 9,
+              "precision": 0.64,
+              "recall": 0.64,
+              "f1": 0.64
+            }
+          },
+          "truth_total": 87,
+          "truth_in_scope": 87,
+          "truth_excluded_small": 0,
+          "ignored_small_predictions": 0,
+          "ignored_neighbor_predictions": 61,
+          "ignored_unmatched_outside_target": 4
+        }
+      },
+      "lower_median": {
+        "frame": 31,
+        "target": "C07",
+        "side": "front",
+        "metrics": {
+          "tp": 61,
+          "fp": 22,
+          "fn": 30,
+          "precision": 0.7349397590361446,
+          "recall": 0.6703296703296703,
+          "f1": 0.7011494252873564,
+          "confusion": [
+            [
+              20,
+              2,
+              1,
+              5
+            ],
+            [
+              1,
+              29,
+              0,
+              16
+            ],
+            [
+              0,
+              0,
+              12,
+              5
+            ],
+            [
+              3,
+              12,
+              3,
+              0
+            ]
+          ],
+          "rows": "truth",
+          "columns": "prediction",
+          "classes": [
+            "pintona",
+            "madura",
+            "sobremadura",
+            "background/unmatched"
+          ],
+          "per_class": {
+            "pintona": {
+              "tp": 20,
+              "fp": 4,
+              "fn": 8,
+              "precision": 0.8333333333333334,
+              "recall": 0.7142857142857143,
+              "f1": 0.7692307692307693
+            },
+            "madura": {
+              "tp": 29,
+              "fp": 14,
+              "fn": 17,
+              "precision": 0.6744186046511628,
+              "recall": 0.6304347826086957,
+              "f1": 0.651685393258427
+            },
+            "sobremadura": {
+              "tp": 12,
+              "fp": 4,
+              "fn": 5,
+              "precision": 0.75,
+              "recall": 0.7058823529411765,
+              "f1": 0.7272727272727273
+            }
+          },
+          "truth_total": 91,
+          "truth_in_scope": 91,
+          "truth_excluded_small": 0,
+          "ignored_small_predictions": 0,
+          "ignored_neighbor_predictions": 40,
+          "ignored_unmatched_outside_target": 7
+        }
+      },
+      "best": {
+        "frame": 33,
+        "target": "C07",
+        "side": "front",
+        "metrics": {
+          "tp": 51,
+          "fp": 12,
+          "fn": 19,
+          "precision": 0.8095238095238095,
+          "recall": 0.7285714285714285,
+          "f1": 0.7669172932330827,
+          "confusion": [
+            [
+              14,
+              3,
+              0,
+              5
+            ],
+            [
+              1,
+              25,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              12,
+              4
+            ],
+            [
+              0,
+              6,
+              2,
+              0
+            ]
+          ],
+          "rows": "truth",
+          "columns": "prediction",
+          "classes": [
+            "pintona",
+            "madura",
+            "sobremadura",
+            "background/unmatched"
+          ],
+          "per_class": {
+            "pintona": {
+              "tp": 14,
+              "fp": 1,
+              "fn": 8,
+              "precision": 0.9333333333333333,
+              "recall": 0.6363636363636364,
+              "f1": 0.7567567567567568
+            },
+            "madura": {
+              "tp": 25,
+              "fp": 9,
+              "fn": 7,
+              "precision": 0.7352941176470589,
+              "recall": 0.78125,
+              "f1": 0.7575757575757576
+            },
+            "sobremadura": {
+              "tp": 12,
+              "fp": 2,
+              "fn": 4,
+              "precision": 0.8571428571428571,
+              "recall": 0.75,
+              "f1": 0.8
+            }
+          },
+          "truth_total": 70,
+          "truth_in_scope": 70,
+          "truth_excluded_small": 0,
+          "ignored_small_predictions": 0,
+          "ignored_neighbor_predictions": 45,
+          "ignored_unmatched_outside_target": 11
+        }
+      }
+    }
+  }
+}

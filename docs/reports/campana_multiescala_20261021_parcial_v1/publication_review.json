@@ -1,0 +1,83 @@
+{
+  "version": "student-publication-review/1",
+  "reviewed_utc": "2026-10-21T22:51:56.338956+00:00",
+  "pdf": {
+    "file": "guia_estudiantes.pdf",
+    "pages": 15,
+    "visual_review": "All 15 pages rendered and visually reviewed; page 3 re-rendered after caption correction. No clipped text, overlapping tables or broken glyphs observed."
+  },
+  "videos": [
+    {
+      "route": "legacy",
+      "file": "videos/legacy_4fps_pip.mp4",
+      "frames_decoded": 178,
+      "fps": 4.0,
+      "duration_seconds": 44.5,
+      "sha256": "9db989be1dcd66aa46f023ef95bad9c77a51a3cd01d4fe0df2b255286f94ad13",
+      "visual_review": "Reviewed decoded frames: first/middle/last and every predeclared phase selection. Main view and masks/IDs present, external inset synchronized. Inset scene/proxy small; fine motion hard to read.",
+      "reviewed_frames": [
+        0,
+        1,
+        3,
+        4,
+        10,
+        15,
+        20,
+        21,
+        27,
+        33,
+        88,
+        97,
+        100,
+        103,
+        104,
+        108,
+        112,
+        174,
+        175,
+        176,
+        177
+      ]
+    },
+    {
+      "route": "vertical",
+      "file": "videos/vertical_4fps_pip.mp4",
+      "frames_decoded": 167,
+      "fps": 4.0,
+      "duration_seconds": 41.75,
+      "sha256": "2eaa84f2044994275387dd018a97420507275d0fabf4afa425038302fa131e0a",
+      "visual_review": "Reviewed decoded frames: first/middle/last and every predeclared phase selection. Main view and masks/IDs present, external inset synchronized. Inset scene/proxy small; fine motion hard to read.",
+      "reviewed_frames": [
+        0,
+        1,
+        3,
+        4,
+        9,
+        13,
+        17,
+        26,
+        29,
+        33,
+        75,
+        78,
+        82,
+        83,
+        104,
+        108,
+        112,
+        163,
+        164,
+        165,
+        166
+      ]
+    }
+  ],
+  "repository_context_graph": {
+    "passed": false,
+    "preexisting_missing_locators": 10,
+    "scope": "Same historical locator failures reported before this publication; graph not changed by publication."
+  },
+  "preserved_originals": true,
+  "inference_or_training_rerun": false,
+  "bulk_raw_dataset_mirrored": false
+}

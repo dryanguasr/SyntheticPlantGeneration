@@ -1,0 +1,539 @@
+{
+  "version": "full-route-preparation-freeze/1",
+  "frozen_utc": "2026-10-21T12:20:53.389589+00:00",
+  "scene_geometry_unchanged": true,
+  "files": [
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\scripts\\render_sparse_pilot.py",
+      "sha256": "f91ce0a9e527f1d9c7bc22b08cb1fa0ef1f39a5d3cb8f0488d70ef53b7fda379"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\scripts\\run_effective_job.py",
+      "sha256": "a7d0e3e21560d61e3ef332479d266d46eaf82d5f7792597585f542a6a2b70c4e"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\__init__.py",
+      "sha256": "3c984eac0501f0cc9a88a0586a9250a802a174502cb272b3e72ca580f936c7cb"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\capture_pairs.py",
+      "sha256": "96b62abaff2620a4befa68831f7a92e0fd001131dd1a72956ef7d2bdc9a9863c"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\continuous_evaluation.py",
+      "sha256": "2a31239f5ec08c394b74c45b6f67c3687ca266e41547f3f2a5025adc19ba89ea"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\continuous_row.py",
+      "sha256": "1e066d8c9324b842af4c1c2618b99bc166813c12be09bd392d4f6a90a9eb5f29"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\cuda_sparse_flow.py",
+      "sha256": "e8de88c308e2e2b7a984e5c3359c1f0f340cbedf461528d4401fef7e2044eb1d"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\evaluation.py",
+      "sha256": "b4e6cdb185ed1fe22a8c38a3149d8514ff5617cd8829ff1ad17ca79a35939549"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\field.py",
+      "sha256": "414182304c3e5a78eb2b8f7749c524670aecc61087ba7a9fee52d88f3f2c7079"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\flight_control.py",
+      "sha256": "3be48ea5a81c169cc5e3e7ee53f46e7d41efa172e134139ff71f588adb0afe8c"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\gpu_mask_overlap.py",
+      "sha256": "c894e24996a5fcbba30c9b26e9cd110abaa83060058ae8d65eae5dcb43fa55e9"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\interfaces.py",
+      "sha256": "fbe10624eee3fef6ff29d6bc3719b642e31805f43a420906826d2eff7c272bab"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\localization.py",
+      "sha256": "e3aa365189e584f96edd13868b79747caf18fac7036e5136d5693d34ba914794"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\low_flight_control.py",
+      "sha256": "9caa9e4829b6135151bdf0647bed6489355416dc7a863ee4a8718e5bc4059f74"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\marker_motion_fusion.py",
+      "sha256": "88e1a4050de82c8d3d4b9d5a97497236b42afe6d1851caa645e33212c86fdcf2"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\mask_tracking.py",
+      "sha256": "6c3dc4425417dd37abc6e6fa76a049dafedfc8e6a30bef0d555eb63caa12c9ae"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\motion_observations.py",
+      "sha256": "be1ff23f70ebd0e5b1063364eebc969a68cc0607ed206f07d273ac916651c77b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\multiview.py",
+      "sha256": "14c7b2405839339909b34394ef20643d97db6524cc67d2b2449eabc37e51e4c0"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\neo.py",
+      "sha256": "e0a1788d6458ec3365b290f113a543fea8fd4afeec0b481bd6bc366ae6773c46"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\offline_reconciliation.py",
+      "sha256": "53a3eecc02f10f33e22de4e7d5ea4978f59914d3446a770ebbed968eb3935f9c"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\public_pose_stream.py",
+      "sha256": "797fdfd71edd025cc21c7137e1eca2deb99425cfa429e360151b7dc2c8802200"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\roi_tiling.py",
+      "sha256": "c140bfc485528bbb0c20e30af81ace0437de850403d6d2418dd1ecd228ccced0"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo\\segmentation_evaluation.py",
+      "sha256": "019afcd7d374547d97f3b34e712ea9771077d82cb3f05ab4b9c901c2203762b8"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\__init__.py",
+      "sha256": "d2c2986128789778a5a7051cc5d2aafd6b8e79b1b13d65fbed92d9c6029570f0"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\annotation_contract.py",
+      "sha256": "66a75f51003b39c3f1caa2e29e6c40146b092088683f49872fb3dec49a04ef36"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\ascending_basal_pilot.py",
+      "sha256": "122b9b7e8752e80e2405462620dca59606dc3256d78dbc8f09e78ea0b3b5f161"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\balanced_basal_pilot.py",
+      "sha256": "7c7027cc374ca5d89c7e899de4711bb333270cb41012172a16b40beeeb41a44b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\basal_architecture.py",
+      "sha256": "a808a6001a2d76acb4d68c1f1fd5afe1c75fee737b4cff03cb364ab6b317a586"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\blender_annotations.py",
+      "sha256": "1a7b16142208fc96414b5910eb6c8a9d6137c00e0d8f1349ed9abfc7ca520bcd"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\blender_dataset.py",
+      "sha256": "35cabedbfaf1265083aea875220647c9363ba8875bbacae0281a7ee7a5f6b4fb"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\blender_environment.py",
+      "sha256": "7b1fb490e992810ab2c9ac8fb54bcaeb0afb6868dc183a106928946597caaa65"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\blender_geometry.py",
+      "sha256": "f7615aaa555381ef6ba6e9cb338e56dcb174da8c664f1493e7a8e8e1765b3344"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\blender_pilot.py",
+      "sha256": "1b164d14f475cedfbde8089b6c572cd4ddf7e434713aed860814f040f920e152"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\blender_pose_repair.py",
+      "sha256": "ae355b945acc4902eb49c4d0fa064c51832c898cc701c16771b7d9cba673438a"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\blender_review.py",
+      "sha256": "6b039d2b7740572051f465c046119e85b79c80bf17acd1aa6de1f8b3860699fd"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\blender_scene.py",
+      "sha256": "ebdc0cda6e152d610170d3790ca0514075c8a416640ac4ad353fe4b5cc0175db"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\bouquet.py",
+      "sha256": "8271b4deaaff0e0e91b0691b3cab967010e0ea96830de74237f67cabb53ac788"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\camera_framing.py",
+      "sha256": "cb1cb8fa78558c17d130b95bc11d3713787b57457f6a5e7111934c125c96254d"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\canopy_preference_pilot.py",
+      "sha256": "017176b02ebf6f0e9ff6f747a03e62d282f707ceda24b4a0684df9ae1740d33b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\clearance_bouquet.py",
+      "sha256": "db751df21f5af81a0a6ab4f3056c372c9f3b2c8498593abca62acc7c2a4fb5fb"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\collisions.py",
+      "sha256": "99c8d8c3b4c0fb15846786386fd5b42f0b7fe027d26d209d5504766b4fd44eff"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\composition_calibration.py",
+      "sha256": "48101fd5201f10b31e5572614e0d3e6401d143d45204870ece0cf758ddb224dd"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\cultivation.py",
+      "sha256": "ad1de7ab58c17e20e82e23e704302133af8100c892a20ed4b1625ba347e3a9ee"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\curved_basal_pilot.py",
+      "sha256": "6af6523175761b0b275624306b90cafbcbf107434fd3ee6e7110a995993e1001"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\detection_diagnostics.py",
+      "sha256": "d6bbb6ee88c4a5983adefbc81aff7f7c27a504f810c798dc0088fc1304779eaa"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\domain_analysis.py",
+      "sha256": "a1dc2b259690411e0e6fee34a66573a62fcb6cb48cc7cdfe54ab7f4024fdbbf4"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\execution_budget.py",
+      "sha256": "c98e9b2098799653070c6b76b2969dbcd79c73a7a6c75c3c20efe172bb384117"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\exporters.py",
+      "sha256": "9952869e4f1894b3a5e73dcf292c93e291973a394f2fa5a09090867c7b6ff0fc"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\foliage_reference_pilot.py",
+      "sha256": "03cf576caab492d006ce1d94e02bce9cf869f341abdc1bae3da5a97b624f72ec"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\grammar.py",
+      "sha256": "f77e2ef39a167136105892cbfdd85e796ad7a4531f26cfa2beccc22384592c47"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\growth.py",
+      "sha256": "42a581e47f34f5cd5a76ce9cf8d4f506d525bc7337fdee256fe7b88a5751288b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\hierarchical_basal_pilot.py",
+      "sha256": "10dd545f124420936ba9e4b371a0a48c0a8a6254a166f08dfed5db896136c6b9"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\human_validation.py",
+      "sha256": "6302e635b3cdbcf6bb9d6ee7e114799e0f064379c3b264e5f5f6d65654832d05"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\hybrid_experiments.py",
+      "sha256": "5f8e387e301926b0babf1a0f6e957f0d5210f2d0252221b9aa42131f9167659d"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\hybrid_study.py",
+      "sha256": "6432f50d891eeea0aaf3700b08d202104160077711dbec8871b9675b71a6dfd1"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\hybrid_training.py",
+      "sha256": "9922ae6a7da617e163d1867a289650308f13badff241aaa4684bfce78b050294"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\leaf_surface.py",
+      "sha256": "8e0c2428a6bf4740270a1ebae8f58ed91b921b5612e853f9694aca6584baee43"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\light_competition.py",
+      "sha256": "bcf7ae6e90c927990db73465f7cca6f55968dee3d1520ae10ca5f914ef504e11"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\matte_organ_review.py",
+      "sha256": "3c389a203e99fa707f08807a0ee48a43d29f7d2cfa933debfc89a888ebbffa88"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\metrics.py",
+      "sha256": "cc330cc2dce84f161686f69a7473b1b0a90715299855535b0e3097bffeacec03"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\morphology.py",
+      "sha256": "3c6ea02a769b9243bc0ef81a3e18fed17ce12c743119de16d3d3354d6e7c3f0a"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\organ_frames.py",
+      "sha256": "07372c14df85dcae2283ea979aa7f997a61785ad5a9c391674bb695d56620a09"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\parameters.py",
+      "sha256": "a29661059e61a7f5f02275adbf8b77a7f46d89ba50503062b80739924aaf75ce"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\phenology.py",
+      "sha256": "b68fb41828243e2c6c4b54b2b640df3b7f106ee5f1c4d782e45214c41cfcfd23"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\photometric_calibration.py",
+      "sha256": "1c7fb83b69c7a0884227480a17068b18a59923d08d8429a7d8f5efce72b8ae1c"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\provenance.py",
+      "sha256": "3e740f7b91851c7d1efd2f971635e766a20a56f233bf6901627060dbd17d6c04"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\scaffold_budget.py",
+      "sha256": "1cbe0446b7032cfb118ce1b1a84635db600e2de5a532d417c9c9861970004fbc"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\scene.py",
+      "sha256": "f12b0b4f83f0aa0f4428059ecff352406ca71f93c4caa50a3bce758617fc5c01"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\segmentation_cycles.py",
+      "sha256": "f61386be18781e6d3a52130849a8daa9d7835d0752b739137419fdf68e3b1e10"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\sparse_pilot.py",
+      "sha256": "10568092296947ed3e287ad425f54a3734bd7be8ad0e1b9c7d0dd4bda7b14938"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\spatial.py",
+      "sha256": "6e3085d93c81c4c2b0e204cee57d1e9a235a633f26a038968dfc5af7882f8117"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\spatial_calibration.py",
+      "sha256": "0aa4550c68e60bd868032a97c6e5c6506eee8b43699dd26250aa0c4fe5624348"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\support.py",
+      "sha256": "c0d1ef90e091ac742c2ba0b26f522756e8fef21985929a8123c042c8cd05138b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\texture_assets.py",
+      "sha256": "9a5758e89d9bae077de85c61aa8adaecef2902827e48d241e6671ca8708d965a"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\validation.py",
+      "sha256": "cb38610d345260f5392a9520265b2fa880da708177183f71c4ebe2ac04bd8036"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_lsystem\\yolo_export.py",
+      "sha256": "ef12048e02b5268632e23c090661d2e4c53f7d75602964f461bf097f8d5e5d93"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C06.json",
+      "sha256": "d22f87ac969833f21a99e3b6679c9b10f0b957a87f591adecd03705dfc907c11"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C07.json",
+      "sha256": "33ea8e066c5a64aee1ed646f3c3b2362d01023b3e77428d0ebc340d7716f9e6b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\training_runs\\training\\weights\\last.pt",
+      "sha256": "79c3dad74e7cf9caab3c82a3e37ea72235352568d7dfacbd5c9e8284cb190073"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\captures\\validation\\view_009\\camera_sample.json",
+      "sha256": "7a060bf7505955f87ff4f9e6da3c4e50cd5710aa6c6d1d2f86723d7783a9d6f4"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\captures\\validation\\view_009\\capture.json",
+      "sha256": "0d3ba212687c3e923722274318073df8f6e4f8de28d4aed49431336da0cae4cb"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\captures\\validation\\view_035\\camera_sample.json",
+      "sha256": "bb5bccf5752decf8582184a93d477c513629c98af4f1e26f670543218eb5bd0e"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\captures\\validation\\view_035\\capture.json",
+      "sha256": "910c147494a5696ef523d0da271f5182fd355a21337c1940f88be7afdb6ca982"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\detector_review_v1.json",
+      "sha256": "88cfd965ed26809a2e838be6d18a67e9302622a730b172f000b4829ed180120b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\evaluate_multiscale_v1.py",
+      "sha256": "111f4359578dae14adaef24626b82bc94b644efef82d1b4076d54a7906b34527"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\evaluation_protocol_v1.json",
+      "sha256": "969af3b6457a6d0fc7fd09e214ac734eef6a76804f27cc2f32366cbd890823bb"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\protocol.json",
+      "sha256": "85c8e31ceb103be9d5aa4ff07a8ac9c1f8b2854f847522a6739dd2bbc5868149"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\render_multiscale.py",
+      "sha256": "aec3eb4d6f4783fb1dbd813f167ed26d0a52ef02d225dc9c5ac2bb20b6cb65e0"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\training_runs\\training\\weights\\last.pt",
+      "sha256": "9c660824319f2c436321d2545cf9b267348c7be64d7780a396d8382555eb05cd"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\evaluate_smoke_private_v1.py",
+      "sha256": "a2f0feaf7624c826ae1305b66ab349690dbd2affc6c08e94c395f31fa69e987b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\flights\\smoke_C06\\evaluation_private_v1\\summary.json",
+      "sha256": "1920f28349ef7cc692330df3d9e0a9edd77e2d80499df0ae3e88d3890659dd40"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\build_full_routes_preflight_v1.py",
+      "sha256": "63ba5f0e74e9bec5a865575a3ff78079a4468bf3f865b7192ad1431f13fbed84"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\check_pipeline_cpu_v1.py",
+      "sha256": "1c36b82e66a2434d9f76728a7131d8ec834e2d3dd206b358c369d7b55f6d0657"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\check_relative_sensors_cpu_v1.py",
+      "sha256": "be4a0443fcacddc0f9824011f17ef93e3c9e9b87d4931ff6b40195339906f3a5"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\compose_full_pip_v1.py",
+      "sha256": "26c4b8a3ec0cdc70373630df460e9d7aa2e0ca981b0eee3a47ace81c62282c9e"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\effective_budget.json",
+      "sha256": "9ddaf3ae46f1977ce2a58e7c97501dc5e703368c17c448482d4af77085229567"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\evaluate_full_routes_private_v1.py",
+      "sha256": "416e67ac4fbeae47a5c5d592ed3459dd106efb05fa38589dd62594e81a387f35"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\export_relative_sensors_v1.py",
+      "sha256": "1a202a64c3342fd51a5987b8b451e256d13d6099dcd30f0a6b8d2c5a90ec597f"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\full_route_queue_v1.py",
+      "sha256": "8e9b723e00e234bccc2db0fe20ffb3bd20f345521028fb470ea2f52e33189de6"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\infer_public_full_routes_v1.py",
+      "sha256": "1cc7b10df32dd01cff864a345ac5bfef44cd8e799cf31a816732c7780e4c92b8"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\marker_observation_contract_v1.py",
+      "sha256": "d50ea63bcee3f944fd1cf51678aab333c382abc8e7ffbad88c253ad0e3dfddbe"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\pipeline_cpu_check_v1.json",
+      "sha256": "75f1989c56b04c77cddfca569e5048ce37cec1b77cae6e9b74d2b083c8edfb41"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\pipeline_derivation_v1.json",
+      "sha256": "f94e95232f47cb00c7571cad679aa91e3fa5191136390d4769cf7ef4cbbff33f"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\planning_settings_v1.json",
+      "sha256": "533f38d72f54c19ec0638f7db75bd5c43fe94fa3a3edc0af8a2ccc9d7130b5c6"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\preflight_cpu_check_v1.json",
+      "sha256": "2cfc07ca8d551ee36c9311aded27fc16f3eddba7f814b5e620af6407d4f60d9b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\preflight_inputs_manifest_v1.json",
+      "sha256": "b9f52a7ef13754cc5ec0257143f7205efcdb705bb72815ff6c70c76a5fe3c870"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\preflight_report_v1.json",
+      "sha256": "92fc8999060ade1b4645da6bb0e387b208a9226f69e7fc5cab705f6c499aab25"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\prepare_full_presentation_v1.py",
+      "sha256": "f88075838bad75bdf0ecd641737dec06d7a3408d40c841929d419b95e2b69b0b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\presentation_cpu_check_v1.json",
+      "sha256": "d8a8d1167c46ff8d3f51d3471d43cc58371d8a66a6b24b80561a1de17e19ddc9"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\presentation_protocol_v1.json",
+      "sha256": "d5ac7c25feed5577a88940794055559bd0ed21fa11f053e2e0fe88ec24f5d723"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\presentation_readiness_v1.json",
+      "sha256": "b226f44d6431c068b0b8a29439aee69b03794914e35a50bb2d0c86e576e51ec6"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\proposal_protocol_v1.json",
+      "sha256": "155bbe69e818d640f17e456f30f9909a7d1ec71d45152970d2b974d891be454a"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\protocol.json",
+      "sha256": "86dabc5a22a59aa53207547e565bd9408a05e3dac8c47df037d11aff71b78026"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\render_full_presentation_v1.py",
+      "sha256": "bb70ad42505036ea363ed5ae992bed8dc8ae1d83e79c149bca38b50dbfb49849"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\render_full_routes_v1.py",
+      "sha256": "cde96342f76ffa37832634d14fa8c41d2e08fc17447b1b8e4ec28f71d4e5b3a3"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\run.json",
+      "sha256": "4b600fe20a1677d50a5628e13be132fcb4381e05efce75718552a8061969841e"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\run_full_delivery_stage_v1.py",
+      "sha256": "542bf93b0cf2baa63499ae76d54ce67bbfeed456f4a42e0487c6fb1cc5838f17"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\sensor_cpu_check_v1.json",
+      "sha256": "f52450b1631c1321daf341b409798f9ceacd7620a9dd69b26f9fd7d8146c6bf2"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\sensor_preparation_review_v1.json",
+      "sha256": "4fb2937cf9079eccd2dd0adb8bffcd0469739bc3bb934f5f097503f8ec52a305"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\sensor_protocol_v1.json",
+      "sha256": "e1caef9b9b6bd2ca322c2848144005871d7461a9d726377f141d0d0a9fcdc00b"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\source_snapshot\\v142_materials.py",
+      "sha256": "312985e61e31080a2ba040438880441a87aeec5887b19576736e41bcf9531c3d"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\track_public_full_routes_v1.py",
+      "sha256": "7facd024ad583a1fdc482d82b215064ef83fe4f28f333e1250e0b66a0604a951"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\verify_export_full_routes_v1.py",
+      "sha256": "ef86faa4a24cacea1467e0e5f127d03a1968a636611b472a5a02d8e03b753964"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\historical_reprojection_recovery_review_v1.json",
+      "sha256": "a606e503a254d5dcc616168e2470a76cbc0253a3a809705fe741f9bb69347fe0"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\next_full_routes_plan_v2.json",
+      "sha256": "d6606ab13c91ce0c82002ceb5385c0d8879059c35d89d8534aad90d652fcf459"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\protocol.json",
+      "sha256": "7a4dac44c4285afbdbcb53439b4f505beb3b19253b335a9f4b05d59bd6503dc0"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\render_smoke_v1.py",
+      "sha256": "848f0d128765b4fe96f83df08b427991b80783d1a79277369890a96966a23ea4"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\route_pilot_v1\\full_row_plan_v1.json",
+      "sha256": "2593369cfd77e5741b30073b17704c4f237ddde4d7f85584df68ac42191aa8cf"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\route_pilot_v1\\protocol.json",
+      "sha256": "9a9bf309e586335a3ff102a8685f4d42ffc2e4940443de14d7a707cf64e47842"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\route_pilot_v1\\render_route_pilot_v1.py",
+      "sha256": "e3e2e559e3853497648bb1e8ece89338c743ded58e66b56a264d69192c4fd7bd"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\route_pilot_v1\\source_snapshot\\v142_materials.py",
+      "sha256": "312985e61e31080a2ba040438880441a87aeec5887b19576736e41bcf9531c3d"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\smoke_validation_v1.json",
+      "sha256": "054c221314822838ea7feec85d96ff6e2ab144828db5c0dd70216d59f1447bca"
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\source_snapshot\\v142_materials.py",
+      "sha256": "312985e61e31080a2ba040438880441a87aeec5887b19576736e41bcf9531c3d"
+    }
+  ]
+}
