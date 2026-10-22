@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "routes": [
+    {
+      "route": "legacy",
+      "frames": 178,
+      "hashes_passed": true,
+      "arithmetic_passed": true
+    },
+    {
+      "route": "vertical",
+      "frames": 167,
+      "hashes_passed": true,
+      "arithmetic_passed": true
+    },
+    {
+      "route": "orbit",
+      "frames": 282,
+      "hashes_passed": true,
+      "arithmetic_passed": true
+    }
+  ],
+  "localization_executed_and_evaluated": true,
+  "scientific_promotion": false,
+  "negative_marker_poses_preserved": true,
+  "protocol_sha256": "74a23fea44c324633105486bda976f1bab7cf023ccd20d91278d7e67c06950dc",
+  "estimator_sha256": "1a746fe918f9bafc8e0def667adc51ca1ca3f062df408bdc0d04959befe1294d",
+  "evaluator_sha256": "75be38d707c7d6c1c26a75a4c30e320dc83908ed3063799345c10345e5aa53b4"
+}

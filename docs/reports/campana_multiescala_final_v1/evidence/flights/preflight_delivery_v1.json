@@ -1,0 +1,62 @@
+{
+  "version": "full-route-preflight-delivery/1",
+  "created_utc": "2026-10-21T12:23:34.236464+00:00",
+  "passed": true,
+  "protocol_sha256": "86dabc5a22a59aa53207547e565bd9408a05e3dac8c47df037d11aff71b78026",
+  "preflight_report_sha256": "92fc8999060ade1b4645da6bb0e387b208a9226f69e7fc5cab705f6c499aab25",
+  "launch_readiness_sha256": "c56c61c1f891a63dda1595a0ccb48ec3b9252db5bee65d52e3d229b3aadba524",
+  "overview_sha256": "6746a6ca8c2542401f9603d92aad46c1da8df95360e6633c77572653aa2a508a",
+  "overview_visually_reviewed": true,
+  "geometry_scene_built_once": true,
+  "new_render_started": true,
+  "completed_frames_snapshot": {
+    "legacy": 17,
+    "vertical": 0,
+    "orbit": 0
+  },
+  "controller_pid_snapshot": 38116,
+  "queue_pid_snapshot": 3360,
+  "blender_pid_snapshot": 45576,
+  "process_identity_verified": "CIM tree matches wrapper -> queue -> guarded Blender, same full_routes_v1 root. Virtualenv launchers are separate parents, not duplicate jobs.",
+  "minimum_free_gib_snapshot": 11.20041275024414,
+  "no_localization_result": true,
+  "no_final_video_result_yet": true,
+  "campaign_complete": false,
+  "independent_reviews": [
+    "Frozen constructor literal equality",
+    "Public allowlist and global-first target attribution",
+    "Four monotonic vertical scans inside foliage, legacy both faces, orbit blocked sectors preserved",
+    "Wrapper/queue/sensor/PiP paths and guard consistency"
+  ],
+  "known_limitations": [
+    "Projected coverage is not actual visibility.",
+    "Partial orbit180degreesC06/225degreesC07; no full360degrees claim.",
+    "Near inspection has34verticalframes; transit126frames: phase metrics must be separated.",
+    "Single frontArUco8; C07 has no independent marker.",
+    "No new localization yet; sensors only prepared."
+  ],
+  "latest_verified_utc": "2026-10-21T12:26:22.949817+00:00",
+  "live_blender_command_verified": [
+    "C:\\Program Files\\Blender Foundation\\Blender 5.1\\blender.exe",
+    "--background",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\render_full_routes_v1.py",
+    "--",
+    "--root",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1",
+    "--scene",
+    "legacy",
+    "--limit",
+    "12"
+  ],
+  "first_block_completed": true,
+  "first_block_min_free_gib": 11.20041275024414,
+  "initial_rgb_visual_review": {
+    "frame": 6,
+    "path": "captures/legacy/view_006/rgb.png",
+    "sha256": "a86934cfdb004b97471b8e7446a059012dd05b0aed73e5e22e22e2440ed15682",
+    "finding": "Full target shrub, unchanged marker, terrain/sky and neighboring shrubs present. No new masks/inference results claimed."
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "protocol_sha256": "74a23fea44c324633105486bda976f1bab7cf023ccd20d91278d7e67c06950dc",
+  "estimator_sha256": "1a746fe918f9bafc8e0def667adc51ca1ca3f062df408bdc0d04959befe1294d",
+  "full_route_protocol_sha256": "86dabc5a22a59aa53207547e565bd9408a05e3dac8c47df037d11aff71b78026",
+  "tracking_sha256": {
+    "legacy": "ee7faf0cffb5cefdedb4c893f192e4db175830c487193129a9e0642cdbec3c6a",
+    "vertical": "c0a9bc0e0c4a1c5b05bb3eb405efddf14a42a4e147951fff048e66ba3a27a648",
+    "orbit": "06ada95df40cf63bf54a4153a18d739e46f786069f257b3186211deb0e20ad8c"
+  },
+  "scientific_promotion": false,
+  "completed_prior_work_repeated": false
+}

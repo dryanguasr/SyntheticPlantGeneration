@@ -1,0 +1,10 @@
+{
+  "version": "final-publication-provenance/1",
+  "inherited_snapshot": "docs/reports/campana_multiescala_20261021_parcial_v1",
+  "inherited_manifest_sha256": "236c8ec7c600515453aceeaf72a743f85d550d554fea2950b5c5b7f5fda3ca3c",
+  "new_source_root": "outputs/multiscale_flights_20261021/full_routes_v1/metric_localization_v1",
+  "new_protocol_sha256": "74a23fea44c324633105486bda976f1bab7cf023ccd20d91278d7e67c06950dc",
+  "new_delivery_audit_sha256": "2fd54dc7d59085ecf92a94b04c4241f54e41e13d9ba9cea8fa2855e5aced3bcf",
+  "new_json_archives": "lossless gzip original bytes; mtime=0",
+  "immutable_prior_snapshot": true
+}

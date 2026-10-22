@@ -1,0 +1,18 @@
+{
+  "files": {
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\protocol.json": "85c8e31ceb103be9d5aa4ff07a8ac9c1f8b2854f847522a6739dd2bbc5868149",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\render_multiscale.py": "aec3eb4d6f4783fb1dbd813f167ed26d0a52ef02d225dc9c5ac2bb20b6cb65e0",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\source_snapshot\\v142_materials.py": "312985e61e31080a2ba040438880441a87aeec5887b19576736e41bcf9531c3d",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C01.json": "50ddb116292cd7f6af6a42ecac8e613a7fdb233dc1e908e5dfbbfeccec65a34b",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C02.json": "d5ff43f4d0626ce4d342a77ad2055cc97c7cde8b8b89eba1cf4fcda763265870",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C03.json": "4ea445d93f32b0069c17d4f836a941633f7895d8a0dd147962ec4a05e5648e85",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C04.json": "2e73f9146c1d9ed525212faff1a59c777dcc5c877d26d726bf0957b63ffbdb6d",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C06.json": "d22f87ac969833f21a99e3b6679c9b10f0b957a87f591adecd03705dfc907c11",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C07.json": "33ea8e066c5a64aee1ed646f3c3b2362d01023b3e77428d0ebc340d7716f9e6b",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C09.json": "f601d931726dab31bbfe3f8d00b28f25c1a588f844523f909051d8caba25fc8e",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C10.json": "477280c6a3ec4bfb6449ee74d26a849d5b8ad4e8adfb713220fe6fcbede4a771",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\source_snapshot\\v142_materials.py": "312985e61e31080a2ba040438880441a87aeec5887b19576736e41bcf9531c3d",
+    "C:/dev/SyntheticPlantGeneration/outputs/frozen_field_pilot_20261019/training_runs/training/weights/last.pt": "79c3dad74e7cf9caab3c82a3e37ea72235352568d7dfacbd5c9e8284cb190073"
+  },
+  "inherited_freeze_manifest": "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\freeze_manifest.json"
+}

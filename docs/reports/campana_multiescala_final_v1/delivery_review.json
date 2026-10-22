@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "pdf_pages": 17,
+  "pdf_sha256": "d05f314859986940a04dffb8a876c1d57b1d1c2a12277442f3c59b65257bfaa3",
+  "pdf_visual_review": "All 17 rendered pages reviewed; tables, plot labels, images, margins and footers readable; no clipping/overlap found.",
+  "videos": {
+    "legacy": "Existing reviewed bytes unchanged; 178 decoded H264 frames at4fps",
+    "vertical": "Existing reviewed bytes unchanged; 167 decoded H264 frames at4fps",
+    "orbit": "282 decoded H264 frames at4fps, all21 predeclared visual selections reviewed"
+  },
+  "interactive_browser_check": "Not completed: Browser Use security policy forbids file: URLs. No workaround attempted. Full file decoding, H264 metadata, frame synchronization and image inspection passed independently.",
+  "scientific_promotion": false,
+  "context_graph_validation": "Repository-wide validator has 10 pre-existing missing textual locators in unrelated working changes; not changed for this artifact-only publication.",
+  "reviewed_utc": "2026-10-22T00:25:03.041894+00:00"
+}

@@ -1,0 +1,605 @@
+{
+  "version": "marker-reflection-diagnosis/1",
+  "marker_id": 8,
+  "controlled_2d_reflection_fixture": {
+    "original": [
+      8
+    ],
+    "horizontal_reflection": [
+      8
+    ],
+    "vertical_reflection": [
+      8
+    ]
+  },
+  "estimator_modified": false,
+  "marker_modified": false,
+  "rerendered": false,
+  "routes": {
+    "legacy": {
+      "bad_visual_poses_over_90deg": 18,
+      "behind_marker_plane": 18,
+      "accepted_by_fusion": 0,
+      "cases": [
+        {
+          "frame": 67,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.7605145575,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.38831487567793,
+          "position_error_m": 8.36529002792105,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.19122086640323352
+          ]
+        },
+        {
+          "frame": 68,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.00634548125,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.81645704945774,
+          "position_error_m": 8.549035169691523,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.4314285615608182
+          ]
+        },
+        {
+          "frame": 72,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.98966920375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.4828354148078,
+          "position_error_m": 9.112629932830338,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.27300475966726856
+          ]
+        },
+        {
+          "frame": 73,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -2.2355000975,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.8955827675932,
+          "position_error_m": 9.39982980080536,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.11507028834640336
+          ]
+        },
+        {
+          "frame": 74,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -2.48133099125,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.96634547006576,
+          "position_error_m": 9.648041913949715,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.14156399163756084
+          ]
+        },
+        {
+          "frame": 75,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -2.72716188375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.4612667460736,
+          "position_error_m": 9.894328087324205,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.1417992701345925
+          ]
+        },
+        {
+          "frame": 78,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -3.46465468375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.89516340938528,
+          "position_error_m": 10.911638399088826,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.17260403587380482
+          ]
+        },
+        {
+          "frame": 79,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -3.71048569625,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 178.41322568213147,
+          "position_error_m": 11.074964655502026,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.12561465463691887
+          ]
+        },
+        {
+          "frame": 80,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -3.95631647125,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.75252130415015,
+          "position_error_m": 11.574379063829435,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.19440829023711417
+          ]
+        },
+        {
+          "frame": 82,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -4.20214748375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.87350059701166,
+          "position_error_m": 11.77190748939657,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.4006981581344287
+          ]
+        },
+        {
+          "frame": 83,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -4.20214748375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.80756625305077,
+          "position_error_m": 11.453745414291776,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.18708885314252693
+          ]
+        },
+        {
+          "frame": 84,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -4.20214748375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.55582523406565,
+          "position_error_m": 11.115460972136702,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.18357855438375414
+          ]
+        },
+        {
+          "frame": 141,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -2.4085652824999997,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.7018636904854,
+          "position_error_m": 5.104803055826244,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.13016039107609872
+          ]
+        },
+        {
+          "frame": 142,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -2.1642776725,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.18318112225532,
+          "position_error_m": 4.6415086025498145,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.3957013865690511
+          ]
+        },
+        {
+          "frame": 144,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.67570233375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.909840535775,
+          "position_error_m": 3.7528871424445995,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.3777199955204764
+          ]
+        },
+        {
+          "frame": 146,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.18712711375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.75333814751812,
+          "position_error_m": 2.8624205239347087,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.06824637438074363
+          ]
+        },
+        {
+          "frame": 147,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.9428395037499999,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.72851582426017,
+          "position_error_m": 2.497034641362356,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.3100773054158452
+          ]
+        },
+        {
+          "frame": 148,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.69855189375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.73779565642226,
+          "position_error_m": 2.1864283633883748,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.14042142897359683
+          ]
+        }
+      ],
+      "marker_updates_rejected": 25
+    },
+    "vertical": {
+      "bad_visual_poses_over_90deg": 6,
+      "behind_marker_plane": 5,
+      "accepted_by_fusion": 0,
+      "cases": [
+        {
+          "frame": 129,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.7841110225,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.4132578798109,
+          "position_error_m": 3.6516823145974966,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.09210818058196847
+          ]
+        },
+        {
+          "frame": 130,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.7841110225,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 180.0,
+          "position_error_m": 3.6969390448941595,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.0425077861595518
+          ]
+        },
+        {
+          "frame": 133,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.54952901625,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 153.2528696406688,
+          "position_error_m": 7.906073939733896,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            1.1976115246907664
+          ]
+        },
+        {
+          "frame": 135,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.08036506125,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.97030709445878,
+          "position_error_m": 2.6912995799828967,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.16595471656722222
+          ]
+        },
+        {
+          "frame": 136,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.84578307,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.27080303180705,
+          "position_error_m": 2.393896401876457,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.24556971518567416
+          ]
+        },
+        {
+          "frame": 143,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": 0.796290755,
+          "behind_marker_plane": false,
+          "orientation_error_degrees": 155.0095071541584,
+          "position_error_m": 7.19930256912305,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.37551478354342016
+          ]
+        }
+      ],
+      "marker_updates_rejected": 6
+    },
+    "orbit": {
+      "bad_visual_poses_over_90deg": 19,
+      "behind_marker_plane": 19,
+      "accepted_by_fusion": 0,
+      "cases": [
+        {
+          "frame": 66,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.72752735,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.83594601200443,
+          "position_error_m": 2.2749598174769075,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.33350612248307454
+          ]
+        },
+        {
+          "frame": 67,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.96170312125,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.6180158122391,
+          "position_error_m": 2.5375993423267014,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.25054815599714736
+          ]
+        },
+        {
+          "frame": 68,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.1958789225,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.58167814886482,
+          "position_error_m": 2.8896318503101996,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.2596708014505183
+          ]
+        },
+        {
+          "frame": 70,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.66423046625,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.47248172959647,
+          "position_error_m": 3.7482745512260087,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.31501297430527453
+          ]
+        },
+        {
+          "frame": 73,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.66423046625,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.445428923733,
+          "position_error_m": 3.41078763211326,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.1965176916996978
+          ]
+        },
+        {
+          "frame": 74,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.66423046625,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.87020824937315,
+          "position_error_m": 3.367163625017774,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.1003707989902896
+          ]
+        },
+        {
+          "frame": 117,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.7841110225,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.91478657277096,
+          "position_error_m": 3.6426119231156653,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.20100151602141508
+          ]
+        },
+        {
+          "frame": 118,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.7841110225,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.70038689325742,
+          "position_error_m": 3.7194579678386783,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.12731255691419766
+          ]
+        },
+        {
+          "frame": 123,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.04926407375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.6933284594495,
+          "position_error_m": 2.66824330854083,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.36779694015165787
+          ]
+        },
+        {
+          "frame": 124,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.80431509,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.15286802054973,
+          "position_error_m": 2.3554138398612197,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.20523110255272234
+          ]
+        },
+        {
+          "frame": 181,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.31441715375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.6253480725469,
+          "position_error_m": 5.437688502300259,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.5022299392940405
+          ]
+        },
+        {
+          "frame": 194,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.22500002375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.06813152743834,
+          "position_error_m": 8.523060531990907,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.4574874723150032
+          ]
+        },
+        {
+          "frame": 203,
+          "phase": "transit",
+          "side": "back",
+          "camera_marker_normal_coordinate_m": -1.22500002375,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.60517133820352,
+          "position_error_m": 5.896078559490333,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.19475560066752265
+          ]
+        },
+        {
+          "frame": 212,
+          "phase": "inspection_orbit",
+          "side": "back",
+          "camera_marker_normal_coordinate_m": -1.60066300625,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.95109963533014,
+          "position_error_m": 5.036299839307493,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.08635282515927821
+          ]
+        },
+        {
+          "frame": 213,
+          "phase": "inspection_orbit",
+          "side": "back",
+          "camera_marker_normal_coordinate_m": -1.66423046625,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.66609112701647,
+          "position_error_m": 4.98161431548601,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.14430601656492203
+          ]
+        },
+        {
+          "frame": 245,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.7841110225,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.92113060235903,
+          "position_error_m": 3.719167308803997,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.10340299880028088
+          ]
+        },
+        {
+          "frame": 250,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -1.08036506125,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.9269721542164,
+          "position_error_m": 2.703625850169973,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.16238084652633203
+          ]
+        },
+        {
+          "frame": 251,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.84578307,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.9016889908988,
+          "position_error_m": 2.367721359588162,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.36713839316419
+          ]
+        },
+        {
+          "frame": 252,
+          "phase": "transit",
+          "side": "outer",
+          "camera_marker_normal_coordinate_m": -0.611201095,
+          "behind_marker_plane": true,
+          "orientation_error_degrees": 179.85420754063074,
+          "position_error_m": 2.250720917179862,
+          "visual_fusion_update_accepted": false,
+          "marker_reprojection_rmse_px": [
+            0.143220486383246
+          ]
+        }
+      ],
+      "marker_updates_rejected": 21
+    }
+  },
+  "evidence": "The unchanged detector decodes ID8 on mirrored synthetic patterns. Every listed case uses actual flight RGB decoding and private camera-side/orientation checks; these checks never feed the estimator.",
+  "interpretation": "Planar reprojection and decoded ID alone cannot certify front-face correspondence for this pattern and two-sided synthetic board. Fusion innovation rejects listed large inconsistencies; retained drift and initial pose error remain."
+}

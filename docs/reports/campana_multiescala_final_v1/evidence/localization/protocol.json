@@ -1,0 +1,82 @@
+{
+  "version": "full-routes-metric-localization/1",
+  "created_at": "2026-10-22T00:14:33.796685+00:00",
+  "route_order": [
+    "legacy",
+    "vertical",
+    "orbit"
+  ],
+  "fps": 4,
+  "interval_seconds": 0.25,
+  "estimator_sha256": "1a746fe918f9bafc8e0def667adc51ca1ca3f062df408bdc0d04959befe1294d",
+  "frozen_module_sha256": {
+    "multiview.py": "14c7b2405839339909b34394ef20643d97db6524cc67d2b2449eabc37e51e4c0",
+    "marker_motion_fusion.py": "88e1a4050de82c8d3d4b9d5a97497236b42afe6d1851caa645e33212c86fdcf2",
+    "localization.py": "e3aa365189e584f96edd13868b79747caf18fac7036e5136d5693d34ba914794",
+    "motion_observations.py": "be1ff23f70ebd0e5b1063364eebc969a68cc0607ed206f07d273ac916651c77b"
+  },
+  "variants": {
+    "primary": "fused",
+    "baseline": "visual_only",
+    "selection": "both reported; no truth-based choice or fallback"
+  },
+  "marker": {
+    "dictionary": "DICT_4X4_50",
+    "coded_side_m": 0.2,
+    "corner_refinement": "OpenCV default, same as prepared contract",
+    "max_reprojection_px": 3.0,
+    "ambiguity_error_gap_px": 0.25,
+    "corner_sigma_px": 0.5,
+    "innovation_gate_mahalanobis_squared": 16.8,
+    "canonical_id": "first accepted actually decoded ID; no private expected-ID map"
+  },
+  "triangulation": {
+    "minimum_views": 3,
+    "minimum_parallax_degrees": 3.0,
+    "maximum_reprojection_px": 3.0,
+    "algorithm": "frozen robust_triangulate; deterministic <=40 hypotheses, no track reconciliation",
+    "input_point": "persisted predicted native-mask centroid; no true center"
+  },
+  "estimator_allowlist": [
+    "RGB",
+    "timestamps",
+    "intrinsics",
+    "physical marker dimensions",
+    "noisy relative motion",
+    "persisted predicted masks centroids and track IDs"
+  ],
+  "evaluation": {
+    "camera_pose": "camera center in marker coordinates and geodesic orientation; evaluated privately per frame and phase",
+    "calyx_reference": "center of evaluated world-axis-aligned calyx bounding box, transformed into marker coordinates; engineering geometry reference, not internal fruit center or 6D fruit pose",
+    "identity_matching": "same global confidence-ordered class-agnostic native-mask IoU>=0.5; no distance-based truth selection; arithmetic checked against completed detection confusion per frame",
+    "strict_attribution": "at least 3 inlier observations, every inlier matched, all matched to the same true instance; mixed/unmatched retained as unassigned negative",
+    "errors_all_matched_inliers": "also report distances for every inlier having a 2D match, including mixed tracks; separate from strict attribution",
+    "scopes": [
+      "all",
+      "eligible",
+      "target_all",
+      "target_eligible"
+    ],
+    "eligible": {
+      "minimum_visible_pixels": 100,
+      "minimum_bbox_side": 8
+    },
+    "coverage": "unique true instances localized / unique visible instances in scope; no counting duplicates as extra coverage",
+    "phase": "inspection separated from transit; phase-specific pose errors",
+    "no_truth_as_estimator_input": true,
+    "no_threshold_tuning": true
+  },
+  "memory": {
+    "admission_free_gib": 6.5,
+    "early_stop_free_gib": 3.0,
+    "required_reserve_gib": 2.0
+  },
+  "limitations": [
+    "Uncalibrated independent sensor noise, no bias or correlated drift",
+    "Single common frontal marker; C07 has no separate marker",
+    "Fragmented frozen track IDs; no tracker correction",
+    "Visible-mask centroids can shift with viewpoint and occlusion",
+    "Calyx AABB center is a geometric reference; no claim of internal fruit pose",
+    "Synthetic validation plants, no external holdout"
+  ]
+}

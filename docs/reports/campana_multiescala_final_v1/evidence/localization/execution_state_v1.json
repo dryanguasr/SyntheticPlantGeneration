@@ -1,0 +1,43 @@
+{
+  "stage": "public_localization_complete_private_evaluation_pending",
+  "controller_pid": null,
+  "localization_complete": false,
+  "started_at": "2026-10-22T00:15:08.439650+00:00",
+  "routes": {
+    "legacy": {
+      "returncode": 0,
+      "minimum_free_gib": 12.403179168701172
+    },
+    "vertical": {
+      "returncode": 0,
+      "minimum_free_gib": 12.420761108398438
+    },
+    "orbit": {
+      "returncode": 0,
+      "minimum_free_gib": 12.319278717041016
+    }
+  },
+  "route": "orbit",
+  "child_pid": null,
+  "command": [
+    "C:\\dev\\SyntheticPlantGeneration\\.venv-training\\Scripts\\python.exe",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\metric_localization_v1\\localize_public_v1.py",
+    "--public",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\flights\\orbit\\public",
+    "--rgb-admission",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\flights\\orbit\\public_admission_v1.json",
+    "--sensors",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\flights\\orbit\\sensors_public",
+    "--sensor-admission",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\flights\\orbit\\sensors_public_admission_v1.json",
+    "--observations",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\flights\\orbit\\tracking_new\\observations.json",
+    "--protocol",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\metric_localization_v1\\protocol.json",
+    "--out",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\metric_localization_v1\\public_estimates\\orbit",
+    "--frozen-src",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\frozen\\src\\uchuva_gazebo"
+  ],
+  "finished_at": "2026-10-22T00:15:54.601737+00:00"
+}

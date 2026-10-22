@@ -1,0 +1,19 @@
+{
+  "version": "relative-sensor-model/1",
+  "frame": "previous_camera",
+  "interval_seconds": 0.25,
+  "covariance_order": [
+    "tx_m",
+    "ty_m",
+    "tz_m",
+    "rx_rad",
+    "ry_rad",
+    "rz_rad"
+  ],
+  "translation_density_m_per_sqrt_s": 0.005,
+  "rotation_density_rad_per_sqrt_s": 0.002,
+  "noise_status": "engineering_heuristic_not_physically_calibrated",
+  "noise_distribution": "independent_zero_mean_gaussian_per_increment",
+  "bias": "not_simulated",
+  "correlated_drift": "not_simulated"
+}

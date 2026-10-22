@@ -1,0 +1,31 @@
+{
+  "version": "full-route-preliminary-visual-review/1",
+  "observed_utc": "2026-10-21T14:19:18.811722+00:00",
+  "route": "legacy",
+  "reviewed_by": "assistant visual inspection with view_image",
+  "files_sha256": {
+    "flights\\legacy\\tracking_new\\frame_104.jpg": "ea9c89d9f5995c098a6f6ed18f6996199624ae7ac812eaa2d38a918b216817d3",
+    "flights\\legacy\\tracking_new\\frame_022.jpg": "1b2566ccad3e48a2d5e3fa86e0ecadbbcfb9f82c110bc41f7900d8762613f880",
+    "flights\\legacy\\tracking_new\\frame_017.jpg": "7d64537c4e296d33514cd88092572fa9140e82bbbd0a7b27ad0de2f49dfbf584",
+    "flights\\legacy\\evaluation_private_v1\\confusion_target_all.png": "f226d7fb63f19423d4629d905465621ca745db40172504564be3787c6be4f602",
+    "flights\\legacy\\evaluation_private_v1\\confusion_target_eligible.png": "0edbeedad25cfdcce1e95ded8c08e34515e4126e16bb6e2792b5a82de36d8efa"
+  },
+  "summary_sha256": "788912083ccf0903449ab270bb4649a25b6d242f3a9c14c14286454e2db3bd32",
+  "arithmetic_review_sha256": "86e475be44a6c2b1cd1fe7a9f48cd89ad701450c49b1bd664369fe72c2170cb7",
+  "full_frame_reviewed": true,
+  "selected_inspection_frames": {
+    "worst": 104,
+    "lower_median": 22,
+    "best": 17
+  },
+  "observations": [
+    "Las superposiciones mantienen el encuadre completo, arbustos vecinos, suelo y cielo; los IDs se muestran también sobre vecinos.",
+    "La densidad de etiquetas es alta en arbustos lejanos; estas vistas permiten inspección general pero no prueban continuidad temporal.",
+    "Las dos matrices objetivo muestran omisiones y confusión pintona-madura; las celdas coinciden con las métricas auditadas.",
+    "El ranking describe F1 de las observaciones del objetivo en inspección; no establece la causa de los errores."
+  ],
+  "full_pip_video_review_complete": false,
+  "localization_complete": false,
+  "campaign_complete": false,
+  "rerender_or_reinference": false
+}

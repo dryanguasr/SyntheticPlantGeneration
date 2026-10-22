@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "reviewer": "Codex visual inspection",
+  "timestamp": "2026-10-21T07:10:20.012401+00:00",
+  "examples": 18,
+  "boards_sha256": {
+    "scale_review_v1/train_near.jpg": "2e3851d9f5dcef8826bddc829a5b0408a4eef290b45d1d1458de64ad59f8388d",
+    "scale_review_v1/train_middle.jpg": "307e0be7093c68a9e4fd69b390a7d519584cbd68249937b2e654c45a2b1de626",
+    "scale_review_v1/train_far.jpg": "1474ab6ad7033b2dd9470e293a5b17d1ea57ee3b89bdbd4b36d4bcd81f1e7bf1",
+    "scale_review_v1/val_near.jpg": "59d02fc29eb4fc7e43f07aff9829ae9fde905da770ff15ed0fa952353fbaa6a9",
+    "scale_review_v1/val_middle.jpg": "7e003cad8da55807ca0208f5b8152d0db5af314049ba5f8864ed3541392c0a99",
+    "scale_review_v1/val_far.jpg": "d76939f952108738fa23a098cc6792b1d44f73296f9f25a600caf384b6e7ac5f"
+  },
+  "findings": [
+    "Full frames reviewed alongside class-mask overlays: masks follow capachos and preserve visible leaf/pole occlusion boundaries.",
+    "Near views show enlarged capachos and some edge truncation; middle and far views retain soil, sky and background plants.",
+    "Hard far cases contain a foreground neighbor obscuring target; retained. Distance bins refer to aim-point target only.",
+    "No visible systematic RGB-mask displacement or missing whole-class annotation in the reviewed samples.",
+    "Frozen plant/environment appearance remains approximate; no aesthetic or botanical changes made."
+  ],
+  "limits": [
+    "18 train/val full frames inspected, not every pixel of every frame.",
+    "No test-image visual selection, no assessment of detector performance before training.",
+    "No fully empty RGB views or tiles in this dataset; many background pixels but no explicit empty-frame negatives.",
+    "Small val instances may disappear under historical reduced mask validation; final metrics must use original native raster masks."
+  ]
+}

@@ -1,0 +1,984 @@
+{
+  "version": "private-full-routes-metric-evaluation/1",
+  "passed": true,
+  "route": "vertical",
+  "frames": 167,
+  "localization_executed": true,
+  "scientific_promotion": false,
+  "inference_rerun": false,
+  "tracking_rerun": false,
+  "minimum_free_gib": 12.582176208496094,
+  "native_matching_confusions_reproduced": 167,
+  "pose": {
+    "visual_only": {
+      "frames": 29,
+      "total_frames": 167,
+      "coverage": 0.17365269461077845,
+      "position_error_m": {
+        "n": 29,
+        "mean": 0.9911506545283387,
+        "median": 0.05551362536613465,
+        "rmse": 2.307450806300495,
+        "p95": 5.798357159431486,
+        "maximum": 7.906073939733896
+      },
+      "orientation_error_degrees": {
+        "n": 29,
+        "mean": 35.88458298856449,
+        "median": 0.6945457877718954,
+        "rmse": 78.04506547706158,
+        "p95": 179.74748740859962,
+        "maximum": 180.0
+      },
+      "by_phase": {
+        "acquisition": {
+          "frames": 4,
+          "total_frames": 4,
+          "coverage": 1.0,
+          "position_error_m": {
+            "n": 4,
+            "mean": 0.023541398115920792,
+            "median": 0.023541398115920792,
+            "rmse": 0.023541398115920792,
+            "p95": 0.023541398115920792,
+            "maximum": 0.023541398115920792
+          },
+          "orientation_error_degrees": {
+            "n": 4,
+            "mean": 0.6945457877718954,
+            "median": 0.6945457877718954,
+            "rmse": 0.6945457877718954,
+            "p95": 0.6945457877718954,
+            "maximum": 0.6945457877718954
+          }
+        },
+        "inspection_vertical": {
+          "frames": 0,
+          "total_frames": 34,
+          "coverage": 0.0,
+          "position_error_m": {
+            "n": 0,
+            "mean": null,
+            "median": null,
+            "rmse": null,
+            "p95": null,
+            "maximum": null
+          },
+          "orientation_error_degrees": {
+            "n": 0,
+            "mean": null,
+            "median": null,
+            "rmse": null,
+            "p95": null,
+            "maximum": null
+          }
+        },
+        "return_anchor": {
+          "frames": 3,
+          "total_frames": 3,
+          "coverage": 1.0,
+          "position_error_m": {
+            "n": 3,
+            "mean": 0.023541398115920792,
+            "median": 0.023541398115920792,
+            "rmse": 0.023541398115920792,
+            "p95": 0.023541398115920792,
+            "maximum": 0.023541398115920792
+          },
+          "orientation_error_degrees": {
+            "n": 3,
+            "mean": 0.6945457877718954,
+            "median": 0.6945457877718954,
+            "rmse": 0.6945457877718954,
+            "p95": 0.6945457877718954,
+            "maximum": 0.6945457877718954
+          }
+        },
+        "transit": {
+          "frames": 22,
+          "total_frames": 126,
+          "coverage": 0.1746031746031746,
+          "position_error_m": {
+            "n": 22,
+            "mean": 1.2990263270231992,
+            "median": 0.08994986370305708,
+            "rmse": 2.649199433957966,
+            "p95": 7.024184392911604,
+            "maximum": 7.906073939733896
+          },
+          "orientation_error_degrees": {
+            "n": 22,
+            "mean": 47.081413006998496,
+            "median": 0.6870562406806364,
+            "rmse": 89.60432171935553,
+            "p95": 179.94245463372638,
+            "maximum": 180.0
+          }
+        }
+      }
+    },
+    "fused": {
+      "frames": 167,
+      "total_frames": 167,
+      "coverage": 1.0,
+      "position_error_m": {
+        "n": 167,
+        "mean": 0.03775979732756876,
+        "median": 0.032198095117159035,
+        "rmse": 0.043120682016703306,
+        "p95": 0.07624813797311017,
+        "maximum": 0.0953788875320519
+      },
+      "orientation_error_degrees": {
+        "n": 167,
+        "mean": 0.43892433465118247,
+        "median": 0.38734480610194916,
+        "rmse": 0.5023061146525609,
+        "p95": 0.8420541343692333,
+        "maximum": 1.1281835241419786
+      },
+      "by_phase": {
+        "acquisition": {
+          "frames": 4,
+          "total_frames": 4,
+          "coverage": 1.0,
+          "position_error_m": {
+            "n": 4,
+            "mean": 0.023075036005932265,
+            "median": 0.023081623172341106,
+            "rmse": 0.023082551269013495,
+            "p95": 0.023729693461599224,
+            "maximum": 0.02376292205201308
+          },
+          "orientation_error_degrees": {
+            "n": 4,
+            "mean": 0.7158409890233278,
+            "median": 0.7019893137884425,
+            "rmse": 0.7165199321556308,
+            "p95": 0.759638064378767,
+            "maximum": 0.7684978098917866
+          }
+        },
+        "inspection_vertical": {
+          "frames": 34,
+          "total_frames": 34,
+          "coverage": 1.0,
+          "position_error_m": {
+            "n": 34,
+            "mean": 0.0270796197654386,
+            "median": 0.027676396139418018,
+            "rmse": 0.03173125430638771,
+            "p95": 0.04940731028050057,
+            "maximum": 0.05252848877515543
+          },
+          "orientation_error_degrees": {
+            "n": 34,
+            "mean": 0.34971706812430203,
+            "median": 0.3598779613404609,
+            "rmse": 0.3633049230440759,
+            "p95": 0.49284574495795236,
+            "maximum": 0.5364698510359396
+          }
+        },
+        "return_anchor": {
+          "frames": 3,
+          "total_frames": 3,
+          "coverage": 1.0,
+          "position_error_m": {
+            "n": 3,
+            "mean": 0.023470910670247137,
+            "median": 0.02331872480685656,
+            "rmse": 0.023472103086490646,
+            "p95": 0.02375642632521383,
+            "maximum": 0.023805059827253526
+          },
+          "orientation_error_degrees": {
+            "n": 3,
+            "mean": 0.7345036669779281,
+            "median": 0.7362603535976958,
+            "rmse": 0.7347582993234169,
+            "p95": 0.755165176341156,
+            "maximum": 0.7572657122015405
+          }
+        },
+        "transit": {
+          "frames": 126,
+          "total_frames": 126,
+          "coverage": 1.0,
+          "position_error_m": {
+            "n": 126,
+            "mean": 0.04144814448924285,
+            "median": 0.03355274084057904,
+            "rmse": 0.04650490388712741,
+            "p95": 0.07785910663091895,
+            "maximum": 0.0953788875320519
+          },
+          "orientation_error_degrees": {
+            "n": 126,
+            "mean": 0.4471675286785248,
+            "median": 0.38947987912063764,
+            "rmse": 0.5192723913662978,
+            "p95": 0.9195726226359755,
+            "maximum": 1.1281835241419786
+          }
+        }
+      }
+    }
+  },
+  "calyx": {
+    "visual_only": {
+      "total_tracks": 10777,
+      "estimated_tracks": 101,
+      "strictly_attributed_tracks": 76,
+      "attribution_rejections": {
+        "unmatched_inlier_observations": 25
+      },
+      "unique_strictly_localized_instances": 73,
+      "strict_track_error_m": {
+        "n": 76,
+        "mean": 0.48951761354735446,
+        "median": 0.08189008272408901,
+        "rmse": 1.0809331951574888,
+        "p95": 3.0915544058419995,
+        "maximum": 3.409216971154887
+      },
+      "all_matched_inlier_error_m_including_mixed_tracks": {
+        "n": 400,
+        "mean": 0.31754006189899525,
+        "median": 0.045686475933309836,
+        "rmse": 0.8341474015179781,
+        "p95": 2.9897081633712075,
+        "maximum": 3.409216971154887
+      },
+      "duplicate_estimates_per_identity": {
+        "C06:hierarchy_axis_51_node_8_reproductive_v142": 1,
+        "C06:axis_0_0_branch_11_branch_3_node_5_reproductive_unit": 1,
+        "C06:hierarchy_axis_8_node_3_reproductive_v142": 1,
+        "C06:axis_0_0_branch_0_branch_2_node_4_reproductive_unit": 1,
+        "C06:hierarchy_axis_46_node_7_reproductive_v142": 1,
+        "C06:axis_0_0_branch_10_branch_3_node_5_reproductive_unit": 1,
+        "C07:hierarchy_axis_24_node_2_reproductive_v142": 1,
+        "C07:hierarchy_axis_49_node_8_reproductive_v142": 1,
+        "C07:hierarchy_axis_29_node_11_reproductive_v142": 1,
+        "C07:hierarchy_axis_28_node_11_reproductive_v142": 1,
+        "C07:hierarchy_axis_50_node_5_reproductive_v142": 1,
+        "C06:axis_0_0_branch_9_branch_3_node_2_reproductive_unit": 1,
+        "C06:hierarchy_axis_59_node_9_reproductive_v142": 1,
+        "C07:hierarchy_axis_45_node_3_reproductive_v142": 1,
+        "C07:hierarchy_axis_56_node_4_reproductive_v142": 2,
+        "C06:axis_0_0_branch_2_branch_1_node_3_reproductive_unit": 1,
+        "C07:axis_0_0_branch_3_branch_1_node_3_reproductive_unit": 1,
+        "C07:hierarchy_axis_59_node_11_reproductive_v142": 1,
+        "C06:hierarchy_axis_74_node_4_reproductive_v142": 1,
+        "C06:hierarchy_axis_88_node_8_reproductive_v142": 1,
+        "C06:hierarchy_axis_48_node_3_reproductive_v142": 1,
+        "C06:axis_0_0_branch_0_branch_0_node_3_reproductive_unit": 1,
+        "C06:hierarchy_axis_83_node_4_reproductive_v142": 1,
+        "C06:hierarchy_axis_51_node_4_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_58_node_2_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_87_node_8_reproductive_v142": 1,
+        "C07:hierarchy_axis_88_node_4_reproductive_v142": 1,
+        "C06:hierarchy_axis_86_node_2_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_9_branch_1_node_5_reproductive_unit": 1,
+        "C06:axis_0_0_branch_9_branch_4_node_6_reproductive_unit": 1,
+        "C07:axis_0_0_branch_9_branch_1_node_5_reproductive_unit": 1,
+        "C06:hierarchy_axis_88_node_4_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_43_node_8_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_82_node_7_reproductive_v142": 1,
+        "C06:hierarchy_axis_50_node_9_reproductive_v142": 1,
+        "C07:hierarchy_axis_37_node_6_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_85_node_6_reproductive_v142": 1,
+        "C06:hierarchy_axis_67_node_5_reproductive_v142": 1,
+        "C06:axis_0_0_branch_7_node_5_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_83_node_4_reproductive_v142": 1,
+        "C07:hierarchy_axis_23_node_3_reproductive_v142": 2,
+        "C06:hierarchy_axis_87_node_8_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_10_branch_4_node_4_reproductive_unit": 1,
+        "C06:axis_0_0_branch_11_branch_2_node_4_reproductive_unit": 1,
+        "C07:axis_0_0_branch_2_branch_1_node_3_reproductive_unit": 2,
+        "C07:hierarchy_axis_79_node_11_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_23_node_1_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_59_node_9_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_0_branch_2_node_4_reproductive_unit": 1,
+        "neighbor_1:hierarchy_axis_65_node_9_reproductive_v142": 1,
+        "C06:axis_0_0_branch_10_branch_0_node_2_reproductive_unit": 1,
+        "C07:axis_0_0_branch_11_branch_0_node_2_reproductive_unit": 1,
+        "C06:hierarchy_axis_13_node_6_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_20_node_6_reproductive_v142": 1,
+        "C06:hierarchy_axis_60_node_11_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_21_node_11_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_14_node_9_reproductive_v142": 1,
+        "C06:hierarchy_axis_78_node_8_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_68_node_1_reproductive_v142": 1,
+        "C07:axis_0_0_branch_10_branch_4_node_4_reproductive_unit": 1,
+        "C07:axis_0_0_branch_3_branch_1_node_2_reproductive_unit": 1,
+        "C07:hierarchy_axis_21_node_11_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_10_branch_2_node_5_reproductive_unit": 1,
+        "neighbor_0:axis_0_0_branch_0_branch_2_node_4_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_85_node_11_reproductive_v142": 1,
+        "C07:hierarchy_axis_65_node_9_reproductive_v142": 1,
+        "C07:hierarchy_axis_1_node_1_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_75_node_11_reproductive_v142": 1,
+        "C07:axis_0_0_branch_0_branch_0_node_1_reproductive_unit": 1,
+        "neighbor_0:axis_0_0_branch_9_branch_3_node_2_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_13_node_6_reproductive_v142": 1,
+        "C06:hierarchy_axis_82_node_7_reproductive_v142": 1,
+        "C06:hierarchy_axis_10_node_11_reproductive_v142": 1
+      },
+      "coverage": {
+        "all": {
+          "unique_visible": 588,
+          "unique_localized": 73,
+          "fraction": 0.12414965986394558,
+          "strict_track_error_m": {
+            "n": 76,
+            "mean": 0.48951761354735446,
+            "median": 0.08189008272408901,
+            "rmse": 1.0809331951574888,
+            "p95": 3.0915544058419995,
+            "maximum": 3.409216971154887
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "eligible": {
+          "unique_visible": 362,
+          "unique_localized": 71,
+          "fraction": 0.19613259668508287,
+          "strict_track_error_m": {
+            "n": 74,
+            "mean": 0.5017357302660252,
+            "median": 0.0874095319397355,
+            "rmse": 1.0954254876076392,
+            "p95": 3.093289253251913,
+            "maximum": 3.409216971154887
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "target_all": {
+          "unique_visible": 238,
+          "unique_localized": 51,
+          "fraction": 0.21428571428571427,
+          "strict_track_error_m": {
+            "n": 54,
+            "mean": 0.6423114124732634,
+            "median": 0.08571479789435626,
+            "rmse": 1.27901357525607,
+            "p95": 3.122995569638309,
+            "maximum": 3.409216971154887
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "target_eligible": {
+          "unique_visible": 235,
+          "unique_localized": 51,
+          "fraction": 0.2170212765957447,
+          "strict_track_error_m": {
+            "n": 54,
+            "mean": 0.6423114124732634,
+            "median": 0.08571479789435626,
+            "rmse": 1.27901357525607,
+            "p95": 3.122995569638309,
+            "maximum": 3.409216971154887
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        }
+      },
+      "inspection_visibility_coverage": {
+        "all": {
+          "unique_visible": 488,
+          "unique_localized": 67,
+          "fraction": 0.13729508196721313,
+          "strict_track_error_m": {
+            "n": 70,
+            "mean": 0.5242484839083233,
+            "median": 0.0874095319397355,
+            "rmse": 1.1258064931446998,
+            "p95": 3.0967589480717406,
+            "maximum": 3.409216971154887
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "eligible": {
+          "unique_visible": 304,
+          "unique_localized": 64,
+          "fraction": 0.21052631578947367,
+          "strict_track_error_m": {
+            "n": 67,
+            "mean": 0.5417765179211358,
+            "median": 0.09123424711000275,
+            "rmse": 1.150181004064963,
+            "p95": 3.0993612191866107,
+            "maximum": 3.409216971154887
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "target_all": {
+          "unique_visible": 238,
+          "unique_localized": 51,
+          "fraction": 0.21428571428571427,
+          "strict_track_error_m": {
+            "n": 54,
+            "mean": 0.6423114124732634,
+            "median": 0.08571479789435626,
+            "rmse": 1.27901357525607,
+            "p95": 3.122995569638309,
+            "maximum": 3.409216971154887
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "target_eligible": {
+          "unique_visible": 233,
+          "unique_localized": 51,
+          "fraction": 0.21888412017167383,
+          "strict_track_error_m": {
+            "n": 54,
+            "mean": 0.6423114124732634,
+            "median": 0.08571479789435626,
+            "rmse": 1.27901357525607,
+            "p95": 3.122995569638309,
+            "maximum": 3.409216971154887
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        }
+      }
+    },
+    "fused": {
+      "total_tracks": 10777,
+      "estimated_tracks": 636,
+      "strictly_attributed_tracks": 507,
+      "attribution_rejections": {
+        "unmatched_inlier_observations": 113,
+        "mixed_true_identities": 16
+      },
+      "unique_strictly_localized_instances": 286,
+      "strict_track_error_m": {
+        "n": 507,
+        "mean": 0.06684039993251875,
+        "median": 0.052042825018810454,
+        "rmse": 0.08549407918887256,
+        "p95": 0.16269788435465088,
+        "maximum": 0.47637091943129883
+      },
+      "all_matched_inlier_error_m_including_mixed_tracks": {
+        "n": 2670,
+        "mean": 0.08416669552632335,
+        "median": 0.050118357478710615,
+        "rmse": 0.22320984643484207,
+        "p95": 0.19150951525120888,
+        "maximum": 3.637107945037672
+      },
+      "duplicate_estimates_per_identity": {
+        "C06:hierarchy_axis_88_node_8_reproductive_v142": 2,
+        "C06:hierarchy_axis_85_node_6_reproductive_v142": 2,
+        "C06:hierarchy_axis_5_node_11_reproductive_v142": 5,
+        "C06:hierarchy_axis_51_node_8_reproductive_v142": 2,
+        "C06:axis_0_0_branch_9_branch_3_node_2_reproductive_unit": 3,
+        "C06:axis_0_0_branch_0_branch_2_node_4_reproductive_unit": 3,
+        "C06:axis_0_0_branch_5_node_3_reproductive_unit": 2,
+        "C06:axis_0_0_branch_11_branch_3_node_5_reproductive_unit": 5,
+        "C06:hierarchy_axis_45_node_7_reproductive_v142": 3,
+        "C06:hierarchy_axis_36_node_6_reproductive_v142": 4,
+        "C06:hierarchy_axis_85_node_11_reproductive_v142": 2,
+        "neighbor_0:hierarchy_axis_83_node_11_reproductive_v142": 2,
+        "neighbor_0:hierarchy_axis_85_node_11_reproductive_v142": 2,
+        "neighbor_0:axis_0_0_branch_9_branch_4_node_6_reproductive_unit": 3,
+        "C06:axis_0_0_branch_2_branch_1_node_1_reproductive_unit": 1,
+        "neighbor_3:hierarchy_axis_60_node_1_reproductive_v142": 1,
+        "neighbor_3:hierarchy_axis_16_node_11_reproductive_v142": 3,
+        "neighbor_0:hierarchy_axis_29_node_4_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_25_node_2_reproductive_v142": 1,
+        "neighbor_3:hierarchy_axis_21_node_11_reproductive_v142": 2,
+        "neighbor_1:hierarchy_axis_76_node_4_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_88_node_4_reproductive_v142": 2,
+        "neighbor_3:hierarchy_axis_73_node_9_reproductive_v142": 3,
+        "neighbor_3:axis_0_0_branch_11_branch_0_node_2_reproductive_unit": 3,
+        "neighbor_1:hierarchy_axis_59_node_11_reproductive_v142": 2,
+        "neighbor_3:hierarchy_axis_53_node_7_reproductive_v142": 1,
+        "neighbor_3:axis_0_0_branch_3_branch_1_node_2_reproductive_unit": 2,
+        "neighbor_3:hierarchy_axis_65_node_9_reproductive_v142": 1,
+        "neighbor_3:axis_0_0_branch_9_branch_1_node_5_reproductive_unit": 2,
+        "neighbor_3:hierarchy_axis_59_node_9_reproductive_v142": 2,
+        "neighbor_3:hierarchy_axis_57_node_2_reproductive_v142": 1,
+        "neighbor_3:hierarchy_axis_63_node_8_reproductive_v142": 1,
+        "neighbor_3:hierarchy_axis_50_node_5_reproductive_v142": 1,
+        "neighbor_3:axis_0_0_branch_10_branch_2_node_5_reproductive_unit": 3,
+        "neighbor_1:hierarchy_axis_75_node_2_reproductive_v142": 1,
+        "neighbor_3:axis_0_0_branch_10_branch_4_node_4_reproductive_unit": 2,
+        "neighbor_3:axis_0_0_branch_3_branch_1_node_1_reproductive_unit": 3,
+        "neighbor_3:hierarchy_axis_56_node_11_reproductive_v142": 1,
+        "neighbor_3:axis_0_0_branch_0_branch_0_node_1_reproductive_unit": 1,
+        "neighbor_1:hierarchy_axis_56_node_11_reproductive_v142": 3,
+        "neighbor_3:hierarchy_axis_1_node_1_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_1_node_1_reproductive_v142": 4,
+        "neighbor_1:hierarchy_axis_54_node_2_reproductive_v142": 2,
+        "neighbor_1:hierarchy_axis_53_node_7_reproductive_v142": 1,
+        "neighbor_3:hierarchy_axis_56_node_8_reproductive_v142": 1,
+        "neighbor_3:hierarchy_axis_47_node_2_reproductive_v142": 1,
+        "neighbor_3:hierarchy_axis_62_node_3_reproductive_v142": 3,
+        "neighbor_1:axis_0_0_branch_3_branch_1_node_3_reproductive_unit": 5,
+        "neighbor_1:hierarchy_axis_59_node_9_reproductive_v142": 5,
+        "neighbor_1:axis_0_0_branch_7_node_5_reproductive_unit": 1,
+        "neighbor_1:hierarchy_axis_40_node_9_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_14_node_9_reproductive_v142": 3,
+        "neighbor_1:hierarchy_axis_75_node_4_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_10_branch_4_node_4_reproductive_unit": 3,
+        "neighbor_1:hierarchy_axis_13_node_10_reproductive_v142": 2,
+        "neighbor_1:axis_0_0_branch_9_branch_4_node_6_reproductive_unit": 1,
+        "neighbor_1:hierarchy_axis_38_node_10_reproductive_v142": 2,
+        "neighbor_1:axis_0_0_branch_9_branch_1_node_5_reproductive_unit": 2,
+        "neighbor_1:hierarchy_axis_45_node_3_reproductive_v142": 2,
+        "neighbor_1:axis_0_0_branch_11_branch_2_node_4_reproductive_unit": 1,
+        "C07:axis_0_0_branch_2_branch_1_node_1_reproductive_unit": 1,
+        "neighbor_1:hierarchy_axis_73_node_9_reproductive_v142": 3,
+        "C07:hierarchy_axis_37_node_6_reproductive_v142": 3,
+        "C07:hierarchy_axis_16_node_11_reproductive_v142": 2,
+        "C07:hierarchy_axis_88_node_4_reproductive_v142": 3,
+        "C07:hierarchy_axis_85_node_11_reproductive_v142": 1,
+        "C07:axis_0_0_branch_9_branch_4_node_6_reproductive_unit": 2,
+        "C07:hierarchy_axis_80_node_11_reproductive_v142": 2,
+        "C07:axis_0_0_branch_9_branch_2_node_1_reproductive_unit": 5,
+        "C07:hierarchy_axis_20_node_6_reproductive_v142": 2,
+        "C07:hierarchy_axis_16_node_2_reproductive_v142": 1,
+        "C07:hierarchy_axis_39_node_11_reproductive_v142": 2,
+        "C07:hierarchy_axis_59_node_11_reproductive_v142": 4,
+        "C07:hierarchy_axis_12_node_11_reproductive_v142": 3,
+        "C07:axis_0_0_branch_11_branch_0_node_3_reproductive_unit": 2,
+        "C07:axis_0_0_branch_2_branch_0_node_2_reproductive_unit": 1,
+        "C07:hierarchy_axis_33_node_11_reproductive_v142": 2,
+        "C07:hierarchy_axis_53_node_7_reproductive_v142": 2,
+        "C07:hierarchy_axis_21_node_11_reproductive_v142": 2,
+        "C07:axis_0_0_branch_11_branch_3_node_5_reproductive_unit": 5,
+        "C07:axis_0_0_branch_3_branch_1_node_2_reproductive_unit": 3,
+        "C07:hierarchy_axis_35_node_2_reproductive_v142": 1,
+        "C06:hierarchy_axis_82_node_7_reproductive_v142": 2,
+        "C07:hierarchy_axis_60_node_1_reproductive_v142": 2,
+        "C07:hierarchy_axis_5_node_6_reproductive_v142": 2,
+        "C07:hierarchy_axis_28_node_11_reproductive_v142": 2,
+        "C07:axis_0_0_branch_1_node_1_reproductive_unit": 3,
+        "C06:hierarchy_axis_68_node_1_reproductive_v142": 2,
+        "C07:hierarchy_axis_30_node_11_reproductive_v142": 2,
+        "C06:hierarchy_axis_86_node_2_reproductive_v142": 2,
+        "C07:axis_0_0_branch_10_node_3_reproductive_unit": 2,
+        "C06:hierarchy_axis_26_node_8_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_26_node_8_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_45_node_7_reproductive_v142": 2,
+        "neighbor_0:hierarchy_axis_8_node_3_reproductive_v142": 1,
+        "C07:hierarchy_axis_77_node_11_reproductive_v142": 2,
+        "C07:axis_0_0_branch_9_branch_1_node_2_reproductive_unit": 2,
+        "C06:axis_0_0_branch_10_branch_2_node_6_reproductive_unit": 1,
+        "C06:axis_0_0_branch_3_branch_1_node_2_reproductive_unit": 3,
+        "C06:hierarchy_axis_29_node_4_reproductive_v142": 2,
+        "C06:hierarchy_axis_16_node_7_reproductive_v142": 1,
+        "C07:axis_0_0_branch_3_branch_1_node_1_reproductive_unit": 2,
+        "C06:hierarchy_axis_16_node_11_reproductive_v142": 2,
+        "C06:hierarchy_axis_42_node_4_reproductive_v142": 2,
+        "C06:hierarchy_axis_21_node_4_reproductive_v142": 4,
+        "C06:axis_0_0_branch_1_node_1_reproductive_unit": 2,
+        "C06:hierarchy_axis_24_node_1_reproductive_v142": 2,
+        "C07:hierarchy_axis_29_node_8_reproductive_v142": 3,
+        "C06:hierarchy_axis_60_node_9_reproductive_v142": 1,
+        "C07:hierarchy_axis_58_node_2_reproductive_v142": 2,
+        "C07:axis_0_0_branch_10_branch_2_node_6_reproductive_unit": 2,
+        "C06:hierarchy_axis_8_node_3_reproductive_v142": 2,
+        "C06:hierarchy_axis_23_node_1_reproductive_v142": 3,
+        "C06:hierarchy_axis_22_node_11_reproductive_v142": 3,
+        "C07:axis_0_0_branch_9_branch_1_node_5_reproductive_unit": 2,
+        "C07:hierarchy_axis_27_node_11_reproductive_v142": 1,
+        "C07:axis_0_0_branch_10_branch_0_node_2_reproductive_unit": 3,
+        "C06:hierarchy_axis_30_node_8_reproductive_v142": 1,
+        "C07:hierarchy_axis_23_node_1_reproductive_v142": 3,
+        "C07:hierarchy_axis_46_node_11_reproductive_v142": 4,
+        "C07:hierarchy_axis_56_node_8_reproductive_v142": 3,
+        "C07:hierarchy_axis_54_node_6_reproductive_v142": 1,
+        "C07:hierarchy_axis_56_node_4_reproductive_v142": 4,
+        "C07:axis_0_0_branch_8_branch_1_node_3_reproductive_unit": 4,
+        "C07:hierarchy_axis_3_node_2_reproductive_v142": 2,
+        "C07:axis_0_0_branch_4_branch_1_node_1_reproductive_unit": 2,
+        "C07:hierarchy_axis_49_node_8_reproductive_v142": 3,
+        "C07:hierarchy_axis_40_node_9_reproductive_v142": 1,
+        "C07:hierarchy_axis_1_node_1_reproductive_v142": 2,
+        "C07:hierarchy_axis_50_node_9_reproductive_v142": 1,
+        "C07:hierarchy_axis_6_node_5_reproductive_v142": 2,
+        "C07:hierarchy_axis_7_node_11_reproductive_v142": 2,
+        "C07:hierarchy_axis_56_node_11_reproductive_v142": 1,
+        "C07:hierarchy_axis_54_node_2_reproductive_v142": 2,
+        "C07:hierarchy_axis_24_node_2_reproductive_v142": 2,
+        "C07:hierarchy_axis_83_node_2_reproductive_v142": 1,
+        "C07:axis_0_0_branch_11_branch_2_node_4_reproductive_unit": 2,
+        "C07:hierarchy_axis_13_node_10_reproductive_v142": 1,
+        "C07:hierarchy_axis_25_node_5_reproductive_v142": 1,
+        "C06:hierarchy_axis_63_node_11_reproductive_v142": 3,
+        "C06:hierarchy_axis_59_node_9_reproductive_v142": 3,
+        "C06:hierarchy_axis_60_node_11_reproductive_v142": 3,
+        "C06:axis_0_0_branch_10_branch_2_node_5_reproductive_unit": 1,
+        "C06:hierarchy_axis_17_node_9_reproductive_v142": 2,
+        "C06:axis_0_0_branch_11_branch_3_node_6_reproductive_unit": 2,
+        "C06:axis_0_0_branch_2_branch_0_node_6_reproductive_unit": 1,
+        "C06:hierarchy_axis_30_node_11_reproductive_v142": 3,
+        "C06:hierarchy_axis_64_node_5_reproductive_v142": 1,
+        "C06:hierarchy_axis_48_node_3_reproductive_v142": 3,
+        "C06:hierarchy_axis_47_node_2_reproductive_v142": 1,
+        "C06:hierarchy_axis_45_node_5_reproductive_v142": 1,
+        "C06:axis_0_0_branch_0_branch_0_node_3_reproductive_unit": 2,
+        "C06:hierarchy_axis_78_node_4_reproductive_v142": 3,
+        "C06:hierarchy_axis_13_node_6_reproductive_v142": 3,
+        "C06:hierarchy_axis_76_node_11_reproductive_v142": 1,
+        "C06:hierarchy_axis_83_node_11_reproductive_v142": 2,
+        "C06:hierarchy_axis_83_node_4_reproductive_v142": 2,
+        "C06:hierarchy_axis_44_node_11_reproductive_v142": 1,
+        "C06:hierarchy_axis_18_node_11_reproductive_v142": 1,
+        "C06:axis_0_0_branch_9_branch_4_node_6_reproductive_unit": 2,
+        "C06:axis_0_0_branch_2_branch_0_node_2_reproductive_unit": 1,
+        "C06:hierarchy_axis_53_node_7_reproductive_v142": 1,
+        "C06:hierarchy_axis_52_node_8_reproductive_v142": 1,
+        "C06:hierarchy_axis_65_node_9_reproductive_v142": 1,
+        "C06:hierarchy_axis_57_node_4_reproductive_v142": 1,
+        "C06:hierarchy_axis_46_node_7_reproductive_v142": 1,
+        "C06:hierarchy_axis_48_node_9_reproductive_v142": 2,
+        "C06:axis_0_0_branch_9_branch_1_node_2_reproductive_unit": 2,
+        "C06:axis_0_0_branch_11_branch_2_node_4_reproductive_unit": 2,
+        "C06:hierarchy_axis_59_node_6_reproductive_v142": 3,
+        "C06:hierarchy_axis_61_node_9_reproductive_v142": 1,
+        "C06:axis_0_0_branch_10_branch_3_node_5_reproductive_unit": 1,
+        "C06:hierarchy_axis_64_node_2_reproductive_v142": 1,
+        "C07:hierarchy_axis_45_node_2_reproductive_v142": 1,
+        "C07:hierarchy_axis_23_node_3_reproductive_v142": 4,
+        "C06:axis_0_0_branch_3_branch_1_node_1_reproductive_unit": 1,
+        "C07:hierarchy_axis_24_node_4_reproductive_v142": 1,
+        "C07:hierarchy_axis_29_node_11_reproductive_v142": 2,
+        "C07:hierarchy_axis_24_node_7_reproductive_v142": 1,
+        "C07:hierarchy_axis_79_node_11_reproductive_v142": 4,
+        "C07:hierarchy_axis_50_node_5_reproductive_v142": 1,
+        "C07:hierarchy_axis_23_node_9_reproductive_v142": 1,
+        "C07:hierarchy_axis_62_node_3_reproductive_v142": 1,
+        "C07:hierarchy_axis_69_node_2_reproductive_v142": 1,
+        "C06:axis_0_0_branch_11_branch_0_node_3_reproductive_unit": 1,
+        "C06:hierarchy_axis_74_node_4_reproductive_v142": 2,
+        "C07:axis_0_0_branch_10_branch_2_node_5_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_88_node_8_reproductive_v142": 1,
+        "C06:axis_0_0_branch_7_node_5_reproductive_unit": 2,
+        "C06:hierarchy_axis_38_node_9_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_10_branch_2_node_5_reproductive_unit": 1,
+        "neighbor_1:axis_0_0_branch_11_branch_0_node_2_reproductive_unit": 3,
+        "neighbor_1:hierarchy_axis_88_node_4_reproductive_v142": 1,
+        "C06:axis_0_0_branch_11_branch_0_node_2_reproductive_unit": 1,
+        "neighbor_1:axis_0_0_branch_2_branch_1_node_3_reproductive_unit": 1,
+        "neighbor_1:axis_0_0_branch_3_branch_1_node_2_reproductive_unit": 2,
+        "neighbor_1:hierarchy_axis_57_node_2_reproductive_v142": 1,
+        "C06:hierarchy_axis_51_node_4_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_19_node_4_reproductive_v142": 2,
+        "C06:hierarchy_axis_56_node_6_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_3_branch_1_node_1_reproductive_unit": 2,
+        "C07:hierarchy_axis_59_node_9_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_65_node_9_reproductive_v142": 3,
+        "neighbor_1:hierarchy_axis_23_node_3_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_87_node_8_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_60_node_1_reproductive_v142": 1,
+        "C07:axis_0_0_branch_11_branch_0_node_2_reproductive_unit": 2,
+        "C06:hierarchy_axis_50_node_9_reproductive_v142": 1,
+        "C07:hierarchy_axis_75_node_4_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_56_node_4_reproductive_v142": 1,
+        "C07:hierarchy_axis_45_node_3_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_50_node_9_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_37_node_6_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_79_node_11_reproductive_v142": 2,
+        "neighbor_1:axis_0_0_branch_0_branch_0_node_1_reproductive_unit": 1,
+        "neighbor_3:hierarchy_axis_19_node_4_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_9_branch_1_node_2_reproductive_unit": 1,
+        "neighbor_1:hierarchy_axis_62_node_3_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_27_node_9_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_43_node_8_reproductive_v142": 1,
+        "C07:hierarchy_axis_9_node_7_reproductive_v142": 1,
+        "neighbor_3:axis_0_0_branch_8_branch_1_node_3_reproductive_unit": 1,
+        "C06:hierarchy_axis_38_node_2_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_82_node_7_reproductive_v142": 1,
+        "C07:hierarchy_axis_46_node_4_reproductive_v142": 2,
+        "neighbor_0:hierarchy_axis_85_node_6_reproductive_v142": 2,
+        "C06:hierarchy_axis_67_node_5_reproductive_v142": 2,
+        "neighbor_0:hierarchy_axis_83_node_4_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_9_branch_2_node_1_reproductive_unit": 1,
+        "C06:axis_0_0_branch_9_branch_1_node_5_reproductive_unit": 1,
+        "C06:hierarchy_axis_87_node_8_reproductive_v142": 2,
+        "C07:axis_0_0_branch_2_branch_1_node_3_reproductive_unit": 2,
+        "neighbor_0:hierarchy_axis_23_node_1_reproductive_v142": 2,
+        "neighbor_1:hierarchy_axis_16_node_11_reproductive_v142": 2,
+        "neighbor_1:axis_0_0_branch_0_branch_2_node_4_reproductive_unit": 2,
+        "C06:axis_0_0_branch_10_branch_0_node_2_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_67_node_5_reproductive_v142": 3,
+        "neighbor_1:hierarchy_axis_20_node_6_reproductive_v142": 2,
+        "neighbor_1:hierarchy_axis_21_node_11_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_74_node_4_reproductive_v142": 3,
+        "neighbor_0:hierarchy_axis_68_node_1_reproductive_v142": 2,
+        "neighbor_0:axis_0_0_branch_9_branch_3_node_2_reproductive_unit": 3,
+        "C07:axis_0_0_branch_10_branch_4_node_4_reproductive_unit": 1,
+        "neighbor_0:axis_0_0_branch_0_branch_0_node_3_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_75_node_11_reproductive_v142": 2,
+        "neighbor_0:axis_0_0_branch_0_branch_2_node_4_reproductive_unit": 3,
+        "neighbor_1:hierarchy_axis_82_node_10_reproductive_v142": 2,
+        "C07:hierarchy_axis_65_node_9_reproductive_v142": 1,
+        "C07:axis_0_0_branch_0_branch_0_node_1_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_21_node_4_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_51_node_8_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_13_node_6_reproductive_v142": 1,
+        "C06:hierarchy_axis_10_node_11_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_11_branch_0_node_3_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_36_node_6_reproductive_v142": 2,
+        "neighbor_0:axis_0_0_branch_7_node_5_reproductive_unit": 1,
+        "neighbor_1:hierarchy_axis_16_node_1_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_56_node_6_reproductive_v142": 1,
+        "C07:axis_0_0_branch_7_node_5_reproductive_unit": 1,
+        "neighbor_1:hierarchy_axis_17_node_2_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_54_node_6_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_51_node_4_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_10_branch_0_node_2_reproductive_unit": 1,
+        "neighbor_0:axis_0_0_branch_9_branch_1_node_2_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_48_node_3_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_2_branch_0_node_2_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_47_node_2_reproductive_v142": 1,
+        "neighbor_1:hierarchy_axis_33_node_11_reproductive_v142": 1,
+        "neighbor_1:axis_0_0_branch_8_branch_1_node_3_reproductive_unit": 1,
+        "neighbor_1:hierarchy_axis_35_node_2_reproductive_v142": 1,
+        "neighbor_3:axis_0_0_branch_0_branch_2_node_4_reproductive_unit": 1,
+        "neighbor_0:axis_0_0_branch_5_node_3_reproductive_unit": 1,
+        "C06:axis_0_0_branch_4_branch_1_node_1_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_86_node_2_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_5_node_11_reproductive_v142": 1,
+        "neighbor_3:hierarchy_axis_20_node_6_reproductive_v142": 1,
+        "neighbor_0:hierarchy_axis_13_node_2_reproductive_v142": 2,
+        "C06:axis_0_0_branch_8_branch_1_node_3_reproductive_unit": 1,
+        "C06:axis_0_0_branch_4_branch_2_node_5_reproductive_unit": 1,
+        "C06:hierarchy_axis_14_node_4_reproductive_v142": 1,
+        "neighbor_0:axis_0_0_branch_10_branch_0_node_2_reproductive_unit": 1,
+        "neighbor_0:axis_0_0_branch_3_branch_1_node_3_reproductive_unit": 1,
+        "neighbor_0:axis_0_0_branch_11_branch_0_node_3_reproductive_unit": 1,
+        "neighbor_0:hierarchy_axis_14_node_4_reproductive_v142": 1,
+        "C06:hierarchy_axis_50_node_2_reproductive_v142": 1,
+        "neighbor_0:axis_0_0_branch_11_branch_0_node_2_reproductive_unit": 1
+      },
+      "coverage": {
+        "all": {
+          "unique_visible": 588,
+          "unique_localized": 286,
+          "fraction": 0.48639455782312924,
+          "strict_track_error_m": {
+            "n": 507,
+            "mean": 0.06684039993251875,
+            "median": 0.052042825018810454,
+            "rmse": 0.08549407918887256,
+            "p95": 0.16269788435465088,
+            "maximum": 0.47637091943129883
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "eligible": {
+          "unique_visible": 362,
+          "unique_localized": 246,
+          "fraction": 0.6795580110497238,
+          "strict_track_error_m": {
+            "n": 444,
+            "mean": 0.06034288695484449,
+            "median": 0.048273474849029344,
+            "rmse": 0.07494917165173369,
+            "p95": 0.15060914240074824,
+            "maximum": 0.3606032793300431
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "target_all": {
+          "unique_visible": 238,
+          "unique_localized": 163,
+          "fraction": 0.6848739495798319,
+          "strict_track_error_m": {
+            "n": 310,
+            "mean": 0.05104357513495934,
+            "median": 0.04333245517460179,
+            "rmse": 0.06105358309925483,
+            "p95": 0.13196776269851207,
+            "maximum": 0.20064098894307397
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "target_eligible": {
+          "unique_visible": 235,
+          "unique_localized": 163,
+          "fraction": 0.6936170212765957,
+          "strict_track_error_m": {
+            "n": 310,
+            "mean": 0.05104357513495934,
+            "median": 0.04333245517460179,
+            "rmse": 0.06105358309925483,
+            "p95": 0.13196776269851207,
+            "maximum": 0.20064098894307397
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        }
+      },
+      "inspection_visibility_coverage": {
+        "all": {
+          "unique_visible": 488,
+          "unique_localized": 259,
+          "fraction": 0.5307377049180327,
+          "strict_track_error_m": {
+            "n": 465,
+            "mean": 0.06557947179499637,
+            "median": 0.050118357478710615,
+            "rmse": 0.08402465986442113,
+            "p95": 0.15943864304101976,
+            "maximum": 0.47637091943129883
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "eligible": {
+          "unique_visible": 304,
+          "unique_localized": 214,
+          "fraction": 0.7039473684210527,
+          "strict_track_error_m": {
+            "n": 397,
+            "mean": 0.05789565537525,
+            "median": 0.047313164814229466,
+            "rmse": 0.07147559972066964,
+            "p95": 0.14471262966000367,
+            "maximum": 0.28784583078054116
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "target_all": {
+          "unique_visible": 238,
+          "unique_localized": 163,
+          "fraction": 0.6848739495798319,
+          "strict_track_error_m": {
+            "n": 310,
+            "mean": 0.05104357513495934,
+            "median": 0.04333245517460179,
+            "rmse": 0.06105358309925483,
+            "p95": 0.13196776269851207,
+            "maximum": 0.20064098894307397
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        },
+        "target_eligible": {
+          "unique_visible": 233,
+          "unique_localized": 163,
+          "fraction": 0.6995708154506438,
+          "strict_track_error_m": {
+            "n": 310,
+            "mean": 0.05104357513495934,
+            "median": 0.04333245517460179,
+            "rmse": 0.06105358309925483,
+            "p95": 0.13196776269851207,
+            "maximum": 0.20064098894307397
+          },
+          "definition": "End-of-route map vs instances ever visible in scope; not online per-frame coverage"
+        }
+      }
+    }
+  },
+  "public_stage_summary": {
+    "version": "full-routes-metric-localization/1",
+    "complete": true,
+    "frames": 167,
+    "private_inputs": false,
+    "rerendered": false,
+    "detector_reinference": false,
+    "tracker_rerun": false,
+    "decoded_frames": 30,
+    "accepted_marker_pose_frames": 29,
+    "fusion_visual_updates": 23,
+    "marker_pose_outcomes": {
+      "estimated": 29,
+      "ambiguous_marker_pose": 1
+    },
+    "fusion_rejections": [
+      {
+        "stamp_ns": 33250000000,
+        "reason": "marker_innovation_gate",
+        "mahalanobis_squared": 84248.09516757018
+      },
+      {
+        "stamp_ns": 33500000000,
+        "reason": "marker_innovation_gate",
+        "mahalanobis_squared": 47602.210696896625
+      },
+      {
+        "stamp_ns": 34250000000,
+        "reason": "marker_innovation_gate",
+        "mahalanobis_squared": 35699.21528515324
+      },
+      {
+        "stamp_ns": 34750000000,
+        "reason": "marker_innovation_gate",
+        "mahalanobis_squared": 53450.57153959691
+      },
+      {
+        "stamp_ns": 35000000000,
+        "reason": "marker_innovation_gate",
+        "mahalanobis_squared": 79071.73065421346
+      },
+      {
+        "stamp_ns": 36750000000,
+        "reason": "marker_innovation_gate",
+        "mahalanobis_squared": 51641.41018770697
+      }
+    ],
+    "variants": {
+      "visual_only": {
+        "pose_frames": 29,
+        "tracks": 10777,
+        "tracks_with_pose_observations": 2618,
+        "estimated_tracks": 101,
+        "rejection_reasons": {
+          "no_consistent_three_view_geometry": 436,
+          "triangulation_reprojection": 20,
+          "estimated": 101,
+          "fewer_than_three_observations": 10220
+        }
+      },
+      "fused": {
+        "pose_frames": 167,
+        "tracks": 10777,
+        "tracks_with_pose_observations": 10777,
+        "estimated_tracks": 636,
+        "rejection_reasons": {
+          "estimated": 636,
+          "no_consistent_three_view_geometry": 815,
+          "triangulation_reprojection": 84,
+          "fewer_than_three_observations": 9242
+        }
+      }
+    },
+    "minimum_free_gib": 12.357658386230469,
+    "binding": {
+      "protocol_sha256": "74a23fea44c324633105486bda976f1bab7cf023ccd20d91278d7e67c06950dc",
+      "estimator_sha256": "1a746fe918f9bafc8e0def667adc51ca1ca3f062df408bdc0d04959befe1294d",
+      "tracking_sha256": "c0a9bc0e0c4a1c5b05bb3eb405efddf14a42a4e147951fff048e66ba3a27a648",
+      "rgb_receipt_sha256": "a7af39aea269f254a41c1f0802085da7e410048a30d630de8157aa21ed7e2569",
+      "sensor_receipt_sha256": "bb63e8d36ff3550e9b19c251d74e867a452eff236dc62b0fe3a5327298bbb8b7"
+    },
+    "output_sha256": {
+      "fused_triangulation.jsonl": "55955a97bddbb9abf3f6e6535e1f1c4333d30a9bb7637291020bc96bc3a58743",
+      "poses.jsonl": "b032bb92bb6ec303575149e25550cf05dbe3332c74e09de1f49b3d73b7d7ca0f",
+      "visual_only_triangulation.jsonl": "6b44a9fc93e49d0ea9fe785948323dc19602975806a8d5da434b5b92995cceb9"
+    }
+  },
+  "reference": "center of evaluated world-axis-aligned calyx bounding box, transformed into marker coordinates; engineering geometry reference, not internal fruit center or 6D fruit pose",
+  "limitations": [
+    "Uncalibrated independent sensor noise, no bias or correlated drift",
+    "Single common frontal marker; C07 has no separate marker",
+    "Fragmented frozen track IDs; no tracker correction",
+    "Visible-mask centroids can shift with viewpoint and occlusion",
+    "Calyx AABB center is a geometric reference; no claim of internal fruit pose",
+    "Synthetic validation plants, no external holdout"
+  ],
+  "coverage_warning": "Conditional errors; missing/unassigned tracks remain in coverage denominators. Calyx reference is not a measured internal fruit center.",
+  "protocol_sha256": "74a23fea44c324633105486bda976f1bab7cf023ccd20d91278d7e67c06950dc",
+  "evaluator_sha256": "75be38d707c7d6c1c26a75a4c30e320dc83908ed3063799345c10345e5aa53b4",
+  "output_sha256": {
+    "fused_calyx_details.json": "711064723029c0d683021b5e85793762db6130dea3a53225a7c2aa9b5b14c687",
+    "fused_strict_attribution.json": "16f036914991f0cefe1920f0c969f9c4b9d735abc6ec515b3262dbf9b2e106a1",
+    "input_hashes.json": "a93e80b2b659909223d1f55e24bc675813b8c05ea0dcac5e726dc93e88f36cc5",
+    "native_assignment_provenance.json": "ff39283a0bd7fd931feacd0eeabaad61a3a0685af6966ba565c72d8c833a3549",
+    "pose_errors.json": "cd470e1fd1df9f1078d7ac009207f9f9c6bc3d9e7dc59bac7f29de7d08224768",
+    "visual_only_calyx_details.json": "90e55b6648cb0f0ee61e3616c9fba654851a98cea3d4bef9be071fe56d414fa8",
+    "visual_only_strict_attribution.json": "e6f29748afa1ef22d4b17ec226cda3203229d6969e52149b668a32bd8d6ad5ef"
+  }
+}

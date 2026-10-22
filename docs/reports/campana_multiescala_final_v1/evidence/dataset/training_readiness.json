@@ -1,0 +1,42 @@
+{
+  "version": "multiscale-training-readiness/1",
+  "passed": true,
+  "created_utc": "2026-10-21T07:10:20.025131+00:00",
+  "protocol_sha256": "85c8e31ceb103be9d5aa4ff07a8ac9c1f8b2854f847522a6739dd2bbc5868149",
+  "raster_manifest_sha256": "2f38aec78c7c92b02b8dda812521a558d987a7d9938207b064c32d4bacc19426",
+  "patch_manifest_sha256": "cade87fc69ec750cd69e147dc3163997aa65d56b7d08615f69c0c6609c1d7e76",
+  "native_augmentation_check_sha256": "4c585f90f20a047b996f44f80436c2cdb3ef1ddba741d390cb3ab466f38feb0b",
+  "initialization_sha256": "79c3dad74e7cf9caab3c82a3e37ea72235352568d7dfacbd5c9e8284cb190073",
+  "evidence_sha256": {
+    "split_integrity_audit_v1.json": "b1ec31ccbf884ae0d8a8b9672c52a865f29910e0579a9c1b1db0bf0790d6f39f",
+    "current_dataset_loader_check_v1.json": "5053e65918455abaa7d5e789a801499d2519f210db7cb6144ebafba8b8d5718c",
+    "scale_review_v1/size_distribution.json": "30b0a870ba77a8512c3229739150f20cf5bc616c0a9bafafde4005da4ad3a95e",
+    "scale_review_v1/visual_review.json": "f1d865b75a28894a120339a27a774556d523ab9252c173174c60ff6f2e2a7599",
+    "patches/input_audit.json": "f739de9915f569f240be82ed1a137ee2e165734f371870a619067b61d50e20d9",
+    "dataset/dataset_contract.json": "34c852c3aa9a3006cd3f66f3d3691d5b72a83ba290e31e5e06f8809bdaf79953"
+  },
+  "full_views": {
+    "train": 192,
+    "val": 96,
+    "test": 96
+  },
+  "patches": {
+    "train": 1152,
+    "val": 576
+  },
+  "label_scope": "Calyx appearance only, not internal fruit maturity.",
+  "warnings": [
+    "No empty-frame negatives.",
+    "Shared D topology; source instances disjoint, families not independent.",
+    "Historically inspected development test, not external holdout.",
+    "Eligible size subset is an engineering diagnostic, not a filter dropping small training targets."
+  ],
+  "runtime": {
+    "threads": 4,
+    "workers": 0,
+    "admission_free_gib": 6.5,
+    "early_stop_free_gib": 3,
+    "reserve_gib": 2
+  },
+  "next_action": "Train 10 epochs from frozen final weights with native train-only transforms and actual update/memory evidence."
+}

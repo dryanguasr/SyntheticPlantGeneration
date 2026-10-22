@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "tests": [
+    "Known four-view 3D geometry recovered with fixed gates",
+    "Fewer than three observations rejected",
+    "Zero-parallax observations rejected",
+    "No metric pose before decoded marker anchor",
+    "Previous-camera increment and 0.25s timestamp correctly propagated",
+    "Motion gaps and private extra fields rejected",
+    "Uncalibrated marker identity rejected",
+    "Large marker innovation rejected by frozen 16.8 gate"
+  ],
+  "number_of_tests": 8,
+  "campaign_data_used": false
+}

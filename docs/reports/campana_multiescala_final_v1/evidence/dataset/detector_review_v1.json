@@ -1,0 +1,36 @@
+{
+  "version": "multiscale-detector-review/1",
+  "created_utc": "2026-10-21T10:06:38.241427+00:00",
+  "technical_delivery_passed": true,
+  "scientific_promotion": false,
+  "allow_new_flight_smoke": true,
+  "full_flight_expansion_requires_smoke": true,
+  "new_weight_sha256": "9c660824319f2c436321d2545cf9b267348c7be64d7780a396d8382555eb05cd",
+  "reviewed_examples": [
+    "validation_view_000",
+    "validation_view_049",
+    "validation_view_095"
+  ],
+  "reviewed_matrices": [
+    "confusion_test_all.png",
+    "confusion_test_eligible.png"
+  ],
+  "visual_findings": [
+    "Near example shows more coherent large calyx masks and fewer visible stray masks than reference; small or leaf-occluded capachos remain missed.",
+    "Middle and far examples preserve full RGB views and original GT; small objects and truncated neighbor plants remain difficult.",
+    "Confusion matrices checked against numeric counts, including wrong-class matches and unmatched objects."
+  ],
+  "evidence_sha256": {
+    "evaluation_delivery_audit_v1.json": "d7c2217a0349976875349b7d65531f3fe78d7eaa524ffb64a52815f7ad7ed98d",
+    "native_evaluation_v1/summary.json": "a33cb8d42b013bb2bbffdcea0fd61111fcd24dedc5020c099fdcf75fd883197b",
+    "training_runs/training/execution_summary.json": "dbccbed08920ed6cd48a058d4b549c306dd3e2863b63a8250c65c5797fb33cc8"
+  },
+  "limitations": [
+    "Global test recall49.57%, no production readiness.",
+    "Eligible subset only38.99% of visible test objects; conditional F1 is not global F1.",
+    "Pintona-to-madura mistakes decreased838-to538; madura-to-pintona increased172-to297.",
+    "Far eligible precision regressed in validation and test.",
+    "Test historically inspected, shared topology, no full-image negatives; image-level distance is not distance to every neighbor.",
+    "Both models use identical640/448/960 pipeline; not a replication of historical384/256 ROI scores."
+  ]
+}

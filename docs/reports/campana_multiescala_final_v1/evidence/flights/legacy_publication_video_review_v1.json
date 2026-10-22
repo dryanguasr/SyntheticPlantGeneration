@@ -1,0 +1,32 @@
+{
+  "route": "legacy",
+  "file": "videos/legacy_4fps_pip.mp4",
+  "frames_decoded": 178,
+  "fps": 4.0,
+  "duration_seconds": 44.5,
+  "sha256": "9db989be1dcd66aa46f023ef95bad9c77a51a3cd01d4fe0df2b255286f94ad13",
+  "visual_review": "Reviewed decoded frames: first/middle/last and every predeclared phase selection. Main view and masks/IDs present, external inset synchronized. Inset scene/proxy small; fine motion hard to read.",
+  "reviewed_frames": [
+    0,
+    1,
+    3,
+    4,
+    10,
+    15,
+    20,
+    21,
+    27,
+    33,
+    88,
+    97,
+    100,
+    103,
+    104,
+    108,
+    112,
+    174,
+    175,
+    176,
+    177
+  ]
+}
