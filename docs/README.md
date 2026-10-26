@@ -32,6 +32,9 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Gobernanza y evidencia
 
+- [Auditoría independiente de generación sintética y Gazebo (25-10-2026)](reports/auditoria_generacion_sintetica_2026-10-25.md):
+  defectos reproducidos de morfología, validación y procedencia; límites de la
+  exportación física, prioridades para estudiantes y piloto flexible secundario.
 - [Informe del componente virtual para Karen y Caroline](reports/informe_virtual_karen_caroline_2026-10-14.md):
   experimentos, resultados, pendientes y referencias para la tesis, sin detalles del generador.
 - [Auditoría científica de Blender y maduración](reports/auditoria_cientifica_blender_2026-09-08.md):
