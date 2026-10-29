@@ -2658,14 +2658,16 @@
       "id": "entrypoint.spatial_dataset_handoff",
       "type": "entrypoint",
       "label": "Transición automática de veinte plantas a dataset con presupuesto restante",
-      "summary": "Pool20admitido, árboles intactos, sin entrenamiento. Usuario amplió29/10 hasta1000imágenes de suelo natural o8horas efectivas adicionales desde autorización. Reloj acumulado preservado y presupuesto previo archivado/hash; revisión autorizada comprobada por budget_lineage. Variantes anteriores192vistas preservadas pero excluidas. Suelo earth/litter/vegetación irregular de plan puro reproducible e intérprete separado,12plantas/cuatrohileras, tutorado horizontal/hilos y panoramaCC0 sólo cámara. Cada escena exige0cruces duros, suelo1mm y orientación/unión; hoja-hoja/proximidades según política, contexto/flores sin certificación exhaustiva. Cantidad final y aprobación visual pendientes.",
+      "summary": "Pool20admitido, árboles intactos, sin entrenamiento. Usuario amplió29/10 hasta1000imágenes de suelo natural o8horas efectivas adicionales desde autorización. Reloj acumulado preservado y presupuesto previo archivado/hash; revisión autorizada comprobada por budget_lineage. Variantes anteriores192vistas preservadas pero excluidas. Suelo earth/litter/vegetación irregular de plan puro reproducible e intérprete separado,12plantas/cuatrohileras, tutorado horizontal/hilos y panoramaCC0 sólo cámara. Cada escena exige0cruces duros, suelo1mm y orientación/unión; hoja-hoja/proximidades según política, contexto/flores sin certificación exhaustiva. Cantidad final y aprobación visual pendientes. Continuación sólo dataset verifica lock/pool y evita PIDs históricos reutilizados; recicla el hijo propio tras24pares completos para acotar memoria, archiva sólo nuevas escenas incompletas con rutas verificadas. Receta y reloj no cambian.",
       "paths": [
         "src/uchuva_lsystem/spatial_dataset.py",
         "scripts/handoff_spatial_dataset.py",
         "scripts/render_spatial_dataset.py",
         "tests/test_spatial_dataset.py",
         "docs/guides/plantas_admision_espacial_8h.md",
-        "scripts/report_spatial_dataset.py"
+        "scripts/report_spatial_dataset.py",
+        "scripts/resume_spatial_dataset.py",
+        "tests/test_spatial_dataset_resume.py"
       ],
       "evidence": [
         {
@@ -2695,6 +2697,10 @@
         {
           "path": "docs/guides/plantas_admision_espacial_8h.md",
           "locator": "## Transición a dataset"
+        },
+        {
+          "path": "docs/guides/generador_actual_y_contrato_gazebo.md",
+          "locator": "## Reanudar sólo el dataset congelado"
         }
       ]
     },

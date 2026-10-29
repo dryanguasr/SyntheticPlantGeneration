@@ -108,3 +108,22 @@ No se versionan imágenes generadas, pesos, campañas bajo `outputs/`, PDFs
 descargados ni materiales brutos. Los recursos CC0 existentes conservan su
 manifiesto y licencia. El grafo distingue los diez errores anteriores de
 localizadores de cualquier regresión nueva.
+
+## Reanudar sólo el dataset congelado
+
+Después de completar la transición de veinte plantas, no se vuelve a detener
+la fase histórica de plantas: sus PIDs pueden haber sido reutilizados por
+otros procesos, incluso protegidos. `resume_spatial_dataset.py RAIZ REVISION`
+comprueba el pool y sus auditorías, los hashes de datos/fuentes y su propio
+`dataset_resume_source_lock.json`, sin consultar ni tocar esos PIDs antiguos.
+El lock contiene `controller_sha256` y `dataset_source_lock_sha256`; debe
+prepararse como revisión explícita tras preservar evidencias y comprobar que
+no queda otro controlador o trabajador propio activo.
+
+El supervisor posee únicamente los nuevos hijos Blender. Los recicla después
+de cada bloque de 24 imágenes completas para acotar memoria retenida, conserva
+los pares ya comprometidos y archiva sólo escenas nuevas sin vistas completas
+antes de reconstruirlas. Todo traslado se comprueba dentro de la raíz de la
+campaña. La receta de generación, órganos, anotaciones y reloj efectivo no
+cambian; no se amplía tiempo por una recuperación. Cada ciclo conserva
+identidad, stdout, stderr y motivo de salida en `dataset_process_cycles/`.
