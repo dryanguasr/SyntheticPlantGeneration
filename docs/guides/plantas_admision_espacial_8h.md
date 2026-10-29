@@ -1,5 +1,13 @@
 # Plantas con admisión espacial: ejecución de ocho horas
 
+**Cierre del 29/10:** generación terminada con 144 pares activos, seis escenas,
+48 vistas por profundidad y las veinte plantas efectivamente visibles. Se
+preservan 192 vistas excluidas. El controlador registra 7,983 horas de la
+ampliación y paró por tiempo insuficiente para otra unidad completa; no llegó
+a mil imágenes ni hubo entrenamiento. La [revisión final](../reports/dataset_cultivo_admitido_2026-10-29.md)
+documenta auditoría integral de etiquetas y las brechas de tamaño/densidad
+frente a train. Las secciones siguientes conservan el historial de la campaña.
+
 **Nueva autorización del 29/10:** tras revisar el suelo gris, el usuario pidió
 tierra, hojarasca y vegetación irregular y amplió la ejecución hasta alcanzar
 1.000 pares completos de esta variante o consumir ocho horas efectivas

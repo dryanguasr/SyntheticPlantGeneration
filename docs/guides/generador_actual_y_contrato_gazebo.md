@@ -127,3 +127,8 @@ antes de reconstruirlas. Todo traslado se comprueba dentro de la raíz de la
 campaña. La receta de generación, órganos, anotaciones y reloj efectivo no
 cambian; no se amplía tiempo por una recuperación. Cada ciclo conserva
 identidad, stdout, stderr y motivo de salida en `dataset_process_cycles/`.
+
+La ejecución del 29/10 quedó cerrada con 144 pares, veinte árboles visibles y
+sin entrenamiento. El [informe verificable](../reports/dataset_cultivo_admitido_2026-10-29.md)
+explica la integridad de anotaciones y las brechas que deben controlarse antes
+de utilizar estas vistas en un piloto de aumentación.

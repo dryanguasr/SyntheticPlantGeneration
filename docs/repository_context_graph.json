@@ -2658,7 +2658,7 @@
       "id": "entrypoint.spatial_dataset_handoff",
       "type": "entrypoint",
       "label": "Transición automática de veinte plantas a dataset con presupuesto restante",
-      "summary": "Pool20admitido, árboles intactos, sin entrenamiento. Usuario amplió29/10 hasta1000imágenes de suelo natural o8horas efectivas adicionales desde autorización. Reloj acumulado preservado y presupuesto previo archivado/hash; revisión autorizada comprobada por budget_lineage. Variantes anteriores192vistas preservadas pero excluidas. Suelo earth/litter/vegetación irregular de plan puro reproducible e intérprete separado,12plantas/cuatrohileras, tutorado horizontal/hilos y panoramaCC0 sólo cámara. Cada escena exige0cruces duros, suelo1mm y orientación/unión; hoja-hoja/proximidades según política, contexto/flores sin certificación exhaustiva. Cantidad final y aprobación visual pendientes. Continuación sólo dataset verifica lock/pool y evita PIDs históricos reutilizados; recicla el hijo propio tras24pares completos para acotar memoria, archiva sólo nuevas escenas incompletas con rutas verificadas. Receta y reloj no cambian.",
+      "summary": "Pool20admitido, árboles intactos, sin entrenamiento. Usuario amplió29/10 hasta1000imágenes de suelo natural o8horas efectivas adicionales desde autorización. Reloj acumulado preservado y presupuesto previo archivado/hash; revisión autorizada comprobada por budget_lineage. Variantes anteriores192vistas preservadas pero excluidas. Suelo earth/litter/vegetación irregular de plan puro reproducible e intérprete separado,12plantas/cuatrohileras, tutorado horizontal/hilos y panoramaCC0 sólo cámara. Cada escena exige0cruces duros, suelo1mm y orientación/unión; hoja-hoja/proximidades según política, contexto/flores sin certificación exhaustiva. Cantidad final y aprobación visual pendientes. Continuación sólo dataset verifica lock/pool y evita PIDs históricos reutilizados; recicla el hijo propio tras24pares completos para acotar memoria, archiva sólo nuevas escenas incompletas con rutas verificadas. Receta y reloj no cambian. CIERRE29/10:144pares,6escenas,20fuentes visibles,192descartadas preservadas. Controlador registra7.983h adicionales; no alcanzó1000 ni hubo entrenamiento. Auditoría integral de147405etiquetas y comparación sólo train documentan brechas de tamaño/densidad; revisar informe antes de un piloto.",
       "paths": [
         "src/uchuva_lsystem/spatial_dataset.py",
         "scripts/handoff_spatial_dataset.py",
@@ -2765,6 +2765,23 @@
         {
           "path": "docs/guides/generador_actual_y_contrato_gazebo.md",
           "locator": "## Exportar una planta admitida para otro consumidor"
+        }
+      ]
+    },
+    {
+      "id": "report.spatial_pool_dataset_20261029",
+      "type": "report",
+      "label": "Cierre verificado de plantas admitidas y dataset natural",
+      "summary": "144pares activos/6escenas/20árboles visibles,192vistas excluidas preservadas.147405anotaciones verificadas porpíxeles, clases yYOLO. Ventana adicional7.983h registradas porcontrolador;1000noalcanzadas. Comparación sólo train encuentra64.05%decajas sintéticas<8px ymediana875anotaciones vs7reales; hipótesis de exposición porinstancia, sin entrenamiento ni eficacia demostrada.",
+      "paths": [
+        "docs/reports/dataset_cultivo_admitido_2026-10-29.md",
+        "docs/reports/plantas_admision_espacial_8h_2026-10-29.md",
+        "scripts/report_spatial_dataset.py"
+      ],
+      "evidence": [
+        {
+          "path": "docs/reports/dataset_cultivo_admitido_2026-10-29.md",
+          "locator": "## Resultado verificado"
         }
       ]
     }
@@ -5660,6 +5677,17 @@
         {
           "path": "docs/guides/generador_actual_y_contrato_gazebo.md",
           "locator": "## Versiones y responsabilidades"
+        }
+      ]
+    },
+    {
+      "source": "report.spatial_pool_dataset_20261029",
+      "target": "entrypoint.spatial_dataset_handoff",
+      "relation": "documents",
+      "evidence": [
+        {
+          "path": "docs/reports/dataset_cultivo_admitido_2026-10-29.md",
+          "locator": "## Resultado verificado"
         }
       ]
     }
