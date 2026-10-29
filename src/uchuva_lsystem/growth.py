@@ -92,6 +92,8 @@ def coordinate_synchronous_growth(
     light_competition: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Plant], dict[str, Any]]:
     """Activate potential axes synchronously against a shared spatial index."""
+    from .nodal_repulsion import require_legacy_pose_inputs
+    require_legacy_pose_inputs(potential_plants.values(),'coordinate_synchronous_growth')
     policy = contact_policy or ContactPolicy.default()
     light_options = light_competition or {}
     light_competition_enabled = bool(
@@ -1087,9 +1089,17 @@ def _select_reproductive_postures(
                         * CM_TO_SCENE_UNIT
                         * instance.scale
                     )
+                    from .reproductive_orientation import organ_direction
+                    distal_direction = organ_direction(unit, direction)
+                    # organ_direction is stored in plant coordinates; this
+                    # layout rotates plants only about the gravity axis.
+                    if "reproductive_orientation" in unit.provenance:
+                        turn = math.radians(instance.rotation_deg)
+                        x, y, z = distal_direction
+                        distal_direction = (x*math.cos(turn)-y*math.sin(turn), x*math.sin(turn)+y*math.cos(turn), z)
                     calyx_center = _add(
                         pedicel_end,
-                        _mul(direction, calyx_length * 0.50),
+                        _mul(distal_direction, calyx_length * 0.50),
                     )
                     items = [
                         SpatialItem(

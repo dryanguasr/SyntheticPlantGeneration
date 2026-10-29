@@ -15,6 +15,7 @@ from typing import Any
 
 from .blender_annotations import tag_annotation_object
 from .morphology import Axis, Leaf, Plant, ReproductiveUnit
+from .geometry_contracts import axis_sag_factor, stem_centerline_points
 
 CM_TO_BLENDER_UNIT = 0.08
 CALYX_CENTER_FROM_PEDICEL_FRACTION = 0.5
@@ -187,15 +188,26 @@ def _build_axis_geometry(
             axis.branch_angle_deg,
         )
     )
+    if axis.provenance.get("branch_frame_v140"):
+        from .organ_frames import branch_direction_3d
+        direction = Vector(branch_direction_3d(parent_direction, axis.azimuth_deg, axis.branch_angle_deg))
     current = Vector(start)
     max_z = current.z
     node_directions: dict[str, object] = {}
 
     for index, internode in enumerate(axis.internodes):
+        # Explicit morphology-recorded continuation turn: both arms leave a Y fork.
+        turns = axis.provenance.get("y_fork_continuations_v142", {})
+        turn = turns.get(axis.nodes[index-1].id) if index > 0 else None
+        if turn:
+            from .organ_frames import branch_direction_3d
+            direction = Vector(branch_direction_3d(direction, turn["azimuth_deg"], turn["angle_deg"]))
+        incoming_tangent = direction.copy()
         direction = _bend_direction(
             direction,
             internode.bend_azimuth_deg,
             internode.bend_angle_deg,
+            minimum_z=(-1.0 if axis.provenance.get("terminal_load_droop_v139") else -0.15),
         )
         direction = _apply_axis_load_deflection(
             direction,
@@ -203,6 +215,10 @@ def _build_axis_geometry(
             segment_index=index,
             segment_count=len(axis.internodes),
         )
+        if 'nodal_growth_repulsion_v1' in internode.provenance:
+            from .nodal_repulsion import segment_directions
+            incoming,recorded=segment_directions(internode,axis.internodes[index-1] if index else None)
+            incoming_tangent,direction=Vector(incoming),Vector(recorded)
         segment_end = current + direction * (internode.length_cm * scale)
         stem_radius = max(internode.radius_cm * scale, 0.008)
         stem_material = materials.get(stem_material_key, materials["stem"])
@@ -212,12 +228,8 @@ def _build_axis_geometry(
             end=segment_end,
             radius=stem_radius,
             material=stem_material,
-            sag_factor=(
-                0.0 if axis.training_phase in {"overhead_strings_manual_initial_guess", "bouquet_open_and_lift_v4"}
-                else (0.012 + axis.reproductive_load * 0.025
-                      if axis.order == 0
-                      else 0.045 + axis.reproductive_load * 0.115)
-            ),
+            endpoint_tangents=((incoming_tangent, direction) if axis.provenance.get("continuous_tangent_v140") else None),
+            sag_factor=axis_sag_factor(axis),
         )
         _append_if_created(objects_created, stem)
         tag_annotation_object(
@@ -229,6 +241,8 @@ def _build_axis_geometry(
             axis_id=axis.id,
             axis_parent_node_id=axis.parent_node_id or "",
             internode_index=index,
+            node_start_id=axis.nodes[index-1].id if 0 < index <= len(axis.nodes) else axis.parent_node_id or "",
+            node_end_id=axis.nodes[index].id if index < len(axis.nodes) else "",
             axis_order=axis.order,
         )
         _register_segment(
@@ -312,6 +326,8 @@ def _build_axis_geometry(
         axis_id=axis.id,
         axis_parent_node_id=axis.parent_node_id or "",
         internode_index=len(axis.internodes),
+        node_start_id=axis.nodes[-1].id if axis.nodes else "",
+        node_end_id=axis.nodes[-1].id if axis.nodes else "",
         axis_order=axis.order,
     )
 
@@ -339,6 +355,12 @@ def _create_leaf_at_node(
     direction = direction.normalized()
 
     petiole_length = leaf.petiole_length_cm * scale
+    if leaf.provenance.get('insertion_frame') == 'orthogonal_local_v1':
+        from .organ_frames import orthogonal_leaf_direction
+        direction = Vector(orthogonal_leaf_direction(axis_direction, leaf.azimuth_deg, leaf.insertion_angle_deg))
+    elif leaf.provenance.get('insertion_frame') == 'local_cone_v2':
+        from .organ_frames import local_cone_leaf_direction
+        direction = Vector(local_cone_leaf_direction(axis_direction, leaf.azimuth_deg, leaf.insertion_angle_deg))
     clearance_lift = max(0.0, float(leaf.clearance_lift_cm)) * scale
     if clearance_lift > 0.0 and petiole_length > 1e-9:
         lifted_target = direction * petiole_length + Vector(
@@ -346,6 +368,8 @@ def _create_leaf_at_node(
         )
         if lifted_target.length > 1e-9:
             direction = lifted_target.normalized()
+    from .nodal_repulsion import pose_direction
+    direction=Vector(pose_direction(leaf,tuple(direction)))
     petiole_end = Vector(node_position) + direction * petiole_length
     petiole_radius = max(0.035 * scale, 0.004)
     petiole = _create_cylinder_between(
@@ -385,11 +409,7 @@ def _create_leaf_at_node(
         direction=direction,
         length=length,
         width=width,
-        material=(
-            materials.get("leaf_senescent", materials["leaf"])
-            if leaf.senescence >= 0.22
-            else materials["leaf"]
-        ),
+        material=_review_leaf_material(leaf.senescence, materials),
         edge_phase=math.radians(leaf.azimuth_deg),
         gravity_sag=gravity_sag,
         shape=leaf.shape,
@@ -397,6 +417,8 @@ def _create_leaf_at_node(
         curl=leaf.curl,
         twist_deg=leaf.twist_deg,
         edge_damage=leaf.edge_damage,
+        surface_relief=float(leaf.provenance.get("surface_relief_ratio", 0.0)),
+        transverse_arch_ratio=leaf.transverse_arch_ratio,
     )
     midrib = _create_leaf_midrib_mesh(
         name=f"uchuva_{leaf.id}_midrib",
@@ -451,13 +473,9 @@ def _create_reproductive_unit_at_node(
     axis_order: int,
 ) -> list[object]:
     _, Vector = _blender_modules()
-    if unit.stage == "flower":
-        radial = _radial_vector(unit.pedicel.azimuth_deg)
-        direction = (radial * 0.9 + Vector((0.0, 0.0, 0.18))).normalized()
-    else:
-        # v3 poses are resolved globally in the morphology tree. Blender is a
-        # strict interpreter and must not silently rotate the pedicel again.
-        direction = _reproductive_direction(unit, 0.0, 0.0)
+    from .reproductive_orientation import pedicel_direction, organ_direction
+    direction = Vector(pedicel_direction(unit))
+    distal_direction = Vector(organ_direction(unit, tuple(direction)))
 
     pedicel_end = Vector(node_position) + direction * (unit.pedicel.length_cm * scale)
     created: list[object] = []
@@ -495,9 +513,10 @@ def _create_reproductive_unit_at_node(
         flower = _create_flower_corolla(
             name=f"uchuva_{unit.id}_flower",
             location=pedicel_end,
-            direction=direction,
+            direction=distal_direction,
             radius=0.16,
             material=materials["flower"],
+            stable_gravity_frame="reproductive_orientation" in unit.provenance,
         )
         _append_if_created(created, flower)
         tag_annotation_object(
@@ -518,7 +537,7 @@ def _create_reproductive_unit_at_node(
     if unit.calyx is not None:
         calyx_length = unit.calyx.length_cm * scale
         calyx_radius = unit.calyx.radius_cm * scale
-        calyx_center = pedicel_end + direction * (
+        calyx_center = pedicel_end + distal_direction * (
             calyx_length * CALYX_CENTER_FROM_PEDICEL_FRACTION
         )
         calyx = create_calyx_mesh(
@@ -542,7 +561,8 @@ def _create_reproductive_unit_at_node(
             seed=_stable_seed(unit.calyx.id),
             materials=materials,
             location=calyx_center,
-            longitudinal_axis=-direction,
+            longitudinal_axis=-distal_direction,
+            stable_gravity_frame="reproductive_orientation" in unit.provenance,
             annotation_context=annotation_context,
             reproductive_id=unit.id,
             calyx_state=unit.calyx.state,
@@ -571,9 +591,9 @@ def _create_reproductive_unit_at_node(
             and unit.fruit.visibility == "hidden"
         )
         if unit.fruit.visibility == "partial":
-            fruit_location = calyx_center + direction * (calyx_length * 0.16)
+            fruit_location = calyx_center + distal_direction * (calyx_length * 0.16)
         elif unit.fruit.visibility == "visible":
-            fruit_location = calyx_center + direction * (calyx_length * 0.30)
+            fruit_location = calyx_center + distal_direction * (calyx_length * 0.30)
         else:
             fruit_location = calyx_center
 
@@ -597,8 +617,10 @@ def _create_reproductive_unit_at_node(
             maturity=unit.maturity or "",
             reproductive_stage=unit.stage,
             annotation_visible=False,
+            organ_kind="fruit",
             axis_order=axis_order,
         )
+        fruit["uchuva_rendered_visibility_scale"] = visible_scale
         _append_if_created(created, fruit)
 
     return created
@@ -627,6 +649,7 @@ def create_calyx_mesh(
     materials: dict[str, object] | None = None,
     location: object | None = None,
     longitudinal_axis: object | None = None,
+    stable_gravity_frame: bool = False,
     annotation_context: dict[str, str] | None = None,
     reproductive_id: str = "",
     calyx_state: str = "",
@@ -816,7 +839,7 @@ def create_calyx_mesh(
     husk["uchuva_surface_fold_model"] = "localized_nonperiodic_v1"
     husk["uchuva_macro_periodic_wrinkles"] = False
     if longitudinal_axis is not None:
-        _orient_local_z_to(husk, longitudinal_axis)
+        _orient_local_z_to(husk, longitudinal_axis, stable_gravity_frame=stable_gravity_frame)
     tag_annotation_object(
         husk,
         "calyx",
@@ -920,6 +943,14 @@ def _create_surface_rib_curve(
     return obj
 
 
+def _review_leaf_material(senescence, materials):
+    """Use opt-in graded materials when supplied; preserve historical fallback."""
+    key = f"leaf_senescence_{min(10, max(0, int(senescence * 10 + .5)))}"
+    if key in materials:
+        return materials[key]
+    return materials.get('leaf_senescent', materials['leaf']) if senescence >= .22 else materials['leaf']
+
+
 def _create_leaf_blade(
     name: str,
     location: object,
@@ -934,6 +965,8 @@ def _create_leaf_blade(
     curl: float,
     twist_deg: float,
     edge_damage: float,
+    surface_relief: float = 0.0,
+    transverse_arch_ratio: float = 0.0,
 ) -> object:
     bpy, Vector = _blender_modules()
     mesh = bpy.data.meshes.new(f"{name}_mesh")
@@ -978,7 +1011,7 @@ def _create_leaf_blade(
         vertices.append((center_x + left_dx, y, z + left_dz))
         vertices.append((center_x + right_dx, y, z + right_dz))
 
-    faces.append((0, 1, 2))
+    faces.append((0, 2, 1))  # Match the body winding at the basal fan.
     for index in range(segments):
         left_0 = 1 + index * 2
         right_0 = left_0 + 1
@@ -986,6 +1019,50 @@ def _create_leaf_blade(
         right_1 = left_0 + 3
         faces.append((left_0, right_0, right_1, left_1))
 
+    if transverse_arch_ratio != 0.0:
+        from .leaf_surface import broad_leaf_surface
+        if surface_relief != 0.0:
+            raise ValueError("Smooth transverse arch cannot combine with legacy surface corrugation")
+        vertices, faces = broad_leaf_surface(
+            vertices, length, width, gravity_sag, transverse_arch_ratio)
+    elif surface_relief > 0.0:
+        # Opt-in photo-development surface. Preserve the nodal organ, outline,
+        # centerline and UV projection; add transverse curvature between veins.
+        edge_vertices = vertices
+        vertices = [edge_vertices[0]]
+        faces = []
+        cross_segments = 12
+        for index in range(segments + 1):
+            t = 0.055 + 0.945 * index / segments
+            left, right = edge_vertices[1 + 2 * index:3 + 2 * index]
+            for cross in range(cross_segments + 1):
+                q = cross / cross_segments
+                x = left[0] * (1 - q) + right[0] * q
+                y = left[1]
+                z = left[2] * (1 - q) + right[2] * q
+                u = 2 * q - 1
+                envelope = math.sin(math.pi * t) * (1 - u * u)
+                # Broad interveinal domes plus smaller irregular corrugation.
+                ribs = math.sin(2 * math.pi * (6 * t - .65 * abs(u)) + edge_phase * .2) ** 2
+                cells = math.sin(2 * math.pi * (13 * t + 2 * u) + edge_phase) ** 2
+                relief = surface_relief * width * envelope * abs(u) ** .45 * (.65 * ribs + .35 * cells)
+                z += relief - .09 * width * abs(u) ** 1.5 * math.sin(math.pi * t)
+                vertices.append((x, y, z))
+        for cross in range(cross_segments):
+            faces.append((0, 2 + cross, 1 + cross))
+        stride = cross_segments + 1
+        # Collapse the zero-width tip to one vertex, avoiding degenerate quads.
+        tip = vertices[1 + segments * stride]
+        vertices = vertices[:1 + segments * stride]
+        tip_index = len(vertices)
+        vertices.append(tip)
+        for index in range(segments - 1):
+            for cross in range(cross_segments):
+                a = 1 + index * stride + cross
+                faces.append((a, a + 1, a + stride + 1, a + stride))
+        last_row = 1 + (segments - 1) * stride
+        for cross in range(cross_segments):
+            faces.append((last_row + cross, last_row + cross + 1, tip_index))
     mesh.from_pydata(vertices, [], faces)
     mesh.update()
     _assign_leaf_uvs(mesh, length, width)
@@ -1016,12 +1093,15 @@ def _leaf_shape_profile(shape: str, t: float) -> tuple[float, float]:
     if shape == "deltoid_ovate":
         profile = (envelope**0.56) * (1.34 - 0.70 * u)
         basal_lobes = 1.0 + 0.10 * math.exp(-((t - 0.16) / 0.11) ** 2)
-    elif shape == "ovate_cordate":
+    elif shape in ("ovate_cordate", "ovate_cordate_acuminate"):
         profile = (envelope**0.42) * (1.22 - 0.52 * u)
         basal_lobes = 1.0 + 0.32 * math.exp(-((t - 0.12) / 0.085) ** 2)
     else:
         profile = (envelope**0.48) * (1.18 - 0.48 * u)
         basal_lobes = 1.0 + 0.12 * math.exp(-((t - 0.14) / 0.10) ** 2)
+    if shape == "ovate_cordate_acuminate" and u > .62:
+        # Long narrowing apex; opt-in outline keeps historical shapes unchanged.
+        profile *= ((1.0 - u) / .38) ** .85
     return profile, basal_lobes
 
 
@@ -1220,6 +1300,7 @@ def _create_sagging_curve_between(
     material: object,
     sag_factor: float,
     points_count: int = 6,
+    endpoint_tangents: tuple | None = None,
 ) -> object | None:
     bpy, Vector = _blender_modules()
     start = Vector(start)
@@ -1229,21 +1310,30 @@ def _create_sagging_curve_between(
     if length < 1e-6:
         return None
 
-    flatness = math.sqrt(direction.x**2 + direction.y**2) / length
-    sag = length * sag_factor * (flatness**1.35)
     curve = bpy.data.curves.new(f"{name}_curve", type="CURVE")
     curve.dimensions = "3D"
     curve.resolution_u = 3
     curve.bevel_depth = radius
     curve.bevel_resolution = 3
 
-    spline = curve.splines.new("POLY")
-    spline.points.add(points_count - 1)
-    for index, point in enumerate(spline.points):
-        t = index / (points_count - 1)
-        position = start.lerp(end, t)
-        position.z -= sag * math.sin(math.pi * t)
-        point.co = (position.x, position.y, position.z, 1.0)
+    if endpoint_tangents is not None:
+        spline = curve.splines.new("BEZIER")
+        spline.bezier_points.add(1)
+        for point, position, tangent in zip(spline.bezier_points, (start, end), endpoint_tangents):
+            tangent = Vector(tangent).normalized()
+            point.co = position
+            point.handle_left_type = 'FREE'
+            point.handle_right_type = 'FREE'
+            point.handle_left = position - tangent * length / 3
+            point.handle_right = position + tangent * length / 3
+        curve.resolution_u = 12
+    else:
+        spline = curve.splines.new("POLY")
+        spline.points.add(points_count - 1)
+        for point, position in zip(spline.points, stem_centerline_points(
+            start, end, sag_factor, points_count=points_count
+        )):
+            point.co = (*position, 1.0)
 
     obj = bpy.data.objects.new(name, curve)
     bpy.context.collection.objects.link(obj)
@@ -1285,6 +1375,7 @@ def _create_flower_corolla(
     direction: object,
     radius: float,
     material: object,
+    stable_gravity_frame: bool = False,
 ) -> object:
     bpy, Vector = _blender_modules()
     vertices: list[tuple[float, float, float]] = [(0.0, 0.0, -radius * 0.08)]
@@ -1311,7 +1402,7 @@ def _create_flower_corolla(
     bpy.context.collection.objects.link(corolla)
     corolla.location = Vector(location)
     corolla.data.materials.append(material)
-    _orient_local_z_to(corolla, direction)
+    _orient_local_z_to(corolla, direction, stable_gravity_frame=stable_gravity_frame)
     solidify = corolla.modifiers.new(name="flower_minimum_thickness", type="SOLIDIFY")
     solidify.thickness = max(radius * 0.035, 0.0015)
     solidify.offset = 0.0
@@ -2124,6 +2215,65 @@ def _move_to_collection(obj: object, collection: object | None) -> None:
     collection.objects.link(obj)
 
 
+def audit_scene_geometry_envelopes() -> dict[str, Any]:
+    """Measure final evaluated organ meshes, including hidden internal fruits.
+
+    This is an envelope diagnostic, separate from mesh intersections and from
+    camera-dependent visibility. A fruit fitting an AABB is not proof that it
+    fits the calyx surface. Bounds are in world Blender units after transforms.
+    """
+    bpy, _ = _blender_modules()
+    from .geometry_contracts import bounds_from_points, summarize_geometry_envelopes
+    objects, candidates = [], []
+    for obj in sorted(bpy.context.scene.objects, key=lambda item: item.name):
+        semantic = str(obj.get("uchuva_semantic_class", ""))
+        # Fruits are deliberately 'ignore' in the capacho annotation ontology.
+        # Geometry evidence must still include their internal evaluated mesh.
+        if obj.get("uchuva_organ_kind") == "fruit" or obj.get("uchuva_hidden_inside_closed_calyx"):
+            semantic = "fruit"
+        plant_id = str(obj.get("uchuva_plant_id", ""))
+        if not plant_id or semantic not in {"stem", "leaf", "calyx", "fruit", "flower"}:
+            continue
+        if obj.type not in {"MESH", "CURVE", "SURFACE"}:
+            continue
+        candidates.append((obj, plant_id, semantic))
+    visibility = [(obj, bool(obj.hide_viewport), bool(obj.hide_get())) for obj, _, _ in candidates]
+    try:
+        # Viewport-hidden objects may have an unevaluated identity world matrix.
+        # Include them temporarily in this CPU depsgraph, without touching RGB
+        # visibility or mesh data, so internal fruit bounds use their true pose.
+        for obj, hidden_global, hidden_local in visibility:
+            if hidden_global:
+                obj.hide_viewport = False
+            if hidden_local:
+                obj.hide_set(False)
+        bpy.context.view_layer.update()
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+        for obj, plant_id, semantic in candidates:
+            evaluated = obj.evaluated_get(depsgraph)
+            mesh = evaluated.to_mesh()
+            try:
+                if mesh is None or not mesh.vertices:
+                    continue
+                bounds = bounds_from_points(tuple(evaluated.matrix_world @ v.co) for v in mesh.vertices)
+                objects.append(dict(name=obj.name, plant_id=plant_id, semantic=semantic,
+                    reproductive_instance_id=str(obj.get("uchuva_reproductive_instance_id", "")),
+                    hidden_in_rgb=bool(obj.hide_render),
+                    rendered_visibility_scale=obj.get("uchuva_rendered_visibility_scale"), bounds=bounds))
+            finally:
+                evaluated.to_mesh_clear()
+    finally:
+        for obj, hidden_global, hidden_local in visibility:
+            obj.hide_set(hidden_local)
+            obj.hide_viewport = hidden_global
+        bpy.context.view_layer.update()
+    result = summarize_geometry_envelopes(objects)
+    result["coordinate_system"] = "world_blender_units_after_evaluated_modifiers"
+    result["metres_per_blender_unit"] = float(bpy.context.scene.unit_settings.scale_length)
+    result["hidden_geometry_evaluation"] = "temporarily_included_in_viewport_depsgraph; visibility_restored; hide_render_unchanged"
+    return result
+
+
 def audit_scene_mesh_collisions(
     *,
     epsilon: float = 0.0005,
@@ -2131,8 +2281,11 @@ def audit_scene_mesh_collisions(
     max_bvh_cache_objects: int | None = None,
     limit_clearance_search: bool = False,
     tolerate_only_leaf_leaf: bool = False,
+    max_reported_pairs: int | None = 500,
 ) -> dict[str, Any]:
     """Audit intersections and pair-specific mesh clearance in world space."""
+    if max_reported_pairs is not None and max_reported_pairs < 0:
+        raise ValueError("Pair report limit must be nonnegative or None")
     bpy, Vector = _blender_modules()
     from mathutils.bvhtree import BVHTree
 
@@ -2305,19 +2458,20 @@ def audit_scene_mesh_collisions(
         "broad_phase_pair_count": len(candidate_indices),
         "narrow_phase_pair_count": tested,
         "physical_collision_count": len(collisions),
-        "physical_collisions": collisions[:500],
-        "mesh_intersections": collisions[:500],
+        "physical_collisions": collisions[:max_reported_pairs],
+        "mesh_intersections": collisions[:max_reported_pairs],
         "intentional_contact_count": len(intentional_contacts),
-        "intentional_contacts": intentional_contacts[:500],
+        "intentional_contacts": intentional_contacts[:max_reported_pairs],
         "soft_occupancy_intersection_count": len(soft_intersections),
-        "soft_occupancy_intersections": soft_intersections[:500],
+        "soft_occupancy_intersections": soft_intersections[:max_reported_pairs],
         "visual_occlusion_count": len(visual_occlusions),
-        "visual_occlusions": visual_occlusions[:500],
+        "visual_occlusions": visual_occlusions[:max_reported_pairs],
         "clearance_violation_count": len(clearance_violations),
-        "clearance_violations": clearance_violations[:500],
+        "clearance_violations": clearance_violations[:max_reported_pairs],
         "near_contact_count": len(near_contacts),
-        "near_contacts": near_contacts[:500],
-        "truncated": len(collisions) > 500,
+        "near_contacts": near_contacts[:max_reported_pairs],
+        "truncated": max_reported_pairs is not None and len(collisions) > max_reported_pairs,
+        "max_reported_pairs": max_reported_pairs,
         "epsilon": epsilon,
         "near_contact_distance": near_contact_distance,
         "leaf_virtual_thickness": 0.011,
@@ -2474,21 +2628,11 @@ def _stem_mesh_attachment_exempt(left: object, right: object) -> bool:
             return abs(index_left - index_right) <= 1
         if kind_left == "axis_segment" and index_left == 0:
             parent_node = str(left.get("uchuva_axis_parent_node_id", ""))
-            if _node_matches_axis_neighbourhood(
-                parent_node,
-                axis_right,
-                index_right,
-                kind_right,
-            ):
+            if _node_attaches_to_axis_object(parent_node, right):
                 return True
         if kind_right == "axis_segment" and index_right == 0:
             parent_node = str(right.get("uchuva_axis_parent_node_id", ""))
-            if _node_matches_axis_neighbourhood(
-                parent_node,
-                axis_left,
-                index_left,
-                kind_left,
-            ):
+            if _node_attaches_to_axis_object(parent_node, left):
                 return True
         return False
 
@@ -2515,14 +2659,20 @@ def _stem_mesh_attachment_exempt(left: object, right: object) -> bool:
             and parent_node == axis_parent_node
         ):
             return True
-        if _node_matches_axis_neighbourhood(
-            parent_node,
-            axis_id,
-            axis_index,
-            axis_kind,
-        ):
+        if _node_attaches_to_axis_object(parent_node, axis_obj):
             return True
     return False
+
+
+def _node_attaches_to_axis_object(node_id: str, obj: object) -> bool:
+    """Prefer explicit topology; retain name inference for historical objects."""
+    if not node_id:
+        return False
+    if 'uchuva_node_start_id' in obj or 'uchuva_node_end_id' in obj:
+        return node_id in {obj.get('uchuva_node_start_id', ''), obj.get('uchuva_node_end_id', '')}
+    return _node_matches_axis_neighbourhood(node_id,
+        str(obj.get('uchuva_axis_id', '')), int(obj.get('uchuva_internode_index', -1)),
+        str(obj.get('uchuva_organ_kind', '')))
 
 
 def _node_matches_axis_neighbourhood(
@@ -2575,6 +2725,7 @@ def _bend_direction(
     direction: object,
     bend_azimuth_deg: float,
     bend_angle_deg: float,
+    minimum_z: float = -0.15,
 ) -> object:
     _, Vector = _blender_modules()
     current = Vector(direction).normalized()
@@ -2585,8 +2736,8 @@ def _bend_direction(
     radial.normalize()
     angle = math.radians(max(-12.0, min(12.0, bend_angle_deg)))
     bent = (current * math.cos(angle) + radial * math.sin(angle)).normalized()
-    if bent.z < -0.15:
-        bent.z = -0.15
+    if bent.z < minimum_z:
+        bent.z = minimum_z
         bent.normalize()
     return bent
 
@@ -2657,12 +2808,16 @@ def _count_axis_fruiting_units(axis: Axis) -> int:
     return own + sum(_count_axis_fruiting_units(child) for child in axis.child_axes)
 
 
-def _orient_local_z_to(obj: object, direction: object) -> None:
+def _orient_local_z_to(obj: object, direction: object, *, stable_gravity_frame: bool = False) -> None:
     _, Vector = _blender_modules()
     direction = Vector(direction)
     if direction.length < 1e-6:
         return
-    obj.rotation_euler = direction.normalized().to_track_quat("Z", "Y").to_euler()
+    if stable_gravity_frame:
+        from .blender_reproductive_orientation import gravity_axis_rotation
+        obj.rotation_euler = gravity_axis_rotation(direction).to_euler()
+    else:
+        obj.rotation_euler = direction.normalized().to_track_quat("Z", "Y").to_euler()
 
 
 def _stable_seed(text: str) -> int:

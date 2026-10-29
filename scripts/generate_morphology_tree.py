@@ -21,6 +21,9 @@ def parse_args() -> argparse.Namespace:
         description="Generate a JSON-serializable uchuva morphology tree."
     )
     parser.add_argument("--seed", type=int, default=0, help="Reproducible seed.")
+    parser.add_argument('--preset',default=None,help='Explicit versioned parameter preset; legacy default is preserved')
+    parser.add_argument('--phenology-model',default='legacy_independent',choices=('legacy_independent','literature_cohort_v1'))
+    parser.add_argument('--no-resolve-growth',action='store_true',help='Raw morphology before posture/admission; never a physical admission')
     parser.add_argument(
         "--condition",
         choices=("healthy", "drying"),
@@ -44,7 +47,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    plant = generate_morphology_tree(seed=args.seed, condition=args.condition)
+    plant = generate_morphology_tree(seed=args.seed, condition=args.condition,preset_name=args.preset,
+                                    phenology_model=args.phenology_model,resolve_growth=not args.no_resolve_growth)
     output_path = args.output or (
         REPO_ROOT / "outputs" / "specs" / f"morphology_tree_seed_{args.seed}.json"
     )

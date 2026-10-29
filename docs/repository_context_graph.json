@@ -2653,6 +2653,114 @@
           "locator": "def reconcile_offline"
         }
       ]
+    },
+    {
+      "id": "entrypoint.spatial_dataset_handoff",
+      "type": "entrypoint",
+      "label": "Transición automática de veinte plantas a dataset con presupuesto restante",
+      "summary": "Pool20admitido, árboles intactos, sin entrenamiento. Usuario amplió29/10 hasta1000imágenes de suelo natural o8horas efectivas adicionales desde autorización. Reloj acumulado preservado y presupuesto previo archivado/hash; revisión autorizada comprobada por budget_lineage. Variantes anteriores192vistas preservadas pero excluidas. Suelo earth/litter/vegetación irregular de plan puro reproducible e intérprete separado,12plantas/cuatrohileras, tutorado horizontal/hilos y panoramaCC0 sólo cámara. Cada escena exige0cruces duros, suelo1mm y orientación/unión; hoja-hoja/proximidades según política, contexto/flores sin certificación exhaustiva. Cantidad final y aprobación visual pendientes.",
+      "paths": [
+        "src/uchuva_lsystem/spatial_dataset.py",
+        "scripts/handoff_spatial_dataset.py",
+        "scripts/render_spatial_dataset.py",
+        "tests/test_spatial_dataset.py",
+        "docs/guides/plantas_admision_espacial_8h.md",
+        "scripts/report_spatial_dataset.py"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/spatial_dataset.py",
+          "locator": "def admitted_pool("
+        },
+        {
+          "path": "src/uchuva_lsystem/spatial_dataset.py",
+          "locator": "def committed_views("
+        },
+        {
+          "path": "scripts/handoff_spatial_dataset.py",
+          "locator": "def stop_recorded("
+        },
+        {
+          "path": "scripts/handoff_spatial_dataset.py",
+          "locator": "if len(plants)!=20"
+        },
+        {
+          "path": "scripts/render_spatial_dataset.py",
+          "locator": "def build_scene("
+        },
+        {
+          "path": "tests/test_spatial_dataset.py",
+          "locator": "test_insufficient_or_duplicate_plants_never_start_dataset"
+        },
+        {
+          "path": "docs/guides/plantas_admision_espacial_8h.md",
+          "locator": "## Transición a dataset"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.spatial_plant_pool_8h",
+      "type": "entrypoint",
+      "label": "Admisión espacial automática de plantas durante ocho horas, sin dataset ni entrenamiento",
+      "summary": "Fase de plantas con8horas efectivas compartidas. Autorización inicial sin paradaen20, sustituida el29/10 por supervisor externo:parar plantas al llegar20 e iniciar dataset con tiempo restante; sin entrenamiento. Fuentes de trabajadores no modificadas. Dos presupuestos acumulados estrictos:frutos<5% yhojas<5% del original;además proxyfoliarL*W<5%. Regeneración antes de geometría, restauración anatómica en memoria y auditorías independientes. Cola de3recuperaciones antes rechazadas y semillas nuevas por coste anatómico; selección adaptativa,no tasa poblacional. Conteo único y exclusión de3plantas históricas válidas. Ejecución en curso, resultados finales pendientes.",
+      "paths": [
+        "src/uchuva_lsystem/spatial_admission.py",
+        "scripts/worker_spatial_pool.py",
+        "scripts/run_spatial_plant_pool.py",
+        "scripts/report_spatial_plant_pool.py",
+        "tests/test_spatial_admission.py",
+        "docs/guides/plantas_admision_espacial_8h.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/spatial_admission.py",
+          "locator": "def strict_five_percent_budget("
+        },
+        {
+          "path": "src/uchuva_lsystem/spatial_admission.py",
+          "locator": "def validate_plan("
+        },
+        {
+          "path": "scripts/worker_spatial_pool.py",
+          "locator": "def contact_options("
+        },
+        {
+          "path": "scripts/run_spatial_plant_pool.py",
+          "locator": "def tasks():"
+        },
+        {
+          "path": "tests/test_spatial_admission.py",
+          "locator": "test_strict_integer_boundary"
+        },
+        {
+          "path": "docs/guides/plantas_admision_espacial_8h.md",
+          "locator": "No hay"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.current_generator_gazebo_bundle",
+      "type": "entrypoint",
+      "label": "Generador admitido, suelo natural y contrato portátil Gazebo",
+      "summary": "Reutiliza el árbol morfológico v8, repulsión nodal y admisión reversible estrictamente menor5% por órgano/proxy. Bundle conserva árbol completo, posturas, IDs, unidades explícitas y hashes de evidencia estática; no ejecuta simulación ni certifica dinámica. Contexto earth/litter procedural independiente no altera plantas. CLI de morfología preserva defaults y permite preset/cohortes versionados.",
+      "paths": [
+        "src/uchuva_gazebo/admitted_plants.py",
+        "scripts/export_admitted_plant.py",
+        "src/uchuva_lsystem/cultivation_floor.py",
+        "src/uchuva_lsystem/blender_cultivation_floor.py",
+        "tests/test_admitted_gazebo_bundle.py",
+        "tests/test_cultivation_floor.py",
+        "docs/guides/generador_actual_y_contrato_gazebo.md",
+        "scripts/prepare_spatial_plant_pool.py",
+        "scripts/generate_morphology_tree.py",
+        "tests/test_portable_spatial_preparation.py"
+      ],
+      "evidence": [
+        {
+          "path": "docs/guides/generador_actual_y_contrato_gazebo.md",
+          "locator": "## Exportar una planta admitida para otro consumidor"
+        }
+      ]
     }
   ],
   "edges": [
@@ -3433,7 +3541,7 @@
       "evidence": [
         {
           "path": "src/uchuva_lsystem/grammar.py",
-          "locator": "return Plant("
+          "locator": "def generate_morphology_tree("
         }
       ]
     },
@@ -5513,6 +5621,39 @@
         {
           "path": "tests/test_gazebo_interfaces.py",
           "locator": "class GazeboInterfaceTests"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.current_generator_gazebo_bundle",
+      "target": "module.morphology",
+      "relation": "reuses",
+      "evidence": [
+        {
+          "path": "docs/guides/generador_actual_y_contrato_gazebo.md",
+          "locator": "## Versiones y responsabilidades"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.current_generator_gazebo_bundle",
+      "target": "module.grammar",
+      "relation": "reuses",
+      "evidence": [
+        {
+          "path": "docs/guides/generador_actual_y_contrato_gazebo.md",
+          "locator": "## Versiones y responsabilidades"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.current_generator_gazebo_bundle",
+      "target": "module.blender_geometry",
+      "relation": "reuses",
+      "evidence": [
+        {
+          "path": "docs/guides/generador_actual_y_contrato_gazebo.md",
+          "locator": "## Versiones y responsabilidades"
         }
       ]
     }

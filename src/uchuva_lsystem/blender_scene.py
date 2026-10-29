@@ -18,16 +18,35 @@ def _blender_modules():
     return bpy, Vector
 
 
-def cleanup_scene() -> None:
-    """Clear generated objects and project materials from the active scene."""
+def cleanup_scene(*, include_hidden: bool = False) -> None:
+    """Clear the active generation scene; preserve historical selection mode.
+
+    New private-scene workers opt in to removing hidden objects as well. Blender
+    selection operators otherwise leave viewport-hidden internal fruits behind
+    between reconstructions. Shared objects require an isolated scene instead
+    of deleting another scene's evidence.
+    """
     bpy, _ = _blender_modules()
-    bpy.ops.object.select_all(action="SELECT")
-    bpy.ops.object.delete()
+    if include_hidden:
+        objects = list(bpy.context.scene.objects)
+        # Object.users_scene scans all objects for every query. Build the same
+        # ownership test once to avoid another quadratic loop on dense crowns.
+        elsewhere={obj.as_pointer() for scene in bpy.data.scenes if scene!=bpy.context.scene for obj in scene.objects}
+        if any(obj.as_pointer() in elsewhere for obj in objects):
+            raise ValueError("Full generation cleanup requires objects exclusive to the active scene")
+        # Per-object removal repeatedly invalidates the dependency graph for
+        # thousands of organs. Removing the same private IDs as one batch keeps
+        # identical ownership/visibility semantics without quadratic teardown.
+        bpy.data.batch_remove(ids=objects)
+    else:
+        bpy.ops.object.select_all(action="SELECT")
+        bpy.ops.object.delete()
 
     for material in list(bpy.data.materials):
         if material.name.startswith(PROJECT_MATERIAL_PREFIX):
             bpy.data.materials.remove(material, do_unlink=True)
 
+    orphaned=[]
     for data_collection in (
         bpy.data.meshes,
         bpy.data.cameras,
@@ -42,10 +61,15 @@ def cleanup_scene() -> None:
             ):
                 continue
             if datablock.users == 0:
+                if include_hidden:
+                    orphaned.append(datablock)
+                    continue
                 try:
                     data_collection.remove(datablock)
                 except RuntimeError:
                     pass
+    if orphaned:
+        bpy.data.batch_remove(ids=orphaned)
 
     for collection in list(bpy.data.collections):
         if collection.name.startswith(PROJECT_PREFIX):
@@ -578,7 +602,8 @@ def _apply_generated_organ_textures(
             preset_name=preset_name,
             uv_map_name=uv_map_name,
             asset_dir=asset_dir,
-            manifest_item=item if isinstance(item, dict) else None,
+            manifest_item={**item, "generator_version": manifest.get("generator_version", "unknown")}
+            if isinstance(item, dict) else None,
         )
         applied[material_key] = report
     return applied
@@ -667,7 +692,9 @@ def _configure_image_texture_set(
             bsdf.inputs[input_name].default_value = float(preset[key])
     material["uchuva_texture_preset"] = preset_name
     _configure_matte_principled(bsdf)
-    material["uchuva_texture_generator_version"] = "0.4.3"
+    material["uchuva_texture_generator_version"] = str(
+        manifest_item.get("generator_version", "unknown") if manifest_item else "unknown"
+    )
     material["uchuva_texture_asset_dir"] = str(asset_dir)
     material["uchuva_normal_strength"] = normal_strength
     material["uchuva_normal_strength_status"] = "engineering_heuristic"

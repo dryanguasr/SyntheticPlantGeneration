@@ -31,6 +31,7 @@ from .parameters import (
     get_initial_parameters,
     get_morphology_parameters,
     get_phenology_profile,
+    leaf_length_factor,
 )
 from .phenology import (
     PHENOLOGY_MODELS,
@@ -38,9 +39,81 @@ from .phenology import (
     coherent_stage_sequence,
     reproductive_phenology,
 )
-from .provenance import audit_parameter_provenance, provenance_for_status
+from .provenance import (
+    audit_parameter_provenance,
+    normalise_parameter_provenance,
+    parameter_snapshot_sha256,
+    provenance_for_status,
+)
 
 SCRIPT_VERSION = "0.11.0-literature-cohort-maturity"
+
+
+def reproductive_load_policy(params: dict[str, Any]) -> str:
+    """Missing policy denotes the historical contract, never a camera target."""
+    policy = params.get("reproduction", {}).get("load_policy", {}).get(
+        "value", "legacy_fruiting_range"
+    )
+    if policy not in {"architecture_driven", "legacy_fruiting_range"}:
+        raise ValueError(f"Unknown reproductive load policy: {policy}")
+    return policy
+
+
+def reproductive_counts(plant_or_axis: Plant | Axis) -> dict[str, int]:
+    """Count morphology organs; visibility and annotation are separate domains."""
+    counts = dict(reproductive_units=0, flowers=0, fruits=0, fruits_with_calyx=0)
+    roots = plant_or_axis.axes if isinstance(plant_or_axis, Plant) else [plant_or_axis]
+    def visit(axis: Axis) -> None:
+        for node in axis.nodes:
+            unit = node.reproductive_unit
+            if unit is None:
+                continue
+            counts["reproductive_units"] += 1
+            counts["flowers"] += int(unit.stage == "flower")
+            counts["fruits"] += int(unit.fruit is not None)
+            counts["fruits_with_calyx"] += int(unit.fruit is not None and unit.calyx is not None)
+        for child in axis.child_axes:
+            visit(child)
+    for root in roots:
+        visit(root)
+    return counts
+
+
+def record_reproductive_counts(plant: Plant, stage: str) -> dict[str, int]:
+    """Refresh stage-specific counts without imposing a reproductive quota."""
+    counts = reproductive_counts(plant)
+    plant.metadata.setdefault("reproductive_counts_by_stage", {})[stage] = counts
+    plant.metadata["model_stage"] = stage
+    return counts
+
+
+def enforce_parent_radius_continuity(plant: Plant, *, stage: str) -> list[dict[str, Any]]:
+    """Keep child axes no thicker than the parent at their actual insertion."""
+    adjustments: list[dict[str, Any]] = []
+    def visit(axis: Axis) -> None:
+        at_node = {node.id: internode.radius_cm
+                   for node, internode in zip(axis.nodes, axis.internodes)}
+        for child in axis.child_axes:
+            if child.parent_node_id not in at_node:
+                raise ValueError(f"Missing parent insertion for {child.id}")
+            limit = at_node[child.parent_node_id]
+            largest = max((part.radius_cm for part in child.internodes), default=0.0)
+            if largest > limit:
+                scale = limit / largest
+                for part in child.internodes:
+                    proposed = part.radius_cm
+                    part.radius_cm = min(limit, round(proposed * scale, 6))
+                    record = dict(original_radius_cm=proposed, final_radius_cm=part.radius_cm,
+                                  parent_node_id=child.parent_node_id, parent_radius_cm=limit,
+                                  scale_factor=scale, stage=stage,
+                                  policy="child_axis_max_at_most_parent_insertion")
+                    part.provenance["radius_continuity"] = record
+                    adjustments.append(dict(internode_id=part.id, **record))
+            visit(child)
+    for root in plant.axes:
+        visit(root)
+    plant.metadata.setdefault("radius_continuity_adjustments", []).extend(adjustments)
+    return adjustments
 
 
 def generate_morphology_tree(
@@ -51,6 +124,9 @@ def generate_morphology_tree(
     condition: str = "healthy",
     preset_name: str | None = None,
     phenology_model: str = "legacy_independent",
+    resolve_growth: bool = True,
+    reproductive_space_plan: dict[str, Any] | None = None,
+    spatial_admission_plan: dict[str, Any] | None = None,
 ) -> Plant:
     """Generate a small, reproducible morphology tree for early validation."""
     if condition not in {"healthy", "drying"}:
@@ -71,6 +147,49 @@ def generate_morphology_tree(
         )
     )
     active_profile_name = phenology_profile or "mixed_balanced"
+    load_policy = reproductive_load_policy(active_params)
+    branch_activation = active_params["branching"].get("activation_policy", {}).get("value")
+    if branch_activation not in {None, "legacy_reproductive_gate", "vegetative_onset_independent_v1"}:
+        raise ValueError(f"Unknown branch activation policy: {branch_activation}")
+    if branch_activation == "vegetative_onset_independent_v1":
+        if load_policy != "architecture_driven" or active_params.get("growth", {}).get("mode", {}).get("value") != "incremental_budgeted":
+            raise ValueError("Independent vegetative activation requires architecture_driven incremental_budgeted generation")
+        first_node = active_params["branching"].get("vegetative_first_main_node", {}).get("value")
+        main_nodes = int(active_params["axis"]["main_node_count"]["value"])
+        if isinstance(first_node, bool) or not isinstance(first_node, int) or not 2 <= first_node < main_nodes:
+            raise ValueError("Invalid vegetative first main node: require a one-based integer from 2 through main_node_count-1")
+    leaf_pose_range = active_params["leaf"].get("insertion_angle_deg_range")
+    leaf_pose_frame = active_params["leaf"].get("insertion_frame", {}).get("value")
+    if leaf_pose_frame not in {None, "orthogonal_local_v1", "local_cone_v2"}:
+        raise ValueError(f"Unknown leaf insertion frame: {leaf_pose_frame}")
+    if leaf_pose_range is not None:
+        low, high = float(leaf_pose_range["min"]), float(leaf_pose_range["max"])
+        if not (math.isfinite(low) and math.isfinite(high) and 0 <= low <= high <= 180):
+            raise ValueError("Invalid effective leaf insertion angle range")
+    branch_frame = active_params["branching"].get("frame", {}).get("value")
+    if branch_frame not in {None, "local_cone_v1"}:
+        raise ValueError(f"Unknown branch frame: {branch_frame}")
+    if branch_frame is not None:
+        table = active_params["branching"].get("branch_angle_deg_by_order", {})
+        for order in range(1, int(active_params["axis"]["max_branch_order"]["value"])+1):
+            bounds = table.get(str(order))
+            if bounds is None:
+                raise ValueError(f"Missing branch angle range for enabled child order {order}")
+            low, high = float(bounds["min"]), float(bounds["max"])
+            if not (math.isfinite(low) and math.isfinite(high) and 0 <= low <= high <= 180):
+                raise ValueError(f"Invalid branch angle range for child order {order}")
+    leaf_length_factor(active_params, 0, 1.0)  # Reject unknown opt-in policy before RNG or generation.
+    if load_policy == "architecture_driven":
+        radii = active_params["internode"]["radius_cm_by_order"]
+        missing = [order for order in range(int(active_params["axis"]["max_branch_order"]["value"]) + 1)
+                   if str(order) not in radii]
+        if missing:
+            raise ValueError(f"Missing radius parameters for enabled branch orders: {missing}")
+        for order in range(int(active_params["axis"]["max_branch_order"]["value"]) + 1):
+            bounds = radii[str(order)]
+            low, high = float(bounds["min"]), float(bounds["max"])
+            if not (math.isfinite(low) and math.isfinite(high) and 0 < low <= high):
+                raise ValueError(f"Invalid radius range for branch order {order}")
     if phenology_profile is not None:
         profile = get_phenology_profile(active_profile_name)
         active_params["reproduction"]["stage_weights"].update(
@@ -91,13 +210,18 @@ def generate_morphology_tree(
             "value": phenology_snapshot.first_bifurcation_node,
             "status": "literature_reported_range_site_bounded",
             "note": "Ramirez et al. 2013 reports the first bifurcation near nodes 8--12.",
-            "provenance": {
-                "source": "ramirez_2013_bbch_physalis",
-                "uncertainty": (
-                    "Site-bounded literature prior; local crop distribution remains to be measured."
-                ),
-            },
+            "provenance": provenance_for_status(
+                "literature_reported_range_site_bounded",
+                method="literature_bounded_sample_first_bifurcation_local_validation_pending",
+                source_ids=["ramirez_2013_bbch_physalis"],
+            ).to_dict(),
         }
+        if branch_activation == "vegetative_onset_independent_v1":
+            active_params["reproduction"]["first_bifurcation_node"]["model_application"] = {
+                "status": "engineering_heuristic",
+                "method": "main_axis_reproductive_eligibility_separate_from_vegetative_lateral_activation",
+                "note": "The sampled literature landmark is retained; treating it separately from adult vegetative axillary branches is a model hypothesis, not a new claim about the source.",
+            }
     stem_color_family = (
         rng.choice(("green", "dark_green"))
         if condition == "healthy"
@@ -123,11 +247,14 @@ def generate_morphology_tree(
         axis_vigor=1.0,
         development_step=0,
     )
-    normalization_report = _enforce_reproductive_unit_target(
-        main_axis,
-        rng,
-        active_params,
-    )
+    if load_policy == "architecture_driven":
+        normalization_report = dict(policy=load_policy, applied=False,
+                                    legacy_range_active=False,
+                                    counts_before_cohorts=reproductive_counts(main_axis))
+    else:
+        normalization_report = _enforce_reproductive_unit_target(main_axis, rng, active_params)
+        normalization_report["policy"] = "legacy_fruiting_range"
+        normalization_report["count_stage"] = "before_cohorts"
     cohort_report: dict[str, Any] = {
         "model": "legacy_independent",
         "applied": False,
@@ -139,7 +266,7 @@ def generate_morphology_tree(
             active_params,
         )
 
-    return Plant(
+    plant = Plant(
         species="Physalis peruviana",
         common_name="uchuva",
         seed=seed,
@@ -199,6 +326,54 @@ def generate_morphology_tree(
             "parameter_provenance_audit": audit_parameter_provenance(active_params),
         },
     )
+    if load_policy == "architecture_driven":
+        active_params = normalise_parameter_provenance(active_params)
+        plant.script_version += "+audit-morphology/2"
+        plant.metadata.update(
+            morphology_contract_version="audit-morphology/2",
+            reproductive_load_policy=load_policy,
+            effective_parameters=deepcopy(active_params),
+            effective_parameters_sha256=parameter_snapshot_sha256(active_params),
+            parameter_provenance_audit=audit_parameter_provenance(active_params),
+        )
+        enforce_parent_radius_continuity(plant, stage="generated")
+        record_reproductive_counts(plant, "generated")
+    if branch_activation == "vegetative_onset_independent_v1":
+        plant.metadata["vegetative_branching_contract"] = {
+            "policy": branch_activation,
+            "first_eligible_main_node": active_params["branching"]["vegetative_first_main_node"]["value"],
+            "reproductive_landmark_node": active_params["reproduction"].get("first_bifurcation_node", {}).get("value"),
+            "status": "engineering_heuristic",
+            "interpretation": "vegetative_axillary_branch_not_reproductive_transition",
+            "branch_count_target": None,
+        }
+    from .reproductive_orientation import assign_reproductive_orientation
+    assign_reproductive_orientation(plant, active_params)
+    if reproductive_space_plan is not None and spatial_admission_plan is not None:
+        raise ValueError('Use only one explicit spatial admission contract')
+    if spatial_admission_plan is not None:
+        from .spatial_admission import apply_plan
+        apply_plan(plant, spatial_admission_plan)
+        plant.script_version += '+spatial-admission/2'
+    if reproductive_space_plan is not None:
+        from .reproductive_space import apply_admission_plan
+        apply_admission_plan(plant, reproductive_space_plan)
+    nodal_policy = active_params.get('growth',{}).get('nodal_repulsion')
+    if nodal_policy:
+        if nodal_policy['value'] != 'bottom_up_lower_first_v1':
+            raise ValueError('Unknown nodal repulsion policy')
+        for key,value in [('branch_rotation_limit_deg',35.),('leaf_rotation_limit_deg',120.),('pedicel_rotation_limit_deg',75.)]:
+            if nodal_policy.get(key)!=value:raise ValueError(f'{key} is fixed by the versioned nodal implementation')
+        plant.script_version += '+nodal-growth/1'
+        plant.metadata['nodal_repulsion_requested'] = deepcopy(nodal_policy)
+        if resolve_growth:
+            from .nodal_repulsion import resolve_nodal_repulsion
+            resolve_nodal_repulsion(plant,sweeps=nodal_policy['sweeps'],step_deg=nodal_policy['step_deg'],
+                max_seconds=nodal_policy['max_active_seconds'],margin=nodal_policy['proxy_margin_bu'])
+            record_reproductive_counts(plant,'adapted')
+        else:
+            plant.metadata['nodal_repulsion_pending'] = True
+    return plant
 
 
 def _generate_axis(
@@ -258,6 +433,15 @@ def _generate_axis(
             method="budgeted_axis_generation" if is_budgeted else "legacy_recursive_axis",
         ).to_dict(),
     )
+    if order > 0 and params["branching"].get("frame", {}).get("value") == "local_cone_v1":
+        axis.provenance["branch_frame_v140"] = True
+        axis.provenance["branch_direction_frame"] = "local_cone_v1"
+        axis.provenance["branch_angle_sampling"] = {
+            "child_order": order,
+            "range_min_deg": params["branching"]["branch_angle_deg_by_order"][str(order)]["min"],
+            "range_max_deg": params["branching"]["branch_angle_deg_by_order"][str(order)]["max"],
+            "status": "engineering_heuristic",
+        }
 
     child_axis_index = 0
     used_length = 0.0
@@ -305,9 +489,9 @@ def _generate_axis(
             child_azimuth = (
                 node.leaf.azimuth_deg + rng.uniform(-18.0, 18.0)
             ) % 360.0
-            child_branch_angle = _uniform_from_range(
-                rng, params["branching"]["branch_angle_deg_range"]
-            )
+            branch_angle_range = params["branching"].get("branch_angle_deg_by_order", {}).get(
+                str(order+1), params["branching"]["branch_angle_deg_range"])
+            child_branch_angle = _uniform_from_range(rng, branch_angle_range)
             node.axillary_bud.state = "branch"
             node.axillary_bud.branch_id = child_axis_id
             node.axillary_bud.decision = (
@@ -340,6 +524,18 @@ def _generate_axis(
                 ),
                 development_step=development_step + 1,
             )
+            if params["branching"].get("activation_policy", {}).get("value") == "vegetative_onset_independent_v1":
+                origin = {
+                    "policy": "vegetative_onset_independent_v1",
+                    "parent_axis_order": order,
+                    "parent_node_number": position_index + 1,
+                    "first_eligible_main_node": params["branching"]["vegetative_first_main_node"]["value"],
+                    "reproductive_landmark_node": params["reproduction"].get("first_bifurcation_node", {}).get("value"),
+                    "interpretation": "vegetative_axillary_branch_not_reproductive_transition",
+                    "status": "engineering_heuristic",
+                }
+                child_axis.provenance["branch_origin"] = dict(origin)
+                node.axillary_bud.provenance["branch_origin"] = dict(origin)
             axis.child_axes.append(child_axis)
             child_axis_index += 1
         elif _can_reproduce(params, order, position_index, rng):
@@ -396,13 +592,19 @@ def _make_internode(
         age_fraction = position_index / max(axis_node_count - 1, 1)
         age_scale = 1.0 - 0.18 * age_fraction
         length *= order_scale * age_scale * max(0.65, min(1.08, axis_vigor))
-    radius_range = params["internode"]["radius_cm_by_order"].get(
-        str(order), params["internode"]["radius_cm_by_order"]["1"]
-    )
+    if reproductive_load_policy(params) == "architecture_driven":
+        radius_range = params["internode"]["radius_cm_by_order"][str(order)]
+    else:
+        # Explicit compatibility branch for historical numerical baselines.
+        radius_range = params["internode"]["radius_cm_by_order"].get(
+            str(order), params["internode"]["radius_cm_by_order"]["1"]
+        )
     radius = _uniform_from_range(rng, radius_range)
+    taper_factor = 1.0
     if budgeted:
         taper_fraction = position_index / max(axis_node_count - 1, 1)
-        radius *= max(0.52, 1.0 - 0.34 * taper_fraction)
+        taper_factor = max(0.52, 1.0 - 0.34 * taper_fraction)
+        radius *= taper_factor
     bend_ranges = params["internode"]["bend_angle_deg_by_order"]
     bend_range = bend_ranges.get(str(order), bend_ranges["1"])
     bend_angle = _uniform_from_range(rng, bend_range)
@@ -420,6 +622,16 @@ def _make_internode(
             + position_index * 18.0
             + correlated * noise_strength
         ) % 360.0
+    radius_provenance = provenance_for_status(
+        str(radius_range["status"]), method="internode_range_by_branch_order",
+    ).to_dict()
+    if reproductive_load_policy(params) == "architecture_driven":
+        radius_provenance["radius_sampling"] = {
+            "taper_factor": taper_factor,
+            "range_min_cm": float(radius_range["min"]),
+            "range_max_cm": float(radius_range["max"]),
+            "axis_node_count_at_sampling": axis_node_count,
+        }
     return Internode(
         id=f"{axis_id}_internode_{position_index}",
         order=order,
@@ -442,10 +654,7 @@ def _make_internode(
             3,
         ),
         parameter_status=radius_range["status"],
-        provenance=provenance_for_status(
-            str(radius_range["status"]),
-            method="internode_range_by_branch_order",
-        ).to_dict(),
+        provenance=radius_provenance,
     )
 
 
@@ -462,13 +671,7 @@ def _make_node(
 ) -> Node:
     leaf_length = _uniform_from_range(rng, params["leaf"]["length_cm_range"])
     if budgeted:
-        order_scale = float(
-            params.get("growth", {})
-            .get("leaf_length_scale_by_order", {})
-            .get(str(order), {"value": 0.74})
-            .get("value", 1.0)
-        )
-        leaf_length *= order_scale * max(0.72, min(1.04, axis_vigor))
+        leaf_length *= leaf_length_factor(params, order, axis_vigor)
     leaf_width_ratio = _uniform_from_range(
         rng, params["leaf"]["width_to_length_ratio_range"]
     )
@@ -481,13 +684,34 @@ def _make_node(
     # near-horizontal range.  The later daily-light optimiser can still tilt
     # them away from occupied projected cells, but starting every blade close
     # to the stem created an unrealistically edge-on, skeletal canopy.
+    pose_range = params["leaf"].get("insertion_angle_deg_range")
     preferred_insertion = (
+        _uniform_from_range(rng, pose_range) if pose_range is not None else
         rng.uniform(55.0, 86.0) if budgeted else rng.uniform(30.0, 78.0)
     )
     leaf_provenance = provenance_for_status(
         str(params["leaf"]["length_cm_range"]["status"]),
         method="leaf_scale_conditioned_by_order_and_vigor",
     ).to_dict()
+    if params.get("growth", {}).get("leaf_vigor_scaling", {}).get("value") == "adult_independent":
+        leaf_provenance["adult_blade_scaling"] = {
+            "policy": "adult_independent", "status": "engineering_heuristic",
+            "order": order, "factor": leaf_length_factor(params, order, axis_vigor),
+            "base_min_cm": params["leaf"]["length_cm_range"]["min"],
+            "base_max_cm": params["leaf"]["length_cm_range"]["max"],
+            "axis_vigor_used_for_blade_length": False,
+        }
+    pose_frame = params["leaf"].get("insertion_frame", {}).get("value")
+    if pose_frame is not None:
+        leaf_provenance["insertion_frame"] = pose_frame
+    if pose_range is not None:
+        leaf_provenance["pose_sampling"] = {
+            "range_min_deg": float(pose_range["min"]),
+            "range_max_deg": float(pose_range["max"]),
+            "status": str(pose_range["status"]),
+            "method": "one_uniform_draw_in_existing_leaf_rng_position",
+            "camera_dependency": "none",
+        }
     leaf = Leaf(
         id=f"{node_id}_leaf",
         node_id=node_id,
@@ -704,7 +928,11 @@ def _can_branch(
         .get("first_bifurcation_node", {})
         .get("value")
     )
-    if order == 0 and first_bifurcation is not None:
+    independent_vegetative = params["branching"].get("activation_policy", {}).get("value") == "vegetative_onset_independent_v1"
+    if order == 0 and independent_vegetative:
+        if position_index + 1 < params["branching"]["vegetative_first_main_node"]["value"]:
+            return False
+    elif order == 0 and first_bifurcation is not None:
         if position_index + 1 < int(first_bifurcation):
             return False
     growth = params.get("growth", {})
@@ -917,7 +1145,7 @@ def _apply_literature_cohorts(
 ) -> dict[str, Any]:
     """Replace independent stages with age-ranked, literature-bounded cohorts."""
     ranked = _ranked_reproductive_nodes(main_axis)
-    if len(ranked) < 5:
+    if reproductive_load_policy(params) == "legacy_fruiting_range" and len(ranked) < 5:
         occupied = {node.id for _score, node in ranked}
         candidates = [
             node

@@ -11,6 +11,7 @@ class BasalTests(unittest.TestCase):
         before=original.to_dict()
         for count in range(2,min(5,len(original.axes[0].child_axes)+1)+1):
             result=basal_scaffolds(original,count)
+            self.assertEqual(result.to_dict(),basal_scaffolds(original,count).to_dict())
             self.assertEqual(original.to_dict(),before)
             self.assertEqual(result.to_dict(),Plant.from_dict(result.to_dict()).to_dict())
             self.assertEqual(original.reproductive_unit_count(),result.reproductive_unit_count())

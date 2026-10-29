@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
+import hashlib
+import json
 from typing import Any
 
 
@@ -66,6 +68,9 @@ class ParameterProvenance:
 def canonical_status(status: str) -> str:
     """Map a historical compound status to one canonical category."""
     lowered = status.strip().lower()
+    if lowered == "measured_local":
+        # Import compatibility only: the name is not proof of a measurement.
+        return "real_dataset_measured"
     if lowered in PROVENANCE_STATUSES:
         return lowered
     if "literature" in lowered:
@@ -118,13 +123,19 @@ def normalise_parameter_provenance(parameters: dict[str, Any]) -> dict[str, Any]
     def visit(value: Any, path: tuple[str, ...]) -> None:
         if isinstance(value, dict):
             status = value.get("status")
-            if isinstance(status, str) and "provenance" not in value:
+            if isinstance(status, str) and (
+                not isinstance(value.get("provenance"), dict)
+                or value["provenance"].get("status") not in PROVENANCE_STATUSES
+            ):
+                previous = deepcopy(value.get("provenance"))
                 value["provenance"] = provenance_for_status(
                     status,
                     method=".".join(path) or "root_parameter",
                 ).to_dict()
+                if previous is not None:
+                    value["provenance"]["legacy_provenance"] = previous
             for key, item in list(value.items()):
-                if key != "provenance":
+                if key not in {"provenance", "override_history"}:
                     visit(item, (*path, str(key)))
         elif isinstance(value, list):
             for index, item in enumerate(value):
@@ -132,6 +143,34 @@ def normalise_parameter_provenance(parameters: dict[str, Any]) -> dict[str, Any]
 
     visit(result, ())
     return result
+
+
+def override_parameter(
+    record: dict[str, Any],
+    *,
+    status: str,
+    method: str,
+    source_ids: list[str] | None = None,
+    **values: Any,
+) -> None:
+    """Apply an explicit override without inheriting its old evidence claim."""
+    if not method:
+        raise ValueError("An override requires its method")
+    previous = {key: deepcopy(value) for key, value in record.items()
+                if key != "override_history"}
+    record.setdefault("override_history", []).append(previous)
+    record.update(values)
+    record["status"] = status
+    record["provenance"] = provenance_for_status(
+        status, method=method, source_ids=source_ids,
+    ).to_dict()
+
+
+def parameter_snapshot_sha256(parameters: dict[str, Any]) -> str:
+    """Hash JSON parameter content, independent of dictionary insertion order."""
+    encoded = json.dumps(parameters, sort_keys=True, separators=(",", ":"),
+                         ensure_ascii=False, allow_nan=False).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def audit_parameter_provenance(parameters: dict[str, Any]) -> dict[str, Any]:
@@ -158,7 +197,7 @@ def audit_parameter_provenance(parameters: dict[str, Any]) -> dict[str, Any]:
                     else:
                         counts[canonical] += 1
             for key, item in value.items():
-                if key != "provenance":
+                if key not in {"provenance", "override_history"}:
                     visit(item, (*path, str(key)))
         elif isinstance(value, list):
             for index, item in enumerate(value):

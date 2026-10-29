@@ -80,6 +80,8 @@ class Leaf(SerializableMixin):
     intraspecific_shading_fraction: float = 0.0
     interspecific_shading_fraction: float = 0.0
     provenance: dict[str, Any] = field(default_factory=dict)
+    # Engineering shape control; independent of fine surface texture.
+    transverse_arch_ratio: float = 0.0
 
 
 @dataclass

@@ -14,7 +14,11 @@ from copy import deepcopy
 from typing import Any
 
 from .morphology import Axis, Plant
-from .grammar import generate_morphology_tree
+from .grammar import (
+    enforce_parent_radius_continuity,
+    generate_morphology_tree,
+    record_reproductive_counts,
+)
 from .growth import coordinate_synchronous_growth
 from .parameters import get_morphology_parameters
 from .scene import CultivationScene, CultivationSupport, PlantInstance
@@ -93,6 +97,7 @@ def generate_cultivation_morphologies(
             "parameter_status": "engineering_heuristic",
         }
         active_scene.metadata["cultivation_adaptation"] = report
+        _record_audit_stage(potential_plants)
         return active_scene, potential_plants, report
 
     variant_options = {
@@ -172,6 +177,7 @@ def generate_cultivation_morphologies(
         else len(active_scene.supports)
     )
     active_scene.metadata["cultivation_adaptation"] = report
+    _record_audit_stage(active_plants)
     return active_scene, active_plants, report
 
 
@@ -186,6 +192,8 @@ def adapt_cultivation_morphologies(
     constraints.  Leaf and canopy overlap remains deliberately permissive so
     dense scenes can interlace visually without being reported as collision.
     """
+    from .nodal_repulsion import require_legacy_pose_inputs
+    require_legacy_pose_inputs(plants_by_id.values(),'adapt_cultivation_morphologies')
     active_scene = deepcopy(scene)
     active_plants = deepcopy(plants_by_id)
     options = {
@@ -276,7 +284,15 @@ def adapt_cultivation_morphologies(
         "parameter_status": "manual_initial_guess_dataset_guided",
     }
     active_scene.metadata["cultivation_adaptation"] = report
+    _record_audit_stage(active_plants)
     return active_scene, active_plants, report
+
+
+def _record_audit_stage(plants: dict[str, Plant]) -> None:
+    for plant in plants.values():
+        if plant.metadata.get("reproductive_load_policy") == "architecture_driven":
+            enforce_parent_radius_continuity(plant, stage="adapted")
+            record_reproductive_counts(plant, "adapted")
 
 
 def _relax_axis_directions(
