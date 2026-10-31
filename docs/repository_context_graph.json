@@ -2661,7 +2661,7 @@
       "id": "entrypoint.harvest_pilot",
       "type": "entrypoint",
       "label": "Piloto de uchuva desmontable con carro 4WD y brazo de cinco GDL",
-      "summary": "Interpreta proxies morfologicos en tres plantas y seis cuerpos fruto-capacho, con robot modular, corte y retencion ideal por plugin Harmonic y auditor de evidencia. Compilacion y cosecha nativas observadas en Harmonic 8.14.0, documentadas por experimento y separadas de las pruebas puras; sin percepcion autonoma ni fisica medida.",
+      "summary": "Piloto rigido con robot modular, corte y retencion ideal por plugin Harmonic y auditor de evidencia. Conserva el perfil historico de seis frutos y permite arboles v8 admitidos mediante catalogos de poses, unidades explicitas, visuales detallados y colisiones prismaticas conservadoras agrupadas. Compilacion, contacto y cosecha nativos se documentan por configuracion y experimento, separados de las pruebas puras; sin percepcion autonoma ni fisica medida.",
       "paths": [
         "src/uchuva_gazebo/harvest_plants.py",
         "src/uchuva_gazebo/harvest_visuals.py",

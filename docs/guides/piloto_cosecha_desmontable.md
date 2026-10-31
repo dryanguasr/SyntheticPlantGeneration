@@ -393,6 +393,30 @@ El informe registra el fallo de rendimiento de la versión con 15.842 entidades
 independientes, las pruebas de contacto y las ejecuciones de la representación
 agrupada.
 
+La misión V8 de esta configuración contiene tres unidades dinámicas, una por
+arbusto, aunque conserva todos sus órganos visuales. Tras preparar un destino
+nuevo, usar `--mode smoke`, después `--mode harvest --max-targets 1` y, sólo
+tras auditar ese ciclo, `--mode harvest --max-targets 3`. Las tres repeticiones
+completas también usan tres objetivos y directorios de ejecución nuevos. No
+aplicar por defecto el `--max-targets 6` de la línea base a este manifiesto.
+
+En el WSL de la validación, Ogre2 seleccionaba `llvmpipe` por CPU. El controlador
+Mesa D3D12 ya instalado permitió usar la RTX 4050 mediante variables limitadas
+al proceso, sin cambiar la configuración global ni instalar dependencias:
+
+```bash
+GALLIUM_DRIVER=d3d12 MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA \
+python3 scripts/run_harvest_pilot.py outputs/harvest_pilot_v8_c1 \
+  --plugin-dir outputs/harvest_plugin_build --mode harvest --max-targets 1 \
+  --gui --gui-config configs/harvest_pilot_gui.config
+```
+
+Esto presupone un backend D3D12 disponible y un adaptador NVIDIA: no es una
+selección universal para cualquier equipo. Comprobar `GL_RENDERER` en
+`~/.gz/rendering/ogre2.log` y conservarlo con la ejecución. La variable del
+adaptador utiliza una coincidencia parcial del nombre, según la
+[documentación de Mesa](https://docs.mesa3d.org/drivers/d3d12.html).
+
 ## Nota sobre el generador y trabajo futuro
 
 El piloto reutiliza la morfología y sus proxies. No redefine la arquitectura

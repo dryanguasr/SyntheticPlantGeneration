@@ -2,16 +2,22 @@
 
 ## Estado y alcance
 
-Informe de las ejecuciones iniciadas el 30 de octubre de 2026, hora de Bogotá
-(31 de octubre en los identificadores UTC). **Línea base C1–C5: A0, A1, A2 y A4
-aprobados mediante auditorías independientes. Las tres repeticiones A3 de C5
-se cancelaron antes de ejecutarse tras la revisión visual del usuario.**
+Informe de las ejecuciones del 30–31 de octubre de 2026, hora de Bogotá
+(31 de octubre en los identificadores UTC). **La revisión V8 conserva tres
+arbustos completos y un robot con acabado gráfico revisado. A0 y A1 aprobaron;
+A2 depositó tres de tres frutos, y A3 repitió esa misión con éxito en tres
+procesos independientes. A4 terminó con un ciclo físico auditado y video nativo
+de 82,6 s**, usando la corrección visual C4 de la herramienta. La captura final
+conserva las mismas plantas y física que C3, con derivación explícita y validada.
 
 Los resultados C1–C5 corresponden al escenario y al robot provisionales
 anteriores a esa revisión. Se conservan como evidencia de la mecánica del
 piloto, pero no validan el aspecto solicitado ni transfieren automáticamente
 su aprobación al escenario con vegetación V8 y robot de acabado revisado.
-Esa revisión requiere identificar sus artefactos y ejecuciones por separado.
+La línea base C5 conserva un A2 de seis depósitos correctos; sus tres misiones
+A3 de seis frutos se cancelaron antes de ejecutarse tras la revisión visual.
+La adaptación autorizada a pocos frutos utiliza uno por arbusto V8. No se
+declara repetibilidad de seis frutos a partir de las nuevas misiones de tres.
 
 El alcance es la mecánica idealizada de un piloto rígido con posiciones conocidas
 del simulador. Las plantas, los nodos, pedicelos e identidades proceden del modelo
@@ -49,7 +55,13 @@ su categoría `engineering_heuristic`; no son mediciones agronómicas.
 - Commit inicial publicado: `3967a5b741e59d4b9370c2d872aa3b391d9380cf`.
 - Commit de las correcciones evaluadas en C5:
   `d42412506a92ff719e1306dc99c4c6fba1a46ac1`.
-- Commit final: pendiente de cerrar el informe y publicar los cambios.
+- Commit de implementación mecánica evaluado en V8-C3:
+  `7adaa35b5d83fd6c7a404b27a271be1180133e81`.
+- Commit final de código, con la corrección visual de los soportes de la herramienta:
+  `51bce19be3593b92bae311fdd70158390ba3681e`; su derivación C4 y ejecución se
+  identifican por separado. No cambia la física validada en C3.
+- La publicación posterior del informe y la guía sólo cambia documentación;
+  el commit que generó el paquete físico permanece identificado arriba.
 - Worktree aislado:
   `C:\Users\User\.codex\worktrees\harvest-pilot\SyntheticPlantGeneration`.
 - El checkout original y sus cambios ajenos a este piloto se conservaron.
@@ -278,17 +290,345 @@ sustituyen las tres repeticiones de la misión completa A3.
 
 ## Revisión V8: arbustos completos y acabado visual
 
-**Aceptación nativa V8: PENDIENTE.** Esta revisión responde a la petición de
+**V8-C3: A0, A1, misión de tres frutos A2 y tres repeticiones A3 aprobados;
+A4 aprobado físicamente, con cierre visual documentado por ejecución.** Esta revisión responde a la petición de
 conservar arbustos elaborados de la versión reciente y mejorar el acabado del
 robot. Es una escena distinta de C1–C5: sus tres frutos no heredan el PASS de
 la misión histórica de seis frutos. El paquete `outputs/harvest_pilot_v8_c1`
 superó la preparación, el examen del SDF y la inspección de identidad, unidades,
-inercias y archivos congelados. Su A0 está en curso, sin aceptación nativa
-declarada en esta sección. `outputs/harvest_pilot_v8_c2` se está regenerando
-desde el árbol limpio del commit `501cd7f20c466898cba05985e8f12d981e061ea7`;
-su cierre y sus ejecuciones se registrarán por separado. V8-C1 conserva los
+inercias y archivos congelados, pero su A0 falló por rendimiento como se detalla
+más abajo. `outputs/harvest_pilot_v8_c2` se regeneró desde el árbol limpio del
+commit `501cd7f20c466898cba05985e8f12d981e061ea7`, sin ejecutarse. El paquete
+productivo `outputs/harvest_pilot_v8_c3` incorpora las colisiones agrupadas y se
+generó desde `7adaa35b5d83fd6c7a404b27a271be1180133e81`, también con el árbol
+limpio. Sus ejecuciones se registran por separado. V8-C1 conserva los
 hashes del árbol de trabajo que lo produjo y no se presenta retrospectivamente
 como un paquete construido desde ese commit limpio.
+
+### Resultados nativos V8-C3
+
+| Experimento | Ejecución | Estado | Evidencia principal |
+| --- | --- | --- | --- |
+| A0 | `20261031_A0_v8_c3_01` | PASS | 20/20 comprobaciones; tres frutos unidos; rechazos negativos |
+| A1 | `20261031_A1_v8_c3_01` | PASS | 29/29 comprobaciones; corte, retención, liberación y depósito de una unidad |
+| A2 adaptado, tres frutos | `20261031_A2_v8_c3_01` | PASS | 45/45 comprobaciones; tres depósitos finales estables |
+| A3 adaptado, tres misiones de tres frutos | `20261031T054851Z_A3_{1,2,3}` | PASS | 45/45 comprobaciones y tres depósitos finales estables en cada repetición |
+| A4 final, derivación visual C4 | `20261031_A4_v8_c4_04` | PASS | 29/29; caída y depósito inspeccionados; 826 PNG y video nativo de 82,6 s |
+
+Los directorios de A0–A2 están bajo
+`outputs/harvest_pilot_v8_c3/runs/`; contienen las poses, comandos, eventos,
+resultado nativo y `audit.json` recalculado mediante el CLI independiente.
+Las métricas y figuras complementarias no controlan al robot.
+
+A0 registró 251 muestras, 12,473 s simulados y 18,713 s de pared. El tramo
+inicial sin comandos duró 2,475 s; deriva máxima de los frutos 4,045 nm,
+intervalo máximo de muestras 51 ms y tres órdenes negativas con tres acuses.
+
+A1 registró 3.758 muestras hasta 188,199 s simulados, 194,564 s de pared y
+5,594 m de recorrido de la base. La unidad de `plant_000` permaneció retenida
+117,967 s, se desplazó 3,222 m y mostró error de retención/deslizamiento máximo
+de 1,629 µm. La holgura mínima observada respecto a los cilindros que contienen
+los prismas fue 5,849 mm. Tras liberarse cayó 0,401838 m y terminó en
+(-2,000016; -1,000017; 0,058076) m, dentro de la cesta, con velocidad final
+0,0000442 m/s y tramo final estable de 5,855 s. Las otras dos unidades
+permanecieron unidas; no se contabilizan como intentos de cosecha en A1.
+
+A2 registró 13.779 muestras hasta 691,695 s simulados, 698,826 s de pared y
+34,028 m de recorrido de la base. Los tres ciclos completaron corte, retención,
+liberación y depósito. El intervalo máximo entre muestras fue 51 ms; la menor
+separación entre las esferas fue **+3,980 mm** en las muestras observadas.
+El análisis geométrico auxiliar no detectó penetración con las envolventes de
+los tallos; no constituye una certificación continua ni una medida de fuerzas.
+
+| Planta | Retención (s) | Desplazamiento retenido (m) | Residual máximo (µm) | Holgura mínima planta (mm) | Tramo final estable (s) | Velocidad final (mm/s) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `plant_000` | 118,068 | 3,222 | 1,485 | 5,879 | 275,292 | 1,230 |
+| `plant_001` | 130,495 | 4,302 | 1,848 | 7,576 | 274,989 | 0,407 |
+| `plant_002` | 146,203 | 6,261 | 1,602 | 6,613 | 5,950 | 0,045 |
+
+«Estable» conserva la definición previa: esfera dentro de la cesta y velocidad
+menor o igual a 35 mm/s durante el tramo final, mínimo 0,7 s. No significa
+inmovilidad exacta. Las dos primeras unidades se desplazaron dentro de la cesta
+después de su liberación y mantienen velocidades finales pequeñas pero no
+nulas; los modelos esféricos y el contacto ideal no calibran la resistencia a
+la rodadura del fruto real. Sus posiciones finales están en
+`observed_metrics.json`; la estabilidad se comprobó de nuevo al final de toda
+la misión, no sólo después de cada depósito individual.
+
+### A3 adaptado confirmado: tres repeticiones de tres frutos
+
+Las ejecuciones `20261031T054851Z_A3_1`, `20261031T054851Z_A3_2` y
+`20261031T054851Z_A3_3` completaron **PASS independiente, 45/45 comprobaciones
+cada una**. Corresponden a los paquetes `outputs/harvest_pilot_v8_c3_a3_1`,
+`harvest_pilot_v8_c3_a3_2` y `harvest_pilot_v8_c3_a3_3`, con procesos y
+particiones distintos. Se ejecutaron en paralelo sólo después de repetir
+independientemente la auditoría de A2. Las tres copias conservan el manifiesto
+C3 de SHA-256
+`359d0a8453c028924bea1df4a59fdd70efa8ee9ac516e92cd44c8c4c834eec63`.
+
+Esta es la adaptación V8 de **tres frutos por misión**, uno por arbusto completo.
+Son nueve ciclos observados sobre las mismas tres identidades botánicas en
+procesos nuevos. No completa retrospectivamente la tanda histórica C5 de
+tres misiones de seis frutos: aquella fue cancelada antes de ejecutarse y
+conserva su estado **NO EJECUTADO**.
+
+Cada repetición contiene 13.780 muestras desde t = 0,052 s, sin intervalos
+mayores de 51 ms. Los tres frutos están liberados y estables en la cesta al
+final de cada misión. El tiempo de pared de la tabla procede de `outcome.json`;
+no incluye el análisis auxiliar posterior ni se interpreta como productividad
+del robot real.
+
+| Repetición | Auditoría | Frutos finales estables | Tiempo simulado final (s) | Pared (s) | Residual máximo de retención (µm) | Holgura mínima planta (mm) | Separación mínima entre frutos (mm) | Menor tramo final estable (s) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| A3-1 | 45/45 | 3/3 | 691,719 | 698,001 | 1,999 | 5,882 | +3,478 | 6,000 |
+| A3-2 | 45/45 | 3/3 | 691,719 | 697,981 | 1,647 | 5,884 | +3,475 | 6,000 |
+| A3-3 | 45/45 | 3/3 | 691,722 | 698,016 | 2,213 | 5,871 | +3,962 | 6,050 |
+
+Las mayores duraciones de retención por repetición fueron 146,254, 146,203 y
+146,203 s; el mayor deslizamiento relativo al TCP de toda la tanda fue
+1,649 µm. Los residuos micrométricos corresponden a la unión ideal. Las
+holguras de planta se calculan contra los cilindros exteriores que contienen
+los prismas; son comprobaciones muestreadas, no medidas de fuerza ni una
+certificación continua. El criterio de estabilidad conserva los 35 mm/s,
+0,7 s y tolerancia de contacto originales. En particular, el valor mínimo
+de la tabla usa el **tramo final**, no un reposo histórico anterior.
+
+La siguiente dispersión compara las posiciones finales de cada identidad
+entre las tres repeticiones. Cada rango XYZ es máximo menos mínimo por
+coordenada; la última columna es la mayor distancia euclídea entre dos
+posiciones finales del mismo fruto.
+
+| Identidad por planta | Rango X (mm) | Rango Y (mm) | Rango Z (mm) | Mayor distancia final entre repeticiones (mm) |
+| --- | ---: | ---: | ---: | ---: |
+| `plant_000` | 7,793 | 48,453 | 0,000 | 49,075 |
+| `plant_001` | 0,290 | 11,585 | 0,000 | 11,589 |
+| `plant_002` | 0,005271 | 0,003856 | 0,000 | 0,005291 |
+
+Las duraciones simuladas difieren hasta 0,003 s y las posiciones finales
+también difieren: no se afirma igualdad de trayectorias bit a bit. La
+dispersión de las primeras unidades es compatible con su movimiento dentro
+de la cesta después de liberarse; «estable» no significa una posición final
+única ni inmovilidad exacta. Tres repeticiones de esta configuración no
+establecen una tasa general de fiabilidad ni validan precisión de depósito
+en el robot real.
+
+El cierre del coordinador y sus auditorías/análisis individuales están en
+`outputs/harvest_validation_evidence/A3_v8_c3_parallel_01/`. El resumen
+`V8_C3_summary_before_gui_01.json` cotejó los seis registros crudos de cada
+auditoría y su vínculo al manifiesto; los 19 hashes fuente de cada paquete
+coincidían con el código registrado. `A3_v8_c3_table_metrics_01.json` conserva
+los valores sin redondear y las diferencias XYZ. Estos dos archivos están
+en `outputs/harvest_validation_evidence/`. Los análisis auxiliares terminaron
+sin error y no intervienen en la aceptación. Las auditorías de A4 se registran
+en su propia sección; los resultados de A3 no se les transfieren.
+
+### A4: ciclos físicos, adquisición visual y revisión de la herramienta
+
+La ejecución `outputs/harvest_pilot_v8_c3/runs/20261031_A4_v8_c3_01`
+completó el ciclo nativo de una unidad sin error y obtuvo **PASS físico
+independiente, 29/29 comprobaciones**. Registró 3.760 muestras entre 0,052 y
+188,302 s simulados, 198,624 s de pared e intervalo máximo de 51 ms. El fruto
+de `plant_000` permaneció retenido 118,068 s, con desplazamiento máximo de
+3,221857 m y residual/deslizamiento máximo de aproximadamente 1,244 µm. La
+holgura mínima observada respecto a las envolventes de planta fue 5,861 mm.
+Terminó en (-2,000016; -1,000004; 0,058076) m, dentro de la cesta, con
+velocidad final 0,0000442 m/s y tramo final estable de 5,856 s. Las otras
+dos unidades permanecieron unidas. Estos resultados pertenecen al mecanismo
+ideal y no constituyen una calibración de pinza real.
+
+La evidencia visual de este intento es **parcial**: `gui_frames.jsonl`
+contiene 75 capturas PNG indexadas y 78 solicitudes con
+`no_png_after_ack`. Las capturas indexadas abarcan solicitudes desde
+t = 14,492 hasta 188,302 s; el índice no contiene fotogramas etiquetados
+`release` o `settle_in_bin`. El capturador cambiaba el directorio de destino
+en cada solicitud, esperaba hasta dos segundos por el PNG tras el acuse y
+lo recogía al aparecer, sin comprobar aún su cierre `IEND` ni estabilidad
+de tamaño. El acuse del servicio no garantizaba que el archivo estuviera
+disponible y completo en ese intervalo. Se conservan los PNG, el índice,
+`capture_driver.py`, los avisos y `gazebo_cycle_native.mp4`; este último
+presenta saltos de tiempo simulado y no se ofrece como registro visual
+continuo de todo el ciclo. Los errores de captura no se atribuyen al motor
+físico ni se ocultan mediante la repetición.
+
+La auditoría y el análisis auxiliar de `_01` se conservaron en
+`outputs/harvest_validation_evidence/A4_v8_c3_01_independent_audit_stdout.json`
+y `A4_v8_c3_01_position_analysis_stdout.json`, junto con sus archivos stderr.
+`audit.json`, `observed_metrics.json` y la gráfica de telemetría quedan en el
+directorio de la ejecución. La gráfica no es una captura de Gazebo.
+
+La repetición `20261031_A4_v8_c3_02` corrigió la adquisición con directorio
+fijo, una solicitud pendiente a la vez y comprobación de cierre `IEND` y
+tamaño estable del PNG. Terminó sin error y obtuvo su propio **PASS físico
+independiente, 29/29 comprobaciones**: 3.761 muestras entre 0,052 y 188,352 s
+simulados, 198,118 s de pared e intervalo máximo de 51 ms. La unidad de
+`plant_000` permaneció retenida 118,119 s, se alejó hasta 3,221880 m de su
+posición inicial retenida y presentó residual/deslizamiento máximo de aproximadamente
+1,675 µm. La holgura mínima observada respecto a las envolventes de planta
+fue 5,863 mm. Terminó en (-2,000016; -1,000019; 0,058076) m, dentro de la
+cesta, con velocidad final 0,0000443 m/s y tramo final estable de 5,856 s.
+Las otras dos unidades permanecieron unidas. El análisis auxiliar terminó
+con código cero y no modifica los criterios de aceptación.
+
+`_02` conserva **218 PNG y cero registros `no_png_after_ack`**. Su vídeo
+nativo tiene 218 fotogramas, 10 fps de reproducción y 21,8 s de duración,
+según `ffprobe`. La separación media entre archivos observados después del
+primero fue 0,816 s de pared (mínimo 0,645; máximo 0,898); los intervalos
+solicitados de 0,05/0,2 s simulados no equivalen a esa cadencia efectiva.
+La primera solicitud se registró a t = 0,052 s, pero el primer PNG se
+observó cuando la telemetría ya indicaba 14,239 s; la última solicitud y
+observación corresponden a 188,352 s. Se preservan tanto
+`sim_time_at_request` como `sim_time_at_file_observed`: son referencias
+asíncronas anteriores y posteriores a la disponibilidad del archivo, no
+el instante exacto de exposición de la imagen. La fase registrada procede
+de la muestra usada para solicitar la captura; no prueba que el PNG
+muestre ese mismo estado. Hay dos solicitudes etiquetadas `settle_in_bin`
+y ninguna `release`. Por ello, eliminar los timeouts no acredita una
+captura fluida ni una representación visual continua de cada transición;
+esa ejecución no cerraba todavía la inspección visual de A4.
+
+La evidencia independiente de `_02` se conserva en
+`outputs/harvest_validation_evidence/A4_v8_c3_02_independent_audit_stdout.json`
+y `A4_v8_c3_02_position_analysis_stdout.json`, con sus archivos stderr
+vacíos; los artefactos completos quedan en su directorio de ejecución.
+El resumidor admite `--a4-run-id 20261031_A4_v8_c3_02`; al seleccionarla
+mantiene `_01` en `additional_a4_runs` y deriva la aceptación de `_02`
+exclusivamente de su propia auditoría independiente. Ambas ejecuciones y
+sus limitaciones visuales permanecen conservadas.
+
+#### Preparación de la captura final con GPU
+
+Los registros de Ogre2 identificaron `llvmpipe` en las capturas anteriores.
+La prueba aislada `outputs/harvest_validation_evidence/v8_gpu_probe_01/`
+confirmó el backend ya instalado **D3D12 (NVIDIA GeForce RTX 4050 Laptop GPU)**.
+Sólo se fijaron `GALLIUM_DRIVER=d3d12` y
+`MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA` en el proceso de captura y sus hijos;
+no se instalaron dependencias ni se alteró la configuración global. La selección
+del adaptador sigue la [documentación de Mesa](https://docs.mesa3d.org/drivers/d3d12.html).
+
+Para dar más tiempo a cada captura, se preparó
+`outputs/harvest_pilot_v8_c3_gui_slow`. Su único cambio XML respecto a C3 es
+`real_time_factor: 1 → 0.25`. Se conserva `max_step_size=0.001`, geometría,
+masa, control y guardas. El factor relaciona tiempo simulado y tiempo real;
+no es el paso del integrador, según la
+[documentación de Harmonic](https://gazebosim.org/docs/harmonic/sdf_worlds/).
+
+La copia es un **artefacto derivado explícito**, no otra generación desde un
+commit limpio. El manifiesto actualiza el hash del SDF e incorpora la derivación;
+los otros 55 archivos permanecen idénticos y C3 no se modifica. La prueba
+`outputs/harvest_validation_evidence/v8_gui_slow_derivation.json` verifica el
+único reemplazo XML, su reversión byte a byte, el cargador y el SDF nativo.
+Su estado «no ejecutado» describe el momento de preparación; la ejecución
+posterior se identifica separadamente. SHA-256 del manifiesto derivado:
+`76f9693cdb5ad6db5da1717d9689527f9d6f56f08a745e1029a5bcf8d6e3cfd9`.
+
+#### A4-03: ciclo completo con captura más densa
+
+La ejecución `20261031_A4_v8_c3_03`, bajo el paquete derivado lento, obtuvo
+**PASS independiente, 29/29 comprobaciones**. Registró 3.761 muestras hasta
+188,327 s simulados y empleó 759,984 s de pared. La retención duró 118,116 s;
+desplazamiento máximo desde la posición inicial retenida 3,221872 m;
+residual/deslizamiento máximo 1,658 µm; holgura mínima a las envolventes de
+planta 5,891 mm. Tras caer 0,401839 m, el fruto acabó en
+(-2,000017375; -1,000016879; 0,058076150) m, con velocidad final
+0,000044198 m/s y tramo final estable de 5,856 s. Las otras unidades siguieron
+unidas. Auditoría y análisis terminaron sin error.
+
+Se conservaron **858 PNG, sin errores de captura**, y video de 85,8 s a
+10 fps. La primera solicitud corresponde a t = 0,052 s y su archivo se observó
+a 3,013 s; la última, a 188,175/188,276 s. Los rótulos muestran ambas referencias
+asíncronas y el estado previo, no una hora exacta de exposición. La cadencia
+de reproducción es variable, con factor medio de las marcas de solicitud
+aproximadamente 2,19×. Hay capturas solicitadas durante `release` y
+`settle_in_bin`; la inspección muestra retirada, transporte y depósito.
+
+Los archivos `gazebo_cycle_native.mp4`, `gazebo_cycle_captioned.mp4`,
+`gui_frames.jsonl`, `gui_media_provenance.json` y `ogre2.log` quedan en el
+directorio de `_03`. El índice de medios vincula sus hashes con `run.json`,
+telemetría y manifiesto. El resumen `V8_C3_summary_final_01.json` conserva
+el cierre C3 con esta ejecución, sin atribuirlo a revisiones posteriores.
+
+La vista próxima de depósito permitió detectar un defecto gráfico real:
+faltaban soportes entre la carcasa y las mordazas (separación vertical de
+33 mm), y entre mordazas y cuchillas (16 mm). Todas pertenecían al mismo
+`tool_link`, por lo que no era una desconexión dinámica. El PASS físico se
+conserva; la apariencia de elementos flotantes necesitaba corrección.
+
+#### C4: soportes visuales de la herramienta
+
+El commit `51bce19` añade dos soportes laterales redondeados, seis primitivas
+visuales, dentro de la envolvente visual existente. Las 12 pruebas del robot
+aprobaron, incluida la igualdad completa del SDF al retirar sus visuales.
+El stdout original se conserva en `tests_robot_visual_supports.log`
+(12 pruebas, 0,040 s); su metadata distingue los hashes calculados al archivar
+el registro de los datos observados durante la ejecución de las pruebas.
+No se cambian masa, inercia, colisiones, articulaciones, TCP ni controles.
+
+`outputs/harvest_pilot_v8_c4_gui` es una derivación explícita de C3: sustituye
+los visuales del robot con el exportador canónico corregido y fija el factor
+de tiempo real a 0,4, manteniendo el paso de 1 ms. Pasa de 252 a 258 visuales.
+Los otros 55 archivos son idénticos. La prueba
+`outputs/harvest_validation_evidence/v8_c4_gui_derivation.json` comprueba
+igualdad byte a byte del XML no visual, la reversión exacta a C3, el cargador
+y el SDF nativo. El manifiesto conserva la fuente C3 como base y declara
+el hash y commit del exportador visual nuevo; no se presenta como una nueva
+generación limpia ni se exige que su fuente heredada antigua coincida con
+el archivo del robot ya corregido. SHA-256 del manifiesto C4:
+`ad65106548f01cc5a389e2ca2f6c33a7c27811746cd895775ee3cacc819e4254`.
+
+#### A4-04 final: inspección y auditoría aprobadas
+
+La ejecución `20261031_A4_v8_c4_04` terminó con **PASS independiente, 29/29**.
+Sus 3.759 muestras abarcan 0,052–188,234 s simulados; tiempo de pared
+477,382 s. Retención de 118,067 s, desplazamiento máximo retenido 3,221868 m,
+residual/deslizamiento máximo 1,478 µm y holgura mínima a planta 5,905 mm.
+La caída observada fue 0,401843 m. El centro final quedó en
+(-2,000017100; -1,000017720; 0,058076150) m, con velocidad final
+0,000044198 m/s y tramo final estable de 5,855 s. Las otras dos unidades
+permanecieron unidas. El análisis auxiliar también terminó con código cero.
+
+La captura conserva **826 PNG sin errores registrados**. El video final es
+H.264, 1278×772, 10 fps y **82,6 s**, comprobado con `ffprobe`. Su reproducción
+tiene cadencia variable y factor medio aproximado 2,28× de las marcas de
+solicitud. La primera solicitud fue a t = 0,052 s y su archivo se observó
+a 5,363 s; la última corresponde a 188,234 s. Las marcas anteriores y
+posteriores, la fase y el estado previo permanecen visibles en los rótulos.
+No se adjudica a cada PNG una exposición sincronizada exactamente con la
+telemetría, ni se interpreta el tiempo de pared como productividad real.
+
+Se inspeccionaron las vistas de aproximación y retirada, los soportes ya
+conectados y la secuencia final `frame_000793.png` a `frame_000796.png`:
+fruto junto a la herramienta, separado durante la caída y dentro de la cesta.
+La retirada física de la restricción está registrada a t = 182,025 s. Ninguna
+solicitud del índice lleva la fase transitoria `release`; seis llevan
+`settle_in_bin`. Eso no se usa para inferir ausencia de liberación: el evento,
+las posiciones y las imágenes de caída se conservan por separado. Los
+fotogramas con rótulos también se revisaron para asegurar legibilidad sin
+ocultar el fruto ni la zona de depósito. Es inspección visual asistida del
+piloto, no aprobación botánica humana.
+
+Directorio final:
+`outputs/harvest_pilot_v8_c4_gui/runs/20261031_A4_v8_c4_04/`.
+
+- `gazebo_cycle_captioned.mp4`: video entregable con referencias temporales.
+- `gazebo_cycle_native.mp4`: secuencia sin rótulos añadidos.
+- `gui_frames/` y `gui_frames.jsonl`: PNG originales e índice asíncrono.
+- `gui_media_provenance.json`: hashes del video, subtítulos, índice, cada PNG,
+  `run.json`, telemetría, manifiesto y scripts de captura/rotulación.
+- `capture_driver.py` y `caption_driver.py`: scripts exactos utilizados.
+- `captioned_pickup_preview.png` y `captioned_drop_preview.png`: revisión del
+  video rotulado; no sustituyen los PNG nativos.
+- `audit.json`, `observed_metrics.json`, `observed_trajectories.png` y registros
+  crudos: evidencia independiente y análisis auxiliar.
+- `renderer_observed.json` y `ogre2.log`: confirmación del renderer D3D12/NVIDIA.
+
+SHA-256 del video rotulado final:
+`0d75d7f7a80a7ccd51591a89ca67fd2398d28110cc6378d57d8ad575146fdb2c`.
+Los stdout independientes están bajo `outputs/harvest_validation_evidence/`
+con prefijo `A4_v8_c4_04_`. `V8_C4_summary_final_01.json` vincula **A0–A3 de
+C3 y A4 de C4** con sus auditorías y hashes, sin fingir una repetición íntegra
+de A0–A3 en C4. El inventario histórico coincide en 18/19 fuentes actuales;
+la diferencia es el archivo del robot corregido. Los dos hashes del exportador
+visual de C4 coinciden. El resumen C3 previo permanece intacto.
 
 ### Fuente morfológica, unidades y conservación
 
@@ -351,7 +691,8 @@ explícitos; no traslada frutos a posiciones convenientes. El prefiltro exige
 0,90 m. La auditoría del movimiento conserva su guarda de 4 mm, muestreo,
 límites articulares y pruebas de la herramienta y del fruto sostenido.
 
-En la tabla, cada nodo lleva el prefijo `axis_0_0_`; el ID reproductivo completo
+La siguiente tabla conserva el cribado original de V8-C1 con cilindros analíticos.
+En ella, cada nodo lleva el prefijo `axis_0_0_`; el ID reproductivo completo
 es `planta:nodo_reproductive_unit`. Las holguras son mínimas **calculadas en
 trayectorias nominales muestreadas**, no mediciones de Gazebo.
 
@@ -360,6 +701,13 @@ trayectorias nominales muestreadas**, no mediciones de Gazebo.
 | `000 / branch_6_branch_2_branch_0_node_3` | 0,744472 | 31,361 | 4,380 | (-0,12; 0; 0) |
 | `001 / branch_10_branch_5_branch_0_node_3` | 0,893233 | 48,604 | 6,440 | (-0,08; 0; 0,03) |
 | `002 / branch_5_branch_8_branch_1_node_1` | 0,466381 | 43,422 | 5,882 | (-0,12; 0; 0) |
+
+En V8-C3, tras incorporar los prismas conservadores, el manifiesto vuelve a
+evaluar esas mismas trayectorias. Las holguras mínimas nominales robot/fruto
+sostenido son, respectivamente, **31,297/4,317 mm**, **48,604/6,376 mm** y
+**43,394/5,818 mm**. Las tres permanecen por encima de los 4 mm exigidos.
+Estos valores tampoco se presentan como distancias dinámicas observadas;
+las tablas A1–A3 contienen el análisis posterior de posiciones reales.
 
 Se conservan `motion_probe_5mm.json`, `candidate_motion_search.json` y
 `candidate_motion_search_one_per_plant.json` bajo `outputs/harvest_v8_sources/`.
@@ -399,6 +747,13 @@ presentan como una única ejecución de las 85 pruebas sobre el último estado:
 tras la corrección final del congelado se ejecutó la prueba dirigida pertinente;
 no se repitió íntegramente la batería anterior de 84. Ninguna de estas pruebas
 unitarias o inspecciones estáticas constituye A0, A1, A2, A3 o A4 nativos de V8.
+Después de incorporar las colisiones agrupadas se ejecutó la batería completa:
+**90 pruebas específicas aprobadas en 72,130 s**, bajo el commit 7adaa35,
+registradas en `tests_v8_prism_final.log`. Se volvieron a ejecutar las **17
+regresiones sobre esa implementación final**, todas aprobadas en 0,145 s;
+registro `tests_regression_v8_c3_final.log`.
+El validador final del contexto confirmó **152 nodos y 262 relaciones válidos**;
+salida en `repository_context_graph_final.log`.
 
 ### Coste físico de V8 y colisiones agrupadas
 
@@ -489,6 +844,8 @@ que guarda el búfer renderizado de su cámara. No se reconstruyen escenas a
 partir de comandos ni se generan imágenes ilustrativas para presentarlas como
 simulación. Los cambios de vista usan únicamente `/gui/move_to/pose`.
 
+Los siguientes comandos reproducen el perfil histórico de seis objetivos:
+
 ```bash
 export PYTHONPATH=src
 python3 -m unittest discover -s tests -p 'test_harvest*.py'
@@ -507,13 +864,33 @@ deben usar salidas y procesos nuevos. La ampliación del límite de tiempo de
 pared de la misión permite ejecución lenta en WSL; no cambia el paso físico
 ni los criterios geométricos o temporales de aceptación.
 
+Para la revisión V8, primero exportar las tres fuentes admitidas mediante los
+comandos de [la guía](../guides/piloto_cosecha_desmontable.md#arbustos-v8-completos-y-acabado-visual).
+Se requieren esos artefactos locales o sus catálogos congelados: no están
+incluidos en el clon de Git. Después, con un destino nuevo:
+
+```bash
+python3 scripts/prepare_harvest_pilot.py --config configs/harvest_pilot_v8.json --output outputs/harvest_pilot_v8_new
+python3 scripts/run_harvest_pilot.py outputs/harvest_pilot_v8_new --plugin-dir outputs/harvest_plugin_build --mode smoke
+python3 scripts/audit_harvest_pilot.py outputs/harvest_pilot_v8_new outputs/harvest_pilot_v8_new/runs/ID_A0
+python3 scripts/run_harvest_pilot.py outputs/harvest_pilot_v8_new --plugin-dir outputs/harvest_plugin_build --mode harvest --max-targets 1
+python3 scripts/audit_harvest_pilot.py outputs/harvest_pilot_v8_new outputs/harvest_pilot_v8_new/runs/ID_A1
+python3 scripts/run_harvest_pilot.py outputs/harvest_pilot_v8_new --plugin-dir outputs/harvest_plugin_build --mode harvest --max-targets 3
+python3 scripts/audit_harvest_pilot.py outputs/harvest_pilot_v8_new outputs/harvest_pilot_v8_new/runs/ID_A2
+```
+
+Avanzar entre fases sólo después de su auditoría independiente satisfactoria.
+A3 repite tres veces el último ciclo de tres objetivos, cada vez con proceso
+y salida nuevos, auditados individualmente. La captura A4 usa un objetivo.
+
 ## Limitaciones y decisiones antes del robot definitivo
 
 1. La unión fija ideal prueba transferencia y transporte de cuerpos en Gazebo;
    no valida fuerzas de corte, agarre por contacto, presión ni daño del fruto.
 2. Las masas, dimensiones, fricciones y ganancias requieren medición y ajuste
-   con el robot definitivo. Las plantas son pequeñas y rígidas; no representan
-   un cultivo adulto calibrado.
+   con el robot definitivo. Las plantas son rígidas y sus dimensiones no están
+   calibradas con un cultivo real. V8 conserva los árboles completos admitidos;
+   la geometría pequeña de la línea base no define esta revisión.
 3. Las hojas, las unidades no seleccionadas y las mordazas son visuales. La política original de bitmasks evita
    autocontactos del robot provisional; no se puede extrapolar esta aceptación
    a autocollision del manipulador final. Permanecen los contactos con el
@@ -535,8 +912,11 @@ ni los criterios geométricos o temporales de aceptación.
    Las variaciones de morfología, carga, fricción, suelo y perturbaciones quedan
    fuera de esta matriz de experimentos.
 
-La línea base C5 completa una misión observada de seis frutos (A2), además de
-los ciclos individuales A1 y A4 y el smoke A0. Las tres repeticiones A3
-previstas no se ejecutaron; por ello no se declara cerrada la matriz completa
-ni se estima fiabilidad general. Esta aceptación mecánica no aprueba por sí
-sola la revisión visual V8 ni la integración de un robot definitivo.
+La revisión V8 constituye una base mecánica reproducible para sustituir el
+robot provisional respetando su contrato: tres depósitos en A2 y tres misiones
+independientes de tres depósitos en A3, además de ciclos individuales auditados.
+La línea base C5 conserva una misión de seis depósitos; su A3 de seis no se
+ejecutó y no se completa mediante los ensayos de tres. La aceptación es de
+este piloto rígido e idealizado. Integrar el robot definitivo exige volver a
+verificar sus alcances, contactos, controles y herramienta; estos resultados
+no validan todavía cosecha autónoma de campo ni una tasa general de fiabilidad.
