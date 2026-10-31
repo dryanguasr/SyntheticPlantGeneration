@@ -366,7 +366,7 @@ es explícitamente 10 unidades por metro; la salida SDF y las mallas están en S
 `harvest_visuals.py` interpreta hojas curvas con dos caras, capachos con cinco
 costillas y los materiales actuales del proyecto. Agrupa las superficies
 estáticas por material para reducir el coste gráfico, conservando los cuerpos
-de los frutos seleccionados y cada cilindro de colisión. Es una interpretación
+de los frutos seleccionados y todos los segmentos rígidos. Es una interpretación
 para Gazebo; no una copia exacta del render o de todas las mallas Blender.
 La apariencia del cáliz no se convierte en madurez agronómica.
 
@@ -375,6 +375,23 @@ elementos visuales. Una prueba compara todo el SDF no visual antes y después:
 masas, colisiones, articulaciones, TCP y controladores se preservan. La nueva
 escena requiere repetir A0 y A1 antes de aceptar misiones más largas; los PASS
 de la línea base no se transfieren automáticamente a los árboles densos.
+
+La configuración v8 utiliza `batched_conservative_prisms` para las colisiones
+estáticas. Cada cilindro original queda contenido en un prisma cerrado de doce
+caras, con los mismos extremos; el radio de sus vértices es `r/cos(pi/12)`
+(+3,53 %). Los 15.842 segmentos se agrupan en tres mallas, sin sustituir las copas
+por envolventes convexas ni retirar ramas. Se declara esta aproximación física:
+no es idéntica al contacto con cilindros analíticos. El perfil histórico conserva
+sus cilindros analíticos.
+
+Cada OBJ de colisión lleva las identidades y dimensiones originales. El lector
+reconstruye y coteja todos sus triángulos antes de evaluar trayectorias usando
+los cilindros externos que contienen los prismas. Se mantiene el margen de
+4 mm y el muestreo previo. Para analizar un paquete desde disco, pasar su
+directorio como `mesh_root` a `rigid_cylinders` después de verificar los hashes.
+El informe registra el fallo de rendimiento de la versión con 15.842 entidades
+independientes, las pruebas de contacto y las ejecuciones de la representación
+agrupada.
 
 ## Nota sobre el generador y trabajo futuro
 

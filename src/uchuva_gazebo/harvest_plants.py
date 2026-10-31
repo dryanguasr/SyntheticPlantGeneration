@@ -26,6 +26,7 @@ from uchuva_lsystem.scene import CultivationScene, PlantInstance
 from uchuva_lsystem.sparse_pilot import UNITS_PER_METRE, walk_axes
 
 from .field import element, material, numbers
+from .harvest_collision_mesh import build_collision_prisms, identity_digest, radius_factor
 from .harvest_visuals import (
     VERSION as VISUAL_VERSION,
     apply_plant_material,
@@ -59,6 +60,7 @@ DEFAULT_PLANT_CONFIG = {
     "proxy_catalog_files": [],
     "source_units_per_metre": UNITS_PER_METRE,
     "target_ids": [],
+    "collision_representation": "analytic_cylinders",
 }
 
 LIMITATIONS = [
@@ -87,6 +89,8 @@ def _config(config):
         raise ValueError(f"Unknown harvest plant config keys: {sorted(unknown)}")
     c = deepcopy(DEFAULT_PLANT_CONFIG)
     c.update(deepcopy(config))
+    if c["collision_representation"] not in {"analytic_cylinders", "batched_conservative_prisms"}:
+        raise ValueError("Unsupported plant collision representation")
     if not c["seeds"] or len(c["seeds"]) > 6:
         raise ValueError("The small pilot requires one to six plant seeds")
     if any(type(seed) is not int for seed in c["seeds"]):
@@ -335,13 +339,13 @@ def _calyx_color(unit):
     return (0.29, 0.48, 0.08, 1.0)
 
 
-def _clearance_obstacles(proxies):
+def _clearance_obstacles(proxies, cylinder_radius_factor=1.0):
     """Cache SI coordinates and a spatial index without changing colliders."""
     result = []
     for proxy in proxies:
         if proxy.kind in {"stem", "pedicel"} and proxy.start is not None:
             start, end = _metres(proxy.start), _metres(proxy.end)
-            result.append((proxy.proxy_id, start, end, proxy.radius / UNITS_PER_METRE))
+            result.append((proxy.proxy_id, start, end, proxy.radius / UNITS_PER_METRE * cylinder_radius_factor))
         elif proxy.kind == "calyx":
             center = _metres(proxy.center)
             result.append((proxy.proxy_id, center, center, max(proxy.half_extents) / UNITS_PER_METRE))
@@ -423,7 +427,9 @@ def build_harvest_plants(config: dict | None = None) -> dict:
     calyces = {p.attachment_id: p for p in proxies if p.kind == "calyx"}
     units = {f"{name}:{node.reproductive_unit.id}": node.reproductive_unit for name, plant in plants.items() for axis in walk_axes(plant.axes) for node in axis.nodes if node.reproductive_unit and node.reproductive_unit.calyx and node.reproductive_unit.fruit}
     selected, audit_by_plant = {}, {}
-    obstacles = _clearance_obstacles(proxies)
+    batched_collisions = c["collision_representation"] == "batched_conservative_prisms"
+    collision_radius_factor = radius_factor() if batched_collisions else 1.0
+    obstacles = _clearance_obstacles(proxies, collision_radius_factor)
     for instance in instances:
         origin = _metres(instance.position)
         choices, rejected = [], []
@@ -464,7 +470,7 @@ def build_harvest_plants(config: dict | None = None) -> dict:
         element(model, "pose", numbers((*origin, 0, 0, 0)))
         link = element(model, "link", name="plant_link")
         own = [p for p in proxies if p.plant_id == name]
-        stem_segments = []
+        stem_segments, collision_primitives = [], []
         for index, proxy in enumerate(own):
             if proxy.kind not in {"stem", "petiole", "pedicel"}:
                 continue
@@ -475,7 +481,18 @@ def build_harvest_plants(config: dict | None = None) -> dict:
             radius = proxy.radius / UNITS_PER_METRE
             stem_segments.append((start, end, radius))
             if proxy.kind in {"stem", "pedicel"}:
-                _cylinder(link, f"rigid_{index}", start, end, radius, collision=True)
+                collision_primitives.append(dict(id=f"rigid_{index}", source_proxy_id=proxy.proxy_id,
+                                                 start=list(start), end=list(end), radius=radius))
+                if not batched_collisions:
+                    _cylinder(link, f"rigid_{index}", start, end, radius, collision=True)
+        if batched_collisions:
+            uri = f"meshes/{name}_collision_prisms.obj"
+            meshes[uri] = build_collision_prisms(collision_primitives)
+            collision = element(link, "collision", name="rigid_batch")
+            element(collision, "pose", "0 0 0 0 0 0")
+            shape = element(element(collision, "geometry"), "mesh")
+            element(shape, "uri", uri)
+            element(shape, "scale", "1 1 1")
         if stem_segments:
             uri = f"meshes/{name}_stems.obj"
             meshes[uri] = cylinder_batch_mesh(stem_segments)
@@ -566,6 +583,9 @@ def build_harvest_plants(config: dict | None = None) -> dict:
             "flower_visuals_omitted_count": sum(n.reproductive_unit is not None and n.reproductive_unit.stage == "flower" for a in walk_axes(plant.axes) for n in a.nodes),
             "selection_audit": audit_by_plant[name],
             "rigid_collision_count": len(link.findall("collision")),
+            "rigid_primitive_count": len(collision_primitives),
+            "rigid_primitive_identity_sha256": identity_digest(collision_primitives),
+            "collision_representation": c["collision_representation"],
             "visual_count": len(link.findall("visual")),
             "visual_leaf_count": len({leaf.attachment_id for leaf in leaves}),
             "static_calyx_material_batches": {preset: len(pieces) for preset, pieces in sorted(static_calyx_batches.items())},
@@ -580,6 +600,16 @@ def build_harvest_plants(config: dict | None = None) -> dict:
             "source_units_per_metre": c["source_units_per_metre"], "output_units": "metres",
             **({"source_catalogs": source_catalogs, "morphology_mode": "admitted_source_catalog"} if imported else {}),
             "parameter_status": "engineering_heuristic", "human_validation": "pending",
+            "plant_collision_geometry": {
+                "representation": c["collision_representation"],
+                "source_primitive_count": sum(report["rigid_primitive_count"] for report in reports),
+                "sdf_collision_count": sum(report["rigid_collision_count"] for report in reports),
+                "outer_radius_factor": collision_radius_factor,
+                "endpoints_preserved": True,
+                "parameter_status": "engineering_heuristic",
+                "analytic_physics_equivalence": not batched_collisions,
+                "motion_audit_envelope": "outer_cylinder_capsules" if batched_collisions else "analytic_cylinder_capsules",
+            },
             "visual_interpreter": {"version": VISUAL_VERSION,
                                    "surface_geometry": "continuous_curved_leaf_and_five_rib_calyx_from_source_proxy_poses",
                                    "texture_library": "assets/textures/current",
@@ -588,6 +618,6 @@ def build_harvest_plants(config: dict | None = None) -> dict:
                                    "source_blender_mesh_equivalence": False,
                                    "collision_geometry_modified": False},
             "selection_policy": "negative_x_face_then_height_with_conservative_clearance",
-            "source_scene": scene.to_dict(), "limitations": ([item for item in LIMITATIONS if not item.startswith(("Technical small-plant", "Legacy independent"))] + ["Source admission is static evidence; imported proxy colliders and harvesting dynamics require their own validation."] if imported else list(LIMITATIONS)),
+            "source_scene": scene.to_dict(), "limitations": (([item for item in LIMITATIONS if not item.startswith(("Technical small-plant", "Legacy independent"))] + ["Source admission is static evidence; imported proxy colliders and harvesting dynamics require their own validation."] if imported else list(LIMITATIONS)) + (["Static collision cylinders are enclosed by twelve-sided prisms; outer radius increases by about 3.53 percent. This is not identical analytic cylinder physics. All source segments remain present."] if batched_collisions else [])),
         },
     }

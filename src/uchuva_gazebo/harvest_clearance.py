@@ -10,6 +10,9 @@ transfer. No runtime imports or additional Python dependencies are required.
 from __future__ import annotations
 
 import math
+from pathlib import Path
+
+from .harvest_collision_mesh import identity_digest, read_collision_prisms
 
 from .harvester_robot import (
     HarvesterConfig, JOINT_LIMITS, inverse_kinematics, link_origins,
@@ -89,23 +92,74 @@ def _segment_box_distance(start, end, half_extents):
     return best
 
 
-def rigid_cylinders(bundle):
-    """Read actual SDF cylinders, conservatively extending their flat ends."""
+def rigid_cylinders(bundle, mesh_root=None):
+    """Read SDF cylinders or verified prism outer bounds, with flat-end extension.
+
+    Mesh text comes from ``bundle['meshes']`` during generation, or from an
+    explicitly supplied package ``mesh_root`` for independent offline audits.
+    An arbitrary OBJ is never interpreted as trusted collision primitives.
+    """
     result = []
+    reports = {row["model_name"]: row for row in bundle.get("plants", [])}
+
+    def pose_of(item):
+        pose = item.find("pose")
+        if pose is not None and pose.attrib:
+            raise ValueError("Relative or non-default pose conventions are unsupported")
+        values = list(map(float, item.findtext("pose", "0 0 0 0 0 0").split()))
+        if len(values) != 6 or not all(math.isfinite(value) for value in values):
+            raise ValueError("Collision poses must contain six finite coordinates")
+        return values
+
+    def mesh_text(uri):
+        if not uri or "\\" in uri or ":" in uri or uri.startswith("/") or ".." in Path(uri).parts:
+            raise ValueError("Collision mesh URI must stay relative to its package")
+        if uri in bundle.get("meshes", {}):
+            return bundle["meshes"][uri]
+        if mesh_root is None:
+            raise ValueError("Collision mesh audit requires its OBJ text or explicit mesh_root")
+        root = Path(mesh_root).resolve()
+        path = (root / uri).resolve()
+        if root not in path.parents:
+            raise ValueError("Collision mesh escapes the package root")
+        return path.read_text(encoding="utf-8")
+
     for model in bundle["models"]:
         if model.findtext("static") != "true":
             continue
-        model_pose = list(map(float, model.findtext("pose", "0 0 0 0 0 0").split()))
+        model_pose = pose_of(model)
         if any(abs(v) > 1e-12 for v in model_pose[3:]):
             raise ValueError("Harvest plant models must bake instance rotations into local geometry")
+        for link in model.findall("link"):
+            if any(abs(value) > 1e-12 for value in pose_of(link)):
+                raise ValueError("Harvest plant links must bake poses into collision geometry")
+        batch_rows = []
         for collision in model.findall("link/collision"):
             shape = collision.find("geometry/cylinder")
+            pose = pose_of(collision)
             if shape is None:
-                raise ValueError("Unexpected plant collider; update the geometric audit before accepting it")
-            pose = list(map(float, collision.findtext("pose", "0 0 0 0 0 0").split()))
+                mesh = collision.find("geometry/mesh")
+                if mesh is None or set(child.tag for child in mesh) - {"uri", "scale"}:
+                    raise ValueError("Unexpected plant collider; update the geometric audit before accepting it")
+                if any(value != 0 for value in pose) or mesh.findtext("scale", "1 1 1").split() != ["1", "1", "1"]:
+                    raise ValueError("Prism meshes require identity collision pose and scale")
+                rows = read_collision_prisms(mesh_text(mesh.findtext("uri")))
+                batch_rows.extend(rows)
+                for row in rows:
+                    result.append({
+                        "id": f"{model.attrib['name']}/{row['id']}",
+                        "source_proxy_id": row["source_proxy_id"],
+                        "start": [row["start"][i] + model_pose[i] for i in range(3)],
+                        "end": [row["end"][i] + model_pose[i] for i in range(3)],
+                        "radius": row["radius"], "source_radius": row["source_radius"],
+                        "representation": row["representation"],
+                    })
+                continue
             if abs(pose[3]) > 1e-12:
                 raise ValueError("Unexpected cylinder roll in fixture")
             radius, half_length = float(shape.findtext("radius")), float(shape.findtext("length")) / 2
+            if not math.isfinite(radius) or not math.isfinite(half_length) or min(radius, half_length) <= 0:
+                raise ValueError("Cylinder dimensions must be finite and positive")
             axis = (math.cos(pose[5]) * math.sin(pose[4]), math.sin(pose[5]) * math.sin(pose[4]), math.cos(pose[4]))
             center = [model_pose[i] + pose[i] for i in range(3)]
             result.append({
@@ -114,6 +168,13 @@ def rigid_cylinders(bundle):
                 "end": [center[i] + half_length * axis[i] for i in range(3)],
                 "radius": radius,
             })
+        if batch_rows:
+            if len({row["id"] for row in batch_rows}) != len(batch_rows) or len({row["source_proxy_id"] for row in batch_rows}) != len(batch_rows):
+                raise ValueError("Duplicate collision primitive identity across mesh batches")
+            report = reports.get(model.attrib["name"])
+            if report is not None and (report.get("rigid_primitive_count") != len(batch_rows)
+                                      or report.get("rigid_primitive_identity_sha256") != identity_digest(batch_rows)):
+                raise ValueError("Prism batch does not cover the declared plant primitive identities")
     return result
 
 

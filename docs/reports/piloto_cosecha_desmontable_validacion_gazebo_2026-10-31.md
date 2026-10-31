@@ -276,6 +276,173 @@ robot. La cancelación no constituye un fallo del motor físico ni una
 repetición satisfactoria. A1 y A4 prueban dos ciclos de un solo fruto; no
 sustituyen las tres repeticiones de la misión completa A3.
 
+## Revisión V8: arbustos completos y acabado visual
+
+**Aceptación nativa V8: PENDIENTE.** Esta revisión responde a la petición de
+conservar arbustos elaborados de la versión reciente y mejorar el acabado del
+robot. Es una escena distinta de C1–C5: sus tres frutos no heredan el PASS de
+la misión histórica de seis frutos. El paquete `outputs/harvest_pilot_v8_c1`
+superó la preparación, el examen del SDF y la inspección de identidad, unidades,
+inercias y archivos congelados. Su A0 está en curso, sin aceptación nativa
+declarada en esta sección. `outputs/harvest_pilot_v8_c2` se está regenerando
+desde el árbol limpio del commit `501cd7f20c466898cba05985e8f12d981e061ea7`;
+su cierre y sus ejecuciones se registrarán por separado. V8-C1 conserva los
+hashes del árbol de trabajo que lo produjo y no se presenta retrospectivamente
+como un paquete construido desde ese commit limpio.
+
+### Fuente morfológica, unidades y conservación
+
+Se reutilizan los árboles **ya admitidos**, con preset
+`trained_trellis_nodal_repulsion_v8` y fenología `literature_cohort_v1`, del banco
+`C:/dev/SyntheticPlantGeneration/outputs/spatial_plant_pool_20261028/plants/`.
+El checkout original se consulta en modo de lectura. No se regeneran árboles,
+no se impone la antigua cuota de cuatro a seis frutos y no se cambia su
+arquitectura para facilitar el movimiento del robot.
+
+| Instancia | Semilla | Hojas conservadas | Frutos/capachos conservados | Segmentos rígidos conservados | Unidades dinámicas |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `plant_000` | 2026102702 | 1045 | 370 | 5647 | 1 |
+| `plant_001` | 2026102703 | 1055 | 371 | 5734 | 1 |
+| `plant_002` | 2026102708 | 808 | 286 | 4461 | 1 |
+| Total | — | 2908 | 1027 | 15842 | 3 |
+
+La admisión de origen declara cero cruces duros bajo su alcance estático,
+suelo y orientación válidos, con intersecciones hoja–hoja toleradas como
+ocupación blanda y advertencias de proximidad conservadas. No certifica la
+dinámica de cosecha ni todas las flores y objetos de contexto. Los recuentos
+de la tabla son los órganos retenidos en esos árboles admitidos; las pérdidas
+anteriores y sus planes reversibles permanecen en la procedencia de origen.
+
+La conversión explícita es **10 unidades de escena por metro**, es decir,
+0,1 m por unidad, coherente con la auditoría de suelo de origen. Es una
+convención declarada de esta escena, no una calibración botánica. El intérprete
+histórico del piloto usa 8 unidades por metro y no sabe reconstruir las
+posturas nodales V8. Por ello `export_admitted_harvest_sources.py`, con
+`--source-repo` explícito, evalúa los proxies mediante el intérprete de origen
+y congela sus posiciones. El consumidor aplica el factor 8/10 a coordenadas
+y radios para su representación interna, seguido de la conversión a SI;
+no vuelve a ejecutar el intérprete histórico sobre el árbol V8. Las tres
+instancias conservan giro 0° y posiciones (0,0,0), (0,2,0), (0,4,0) m.
+
+`outputs/harvest_v8_sources/` conserva el JSON original byte a byte, el catálogo
+de cada planta y su admisión. Los catálogos registran hashes de morfología,
+fuentes, exportador y auditorías de origen. El paquete añade copias portables
+en `sources/plant_000/`, `sources/plant_001/` y `sources/plant_002/`, verificadas
+contra los hashes previos a la interpretación. El JSON completo se conserva
+también como procedencia, incluidos campos adicionales desconocidos por las
+dataclasses históricas. La prueba de congelado rechaza una fuente que cambia
+entre interpretación y empaquetado.
+
+### Selección acotada y movimiento nominal
+
+Se intentaron primero dos unidades por arbusto. La separación inicial de la
+esfera del fruto no bastaba para aprobar el abordaje: el primer plan con
+prefiltro de 5 mm dejó la herramienta a **1,739 mm** de un cilindro al llegar
+al corte, por debajo de la guarda intacta de 4 mm. En la búsqueda acotada del
+primer arbusto, sólo uno de sus cinco candidatos del prefiltro pasó abordaje
+y retirada; los otros cuatro fallaron la postura de corte. Esto no demuestra
+que sea imposible cosechar dos unidades con otra planificación, pero no
+justifica declarar seis trayectorias válidas en esta revisión.
+
+Se eligió una unidad por arbusto, manteniendo todas las hojas, capachos y
+colisiones existentes. `configs/harvest_pilot_v8.json` fija los tres IDs
+explícitos; no traslada frutos a posiciones convenientes. El prefiltro exige
+5 mm de holgura inicial, lado X negativo y altura de centro entre 0,45 y
+0,90 m. La auditoría del movimiento conserva su guarda de 4 mm, muestreo,
+límites articulares y pruebas de la herramienta y del fruto sostenido.
+
+En la tabla, cada nodo lleva el prefijo `axis_0_0_`; el ID reproductivo completo
+es `planta:nodo_reproductive_unit`. Las holguras son mínimas **calculadas en
+trayectorias nominales muestreadas**, no mediciones de Gazebo.
+
+| Planta / nodo | Altura del centro (m) | Holgura robot (mm) | Holgura fruto sostenido (mm) | Retirada desde el corte (m) |
+| --- | ---: | ---: | ---: | --- |
+| `000 / branch_6_branch_2_branch_0_node_3` | 0,744472 | 31,361 | 4,380 | (-0,12; 0; 0) |
+| `001 / branch_10_branch_5_branch_0_node_3` | 0,893233 | 48,604 | 6,440 | (-0,08; 0; 0,03) |
+| `002 / branch_5_branch_8_branch_1_node_1` | 0,466381 | 43,422 | 5,882 | (-0,12; 0; 0) |
+
+Se conservan `motion_probe_5mm.json`, `candidate_motion_search.json` y
+`candidate_motion_search_one_per_plant.json` bajo `outputs/harvest_v8_sources/`.
+El último contiene el cribado satisfactorio de los tres IDs; los anteriores
+preservan los rechazos. Después, la preparación de V8-C1 vuelve a comprobar
+el movimiento contra los cilindros del SDF exportado, con los demás frutos
+presentes. `outputs/harvest_validation_evidence/harvest_pilot_v8_c1_inspection.json`
+y `v8_inspection.log` registran 3 plantas, 3 frutos, 15842 cilindros y 22 mallas,
+además de la integridad de los archivos y la conversión a SI. Los índices
+espaciales sólo aceleran la búsqueda de pares: no retiran colisionadores ni
+relajan las distancias, y sus resultados se comparan con recorridos exhaustivos.
+
+### Interpretación visual y comprobaciones
+
+Las hojas curvas conservan sus identidades y posturas nodales; el cáliz añade
+un perfil de cinco sépalos, subdivisiones, normales suaves y UV. Se reutilizan
+las texturas actuales del proyecto y se agrupan las superficies estáticas
+para reducir las llamadas de dibujo. Las unidades seleccionadas mantienen
+sus cuerpos y visuales independientes. Es una interpretación Gazebo detallada
+a partir de los proxies y perfiles existentes: **no es una copia exacta de las
+mallas, los shaders o el render de Blender de la referencia**. Las texturas y
+el relieve son hipótesis visuales; no validan madurez agronómica.
+
+El robot incorpora carcasas redondeadas, tapas de articulación, llantas y
+banda de rodadura, respiraderos, luces y detalles de la herramienta. Esos
+elementos son visuales: permanecen las masas, inercias, articulaciones,
+colisiones y unión ideal del robot provisional. El suelo añade mapas
+procedurales propios de color y rugosidad; su colisión sigue siendo plana.
+El acabado gráfico no añade agarre por contacto, suelo deformable ni una
+réplica del robot definitivo.
+
+Los registros de desarrollo contienen **85 pruebas específicas aprobadas**:
+84 en `tests_v8_final.log` y una prueba adicional de congelado de fuentes en
+`test_v8_source_freeze.log`. Las 17 regresiones de contratos Gazebo y estructura
+del repositorio están en `tests_regression_v8.log`, también aprobadas. No se
+presentan como una única ejecución de las 85 pruebas sobre el último estado:
+tras la corrección final del congelado se ejecutó la prueba dirigida pertinente;
+no se repitió íntegramente la batería anterior de 84. Ninguna de estas pruebas
+unitarias o inspecciones estáticas constituye A0, A1, A2, A3 o A4 nativos de V8.
+
+### Coste físico de V8 y colisiones agrupadas
+
+V8-C1, con 15.842 entidades de colisión cilíndricas, **falló A0** en
+`20261031T051258Z-505`: `TimeoutError: Wall-clock timeout in stow`, tras
+277,717 s de pared y 3,763 s simulados. El plugin estaba listo y los frutos
+seguían unidos, pero la fase inicial no terminó. No fue una cancelación manual
+ni un PASS de reposo. La auditoría independiente conserva los criterios no
+observados en `v8_c1_smoke_audit.json`. V8-C2 conserva el mismo escenario
+analítico, regenerado desde el commit 501cd7f, sin ejecución nativa adicional.
+
+La corrección incorpora `harvest_collision_mesh.py`: cada segmento original
+queda contenido en un prisma cerrado de doce caras con los mismos extremos.
+El radio de los vértices es `r/cos(pi/12)`, +3,53 %, y el auditor utiliza ese
+cilindro envolvente mayor. Se mantienen el margen de 4 mm y el muestreo; no se
+retiran tallos ni se reemplaza el arbusto por una envolvente convexa. Los 15.842
+segmentos forman tres mallas estáticas. Esto cambia explícitamente la
+aproximación del contacto, aunque conserva de forma conservadora su volumen.
+El perfil histórico sigue usando cilindros analíticos.
+
+Los OBJ guardan cada ID, extremo y radio original. Su lector reconstruye y
+compara íntegramente la geometría antes de usarla; rechaza caras, tapas,
+coordenadas o identidades alteradas. La revisión detectó que el exportador
+también necesitaba normales explícitas antes de preparar la versión productiva:
+[OBJLoader de gz-common5](https://raw.githubusercontent.com/gazebosim/gz-common/gz-common5/graphics/src/OBJLoader.cc)
+y [CustomMeshShape de gz-physics7/DART](https://raw.githubusercontent.com/gazebosim/gz-physics/gz-physics7/dartsim/src/CustomMeshShape.cc)
+explican este requisito. Se añadieron `vn` y referencias por vértice, sin cambiar
+los puntos ni las caras.
+
+El benchmark independiente `harvest_pilot_v8_mesh_bench_01` alcanzó un factor
+de tiempo real de 0,998 en una ventana activa de 11,349 s simulados / 11,372 s
+de pared. El factor de 0,759 del registro completo incluye la finalización y
+la auditoría; no se confunden ambas ventanas. Su smoke terminó sin error con
+los tres frutos unidos; sigue identificado como benchmark, no aceptación de
+cosecha del paquete productivo.
+
+`harvest_pilot_v8_mesh_contact_probe_03` prueba el exportador canónico corregido:
+una malla con tres prismas desconectados, una esfera sobre una columna, otra en
+un hueco interior y un control exterior. En 302 poses por esfera hasta 3,020 s,
+la primera quedó a z=1,024972498 m y las otras dos a z=0,024999895 m. Hay contacto
+efectivo y el hueco permanece abierto. El ensayo `_01` conserva su limitación
+de timestamps; `_02` comprobó el helper del benchmark; `_03` usa el módulo
+productivo. Estos ensayos no sustituyen A0–A4 de cosecha.
+
 ## Historial negativo conservado
 
 Todos los directorios están bajo `outputs/`; no se sustituyeron por los intentos

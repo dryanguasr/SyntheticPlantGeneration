@@ -18,6 +18,7 @@
       "outputs/harvest_v8_sources/seed_2026102708/proxy_catalog.json"
     ],
     "source_units_per_metre": 10,
+    "collision_representation": "batched_conservative_prisms",
     "minimum_target_height_m": 0.45,
     "maximum_target_height_m": 0.90,
     "clearance_m": 0.005,

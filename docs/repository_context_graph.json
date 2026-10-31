@@ -2665,6 +2665,7 @@
       "paths": [
         "src/uchuva_gazebo/harvest_plants.py",
         "src/uchuva_gazebo/harvest_visuals.py",
+        "src/uchuva_gazebo/harvest_collision_mesh.py",
         "src/uchuva_gazebo/harvester_robot.py",
         "src/uchuva_gazebo/harvest_pilot.py",
         "src/uchuva_gazebo/harvest_validation.py",
@@ -2681,6 +2682,7 @@
         "scripts/audit_harvest_pilot.py",
         "tests/test_harvest_plants.py",
         "tests/test_harvest_visuals.py",
+        "tests/test_harvest_collision_mesh.py",
         "tests/test_harvester_robot.py",
         "tests/test_harvest_pilot.py",
         "tests/test_harvest_validation.py",
@@ -2703,6 +2705,10 @@
         {
           "path": "src/uchuva_gazebo/harvest_visuals.py",
           "locator": "def detailed_leaf_mesh"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_collision_mesh.py",
+          "locator": "def build_collision_prisms"
         },
         {
           "path": "gazebo/harvest_system/HarvestSystem.cc",

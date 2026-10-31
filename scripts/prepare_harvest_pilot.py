@@ -19,7 +19,8 @@ def source_metadata():
         result = subprocess.run(['git', '-C', str(REPO), *args], capture_output=True, text=True, check=False)
         return result.stdout.strip() if result.returncode == 0 else 'unavailable'
     paths = [REPO / 'src/uchuva_gazebo' / filename for filename in (
-        'harvest_pilot.py', 'harvest_plants.py', 'harvest_visuals.py', 'harvest_clearance.py', 'harvester_robot.py', 'harvest_validation.py')]
+        'harvest_pilot.py', 'harvest_plants.py', 'harvest_visuals.py', 'harvest_collision_mesh.py',
+        'harvest_clearance.py', 'harvester_robot.py', 'harvest_validation.py')]
     paths += [REPO / 'src/uchuva_lsystem' / filename for filename in (
         'grammar.py', 'parameters.py', 'morphology.py', 'collisions.py', 'scene.py', 'blender_geometry.py', 'texture_assets.py')]
     paths += [REPO / 'scripts' / filename for filename in (
