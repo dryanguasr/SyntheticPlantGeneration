@@ -8,11 +8,13 @@ pedicelo, solicite el corte, retire el conjunto fruto-capacho y lo deposite en
 una cesta. El modelo botánico procede del generador morfológico del proyecto.
 El robot es provisional y sus interfaces están separadas de las plantas.
 
-**El código implementa el piloto; la aceptación física queda pendiente de las
-ejecuciones nativas descritas aquí.** Generar XML válido, resolver la cinemática
-en Python o recibir un acuse de corte no demuestra que Gazebo haya simulado la
-retención ni el depósito. La compilación del plugin y la simulación no se
-ejecutaron en el entorno que preparó esta entrega.
+**El ciclo ideal de corte, retención, transporte y depósito cuenta con ejecución
+nativa auditada en Gazebo Harmonic 8.14.0.** El alcance, las correcciones, los
+intentos fallidos y los resultados por experimento están en el
+[informe de validación nativa](../reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md).
+La entrega inicial no había compilado ni simulado el piloto; su informe se
+conserva como antecedente. Generar XML válido, resolver IK en Python o recibir
+un acuse de corte no demuestra retención ni depósito físico.
 
 El alcance es deliberadamente mecánico: se emplean las posiciones conocidas del
 simulador. No se atribuye al piloto detección visual, elección agronómica de
@@ -195,6 +197,12 @@ Si se cambia su número, ajustar `--max-targets` al inventario generado. La opci
 con sus identificadores de ejecución y artefactos. El video complementa la
 auditoría de telemetría y no sustituye sus criterios.
 
+Para una vista de inspección sin cambiar el mundo físico, añadir
+`--gui-config configs/harvest_pilot_gui.config` junto con `--gui`. El ejecutor
+copia esa configuración a la salida y registra su SHA-256. Incluye los plugins
+de captura y video de Gazebo. El servicio `/gui/screenshot` permite guardar la
+cámara nativa cuando la captura de ventanas de WSLg desde Windows no funciona.
+
 Cada ejecución usa por defecto un subdirectorio nuevo
 `outputs/harvest_pilot/runs/<utc>-<pid>`. La opción `--output RUTA` permite fijar
 el directorio de resultados. No superponer dos procesos sobre la misma salida.
@@ -212,6 +220,15 @@ Sustituir `ID_DE_LA_EJECUCION` por el directorio real que informó el ejecutor.
 La auditoría utiliza la telemetría y los eventos guardados. Si faltan muestras,
 hay coordenadas no finitas, se reinició el tiempo de simulación o falta alguna
 condición de aceptación, el resultado debe permanecer fallido o no observado.
+El informe distingue `PASS`, `FAIL`, `NO OBSERVADO` y `NO EJECUTADO`. Coteja
+comandos y acuses en orden y exige estabilidad del depósito al final del
+registro: un fruto que estuvo estable pero salió después no aprueba.
+La comprobación de separación entre esferas es geométrica y muestreada; no
+equivale a una validación de fuerzas de contacto.
+
+El manifiesto preparado conserva `native_validation: pending_gazebo`; no se
+reescribe después de una misión porque sus hashes deben permanecer estables.
+La aceptación nativa corresponde al `audit.json` de cada ejecución.
 
 ## Contrato del mecanismo de cosecha
 
@@ -310,6 +327,54 @@ de planta/nodo/pedicelo/fruto, el exportador botánico y el sistema de uniones
 no necesitan depender de las dimensiones del nuevo chasis. La sustitución
 requiere repetir la aceptación física, especialmente alcance, autocolisiones,
 estabilidad de base, holgura del efector y depósito.
+
+## Arbustos v8 completos y acabado visual
+
+`configs/harvest_pilot_v1.json` conserva el escenario pequeño de la línea base.
+La configuración `configs/harvest_pilot_v8.json` importa tres árboles admitidos
+`trained_trellis_nodal_repulsion_v8` con fenología `literature_cohort_v1`, sin
+reducir sus hojas ni capachos al presupuesto de frutos cosechables.
+
+El intérprete histórico de esta rama no reconstruye las poses v8. Por eso
+`scripts/export_admitted_harvest_sources.py` evalúa, en modo de lectura, el
+intérprete del checkout fuente y congela un catálogo de proxies junto al JSON
+morfológico original. Requiere las evidencias de admisión del árbol y verifica
+sus identidades, escala y hashes. La admisión estática existente no sustituye
+una nueva validación física de cosecha.
+
+Ejemplo para los árboles locales utilizados, desde WSL:
+
+```bash
+python3 scripts/export_admitted_harvest_sources.py \
+  --source-repo /mnt/c/dev/SyntheticPlantGeneration \
+  --source-units-per-metre 10 \
+  --plant-files \
+    /mnt/c/dev/SyntheticPlantGeneration/outputs/spatial_plant_pool_20261028/plants/seed_2026102702/plant.json \
+    /mnt/c/dev/SyntheticPlantGeneration/outputs/spatial_plant_pool_20261028/plants/seed_2026102703/plant.json \
+    /mnt/c/dev/SyntheticPlantGeneration/outputs/spatial_plant_pool_20261028/plants/seed_2026102708/plant.json \
+  --output outputs/harvest_v8_sources
+python3 scripts/prepare_harvest_pilot.py \
+  --config configs/harvest_pilot_v8.json --output outputs/harvest_pilot_v8_c1
+```
+
+Ambos comandos exigen destinos nuevos. Las fuentes grandes permanecen como
+artefactos locales, fuera de Git; un clon de esta rama necesita esos árboles y
+sus evidencias o los catálogos congelados. El paquete final copia los originales,
+los catálogos y los PNG utilizados, y registra sus SHA-256. La conversión fuente
+es explícitamente 10 unidades por metro; la salida SDF y las mallas están en SI.
+
+`harvest_visuals.py` interpreta hojas curvas con dos caras, capachos con cinco
+costillas y los materiales actuales del proyecto. Agrupa las superficies
+estáticas por material para reducir el coste gráfico, conservando los cuerpos
+de los frutos seleccionados y cada cilindro de colisión. Es una interpretación
+para Gazebo; no una copia exacta del render o de todas las mallas Blender.
+La apariencia del cáliz no se convierte en madurez agronómica.
+
+El robot incorpora carenados, neumáticos con dibujo y juntas visibles mediante
+elementos visuales. Una prueba compara todo el SDF no visual antes y después:
+masas, colisiones, articulaciones, TCP y controladores se preservan. La nueva
+escena requiere repetir A0 y A1 antes de aceptar misiones más largas; los PASS
+de la línea base no se transfieren automáticamente a los árboles densos.
 
 ## Nota sobre el generador y trabajo futuro
 

@@ -1,15 +1,23 @@
 """Pure checks for the morphology-derived cutting fixture, no Gazebo required."""
 
 from copy import deepcopy
+from dataclasses import asdict
+import hashlib
 import json
 import math
+from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 
-from uchuva_gazebo.harvest_plants import DEFAULT_PLANT_CONFIG, build_harvest_plants
+from uchuva_gazebo.harvest_plants import (
+    DEFAULT_PLANT_CONFIG, _candidate_clearance, _clearance_obstacles,
+    _load_catalog_plant, build_harvest_plants,
+)
 from uchuva_lsystem.collisions import build_scene_proxies
 from uchuva_lsystem.morphology import Plant
-from uchuva_lsystem.scene import CultivationScene
+from uchuva_lsystem.scene import CultivationScene, PlantInstance
 
 
 class HarvestPlantTests(unittest.TestCase):
@@ -138,6 +146,94 @@ class HarvestPlantTests(unittest.TestCase):
                 build_harvest_plants(update)
         with self.assertRaises(ValueError):
             build_harvest_plants({"positions_m": [[0, 0, 0]]})
+
+    def test_explicit_target_ids_choose_existing_organs_and_fail_closed(self):
+        identifiers = [self.bundle["fruits"][index]["id"] for index in (1, 3, 5)]
+        config = dict(max_dynamic_fruits_per_plant=1, target_ids=identifiers)
+        chosen = build_harvest_plants(config)
+        self.assertEqual([fruit["id"] for fruit in chosen["fruits"]], identifiers)
+        self.assertEqual([plant["fruit_calyx_count"] for plant in chosen["plants"]], [6, 6, 6])
+        config["target_ids"] = identifiers[:2] + ["plant_002:missing_unit"]
+        with self.assertRaises(ValueError):
+            build_harvest_plants(config)
+
+    def test_imported_catalog_preserves_source_and_never_recomputes_poses(self):
+        source = deepcopy(self.bundle["plants"][0]["source_morphology"])
+        source["future_metadata"] = {"kept_verbatim": [1, 2, 3]}
+        tree = Plant.from_dict(source)
+        scene = CultivationScene("test", "test", tree.seed, plant_instances=[PlantInstance("source", tree.seed)])
+        proxies = build_scene_proxies(scene, {"source": tree})
+        rows = [asdict(proxy) for proxy in proxies]
+        # Serialize the same physical plant at ten source units per metre.
+        for row in rows:
+            for key in ("center", "start", "end", "half_extents"):
+                if row.get(key) is not None:
+                    row[key] = [value * 1.25 for value in row[key]]
+            row["radius"] *= 1.25
+        with tempfile.TemporaryDirectory(dir=Path.cwd()) as directory:
+            morphology_path = Path(directory) / "plant.json"
+            catalog_path = Path(directory) / "proxy_catalog.json"
+            morphology_path.write_text(json.dumps(source), encoding="utf-8")
+            catalog = dict(schema_version="uchuva.harvest_proxy_catalog/1", seed=tree.seed,
+                source_plant_id="source", source_units_per_metre=10,
+                morphology_sha256=hashlib.sha256(morphology_path.read_bytes()).hexdigest(),
+                admission=dict(status="admitted", physical_crossings=0), proxies=rows)
+            catalog_path.write_text(json.dumps(catalog), encoding="utf-8")
+            config = dict(seeds=[tree.seed], positions_m=[[0, 0, 0]], rotations_deg=[0],
+                morphology_files=[str(morphology_path)], proxy_catalog_files=[str(catalog_path)],
+                source_units_per_metre=10, preset="unavailable_in_historical_interpreter",
+                phenology_model="literature_cohort_v1")
+            with patch("uchuva_gazebo.harvest_plants.build_scene_proxies", side_effect=AssertionError("Historical poses must not run")):
+                imported = build_harvest_plants(config)
+            self.assertEqual(imported["plants"][0]["source_morphology"], source)
+            self.assertEqual(len(imported["fruits"]), 2)
+            for actual, expected in zip(imported["fruits"], self.bundle["fruits"][:2]):
+                self.assertEqual(actual["id"], expected["id"])
+                for a, b in zip(actual["center_world_m"], expected["center_world_m"]):
+                    self.assertAlmostEqual(a, b, places=12)
+            instance = PlantInstance("rotated", tree.seed, position=(24, 40, 0), rotation_deg=90)
+            _, raw, transformed, provenance = _load_catalog_plant(morphology_path, catalog_path, instance, 10)
+            self.assertEqual(raw, source)
+            self.assertEqual(provenance["internal_unit_factor"], .8)
+            for original, actual in zip(proxies, transformed):
+                self.assertAlmostEqual(actual.center[0], 24 - original.center[1])
+                self.assertAlmostEqual(actual.center[1], 40 + original.center[0])
+                self.assertAlmostEqual(actual.center[2], original.center[2])
+                self.assertAlmostEqual(actual.radius, original.radius)
+                self.assertTrue(actual.proxy_id.startswith("rotated:"))
+            with self.assertRaisesRegex(ValueError, "source units differ"):
+                _load_catalog_plant(morphology_path, catalog_path, instance, 8)
+            morphology_path.write_text(json.dumps(dict(source, future_metadata="changed")), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "do not match"):
+                _load_catalog_plant(morphology_path, catalog_path, instance, 10)
+
+    def test_indexed_clearance_matches_exhaustive_capsule_and_sphere_distances(self):
+        scene = CultivationScene.from_dict(self.bundle["provenance"]["source_scene"])
+        plants = {p["id"]: Plant.from_dict(p["source_morphology"]) for p in self.bundle["plants"]}
+        proxies = build_scene_proxies(scene, plants)
+        pedicels = {p.attachment_id: p for p in proxies if p.kind == "pedicel"}
+        cache = _clearance_obstacles(proxies)
+        for calyx in (p for p in proxies if p.kind == "calyx"):
+            center = [v / 8 for v in calyx.center]
+            radius = max(calyx.half_extents) / 8
+            pedicel = pedicels[calyx.attachment_id]
+            cut = [(a + b) / 16 for a, b in zip(pedicel.start, pedicel.end)]
+            expected = (center[2] - radius, "ground")
+            for other in proxies:
+                if other.kind in {"stem", "pedicel"} and other.start is not None:
+                    start, end = [v / 8 for v in other.start], [v / 8 for v in other.end]
+                    if other.proxy_id == pedicel.proxy_id:
+                        end = cut
+                    delta = [b - a for a, b in zip(start, end)]
+                    denominator = sum(v * v for v in delta)
+                    t = max(0, min(1, sum((p - a) * v for p, a, v in zip(center, start, delta)) / denominator)) if denominator else 0
+                    nearest = [a + t * v for a, v in zip(start, delta)]
+                    expected = min(expected, (math.dist(center, nearest) - radius - other.radius / 8, other.proxy_id))
+                elif other.kind == "calyx" and other.proxy_id != calyx.proxy_id:
+                    expected = min(expected, (math.dist(center, [v / 8 for v in other.center]) - radius - max(other.half_extents) / 8, other.proxy_id))
+            clearance, obstacle, _ = _candidate_clearance(calyx, pedicel, proxies, DEFAULT_PLANT_CONFIG, cache)
+            self.assertAlmostEqual(clearance, expected[0], places=12)
+            self.assertEqual(obstacle, expected[1])
 
 
 if __name__ == "__main__":

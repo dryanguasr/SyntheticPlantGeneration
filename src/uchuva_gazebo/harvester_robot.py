@@ -6,6 +6,7 @@ jaws are visual-only: the harvest runtime provides an explicitly ideal latch.
 The five joints belong to the arm; wheel motors are additional actuators.
 Robot self-contact is deliberately filtered link-by-link. Model self_collide
 remains enabled so attached/released fruit do not inherit its suppression.
+Detailed visual skins do not change the conservative collision/inertia proxy.
 
 Gazebo Harmonic references (gz-sim8):
 https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1DiffDrive.html
@@ -276,6 +277,164 @@ def _revolute(model, name, parent, child, axis, lower, upper, effort=60.0,
     return joint
 
 
+def _finish_visual(item, color, *, metalness=0.0, roughness=.55):
+    """Code-native appearance only; these values are art-direction heuristics."""
+    material(item, color)
+    # https://sdformat.org/spec/?elem=material&ver=1.9
+    metal = e(e(item.find("material"), "pbr"), "metal")
+    e(metal, "metalness", metalness)
+    e(metal, "roughness", roughness)
+    return item
+
+
+def _visual_box(link, name, center, size, color, *, rotation=(0, 0, 0),
+                metalness=0.0, roughness=.55):
+    item = box(link, name, center, size)
+    item.find("pose").text = numbers((*center, *rotation))
+    return _finish_visual(item, color, metalness=metalness, roughness=roughness)
+
+
+def _visual_cylinder(link, name, center, radius, length, color,
+                     *, rotation=(0, 0, 0), metalness=0.0, roughness=.55):
+    item = e(link, "visual", name=name)
+    e(item, "pose", numbers((*center, *rotation)))
+    shape = e(e(item, "geometry"), "cylinder")
+    e(shape, "radius", radius)
+    e(shape, "length", length)
+    return _finish_visual(item, color, metalness=metalness, roughness=roughness)
+
+
+def _rounded_case(link, name, center, size, radius, color):
+    """Rounded XY outline built from primitives, within the given box envelope."""
+    x, y, z = center
+    length, width, height = size
+    radius = min(radius, length/4, width/4)
+    _visual_box(link, name, center, (length-2*radius, width, height), color)
+    _visual_box(link, name+"_ends", center, (length, width-2*radius, height), color)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            _visual_cylinder(link, f"{name}_corner_{sx}_{sy}",
+                (x+sx*(length/2-radius), y+sy*(width/2-radius), z),
+                radius, height, color)
+
+
+def _rounded_beam(link, name, center, length, width, height, color,
+                  *, metalness=0.0, roughness=.55):
+    """Arm shell rounded in XZ; the original rectangular collider remains."""
+    radius = min(height/2, length/4)
+    _visual_box(link, name, center, (length-2*radius, width, height), color,
+                metalness=metalness, roughness=roughness)
+    for sign in (-1, 1):
+        end = (center[0]+sign*(length/2-radius), center[1], center[2])
+        _visual_cylinder(link, f"{name}_cap_{sign}", end, radius, width, color,
+                         rotation=(math.pi/2, 0, 0), metalness=metalness, roughness=roughness)
+
+
+def _polish_visuals(model, c):
+    """Replace visual skins without changing links, dynamics or collision shapes.
+
+    Covers, lights, tread and fasteners are appearance details, not additional
+    hardware or contact models. Jaws remain the same visual-only ideal fixture.
+    """
+    links = {link.get("name"): link for link in model.findall("link")}
+    for link in links.values():
+        for visual in list(link.findall("visual")):
+            link.remove(visual)
+    charcoal = (.055, .068, .075, 1)
+    rubber = (.022, .028, .031, 1)
+    enamel = (.77, .81, .78, 1)
+    green = (.12, .28, .23, 1)
+    orange = (.92, .39, .075, 1)
+    alloy = (.48, .55, .58, 1)
+    base = links["base_link"]
+    length, width, height = c.body_length_m, c.body_width_m, c.body_height_m
+    bottom = c.body_center_z_m-height/2
+    top = c.body_center_z_m+height/2
+    _rounded_case(base, "chassis_lower", (0, 0, bottom+height*.17),
+                  (length, width, height*.34), .035, charcoal)
+    _rounded_case(base, "chassis_shell", (0, 0, bottom+height*.65),
+                  (length*.99, width*.99, height*.62), .04, green)
+    _rounded_case(base, "chassis_lid", (0, 0, top-height*.02),
+                  (length*.97, width*.97, height*.04), .035, enamel)
+    for sign in (-1, 1):
+        # Inset vent slots and a thin orange identification stripe on each side.
+        for i in range(6):
+            _visual_box(base, f"vent_{sign}_{i}",
+                (length*(-.30+i*.07), sign*width*.496, bottom+height*.62),
+                (length*.025, width*.004, height*.25), charcoal)
+        _visual_box(base, f"side_stripe_{sign}", (0, sign*width*.496, bottom+height*.83),
+                    (length*.73, width*.004, height*.04), orange)
+        for end in (-1, 1):
+            lamp = (.87, .94, 1, 1) if end == 1 else (.65, .035, .025, 1)
+            _visual_box(base, f"lamp_{end}_{sign}",
+                (end*length*.496, sign*width*.29, bottom+height*.57),
+                (length*.004, width*.10, height*.10), lamp, roughness=.2)
+    pedestal_height = c.shoulder_height_m-top
+    _visual_cylinder(base, "pedestal_column", (0, 0, top+pedestal_height/2),
+                     .037, pedestal_height, alloy, metalness=.65, roughness=.32)
+    for z, name in ((top+.009, "pedestal_foot"), (c.shoulder_height_m-.009, "pedestal_collar")):
+        _visual_cylinder(base, name, (0, 0, z), .044, .018, charcoal)
+
+    for name, link in links.items():
+        if not name.endswith("_wheel"):
+            continue
+        radius, wheel_width = c.wheel_radius_m, c.wheel_width_m
+        turn = (math.pi/2, 0, 0)
+        # Inset rubber lets the lugs remain visible while their outer radius
+        # stays within the unchanged circular collision envelope.
+        _visual_cylinder(link, "tire", (0, 0, 0), radius*.972, wheel_width, rubber,
+                         rotation=turn, roughness=.94)
+        for i in range(24):
+            angle = i*math.tau/24
+            _visual_box(link, f"tread_{i}",
+                ((radius*.985)*math.sin(angle), 0, (radius*.985)*math.cos(angle)),
+                (radius*.11, wheel_width*.88, radius*.025), (.045, .052, .055, 1),
+                rotation=(0, angle, 0), roughness=.98)
+        for sign in (-1, 1):
+            face = sign*wheel_width*.46
+            _visual_cylinder(link, f"rim_{sign}", (0, face, 0), radius*.64,
+                wheel_width*.08, alloy, rotation=turn, metalness=.8, roughness=.26)
+            _visual_cylinder(link, f"hub_inset_{sign}", (0, sign*wheel_width*.485, 0),
+                radius*.46, wheel_width*.03, charcoal, rotation=turn)
+            _visual_cylinder(link, f"hub_cap_{sign}", (0, sign*wheel_width*.49, 0),
+                radius*.21, wheel_width*.02, green, rotation=turn, metalness=.25)
+            for i in range(6):
+                angle = i*math.tau/6
+                _visual_cylinder(link, f"wheel_bolt_{sign}_{i}",
+                    (radius*.34*math.cos(angle), sign*wheel_width*.49, radius*.34*math.sin(angle)),
+                    radius*.028, wheel_width*.02, alloy, rotation=turn, metalness=.8)
+
+    _visual_cylinder(links["arm_yaw_link"], "yaw_bearing", (0, 0, 0),
+                     .036, .062, charcoal)
+    for name, span, thickness in (("upper_arm_link", c.upper_arm_m, .053),
+                                   ("forearm_link", c.forearm_m, .043)):
+        link = links[name]
+        _rounded_beam(link, "arm_shell", (span/2, 0, 0), span, thickness, thickness, enamel)
+        for sign in (-1, 1):
+            _visual_box(link, f"arm_inlay_{sign}", (span/2, sign*thickness*.49, 0),
+                (span*.63, thickness*.02, thickness*.22), charcoal)
+            _visual_box(link, f"arm_accent_{sign}", (span*.28, sign*thickness*.496, 0),
+                (span*.13, thickness*.008, thickness*.22), orange)
+            _visual_cylinder(link, f"joint_cover_{sign}", (0, sign*thickness*.44, 0),
+                thickness*.49, thickness*.12, charcoal, rotation=(math.pi/2, 0, 0))
+            _visual_cylinder(link, f"joint_axle_{sign}", (0, sign*thickness*.49, 0),
+                thickness*.24, thickness*.02, alloy, rotation=(math.pi/2, 0, 0), metalness=.75)
+    _visual_cylinder(links["wrist_link"], "wrist_pitch_cover", (0, 0, 0),
+                     .022, .049, charcoal, rotation=(math.pi/2, 0, 0))
+    tool = links["tool_link"]
+    _rounded_case(tool, "tool_housing", (-c.tool_length_m*.72, 0, .03),
+                  (c.tool_length_m*.45, .075, .03), .01, green)
+    _visual_cylinder(tool, "tool_roll_collar", (-c.tool_length_m*.92, 0, .015),
+                     .019, c.tool_length_m*.10, alloy, rotation=(0, math.pi/2, 0), metalness=.65)
+    for side, sign in (("left", 1), ("right", -1)):
+        _rounded_beam(tool, f"capture_jaw_{side}", (-.025, sign*.04, -.025),
+                      .075, .009, .014, alloy, metalness=.75, roughness=.3)
+        _visual_box(tool, f"jaw_pad_{side}", (-.025, sign*.0365, -.025),
+                    (.048, .002, .009), rubber, roughness=.95)
+        _visual_box(tool, f"cutter_{side}", (0, sign*.022, 0),
+                    (.018, .032, .004), (.65, .70, .72, 1), metalness=.9, roughness=.24)
+
+
 def generic_harvester_model(config: HarvesterConfig | None = None,
                              start=(0.0, 0.0, 0.002, 0.0)) -> ET.Element:
     """Create a self-contained dynamic SDF model; no external meshes needed.
@@ -430,4 +589,5 @@ def generic_harvester_model(config: HarvesterConfig | None = None,
         raise ValueError("Proxy collision policy supports at most sixteen colliding links")
     for index, link in enumerate(colliding_links):
         set_collision_bitmask(link, 1 << index)
+    _polish_visuals(model, c)
     return model

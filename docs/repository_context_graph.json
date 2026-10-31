@@ -2661,25 +2661,32 @@
       "id": "entrypoint.harvest_pilot",
       "type": "entrypoint",
       "label": "Piloto de uchuva desmontable con carro 4WD y brazo de cinco GDL",
-      "summary": "Interpreta proxies morfologicos en tres plantas y seis cuerpos fruto-capacho, con robot modular, corte y retencion ideal por plugin Harmonic y auditor de evidencia. Pruebas puras separadas de compilacion y simulacion nativas pendientes; sin percepcion autonoma ni fisica medida.",
+      "summary": "Interpreta proxies morfologicos en tres plantas y seis cuerpos fruto-capacho, con robot modular, corte y retencion ideal por plugin Harmonic y auditor de evidencia. Compilacion y cosecha nativas observadas en Harmonic 8.14.0, documentadas por experimento y separadas de las pruebas puras; sin percepcion autonoma ni fisica medida.",
       "paths": [
         "src/uchuva_gazebo/harvest_plants.py",
+        "src/uchuva_gazebo/harvest_visuals.py",
         "src/uchuva_gazebo/harvester_robot.py",
         "src/uchuva_gazebo/harvest_pilot.py",
         "src/uchuva_gazebo/harvest_validation.py",
         "gazebo/harvest_system/HarvestSystem.cc",
         "gazebo/harvest_system/CMakeLists.txt",
         "configs/harvest_pilot_v1.json",
+        "configs/harvest_pilot_v8.json",
+        "configs/harvest_pilot_gui.config",
         "scripts/prepare_harvest_pilot.py",
+        "scripts/export_admitted_harvest_sources.py",
+        "scripts/screen_admitted_harvest_targets.py",
         "scripts/build_harvest_plugin.sh",
         "scripts/run_harvest_pilot.py",
         "scripts/audit_harvest_pilot.py",
         "tests/test_harvest_plants.py",
+        "tests/test_harvest_visuals.py",
         "tests/test_harvester_robot.py",
         "tests/test_harvest_pilot.py",
         "tests/test_harvest_validation.py",
         "docs/guides/piloto_cosecha_desmontable.md",
         "docs/reports/piloto_cosecha_desmontable_2026-10-30.md",
+        "docs/reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md",
         "src/uchuva_gazebo/harvest_clearance.py",
         "tests/test_harvest_clearance.py",
         "tests/test_harvest_runtime_contract.py"
@@ -2688,6 +2695,14 @@
         {
           "path": "src/uchuva_gazebo/harvest_plants.py",
           "locator": "def build_harvest_plants"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_plants.py",
+          "locator": "def _load_catalog_plant"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_visuals.py",
+          "locator": "def detailed_leaf_mesh"
         },
         {
           "path": "gazebo/harvest_system/HarvestSystem.cc",
@@ -5572,7 +5587,7 @@
       "evidence": [
         {
           "path": "src/uchuva_gazebo/harvest_plants.py",
-          "locator": "from uchuva_lsystem.collisions import build_scene_proxies"
+          "locator": "from uchuva_lsystem.collisions import CollisionProxy, build_scene_proxies"
         }
       ]
     },

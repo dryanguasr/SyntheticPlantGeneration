@@ -1,0 +1,50 @@
+{
+  "schema_version": "harvest-pilot/1.0",
+  "world_name": "uchuva_harvest_pilot",
+  "plants": {
+    "seeds": [2026102702, 2026102703, 2026102708],
+    "positions_m": [[0, 0, 0], [0, 2, 0], [0, 4, 0]],
+    "rotations_deg": [0, 0, 0],
+    "preset": "trained_trellis_nodal_repulsion_v8",
+    "phenology_model": "literature_cohort_v1",
+    "morphology_files": [
+      "outputs/harvest_v8_sources/seed_2026102702/plant.json",
+      "outputs/harvest_v8_sources/seed_2026102703/plant.json",
+      "outputs/harvest_v8_sources/seed_2026102708/plant.json"
+    ],
+    "proxy_catalog_files": [
+      "outputs/harvest_v8_sources/seed_2026102702/proxy_catalog.json",
+      "outputs/harvest_v8_sources/seed_2026102703/proxy_catalog.json",
+      "outputs/harvest_v8_sources/seed_2026102708/proxy_catalog.json"
+    ],
+    "source_units_per_metre": 10,
+    "minimum_target_height_m": 0.45,
+    "maximum_target_height_m": 0.90,
+    "clearance_m": 0.005,
+    "max_dynamic_fruits_per_plant": 1,
+    "target_ids": [
+      "plant_000:axis_0_0_branch_6_branch_2_branch_0_node_3_reproductive_unit",
+      "plant_001:axis_0_0_branch_10_branch_5_branch_0_node_3_reproductive_unit",
+      "plant_002:axis_0_0_branch_5_branch_8_branch_1_node_1_reproductive_unit"
+    ]
+  },
+  "robot": {},
+  "robot_start_xyzyaw": [-1.35, -0.8, 0.002, 0],
+  "carry_tcp_base_m": [0.4, 0, 0.72],
+  "pickup_standoff_m": 0.5,
+  "aisle_x_m": -1.25,
+  "bin_center_xy_m": [-2, -1],
+  "deposit_base_xyyaw": [-2.6, -1, 0],
+  "deposit_tool_height_m": 0.48,
+  "interaction": {
+    "command_topic": "/harvest/command",
+    "state_topic": "/harvest/state",
+    "event_topic": "/harvest/events",
+    "cut_tolerance": 0.02,
+    "capture_radius": 0.12,
+    "max_relative_speed": 0.12,
+    "stable_time": 0.2,
+    "startup_timeout": 5,
+    "attachment_tolerance": 0.01
+  }
+}

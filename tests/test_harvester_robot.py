@@ -2,6 +2,7 @@
 import math
 import random
 import unittest
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 
 from uchuva_gazebo.harvester_robot import (
@@ -86,6 +87,25 @@ def evaluate_sdf_arm(model, joints):
 
 
 class HarvesterRobotTests(unittest.TestCase):
+    def test_visual_polish_preserves_every_nonvisual_sdf_element(self):
+        for config in (HarvesterConfig(), HarvesterConfig(camera=True,
+                body_length_m=.65, body_width_m=.42, wheel_separation_m=.52,
+                shoulder_height_m=.7, upper_arm_m=.4, forearm_m=.35)):
+            with patch('uchuva_gazebo.harvester_robot._polish_visuals'):
+                baseline = generic_harvester_model(config)
+            polished = generic_harvester_model(config)
+            self.assertGreater(len(polished.findall('.//visual')),
+                               len(baseline.findall('.//visual')))
+            for model in (baseline, polished):
+                for link in model.findall('link'):
+                    names = [v.get('name') for v in link.findall('visual')]
+                    self.assertEqual(len(names), len(set(names)))
+                    for visual in list(link.findall('visual')):
+                        link.remove(visual)
+            # Includes every link pose, collision, inertia, controller, joint,
+            # sensor and bitmask: visual work cannot silently change physics.
+            self.assertEqual(ET.tostring(polished), ET.tostring(baseline))
+
     def test_skid_slip_direction_is_parallel_to_each_wheel_axle(self):
         model = generic_harvester_model()
         for joint in model.findall('joint'):

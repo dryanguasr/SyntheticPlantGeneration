@@ -4,10 +4,11 @@ import json
 import unittest
 
 from uchuva_gazebo.harvest_clearance import (
-    _segment_box_distance, audit_joint_segment, plan_harvest_motion, rigid_cylinders,
+    _CylinderIndex, _segment_box_distance, _world_clearance,
+    audit_joint_segment, plan_harvest_motion, rigid_cylinders,
 )
 from uchuva_gazebo.harvest_plants import build_harvest_plants
-from uchuva_gazebo.harvester_robot import inverse_kinematics
+from uchuva_gazebo.harvester_robot import HarvesterConfig, inverse_kinematics
 
 
 class HarvestClearanceTests(unittest.TestCase):
@@ -60,6 +61,19 @@ class HarvestClearanceTests(unittest.TestCase):
         audit = audit_joint_segment(target["joint_waypoints"]["cut"], target["joint_waypoints"]["extraction_0"], target["pickup_base_pose"], obstacles, self.bundle["fruits"], held=fruit, stop_on_failure=True)
         self.assertFalse(audit["passed"])
         self.assertLess(audit["samples"], audit["requested_samples"])
+
+    def test_spatial_index_matches_exhaustive_distances_and_limiting_pairs(self):
+        obstacles = rigid_cylinders(self.bundle)
+        index = _CylinderIndex(obstacles)
+        config = HarvesterConfig()
+        for fruit in self.bundle["fruits"]:
+            target = self.plan["targets"][fruit["id"]]
+            for name in ("carry", "cut", "extraction_0"):
+                joints = target["joint_waypoints"][name]
+                for held in (None, fruit):
+                    exhaustive = _world_clearance(joints, target["pickup_base_pose"], obstacles, self.bundle["fruits"], held, config)
+                    indexed = _world_clearance(joints, target["pickup_base_pose"], index, self.bundle["fruits"], held, config)
+                    self.assertEqual(indexed, exhaustive)
 
 
 if __name__ == "__main__":

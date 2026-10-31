@@ -140,6 +140,33 @@ def _arm_boxes(joints, base, config):
     return boxes, world
 
 
+class _CylinderIndex(list):
+    """Exact broad phase over the unchanged exported cylinder envelopes."""
+
+    def __init__(self, cylinders):
+        super().__init__(cylinders)
+        self.cell_size = .10
+        self.grid = {}
+        for index, row in enumerate(self):
+            low = [math.floor((min(a, b) - row["radius"]) / self.cell_size) for a, b in zip(row["start"], row["end"])]
+            high = [math.floor((max(a, b) + row["radius"]) / self.cell_size) for a, b in zip(row["start"], row["end"])]
+            for x in range(low[0], high[0] + 1):
+                for y in range(low[1], high[1] + 1):
+                    for z in range(low[2], high[2] + 1):
+                        self.grid.setdefault((x, y, z), []).append(index)
+
+    def near(self, center, extent):
+        low = [math.floor((p - extent) / self.cell_size) for p in center]
+        high = [math.floor((p + extent) / self.cell_size) for p in center]
+        indices = set()
+        for x in range(low[0], high[0] + 1):
+            for y in range(low[1], high[1] + 1):
+                for z in range(low[2], high[2] + 1):
+                    indices.update(self.grid.get((x, y, z), ()))
+        # Keep original order to preserve equal-distance limiting IDs.
+        return (self[index] for index in sorted(indices))
+
+
 def _world_clearance(joints, base, cylinders, fruit_specs, held, config, report_cap=0.5):
     """Distances beyond report_cap are censored, retaining a valid lower bound."""
     boxes, world = _arm_boxes(joints, base, config)
@@ -147,7 +174,8 @@ def _world_clearance(joints, base, cylinders, fruit_specs, held, config, report_
     limiting_robot = limiting_held = limiting_held_robot = None
     for name, center, yaw, elevation, half in boxes:
         bound = math.sqrt(sum(v * v for v in half))
-        for obstacle in cylinders:
+        nearby = cylinders.near(center, bound + max(0, robot_min)) if isinstance(cylinders, _CylinderIndex) else cylinders
+        for obstacle in nearby:
             a, b, r = obstacle["start"], obstacle["end"], obstacle["radius"]
             if any(center[i] + bound + robot_min < min(a[i], b[i]) - r or center[i] - bound - robot_min > max(a[i], b[i]) + r for i in range(3)):
                 continue
@@ -175,7 +203,8 @@ def _world_clearance(joints, base, cylinders, fruit_specs, held, config, report_
         center = [world["tool"][i] + moved_offset[i] for i in range(3)]
         radius = held["radius_m"]
         held_min, limiting_held = min(report_cap, center[2] - radius), "ground"
-        for obstacle in cylinders:
+        nearby = cylinders.near(center, radius + max(0, held_min)) if isinstance(cylinders, _CylinderIndex) else cylinders
+        for obstacle in nearby:
             distance = _point_segment_distance(center, obstacle["start"], obstacle["end"]) - radius - obstacle["radius"]
             if distance < held_min:
                 held_min, limiting_held = distance, obstacle["id"]
@@ -218,6 +247,7 @@ def audit_joint_segment(start, end, base, cylinders, fruit_specs, *, held=None,
                       if all(min(obstacle["start"][i], obstacle["end"][i]) - obstacle["radius"] <= base[i] + extent
                              and max(obstacle["start"][i], obstacle["end"][i]) + obstacle["radius"] >= base[i] - extent
                              for i in (0, 1))]
+    near_cylinders = _CylinderIndex(near_cylinders)
     # Bound articulation increments as well as the minimum sample count.
     count = max(samples, math.ceil(max(abs(a - b) for a, b in zip(start, end)) / .004) + 1)
     result = {"passed": True, "samples": 0, "requested_samples": count,

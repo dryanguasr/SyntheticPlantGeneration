@@ -1,5 +1,6 @@
 """Pure package/integration checks. These do not execute the simulator."""
 from copy import deepcopy
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -56,6 +57,12 @@ class HarvestPackageTests(unittest.TestCase):
             path.rename(relocated)
             loaded = load_verified_package(relocated)
             self.assertEqual(loaded['fruits'], manifest['fruits'])
+            for uri, source in self.bundle.get('binary_assets', {}).items():
+                self.assertIn(uri, loaded['files_sha256'])
+                self.assertEqual((relocated / uri).read_bytes(), Path(source).read_bytes())
+            for uri, content in self.bundle.get('generated_binary_assets', {}).items():
+                self.assertIn(uri, loaded['files_sha256'])
+                self.assertEqual((relocated / uri).read_bytes(), content)
             with patch('uchuva_gazebo.harvest_pilot.build_pilot', return_value=deepcopy(self.bundle)):
                 with self.assertRaises(FileExistsError):
                     write_package(relocated, self.config)
@@ -74,6 +81,23 @@ class HarvestPackageTests(unittest.TestCase):
             (path / 'manifest.json').write_text(json.dumps(manifest))
             with self.assertRaisesRegex(ValueError, 'escaped'):
                 load_verified_package(path)
+
+    def test_source_changed_after_interpretation_cannot_be_packaged(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source = Path(temp) / 'plant.json'
+            original = b'{"seed": 12}'
+            source.write_bytes(original)
+            bundle = deepcopy(self.bundle)
+            uri = 'sources/plant_000/plant.json'
+            bundle['binary_assets'][uri] = str(source)
+            bundle['source_asset_hashes'] = {uri: hashlib.sha256(original).hexdigest()}
+            # Geometry has already been evaluated from the original bytes.
+            source.write_bytes(b'{"seed": 13}')
+            output = Path(temp) / 'package'
+            with patch('uchuva_gazebo.harvest_pilot.build_pilot', return_value=bundle):
+                with self.assertRaisesRegex(ValueError, 'Source changed'):
+                    write_package(output, self.config)
+            self.assertFalse((output / 'manifest.json').exists())
 
     def test_all_waypoints_reachable_and_unreachable_robot_fails_preparation(self):
         mission = self.bundle['manifest']['mission']

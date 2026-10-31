@@ -14,6 +14,7 @@ import json
 import math
 from pathlib import Path
 import re
+import shutil
 import xml.etree.ElementTree as ET
 
 from .field import box, element as e, numbers
@@ -22,6 +23,7 @@ from .harvest_clearance import plan_harvest_motion
 from .harvester_robot import (HarvesterConfig, generic_harvester_model,
                              inverse_kinematics, robot_contract, set_collision_bitmask)
 from .harvest_validation import local_point
+from .harvest_visuals import apply_soil_material, procedural_soil_assets
 
 VERSION = "harvest-pilot/1.0"
 ROOT = Path(__file__).resolve().parents[2]
@@ -47,7 +49,7 @@ def _bin(world, center):
     e(model, "static", "true")
     e(model, "pose", numbers((x, y, 0, 0, 0, 0)))
     link = e(model, "link", name="bin_link")
-    color = (.15, .24, .48, 1)
+    color = (.095, .20, .28, 1)
     pieces = [("floor", (0, 0, floor - thickness / 2), (interior + 2 * thickness, interior + 2 * thickness, thickness))]
     for sign, label in ((-1, "negative"), (1, "positive")):
         offset = sign * (interior + thickness) / 2
@@ -56,6 +58,14 @@ def _bin(world, center):
     for name, position, size in pieces:
         box(link, name, position, size, color)
         box(link, name + "_collision", position, size, collision=True)
+    # Injection-moulded rim and feet remain within the existing collision
+    # envelope: this is visual finish, not a larger or more permissive tray.
+    for sign in (-1, 1):
+        offset = sign * (interior + thickness) / 2
+        for axis in ('x', 'y'):
+            position = (offset, 0, top-.012) if axis == 'x' else (0, offset, top-.012)
+            size = (thickness, interior+2*thickness, .024) if axis == 'x' else (interior, thickness, .024)
+            box(link, f'rim_{axis}_{sign}', position, size, (.17, .30, .36, 1))
     return {"model_name": "collection_bin", "center_xy_m": list(center),
             "inner_min_m": [x - interior / 2, y - interior / 2, floor],
             "inner_max_m": [x + interior / 2, y + interior / 2, top],
@@ -137,17 +147,23 @@ def build_pilot(config):
         sensors = e(world, 'plugin', filename='gz-sim-sensors-system', name='gz::sim::systems::Sensors')
         e(sensors, 'render_engine', 'ogre2')
     scene = e(world, 'scene')
-    e(scene, 'ambient', '.65 .65 .65 1')
-    e(scene, 'background', '.65 .80 .92 1')
+    e(scene, 'ambient', '.38 .40 .42 1')
+    e(scene, 'background', '.63 .72 .77 1')
+    e(scene, 'shadows', 'true')
+    e(scene, 'grid', 'false')
     light = e(world, 'light', name='sun', type='directional')
     e(light, 'pose', '0 0 10 0 0 0')
-    e(light, 'diffuse', '.85 .85 .85 1')
+    e(light, 'diffuse', '.95 .91 .82 1')
     e(light, 'specular', '.2 .2 .2 1')
     e(light, 'direction', '-.4 .2 -1')
+    e(light, 'cast_shadows', 'true')
     ground = e(world, 'model', name='ground')
     e(ground, 'static', 'true')
     link = e(ground, 'link', name='ground_link')
-    box(link, 'ground_visual', (0, 2, -.05), (16, 16, .1), (.28, .21, .12, 1))
+    soil_assets = procedural_soil_assets()
+    floor = e(link, 'visual', name='ground_visual')
+    e(e(e(floor, 'geometry'), 'mesh'), 'uri', 'meshes/harvest_soil.obj')
+    apply_soil_material(floor)
     box(link, 'ground_collision', (0, 2, -.05), (16, 16, .1), collision=True)
     for model in plants['models']:
         world.append(model)
@@ -172,9 +188,20 @@ def build_pilot(config):
     ET.indent(root, space='  ')
     reports = []
     morphologies = {}
+    source_assets = {}
+    source_asset_hashes = {}
     for plant in plants['plants']:
         report = dict(plant)
         morphologies[f'morphologies/{plant["id"]}.json'] = report.pop('source_morphology')
+        if 'source_catalog' in report:
+            catalog = report['source_catalog']
+            for key, filename in (('morphology_file', 'plant.json'), ('proxy_catalog_file', 'proxy_catalog.json')):
+                uri = f'sources/{plant["id"]}/{filename}'
+                source_assets[uri] = catalog[key]
+                source_asset_hashes[uri] = catalog['morphology_sha256' if key == 'morphology_file' else 'proxy_catalog_sha256']
+                # Preserve the original location as provenance, while exposing
+                # a portable byte-identical input in the prepared package.
+                catalog[key + '_packaged'] = uri
         reports.append(report)
     manifest = {
         'schema_version': VERSION, 'world_name': c['world_name'], 'world_file': 'harvest.sdf',
@@ -191,7 +218,10 @@ def build_pilot(config):
         ],
     }
     return {'sdf': ET.tostring(root, encoding='unicode', xml_declaration=True), 'manifest': manifest,
-            'meshes': plants['meshes'], 'morphologies': morphologies, 'configuration': c,
+            'meshes': {**plants['meshes'], **soil_assets['meshes']}, 'morphologies': morphologies, 'configuration': c,
+            'binary_assets': {**plants.get('texture_assets', {}), **source_assets},
+            'source_asset_hashes': source_asset_hashes,
+            'generated_binary_assets': soil_assets['generated_binary_assets'],
             'bridge': _bridge_yaml(contract, c['interaction'], c['world_name'])}
 
 
@@ -213,8 +243,25 @@ def write_package(output, config, source_metadata=None):
         path = directory / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding='utf-8')
+    binary_assets = bundle.get('binary_assets', {})
+    for name, source in binary_assets.items():
+        path = (directory / name).resolve()
+        if not path.is_relative_to(directory) or name in assets:
+            raise ValueError(f'Invalid or duplicate binary asset destination: {name}')
+        path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, path)
+        expected = bundle.get('source_asset_hashes', {}).get(name)
+        if expected is not None and sha256_file(path) != expected:
+            raise ValueError(f'Source changed after morphology interpretation: {name}')
+    generated_binary_assets = bundle.get('generated_binary_assets', {})
+    for name, content in generated_binary_assets.items():
+        path = (directory / name).resolve()
+        if not path.is_relative_to(directory) or name in assets or name in binary_assets:
+            raise ValueError(f'Invalid or duplicate generated asset destination: {name}')
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
     manifest = bundle['manifest']
-    manifest['files_sha256'] = {name: sha256_file(directory / name) for name in sorted(assets)}
+    manifest['files_sha256'] = {name: sha256_file(directory / name) for name in sorted(set(assets) | set(binary_assets) | set(generated_binary_assets))}
     manifest['source'] = source_metadata or {'status': 'unspecified'}
     (directory / 'manifest.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False, allow_nan=False) + '\n', encoding='utf-8')
     return manifest

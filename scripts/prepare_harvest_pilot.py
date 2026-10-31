@@ -19,9 +19,11 @@ def source_metadata():
         result = subprocess.run(['git', '-C', str(REPO), *args], capture_output=True, text=True, check=False)
         return result.stdout.strip() if result.returncode == 0 else 'unavailable'
     paths = [REPO / 'src/uchuva_gazebo' / filename for filename in (
-        'harvest_pilot.py', 'harvest_plants.py', 'harvest_clearance.py', 'harvester_robot.py', 'harvest_validation.py')]
+        'harvest_pilot.py', 'harvest_plants.py', 'harvest_visuals.py', 'harvest_clearance.py', 'harvester_robot.py', 'harvest_validation.py')]
     paths += [REPO / 'src/uchuva_lsystem' / filename for filename in (
-        'grammar.py', 'parameters.py', 'morphology.py', 'collisions.py', 'scene.py')]
+        'grammar.py', 'parameters.py', 'morphology.py', 'collisions.py', 'scene.py', 'blender_geometry.py', 'texture_assets.py')]
+    paths += [REPO / 'scripts' / filename for filename in (
+        'prepare_harvest_pilot.py', 'export_admitted_harvest_sources.py', 'screen_admitted_harvest_targets.py')]
     paths += [REPO / 'gazebo/harvest_system/HarvestSystem.cc', REPO / 'gazebo/harvest_system/CMakeLists.txt']
     return {'git_commit': git('rev-parse', 'HEAD'), 'git_branch': git('branch', '--show-current'),
             'working_tree_dirty': bool(git('status', '--porcelain')),
