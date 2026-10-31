@@ -427,6 +427,13 @@ def _polish_visuals(model, c):
     _visual_cylinder(tool, "tool_roll_collar", (-c.tool_length_m*.92, 0, .015),
                      .019, c.tool_length_m*.10, alloy, rotation=(0, math.pi/2, 0), metalness=.65)
     for side, sign in (("left", 1), ("right", -1)):
+        # Side supports connect the elevated housing, lower jaws and blades.
+        # They stay visual-only within the tool's existing overall envelope.
+        support_start, support_end = -c.tool_length_m*.68, .010
+        _rounded_beam(tool, f"tool_side_support_{side}",
+                      ((support_start + support_end)/2, sign*.036, -.0055),
+                      support_end - support_start, .008, .047, alloy,
+                      metalness=.65, roughness=.35)
         _rounded_beam(tool, f"capture_jaw_{side}", (-.025, sign*.04, -.025),
                       .075, .009, .014, alloy, metalness=.75, roughness=.3)
         _visual_box(tool, f"jaw_pad_{side}", (-.025, sign*.0365, -.025),
