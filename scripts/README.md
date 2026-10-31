@@ -46,6 +46,12 @@ reemplazados están en `legacy/scripts/`.
 | Script | Propósito |
 |---|---|
 | `export_gazebo_plant.py` | Exporta un plan JSON puro por LOD desde una morfología; no produce SDF ni requiere Gazebo |
+| `prepare_harvest_pilot.py` | Genera tres plantas, seis unidades desmontables, robot 4WD/5 GDL, cesta y manifiesto sin Blender ni Gazebo |
+| `build_harvest_plugin.sh` | Compila el sistema de corte/retención para Gazebo Harmonic en un directorio de salida |
+| `run_harvest_pilot.py` | Ejecuta una escena nueva, prueba guardas y cosecha, conserva telemetría y audita el resultado |
+| `audit_harvest_pilot.py` | Recalcula aceptación desde evidencia nativa; rechaza resultados sin movimiento/depósito observados |
+
+Procedimiento completo: [piloto de uchuvas desmontables](../docs/guides/piloto_cosecha_desmontable.md).
 
 La entrega estudiantil de aumentación clásica se conserva bajo
 `contributions/diego_amaya/`. No se registra como entrada vigente del

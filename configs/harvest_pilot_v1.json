@@ -1,0 +1,33 @@
+{
+  "schema_version": "harvest-pilot/1.0",
+  "world_name": "uchuva_harvest_pilot",
+  "plants": {
+    "seeds": [1031, 1032, 1033],
+    "positions_m": [[0, 0, 0], [0, 2, 0], [0, 4, 0]],
+    "rotations_deg": [0, 0, 180],
+    "preset": "trained_trellis",
+    "phenology_model": "legacy_independent",
+    "reproductive_units_min": 4,
+    "reproductive_units_max": 6,
+    "max_dynamic_fruits_per_plant": 2
+  },
+  "robot": {},
+  "robot_start_xyzyaw": [-1.35, -0.8, 0.002, 0],
+  "carry_tcp_base_m": [0.4, 0, 0.72],
+  "pickup_standoff_m": 0.5,
+  "aisle_x_m": -1.25,
+  "bin_center_xy_m": [-2, -1],
+  "deposit_base_xyyaw": [-2.6, -1, 0],
+  "deposit_tool_height_m": 0.48,
+  "interaction": {
+    "command_topic": "/harvest/command",
+    "state_topic": "/harvest/state",
+    "event_topic": "/harvest/events",
+    "cut_tolerance": 0.02,
+    "capture_radius": 0.12,
+    "max_relative_speed": 0.12,
+    "stable_time": 0.2,
+    "startup_timeout": 5,
+    "attachment_tolerance": 0.01
+  }
+}

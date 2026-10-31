@@ -17,6 +17,9 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Guías operativas
 
+- [Piloto de uchuvas desmontables](guides/piloto_cosecha_desmontable.md): tres
+  arbustos, seis objetivos, robot 4WD/5 GDL, compilación Harmonic y auditoría de
+  corte, retención y depósito; física pendiente de ejecución nativa.
 - [Video del DJI Neo en Android y PC](guides/video_dron_pc_rtmp.md): recepción
   RTMP, servidor local, red del teléfono emisor y exportación de videos y datos.
 
@@ -71,6 +74,8 @@ Consulte:
 
 ## Reportes con fecha de corte
 
+- [Implementación del piloto de cosecha desmontable](reports/piloto_cosecha_desmontable_2026-10-30.md):
+  auditoría del generador, código implementado, comprobaciones puras y aceptación nativa pendiente.
 - [RTMP Android y aplicación PC](reports/video_rtmp_android_pc_2026-09-11.md):
   pruebas de transmisión local, referencias multipunto y paquetes 0.3.0.
 

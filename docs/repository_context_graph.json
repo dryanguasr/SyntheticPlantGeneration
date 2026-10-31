@@ -1882,7 +1882,6 @@
       "label": "Dataset original inmutable",
       "summary": "Dataset Original es una referencia inmutable y toda comparacion debe operar en modo de solo lectura.",
       "paths": [
-        "Dataset Original",
         "README.md"
       ],
       "evidence": [
@@ -1890,7 +1889,11 @@
           "path": "README.md",
           "locator": "`Dataset Original/` es de solo lectura"
         }
-      ]
+      ],
+      "local_input_paths": [
+        "Dataset Original"
+      ],
+      "local_input_availability": "optional_private_directory_not_versioned"
     },
     {
       "id": "constraint.closed_calyx_hidden_fruit",
@@ -2651,6 +2654,52 @@
         {
           "path": "src/uchuva_gazebo/offline_reconciliation.py",
           "locator": "def reconcile_offline"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.harvest_pilot",
+      "type": "entrypoint",
+      "label": "Piloto de uchuva desmontable con carro 4WD y brazo de cinco GDL",
+      "summary": "Interpreta proxies morfologicos en tres plantas y seis cuerpos fruto-capacho, con robot modular, corte y retencion ideal por plugin Harmonic y auditor de evidencia. Pruebas puras separadas de compilacion y simulacion nativas pendientes; sin percepcion autonoma ni fisica medida.",
+      "paths": [
+        "src/uchuva_gazebo/harvest_plants.py",
+        "src/uchuva_gazebo/harvester_robot.py",
+        "src/uchuva_gazebo/harvest_pilot.py",
+        "src/uchuva_gazebo/harvest_validation.py",
+        "gazebo/harvest_system/HarvestSystem.cc",
+        "gazebo/harvest_system/CMakeLists.txt",
+        "configs/harvest_pilot_v1.json",
+        "scripts/prepare_harvest_pilot.py",
+        "scripts/build_harvest_plugin.sh",
+        "scripts/run_harvest_pilot.py",
+        "scripts/audit_harvest_pilot.py",
+        "tests/test_harvest_plants.py",
+        "tests/test_harvester_robot.py",
+        "tests/test_harvest_pilot.py",
+        "tests/test_harvest_validation.py",
+        "docs/guides/piloto_cosecha_desmontable.md",
+        "docs/reports/piloto_cosecha_desmontable_2026-10-30.md",
+        "src/uchuva_gazebo/harvest_clearance.py",
+        "tests/test_harvest_clearance.py",
+        "tests/test_harvest_runtime_contract.py"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/harvest_plants.py",
+          "locator": "def build_harvest_plants"
+        },
+        {
+          "path": "gazebo/harvest_system/HarvestSystem.cc",
+          "locator": "class HarvestSystem"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_validation.py",
+          "locator": "def evaluate_harvest_run"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_clearance.py",
+          "locator": "def plan_harvest_motion"
         }
       ]
     }
@@ -5513,6 +5562,28 @@
         {
           "path": "tests/test_gazebo_interfaces.py",
           "locator": "class GazeboInterfaceTests"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.harvest_pilot",
+      "relation": "depends_on",
+      "target": "module.collisions",
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/harvest_plants.py",
+          "locator": "from uchuva_lsystem.collisions import build_scene_proxies"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.harvest_pilot",
+      "relation": "must_preserve",
+      "target": "constraint.morphological_attachment",
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/harvest_plants.py",
+          "locator": "pedicel_id"
         }
       ]
     }

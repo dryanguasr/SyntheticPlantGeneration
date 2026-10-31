@@ -25,8 +25,32 @@ morfología serializable ───┤
 |---|---|---|
 | Aumentación clásica | `src/uchuva_classical_augmentation/` | E0/E1/E2 preservados; campaña v2 cerrada sin receta promovida |
 | Generación sintética | `src/uchuva_lsystem/` | Pipeline implementado; transferencia científica y maduración por validar |
-| Gazebo | `src/uchuva_gazebo/` | [Campo SDF con uchuvas, tutorado y ArUcos](docs/guides/campo_gazebo.md) y [vuelo con Neo aproximado y video](docs/guides/vuelo_neo_gazebo.md); física de cosecha pendiente |
+| Gazebo | `src/uchuva_gazebo/` | [Campo SDF](docs/guides/campo_gazebo.md), [vuelo con Neo](docs/guides/vuelo_neo_gazebo.md) y [piloto de cosecha desmontable](docs/guides/piloto_cosecha_desmontable.md); aceptación física de cosecha pendiente |
 | Contribuciones externas | `contributions/` | Snapshots atribuidos, separados del código vigente |
+
+## Piloto de cosecha desmontable
+
+El piloto prepara tres arbustos y seis unidades fruto-capacho independientes,
+un carro 4WD con brazo provisional de cinco GDL y una cesta. Conserva los
+pedicelos e identidades del generador y utiliza un plugin nativo para cortar,
+retener y liberar; las ramas son rígidas y el agarre es una restricción ideal.
+La demostración usa posiciones conocidas del simulador para evaluar mecánica.
+
+```bash
+python3 scripts/prepare_harvest_pilot.py --output outputs/harvest_pilot
+bash scripts/build_harvest_plugin.sh
+python3 scripts/run_harvest_pilot.py outputs/harvest_pilot --mode smoke
+python3 scripts/run_harvest_pilot.py outputs/harvest_pilot --mode harvest --max-targets 1
+```
+
+Preparación y pruebas puras funcionan sin Blender ni Gazebo. Compilación,
+validación SDF y simulación requieren Gazebo Harmonic. **La entrega inicial no
+declara aprobada la física:** las ejecuciones nativas generan evidencia y un
+auditor comprueba retención, rechazo de órdenes inválidas y depósito observado.
+Véanse la [guía operativa y encargo para Codex](docs/guides/piloto_cosecha_desmontable.md)
+y el [reporte de implementación](docs/reports/piloto_cosecha_desmontable_2026-10-30.md).
+
+## Contrato del generador
 
 La implementación vigente del generador sigue este contrato:
 
