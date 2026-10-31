@@ -17,6 +17,33 @@ from uchuva_gazebo.harvest_validation import evaluate_harvest_run
 NATIVE_SOURCE_FILES = ('HarvestSystem.cc', 'CMakeLists.txt')
 
 
+def command_event_consistency(commands, events):
+    """Match ordered acknowledgements to recorded commands, independently."""
+    interactions = [c for c in commands if c.get('kind') == 'interaction']
+    acks = [e for e in events if e.get('phase') == 'ack']
+    errors = []
+    prior_seq, prior_time = 0, -math.inf
+    for event in events:
+        seq, stamp = event.get('seq'), event.get('sim_time')
+        if (type(seq) is not int or seq <= prior_seq or type(stamp) not in (int, float)
+                or not math.isfinite(stamp) or stamp < prior_time):
+            errors.append('invalid_event_sequence_or_time')
+            break
+        prior_seq, prior_time = seq, stamp
+    if not interactions or len(interactions) != len(acks):
+        errors.append('command_ack_count_mismatch')
+    for index, (command, event) in enumerate(zip(interactions, acks)):
+        expected = event.get('action', '') + (' ' + event['id'] if event.get('id') else '')
+        stamp = command.get('sim_time')
+        valid_time = (type(stamp) in (int, float) and math.isfinite(stamp)
+                      and type(event.get('sim_time')) in (int, float)
+                      and 0 <= event['sim_time'] - stamp <= 3)
+        if command.get('command') != expected or not valid_time:
+            errors.append(f'command_ack_mismatch:{index}')
+    return {'name': 'commands_match_event_acknowledgements', 'passed': not errors,
+            'command_count': len(interactions), 'ack_count': len(acks), 'errors': errors}
+
+
 def json_safe(value):
     """Keep unavailable diagnostic magnitudes as null, never JSON Infinity.
 
@@ -79,8 +106,15 @@ def _audit(package, run):
         {'name': 'harmonic_explicitly_selected', 'passed': metadata.get('forced_gazebo_major') == 8},
         {'name': 'native_plugin_provenance', 'passed': plugin_record_matches(manifest, metadata)},
         {'name': 'command_evidence_available', 'passed': bool(commands)},
+        command_event_consistency(commands, events),
     ]
+    for check in report['checks']:
+        check.setdefault('status', 'PASS' if check['passed'] else 'FAIL')
     report['passed'] = all(check['passed'] for check in report['checks'])
+    report['status'] = ('NO EJECUTADO' if metadata.get('native_executed') is not True
+                        else 'PASS' if report['passed'] else 'FAIL')
+    report['auditor_sha256'] = sha256_file(Path(__file__))
+    report['validation_source_sha256'] = sha256_file(REPO / 'src/uchuva_gazebo/harvest_validation.py')
     if not report['passed']:
         report['physical_validation'] = 'failed_or_unobserved'
     report['evidence_files_sha256'] = {name: sha256_file(run / name) for name in (
@@ -95,6 +129,7 @@ def audit(package, run):
     except Exception as error:
         # Auditing must fail closed even when a run was interrupted mid-write.
         return {'schema_version': 'harvest-acceptance/1.0', 'passed': False,
+                'status': 'NO OBSERVADO' if isinstance(error, FileNotFoundError) else 'FAIL',
                 'checks': [{'name': 'evidence_integrity', 'passed': False}],
                 'error': f'{type(error).__name__}: {error}',
                 'physical_validation': 'failed_or_unobserved'}

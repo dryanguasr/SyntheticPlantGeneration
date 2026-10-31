@@ -119,7 +119,11 @@ def deposited_interval(samples, fruit_id, radius, bin_spec,
         else:
             first = None
         previous = current
-    return {"passed": best >= min_duration, "settled_duration_s": best,
+    # A previous stable deposit is insufficient if the fruit later escapes,
+    # bounces or is displaced by the next fruit. Require stability at the END.
+    tail = previous[0] - first if first is not None and previous is not None else 0.0
+    return {"passed": tail >= min_duration, "settled_duration_s": tail,
+            "longest_settled_duration_s": best,
             "required_duration_s": min_duration, "max_speed_m_s": max_speed}
 
 
@@ -136,11 +140,13 @@ def evaluate_harvest_run(manifest, samples, events, target_ids, *, mode="harvest
     specs = {f["id"]: f for f in manifest["fruits"]}
     checks = []
 
-    def check(name, passed, **evidence):
-        checks.append({"name": name, "passed": bool(passed), **evidence})
+    def check(name, passed, *, observed=True, **evidence):
+        checks.append({"name": name, "passed": bool(passed),
+                       "status": "PASS" if passed else "FAIL" if observed else "NO OBSERVADO",
+                       **evidence})
 
     check("runtime_completed", execution_error is None, error=execution_error)
-    check("telemetry_available", len(samples) >= 30, sample_count=len(samples))
+    check("telemetry_available", len(samples) >= 30, observed=bool(samples), sample_count=len(samples))
     check("targets_known_and_unique", bool(target_ids) and len(set(target_ids)) == len(target_ids)
           and set(target_ids).issubset(specs), target_ids=target_ids)
     if not samples:
@@ -256,6 +262,22 @@ def evaluate_harvest_run(manifest, samples, events, target_ids, *, mode="harvest
     unexpected = {f["id"] for s in samples for f in s["fruits"]
                   if f["state"] not in ("ATTACHED", "ARMED") and f["id"] not in expected}
     check("no_unrequested_detachments", not unexpected, unexpected_ids=sorted(unexpected))
+    minimum_separation = math.inf
+    limiting_pair = None
+    for sample in samples:
+        bodies = sample['fruits']
+        for i, first in enumerate(bodies):
+            for second in bodies[i+1:]:
+                gap = (distance(first['position'], second['position'])
+                       - specs[first['id']]['radius_m'] - specs[second['id']]['radius_m'])
+                if gap < minimum_separation:
+                    minimum_separation = gap
+                    limiting_pair = [first['id'], second['id'], sample['sim_time']]
+    # Same 4 mm contact allowance as full-sphere bin containment; this is a
+    # sampled geometric penetration check, not a contact-force measurement.
+    check("fruit_bodies_not_interpenetrating", minimum_separation >= -.004,
+          minimum_sphere_gap_m=minimum_separation if limiting_pair else None,
+          limiting_pair_and_time=limiting_pair, contact_allowance_m=.004)
     if mode == "harvest":
         base_travel = max(math.hypot(s["robot_pose"][0] - samples[0]["robot_pose"][0],
                                      s["robot_pose"][1] - samples[0]["robot_pose"][1]) for s in samples)
@@ -266,14 +288,15 @@ def evaluate_harvest_run(manifest, samples, events, target_ids, *, mode="harvest
             own_events = [ev for ev in acks if ev.get("id") == identifier]
             for action in ("arm", "cut", "release"):
                 accepted = [ev for ev in own_events if ev.get("action") == action and ev.get("accepted") is True]
-                check(f"{identifier}:one_{action}", len(accepted) == 1, accepted_count=len(accepted))
+                check(f"{identifier}:one_{action}", len(accepted) == 1,
+                      observed=bool(accepted), accepted_count=len(accepted))
             accepted_actions = {action: [ev for ev in own_events if ev.get("action") == action
                                 and ev.get("accepted") is True] for action in ("arm", "cut", "release")}
             times = [accepted_actions[action][0].get("sim_time") if len(accepted_actions[action]) == 1 else None
                      for action in ("arm", "cut", "release")]
             ordered = (all(type(t) in (int, float) and math.isfinite(t) for t in times)
                        and samples[0]["sim_time"] <= times[0] < times[1] < times[2] <= samples[-1]["sim_time"])
-            check(f"{identifier}:ordered_actions", ordered)
+            check(f"{identifier}:ordered_actions", ordered, observed=all(t is not None for t in times))
             check(f"{identifier}:repeat_cut_rejected", any(ev.get("client_phase") == "negative_repeat"
                   and ev.get("action") == "cut" and ev.get("accepted") is False for ev in own_events))
             check(f"{identifier}:armed_distant_cut_rejected", any(ev.get("client_phase") == "negative_armed_far"
@@ -289,10 +312,11 @@ def evaluate_harvest_run(manifest, samples, events, target_ids, *, mode="harvest
             check(f"{identifier}:physical_retention", span >= .4 and motion >= .10
                   and residual <= .015 and slip <= .015
                   and all(f.get("joint_present") and f.get("joint_parent") == "tool" for _, f in held),
-                  held_duration_s=span, held_displacement_m=motion,
+                  observed=bool(held), held_duration_s=span, held_displacement_m=motion,
                   maximum_constraint_error_m=residual, relative_slip_m=slip)
             result = deposited_interval(samples, identifier, specs[identifier]["radius_m"], manifest["bin"])
-            check(f"{identifier}:settled_in_bin", result.pop("passed"), **result)
+            released = [s for s in samples if fruit_map(s)[identifier]['state'] == 'RELEASED']
+            check(f"{identifier}:settled_in_bin", result.pop("passed"), observed=bool(released), **result)
     passed = all(item["passed"] for item in checks)
     return {"schema_version": "harvest-acceptance/1.0", "mode": mode, "passed": passed,
             "checks": checks, "physical_validation": "observed_pilot_pass" if passed else "failed_or_unobserved",

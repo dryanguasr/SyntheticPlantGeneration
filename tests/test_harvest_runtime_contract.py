@@ -6,6 +6,7 @@ artificial. They exercise refusal paths and recorded-evidence contracts only.
 from copy import deepcopy
 import io
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -18,9 +19,11 @@ import unittest
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / 'scripts'))
-from audit_harvest_pilot import audit, strict_json_loads
+from audit_harvest_pilot import audit, command_event_consistency, strict_json_loads
 from run_harvest_pilot import NativePilot, verified_plugin_build
 from uchuva_gazebo.harvest_pilot import VERSION, sha256_file
+from uchuva_gazebo.harvester_robot import HarvesterConfig, forward_kinematics, inverse_kinematics
+from uchuva_gazebo.harvest_validation import distance, world_point
 
 
 def artificial_package(root):
@@ -91,6 +94,83 @@ def callback_fixture():
 
 
 class HarvestRuntimeContractTests(unittest.TestCase):
+    def test_world_goal_tracks_observed_base_drift_with_bounded_joint_commands(self):
+        pilot = callback_fixture()
+        pilot.config = HarvesterConfig()
+        names = pilot.manifest['robot']['arm_joint_names']
+        initial = inverse_kinematics([.4, 0, .72])
+        pilot.joints = dict(zip(names, initial))
+        pilot.joint_time = 0
+        emitted = [initial]
+        pilot.send_joints = lambda q: emitted.append(list(q))
+        pilot.send_base = lambda *args: None
+        goal = [.6, 0, .48]
+        last_pose = None
+        def exercise(predicate, *, action=None, **kwargs):
+            nonlocal last_pose
+            if action is None:
+                return artificial_sample(0)
+            for i in range(241):
+                sample = artificial_sample(i*.05)
+                sample['robot_pose'][0] = -.0064 if i >= 60 else 0
+                last_pose = sample['robot_pose']
+                pilot.joint_time = sample['sim_time']
+                pilot.joints = dict(zip(names, emitted[-1]))
+                action(sample)
+                # Artificial TCP remains far away: joint commands alone
+                # must never satisfy world-position convergence.
+                self.assertFalse(predicate(sample))
+        pilot.wait = exercise
+        pilot.move_joints(inverse_kinematics(goal), expected_tool=goal)
+        final_world = world_point(forward_kinematics(emitted[-1])['position_m'], last_pose)
+        self.assertLess(distance(final_world, goal), 1e-9)
+        self.assertLessEqual(max(abs(b-a) for old, new in zip(emitted, emitted[1:])
+                                 for a, b in zip(old, new)), .35*.05 + 1e-12)
+
+    def test_cut_readiness_requires_consecutive_observed_low_speed(self):
+        pilot = callback_fixture()
+        pilot.interaction = {'max_relative_speed': .12, 'capture_radius': .12, 'stable_time': .2}
+        pilot.send_base = lambda *args: None
+        observed = []
+        def exercise(predicate, **kwargs):
+            for t, speed in ((0, .13), (.1, .01), (.25, .07), (.3, .01), (.45, .01), (.55, .01)):
+                sample = artificial_sample(t)
+                sample['tool_pose'][:3] = [.6, 0, .64]
+                sample['fruits'][0].update(cut_position=[.6, 0, .64], relative_speed=speed)
+                observed.append(predicate(sample))
+        pilot.wait = exercise
+        pilot.wait_cut_ready('target')
+        self.assertEqual(observed, [False, False, False, False, False, True])
+
+    def test_base_alignment_uses_inner_arrival_margin_without_relaxing_final_limit(self):
+        pilot = callback_fixture()
+        pilot.state = artificial_sample(1)
+        emitted = []
+        pilot.send_base = lambda v, w: emitted.append((v, w))
+        def exercise(predicate, *, action, **kwargs):
+            for t, x, yaw in ((1, -.002, 0), (2, -.0008, .3),
+                              (3, -.0028, .2), (4, -.004, 0)):
+                state = artificial_sample(t)
+                state['robot_pose'] = [x, 0, 0, 0, 0, math.sin(yaw/2), math.cos(yaw/2)]
+                action(state)
+                self.assertFalse(predicate(state))
+        pilot.wait = exercise
+        pilot.drive_to(0, 0, 0)
+        self.assertGreater(emitted[0][0], 0)  # still approach at 2 mm
+        self.assertEqual(emitted[1][0], 0)
+        self.assertEqual(emitted[2][0], 0)  # do not chase drift within 3 mm
+        self.assertGreater(emitted[3][0], 0)  # enforce the original outer limit
+
+    def test_commands_require_matching_ordered_acks_and_no_replay(self):
+        commands = [{'kind': 'interaction', 'command': 'arm target', 'sim_time': 1}]
+        events = [{'phase': 'ack', 'id': 'target', 'action': 'arm',
+                   'seq': 1, 'sim_time': 1.01}]
+        self.assertTrue(command_event_consistency(commands, events)['passed'])
+        for altered in ([], events + events, [{**events[0], 'id': 'other'}],
+                        [{**events[0], 'sim_time': .5}]):
+            self.assertFalse(command_event_consistency(commands, altered)['passed'])
+        self.assertFalse(command_event_consistency([], events)['passed'])
+
     def test_blocked_without_gazebo_writes_reauditable_strict_json_failure(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

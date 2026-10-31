@@ -340,6 +340,16 @@ def generic_harvester_model(config: HarvesterConfig | None = None,
                     ode = e(e(e(item, "surface"), "friction"), "ode")
                     e(ode, "mu", .9)
                     e(ode, "mu2", .5)
+                    # The collision cylinder's Z axis is the wheel axle.
+                    # Four fixed wheel axes need lateral slip to skid-steer;
+                    # an unspecified friction direction can lock turning and
+                    # convert opposite wheel speeds into chassis translation.
+                    # Same lateral-compliance convention as Harmonic's
+                    # examples/worlds/diff_drive_skid.sdf. Engineering guess,
+                    # not a calibrated tyre model; longitudinal slip stays 0.
+                    e(ode, "fdir1", "0 0 1")
+                    e(ode, "slip1", .035)
+                    e(ode, "slip2", 0)
             joint_name = name + "_joint"
             _revolute(model, joint_name, "base_link", name, (0, 1, 0),
                       -1e16, 1e16, effort=15, velocity=8)
@@ -387,7 +397,12 @@ def generic_harvester_model(config: HarvesterConfig | None = None,
         _plugin(model, "joint-position-controller", "JointPositionController", {
             "joint_name": name, "topic": f"{c.namespace}/arm/{name}/cmd_pos",
             "initial_position": 0, "p_gain": 120 if index < 3 else 45,
-            "i_gain": 8 if index < 3 else 2, "d_gain": 12 if index < 3 else 3,
+            # The tiny wrist inertias cannot use the proximal derivative gain
+            # at the 1 ms physics step. d=3 produced persistent +/-1 mrad
+            # limit cycling and nonzero TCP relative speed at rest in DART.
+            # Keep force-based PID and the same position/guard tolerances.
+            "i_gain": 8 if index < 3 else 2,
+            "d_gain": 12 if index < 3 else (.20 if index == 3 else .03),
             "i_min": -15, "i_max": 15, "cmd_min": -60, "cmd_max": 60,
         })
     states = _plugin(model, "joint-state-publisher", "JointStatePublisher", {

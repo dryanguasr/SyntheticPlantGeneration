@@ -289,6 +289,7 @@ class NativePilot:
         return event
 
     def move_joints(self, target, expected_tool=None):
+        target = list(target)
         names = self.manifest['robot']['arm_joint_names']
         state = self.wait(lambda s: all(name in self.joints for name in names)
                           and self.joint_time is not None and abs(s['sim_time'] - self.joint_time) < .3,
@@ -298,11 +299,25 @@ class NativePilot:
         # Cubic interpolation's peak derivative is 1.5; cap nominal joint speed.
         duration = max(.8, 1.5 * max(abs(a - b) for a, b in zip(start_joints, target)) / .35)
         stable_since = None
+        last_command = list(start_joints)
+        last_command_time = started
 
         def advance(current):
+            nonlocal last_command, last_command_time
+            if expected_tool is not None:
+                # Arm reaction moves the unanchored wheeled base by millimetres.
+                # Track the world goal using its measured pose, rather than
+                # keeping an IK solution in an obsolete base frame.
+                target[:] = inverse_kinematics(local_point(expected_tool, current['robot_pose']),
+                                              config=self.config)
             u = max(0.0, min(1.0, (current['sim_time'] - started) / duration))
             blend = u * u * (3 - 2 * u)
-            self.send_joints([a + blend * (b - a) for a, b in zip(start_joints, target)])
+            desired = [a + blend * (b - a) for a, b in zip(start_joints, target)]
+            step = .35 * max(0.0, current['sim_time'] - last_command_time)
+            last_command = [old + max(-step, min(step, new - old))
+                            for old, new in zip(last_command, desired)]
+            last_command_time = current['sim_time']
+            self.send_joints(last_command)
             self.send_base(0, 0)
 
         def converged(current):
@@ -315,7 +330,11 @@ class NativePilot:
             stable_since = (t if stable_since is None else stable_since) if valid else None
             return stable_since is not None and t - stable_since >= .4
 
-        self.wait(converged, simulation_timeout=duration + 15, wall_timeout=240, action=advance)
+        # The proximal force PID has a P/I time scale of 120/8 = 15 s.
+        # With the arm extended over the bin, the first native run was still
+        # converging under gravity at the former 15 s settling deadline.
+        # Allow convergence; retain the 6 mm TCP and 0.035 rad joint limits.
+        self.wait(converged, simulation_timeout=duration + 35, wall_timeout=240, action=advance)
 
     def move_tool(self, world_target):
         target_in_base = local_point(world_target, self.snapshot()['robot_pose'])
@@ -325,15 +344,48 @@ class NativePilot:
         target = self.manifest['mission']['carry_tcp_base_m']
         self.move_joints(inverse_kinematics(target, config=self.config))
 
-    def drive_to(self, x, y, yaw=0):
+    def wait_cut_ready(self, identifier):
+        """Wait for measured settling before arm; position alone is insufficient.
+
+        Use a speed margin below the unchanged native guard because the 20 Hz
+        observation precedes command handling at the next physics step.
+        """
         stable_since = None
 
-        def control(state):
+        def settled(state):
             nonlocal stable_since
+            fruit = fruit_map(state)[identifier]
+            speed = fruit.get('relative_speed')
+            valid = (type(speed) in (int, float) and math.isfinite(speed)
+                     and speed <= .5 * self.interaction['max_relative_speed']
+                     and distance(state['tool_pose'][:3], fruit['cut_position']) <= .006
+                     and distance(state['tool_pose'][:3], fruit['position']) <= self.interaction['capture_radius'])
+            stable_since = (state['sim_time'] if stable_since is None else stable_since) if valid else None
+            return stable_since is not None and state['sim_time'] - stable_since >= self.interaction['stable_time']
+
+        self.wait(settled, simulation_timeout=10, action=lambda _: self.send_base(0, 0))
+
+    def drive_to(self, x, y, yaw=0):
+        stable_since = None
+        aligning = False
+        self._line('commands', {'kind': 'base_goal', 'phase': self.phase,
+                               'sim_time': self.snapshot()['sim_time'],
+                               'target_xyyaw': [x, y, yaw]})
+
+        def control(state):
+            nonlocal stable_since, aligning
             pose = state['robot_pose']
             dx, dy = x - pose[0], y - pose[1]
             remaining = math.hypot(dx, dy)
+            # Arrive inside 1 mm before aligning, retaining the original
+            # 3 mm final acceptance boundary. With one switching threshold,
+            # lateral skid during a pivot repeatedly restarts approach and
+            # turns the base back towards a millimetric position error.
             if remaining > .003:
+                aligning = False
+            elif remaining <= .001:
+                aligning = True
+            if not aligning:
                 heading_error = angle_error(math.atan2(dy, dx), yaw_of(pose))
                 linear = min(.16, .7 * remaining) if abs(heading_error) < .22 else 0.0
                 angular = max(-.45, min(.45, 1.5 * heading_error))
@@ -406,6 +458,7 @@ class NativePilot:
             self.set_phase('approach_cut', identifier)
             cut = fruit_map(self.snapshot())[identifier]['cut_position']
             self.move_tool(cut)
+            self.wait_cut_ready(identifier)
             self.command('arm', identifier)
             # Exercise the actual geometric guard after arming, not just the
             # easier rejection of a cut in ATTACHED state.
@@ -414,6 +467,7 @@ class NativePilot:
             self.command('cut', identifier, False, 'cut_point_out_of_range')
             self.set_phase('cut', identifier)
             self.move_tool(fruit_map(self.snapshot())[identifier]['cut_position'])
+            self.wait_cut_ready(identifier)
             self.wait(lambda s: fruit_map(s)[identifier].get('stable_seconds', 0) >= .22,
                       simulation_timeout=4, action=lambda _: self.send_base(0, 0))
             self.command('cut', identifier)
@@ -463,12 +517,15 @@ def parser_for_run():
     parser.add_argument('--output', type=Path)
     parser.add_argument('--wall-timeout', type=float, default=3600)
     parser.add_argument('--gui', action='store_true', help='Also open a GUI on this isolated transport partition')
+    parser.add_argument('--gui-config', type=Path, help='Optional Gazebo GUI configuration for visual inspection')
     return parser
 
 
 def main(argv=None):
     parser = parser_for_run()
     args = parser.parse_args(argv)
+    if args.gui_config is not None and (not args.gui or not args.gui_config.is_file()):
+        parser.error('--gui-config requires --gui and an existing configuration file')
     package = args.package.resolve()
     manifest = load_verified_package(package)
     if not 1 <= args.max_targets <= len(manifest['mission']['targets']) or not math.isfinite(args.wall_timeout) or args.wall_timeout <= 0:
@@ -530,7 +587,15 @@ def main(argv=None):
             write_json(output / 'run.json', metadata)
             if args.gui:
                 gui_log = stack.enter_context((output / 'gui.log').open('w'))
-                gui = subprocess.Popen(['gz', 'sim', '--force-version', '8', '-g', '-v', '2'], stdout=gui_log, stderr=subprocess.STDOUT, cwd=package)
+                gui_command = ['gz', 'sim', '--force-version', '8', '-g', '-v', '2']
+                if args.gui_config is not None:
+                    gui_config = output / 'gui.config'
+                    shutil.copyfile(args.gui_config, gui_config)
+                    gui_command.extend(['--gui-config', str(gui_config)])
+                    metadata['gui_config_sha256'] = sha256_file(gui_config)
+                metadata['gui_command'] = gui_command
+                write_json(output / 'run.json', metadata)
+                gui = subprocess.Popen(gui_command, stdout=gui_log, stderr=subprocess.STDOUT, cwd=package)
             pilot = NativePilot(manifest, output, server, streams, args.wall_timeout)
             pilot.run(target_ids, args.mode)
         except KeyboardInterrupt:

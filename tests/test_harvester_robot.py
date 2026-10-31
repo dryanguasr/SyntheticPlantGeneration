@@ -86,6 +86,22 @@ def evaluate_sdf_arm(model, joints):
 
 
 class HarvesterRobotTests(unittest.TestCase):
+    def test_skid_slip_direction_is_parallel_to_each_wheel_axle(self):
+        model = generic_harvester_model()
+        for joint in model.findall('joint'):
+            if 'wheel' not in joint.get('name'):
+                continue
+            link = model.find("link[@name='" + joint.findtext('child') + "']")
+            collision = link.find('collision')
+            rotation = pose_matrix(list(map(float, collision.findtext('pose').split())))
+            friction = collision.find('surface/friction/ode')
+            direction = list(map(float, friction.findtext('fdir1').split()))
+            in_link = [sum(rotation[i][j] * direction[j] for j in range(3)) for i in range(3)]
+            axle = list(map(float, joint.findtext('axis/xyz').split()))
+            self.assertAlmostEqual(abs(sum(a*b for a,b in zip(in_link, axle))), 1)
+            self.assertGreater(float(friction.findtext('slip1')), 0)
+            self.assertEqual(float(friction.findtext('slip2')), 0)
+
     def assert_vectors_close(self, actual, expected, places=9):
         self.assertEqual(len(actual), len(expected))
         for a, b in zip(actual, expected):

@@ -132,6 +132,21 @@ class HarvestValidationTests(unittest.TestCase):
         self.assertFalse(report['passed'])
         self.assertFalse(checks(report)['target:settled_in_bin']['passed'])
 
+    def test_fruit_that_leaves_bin_after_settling_is_rejected(self):
+        manifest, samples, events = artificial_fixture()
+        # A long earlier stable interval cannot excuse the final escape.
+        samples[-1]['fruits'][0]['position'][0] = .65
+        report = evaluate_harvest_run(manifest, samples, events, ['target'])
+        self.assertFalse(checks(report)['target:settled_in_bin']['passed'])
+
+    def test_overlapping_collision_spheres_are_reported_independently(self):
+        manifest, samples, events = artificial_fixture()
+        samples[115]['fruits'][1]['position'] = list(samples[115]['fruits'][0]['position'])
+        report = evaluate_harvest_run(manifest, samples, events, ['target'])
+        entry = checks(report)['fruit_bodies_not_interpenetrating']
+        self.assertFalse(entry['passed'])
+        self.assertAlmostEqual(entry['minimum_sphere_gap_m'], -.04)
+
     def test_center_inside_bin_does_not_substitute_for_whole_fruit_containment(self):
         manifest, _, _ = artificial_fixture()
         self.assertTrue(sphere_in_bin([.4, .2, .45], .02, manifest['bin']))
