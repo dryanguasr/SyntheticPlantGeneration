@@ -1,0 +1,11 @@
+{
+  "name": "MobileSAM",
+  "local_path": "outputs/annotation_assistance_models/mobile_sam.pt",
+  "sha256": "6dbb90523a35330fedd7f1d3dfc66f995213d81b29a5ca8108dbcdd4e37d6c2f",
+  "source_url": "https://github.com/ultralytics/assets/releases/download/v8.4.0/mobile_sam.pt",
+  "upstream_project": "https://github.com/ChaoningZhang/MobileSAM",
+  "integration_docs": "https://docs.ultralytics.com/models/sam/",
+  "runtime_used": "ultralytics 8.4.114, already installed",
+  "status": "interactive human-prompted mask aid; class assigned by person; not validated uchuva segmentation",
+  "license_note": "Third-party model and installed Ultralytics retain their own terms; repository MIT does not relicense them."
+}

@@ -2784,6 +2784,35 @@
           "locator": "## Resultado verificado"
         }
       ]
+    },
+    {
+      "id": "entrypoint.cross_review_segmentation",
+      "type": "entrypoint",
+      "label": "Distribución y revisión cruzada de máscaras de capachos",
+      "summary": "Seis lotes ciegos asignan dos revisiones humanas independientes por fotografía de entrenamiento. Coordinación conserva la propuesta congelada del piloto y la compara sólo tras dos entregas. La anotación usa máscaras nativas y SAM por clics opcional. La distribución genera un ZIP común para la aplicación y seis ZIP individuales con imágenes selladas y manual PDF. Las propuestas, los borradores y las entregas quedan separados de los ZIP de distribución.",
+      "paths": [
+        "scripts/abrir_revision_cruzada.cmd",
+        "scripts/cross_review_app.py",
+        "scripts/prepare_cross_review.py",
+        "src/uchuva_annotation_audit/cross_review.py",
+        "tests/test_cross_review.py",
+        "docs/guides/auditoria_ciega_segmentacion.md",
+        "docs/guides/manual_estudiantes_revision_cruzada.pdf"
+      ],
+      "evidence": [
+        {
+          "path": "scripts/prepare_cross_review.py",
+          "locator": "def distribute_round("
+        },
+        {
+          "path": "src/uchuva_annotation_audit/cross_review.py",
+          "locator": "class ReviewerStore("
+        },
+        {
+          "path": "tests/test_cross_review.py",
+          "locator": "def test_distribution_adds_manual_and_excludes_sidecars("
+        }
+      ]
     }
   ],
   "edges": [
