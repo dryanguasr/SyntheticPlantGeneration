@@ -1,0 +1,226 @@
+{
+  "version": "reference-loupe-palette/1",
+  "source_path": "Nuevo Dataset/Norma.webp",
+  "source_sha256": "288f78ccf4de02097759a6ca1ac8d9a4095961cacaeb4f473d5299a4fdc22128",
+  "source_size": [
+    707,
+    477
+  ],
+  "source_kind": "user_supplied_illustration_not_full_standard_text",
+  "sampling": "per_channel_median_of_all_pixels_in_declared_disk",
+  "color_status": "uncalibrated_RGB_from_supplied_image",
+  "grouping_status": "historical_user_approximation_not_normative_label_validation",
+  "grouping_evidence": "src/uchuva_lsystem/sparse_pilot.py::class_for_grade",
+  "grades": [
+    {
+      "grade": 0,
+      "agreed_visual_group": "Verde",
+      "calyx": {
+        "center": [
+          88,
+          117
+        ],
+        "radius": 10,
+        "rgb": [
+          27,
+          76,
+          9
+        ],
+        "hex": "#1b4c09"
+      },
+      "fruit": {
+        "center": [
+          90,
+          243
+        ],
+        "radius": 7,
+        "rgb": [
+          12,
+          37,
+          6
+        ],
+        "hex": "#0c2506"
+      }
+    },
+    {
+      "grade": 1,
+      "agreed_visual_group": "Verde",
+      "calyx": {
+        "center": [
+          179,
+          117
+        ],
+        "radius": 10,
+        "rgb": [
+          38,
+          71,
+          10
+        ],
+        "hex": "#26470a"
+      },
+      "fruit": {
+        "center": [
+          184,
+          243
+        ],
+        "radius": 7,
+        "rgb": [
+          36,
+          80,
+          5
+        ],
+        "hex": "#245005"
+      }
+    },
+    {
+      "grade": 2,
+      "agreed_visual_group": "Pintona",
+      "calyx": {
+        "center": [
+          261,
+          117
+        ],
+        "radius": 10,
+        "rgb": [
+          104,
+          118,
+          8
+        ],
+        "hex": "#687608"
+      },
+      "fruit": {
+        "center": [
+          267,
+          243
+        ],
+        "radius": 7,
+        "rgb": [
+          106,
+          132,
+          8
+        ],
+        "hex": "#6a8408"
+      }
+    },
+    {
+      "grade": 3,
+      "agreed_visual_group": "Pintona",
+      "calyx": {
+        "center": [
+          353,
+          117
+        ],
+        "radius": 10,
+        "rgb": [
+          131,
+          137,
+          4
+        ],
+        "hex": "#838904"
+      },
+      "fruit": {
+        "center": [
+          354,
+          243
+        ],
+        "radius": 7,
+        "rgb": [
+          130,
+          139,
+          5
+        ],
+        "hex": "#828b05"
+      }
+    },
+    {
+      "grade": 4,
+      "agreed_visual_group": "Pintona",
+      "calyx": {
+        "center": [
+          441,
+          117
+        ],
+        "radius": 10,
+        "rgb": [
+          155,
+          141,
+          4
+        ],
+        "hex": "#9b8d04"
+      },
+      "fruit": {
+        "center": [
+          442,
+          243
+        ],
+        "radius": 7,
+        "rgb": [
+          189,
+          170,
+          7
+        ],
+        "hex": "#bdaa07"
+      }
+    },
+    {
+      "grade": 5,
+      "agreed_visual_group": "Madura",
+      "calyx": {
+        "center": [
+          526,
+          117
+        ],
+        "radius": 10,
+        "rgb": [
+          176,
+          154,
+          4
+        ],
+        "hex": "#b09a04"
+      },
+      "fruit": {
+        "center": [
+          526,
+          243
+        ],
+        "radius": 7,
+        "rgb": [
+          197,
+          155,
+          6
+        ],
+        "hex": "#c59b06"
+      }
+    },
+    {
+      "grade": 6,
+      "agreed_visual_group": "Sobremadura",
+      "calyx": {
+        "center": [
+          624,
+          117
+        ],
+        "radius": 10,
+        "rgb": [
+          179,
+          154,
+          4
+        ],
+        "hex": "#b39a04"
+      },
+      "fruit": {
+        "center": [
+          613,
+          243
+        ],
+        "radius": 7,
+        "rgb": [
+          188,
+          121,
+          3
+        ],
+        "hex": "#bc7903"
+      }
+    }
+  ]
+}

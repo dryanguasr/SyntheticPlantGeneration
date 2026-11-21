@@ -25,6 +25,10 @@ Plant
 - Las hojas estan asociadas a nodos, no a coordenadas globales arbitrarias.
 - Las flores y frutos son solitarios y axilares.
 - El pedicelo conecta el axil con la unidad reproductiva.
+- En el preset de revisión `trained_trellis_pendulous_audit_v7`, la postura
+  colgante del capacho se declara respecto a gravedad en el árbol, separada
+  de la salida axilar del pedicelo. La inclinación numérica es una heurística
+  pendiente de medición local; no una orientación universal de la especie.
 - El caliz/capacho persistente acompana las etapas de fruto.
 - Una misma planta puede mezclar yemas dormantes, ramas y estados reproductivos.
 - La planta individual debe mantenerse moderadamente ramificada. La apariencia

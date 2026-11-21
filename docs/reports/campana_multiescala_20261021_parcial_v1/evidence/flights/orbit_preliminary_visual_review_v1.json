@@ -1,0 +1,36 @@
+{
+  "version": "full-route-orbit-visual-review/1",
+  "reviewed_utc": "2026-10-21T21:48:35.761858+00:00",
+  "evaluation_sha256": "86dadf218daa8e7131ebb15053d79729084c0944c2221387b030e42c23d47256",
+  "arithmetic_audit_sha256": "2316938df30e476556164ba12c04ee7a5196b37a9fff081210083f9e75b65283",
+  "selection_plan_sha256": "efdcb03eb1e93db70f42e6cc4a20f9c38c45a7d8143740d26badf03fa39b1bf7",
+  "reviewed_frames": [
+    163,
+    22,
+    214
+  ],
+  "reviewed_matrices": [
+    "inspection_target_all",
+    "inspection_target_eligible"
+  ],
+  "reviewer": "assistant view_image: original full-frame overlays and two matrices",
+  "reviewed_files_sha256": {
+    "flights/orbit/tracking_new/frame_163.jpg": "bce7b4fa67784639ef26e58063b7c80c73cecf1469bceee17bd46dc582c7c5a9",
+    "flights/orbit/tracking_new/frame_022.jpg": "bdf3e535530feea65f51631214800bb7445beed97acbb4217fa54a9ab38157d7",
+    "flights/orbit/tracking_new/frame_214.jpg": "0879a25bf528e76284746013930b17c1852c635a9c612f3e146bf17945493ec3",
+    "flights/orbit/evaluation_private_v1/confusion_phase_inspection_orbit_target_all.png": "d0e5d935359fecfb7fd265242d8dcf2081a800cb68e6fb2e8843edc740eeb59a",
+    "flights/orbit/evaluation_private_v1/confusion_phase_inspection_orbit_target_eligible.png": "d2f950751e278bd38c416f7b7fe51d1b34b8896f415355e5d469c09ac35a9ea0"
+  },
+  "findings": [
+    "Las tres vistas completas conservan suelo, cielo y follaje circundante; en las tomas cercanas se corta parte del follaje por los bordes. No se deduce una tasa de oclusion a partir del area visible.",
+    "Peor vista predeclarada, frame163 C07 frontal: 57 aciertos,45 falsos positivos y40 falsos negativos objetivo; F1 57.29%. La matriz atribuye38 a falta de pareja espacial y2 a clase incorrecta. Se aprecian superposiciones pequenas o fragmentadas entre hojas; su causa individual no queda demostrada solo por esta imagen.",
+    "Mediana, frame22 C06 frontal: F1 70.00%,63 aciertos,27 FP y27 FN. Varias mascaras grandes siguen siluetas visibles de capachos, pero hay fragmentos interiores y follaje que tapa regiones de la planta; no es prueba causal de cada omision.",
+    "Mejor vista, frame214 C07 posterior: F1 78.69%,72 aciertos,10 FP y29 FN. Persiste falta de pareja para26 observaciones objetivo y3 errores de clase incluso en el mejor caso; no se ocultan estos negativos.",
+    "Inspeccion orbital:2149 observaciones objetivo sin pareja espacial y359 coincidencias con clase incorrecta. Entre elegibles siguen934 sin pareja y325 con clase incorrecta. Ausencia de pareja puede incluir falta de propuesta o mascara con IoU menor que0.50; no equivale automaticamente a ausencia visual.",
+    "Los colores corresponden a IDs de seguimiento, no a clases. Estas imagenes estaticas no acreditan continuidad temporal. El resumen registra2618 cambios elegibles en4272 pares emparejados, cobertura79.82%.",
+    "Las dos matrices visualizadas coinciden con los conteos auditados, incluidas omisiones y confusion pintona a madura. No hay afirmacion de localizacion3D ni videoPiP completo revisado."
+  ],
+  "full_pip_video_reviewed": false,
+  "localization_complete": false,
+  "campaign_complete": false
+}

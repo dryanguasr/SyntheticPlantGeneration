@@ -7,17 +7,33 @@ collision and visual occlusion checks.
 from __future__ import annotations
 
 import math
+import hashlib
+import json
 from typing import Any
 
 from .morphology import Axis, Node, Plant
-from .parameters import get_initial_parameters
+from .parameters import get_initial_parameters, leaf_length_factor
 from .scene import CultivationScene
 
 
-def validate_morphology_tree(plant: Plant) -> dict[str, Any]:
-    """Return a lightweight validation report for a morphology tree."""
+def validate_morphology_tree(
+    plant: Plant, *, params: dict[str, Any] | None = None, stage: str | None = None,
+) -> dict[str, Any]:
+    """Validate integrity and the recorded parameter contract at its actual stage.
+
+    Old trees remain readable. Without an effective snapshot (or explicitly
+    supplied parameters), their parameter contract is unknown, not silently
+    inferred from the initial preset. Geometric validity requires a mesh audit.
+    """
     warnings: list[dict[str, str]] = []
-    params = get_initial_parameters()
+    errors: list[dict[str, str]] = []
+    stage = stage or ("adapted" if plant.metadata.get("model_stage") == "adapted"
+                     or plant.metadata.get("synchronous_growth")
+                     or plant.metadata.get("cultivation_adaptation") else "generated")
+    if stage not in {"generated", "adapted"}:
+        raise ValueError("Morphology validation stage must be generated or adapted")
+    params, parameter_contract = _resolve_validation_parameters(plant, params, errors)
+    range_params = params if parameter_contract['contract_available'] else None
     axis_count = 0
     node_count = 0
     reproductive_count = 0
@@ -42,7 +58,7 @@ def validate_morphology_tree(plant: Plant) -> dict[str, Any]:
 
     for axis in plant.axes:
         axis_count += _count_axes(axis)
-        node_count += _validate_axis(axis, warnings)
+        node_count += _validate_axis(axis, warnings, range_params, stage, errors)
         reproductive_count += _count_reproductive_units(axis)
         fruiting_count += _count_fruiting_units(axis)
         flower_count += _count_flowers(axis)
@@ -53,19 +69,38 @@ def validate_morphology_tree(plant: Plant) -> dict[str, Any]:
     light_enabled = bool(
         plant.metadata.get("synchronous_growth", {}).get(
             "light_competition_enabled",
-            plant.metadata.get("light_competition", {}).get("enabled", False),
+            plant.metadata.get("light_competition", {}).get("enabled",
+                bool(range_params and range_params.get("light_competition", {}).get(
+                    "enabled", {}).get("value", False))),
         )
     )
     leaf_light_summary = _validate_leaf_light_response(
         plant,
         warnings,
-        required=light_enabled,
+        required=light_enabled and stage == "adapted",
     )
-    phenology_summary = _validate_phenology_coherence(plant, warnings)
+    phenology_summary = _validate_phenology_coherence(plant, warnings, range_params, errors)
+    _validate_recorded_counts(plant, stage, errors)
+    nodal_summary = _validate_nodal_growth_poses(plant,stage,errors,warnings)
+    from .reproductive_space import validate_admission
+    try:
+        space_summary = validate_admission(plant)
+    except (ValueError, KeyError, TypeError) as exc:
+        space_summary = dict(applied=True, status='invalid')
+        _warn(errors, 'reproductive_space_admission', str(exc))
+    from .spatial_admission import validate_plan
+    try:
+        spatial_summary = validate_plan(plant)
+    except (ValueError, KeyError, TypeError) as exc:
+        spatial_summary = dict(applied=True,status='invalid')
+        _warn(errors,'spatial_admission',str(exc))
 
     return {
         "plant_seed": plant.seed,
-        "status": "valid_with_warnings" if warnings else "valid",
+        "status": "invalid" if errors else "valid_with_warnings" if warnings else "valid",
+        "validation_stage": stage,
+        "parameter_contract": parameter_contract,
+        "errors": errors,
         "summary": {
             "axis_count": axis_count,
             "node_count": node_count,
@@ -75,21 +110,117 @@ def validate_morphology_tree(plant: Plant) -> dict[str, Any]:
             "calyx_state_counts": calyx_state_counts,
             "leaf_light_response": leaf_light_summary,
             "phenology": phenology_summary,
+            "nodal_growth_poses":nodal_summary,
+            "reproductive_space_admission":space_summary,
+            "spatial_admission":spatial_summary,
         },
         "warnings": warnings,
         "checks": {
             "geometric_collision": "not_evaluated_in_initial_migration",
             "visual_occlusion": "not_evaluated_in_initial_migration",
             "out_of_range_morphology": "basic_morphology_and_calyx_checks",
-            "individual_width_scope": "basic_axis_span_estimate",
+            "individual_width_scope": "projection_sum_proxy_requires_evaluated_envelope",
             "stratified_light_response": (
                 "validated_additive_proxy_fields"
-                if light_enabled
+                if light_enabled and stage == "adapted"
+                else "not_required_before_scene_adaptation" if light_enabled
                 else "not_enabled"
             ),
             "phenology_coherence": phenology_summary["status"],
         },
     }
+
+
+def _validate_nodal_growth_poses(plant,stage,errors,warnings):
+    """Recorded directions are actual adapted poses; legacy angles stay initial.
+
+    Numerical bounds are engineering integrity checks, not measured botanical
+    ranges or proof that a collision has been eliminated.
+    """
+    from .nodal_repulsion import KEY, axes, dot, unit, protected_anatomy
+    expected=bool(plant.metadata.get('nodal_repulsion_requested')) and stage=='adapted'
+    checked=0;missing=0
+    for axis in axes(plant.axes):
+        controls=[('branch',p) for p in axis.internodes]
+        for node in axis.nodes:
+            if node.reproductive_unit and KEY in node.reproductive_unit.provenance:
+                try:
+                    from .reproductive_orientation import organ_direction
+                    organ_direction(node.reproductive_unit)
+                except (ValueError,KeyError,TypeError) as exc:
+                    _warn(errors,'nodal_growth_pose',f'{node.reproductive_unit.id}: {exc}')
+            if node.leaf:controls.append(('leaf',node.leaf))
+            if node.reproductive_unit:controls.append(('pedicel',node.reproductive_unit.pedicel))
+        for kind,part in controls:
+            record=part.provenance.get(KEY)
+            if record is None:
+                missing+=1
+                continue
+            checked+=1
+            try:
+                direction=record['direction'];initial=record['input_direction']
+                if len(direction)!=3 or len(initial)!=3:raise ValueError('Direction must have three components')
+                if record['frame']!='plant' or record['status']!='engineering_heuristic':raise ValueError('Missing frame/provenance')
+                if abs(sum(float(v)**2 for v in direction)-1)>1e-5:raise ValueError('Direction is not normalized')
+                angle=math.degrees(math.acos(max(-1,min(1,dot(unit(direction),unit(initial))))))
+                limit={'branch':35.,'leaf':120.,'pedicel':75.}[kind]
+                if kind=='pedicel' and record.get('excursion_limit_deg',75)!=75:
+                    revision=next((r for r in plant.metadata.get('nodal_mobility_revisions',[]) if r['sha256']==record.get('mobility_revision_sha256')),None)
+                    if revision is None:raise ValueError('Missing explicit mobility revision')
+                    policy=revision['policy'];digest=hashlib.sha256(json.dumps(policy,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+                    if digest!=revision['sha256'] or policy['excursion_from_input_deg']!=record['excursion_limit_deg'] or not 75<=record['excursion_limit_deg']<=180:
+                        raise ValueError('Mobility revision hash or limit differs')
+                    limit=record['excursion_limit_deg']
+                if angle>limit+1e-5:raise ValueError('Pose exceeds declared engineering excursion')
+                if kind=='branch':unit(record['input_incoming_direction'])
+            except (ValueError,KeyError,TypeError,OverflowError) as exc:
+                _warn(errors,'nodal_growth_pose',f'{part.id}: {exc}')
+    if expected and missing:_warn(errors,'nodal_growth_pose',f'{missing} expected nodal directions missing')
+    recorded=plant.metadata.get('nodal_repulsion',{}).get('anatomy_after')
+    if recorded and protected_anatomy(plant)!=recorded:
+        _warn(errors,'nodal_growth_pose','Protected anatomy differs from the completed nodal search')
+    if checked:
+        _warn(warnings,'out_of_range_morphology','Nodal growth postures are unmeasured engineering hypotheses; independent evaluated-mesh and ground audits remain necessary.')
+    return dict(checked=checked,missing=missing,required=expected,physical_validity='not established by morphology validation')
+
+
+def _parameters_digest(params: dict[str, Any]) -> str:
+    return hashlib.sha256(json.dumps(params, sort_keys=True, separators=(",", ":"),
+                                    ensure_ascii=False, allow_nan=False).encode("utf-8")).hexdigest()
+
+
+def _resolve_validation_parameters(plant: Plant, explicit: dict | None, errors: list) -> tuple[dict, dict]:
+    snapshot = plant.metadata.get("effective_parameters")
+    recorded = plant.metadata.get("effective_parameters_sha256")
+    if snapshot is not None:
+        digest = _parameters_digest(snapshot)
+        if recorded != digest:
+            _warn(errors, "parameter_contract", "Effective parameter snapshot hash is missing or mismatched.")
+        if explicit is not None and _parameters_digest(explicit) != digest:
+            _warn(errors, "parameter_contract", "Explicit parameters do not match the effective snapshot.")
+        return snapshot, dict(contract_available=True, source="effective_snapshot", sha256=digest,
+                              recorded_sha256=recorded, snapshot_verified=recorded == digest)
+    if explicit is not None:
+        return explicit, dict(contract_available=True, source="explicit_parameters_without_historical_snapshot",
+                              sha256=_parameters_digest(explicit), snapshot_verified=False)
+    return get_initial_parameters(), dict(contract_available=False,
+        source="legacy_snapshot_missing", snapshot_verified=False,
+        limitation="Original effective parameters unknown; sampled parameter ranges are not certified.")
+
+
+def _validate_recorded_counts(plant: Plant, stage: str, errors: list) -> None:
+    recorded = plant.metadata.get("reproductive_counts_by_stage", {}).get(stage)
+    if recorded is None:
+        return
+    counts = dict(reproductive_units=0, flowers=0, fruits=0, fruits_with_calyx=0)
+    for root in plant.axes:
+        for unit in _phenology_units(root):
+            counts["reproductive_units"] += 1
+            counts["flowers"] += unit.stage == "flower"
+            counts["fruits"] += unit.fruit is not None
+            counts["fruits_with_calyx"] += unit.fruit is not None and unit.calyx is not None
+    if counts != recorded:
+        _warn(errors, "parameter_contract", f"Recorded {stage} reproductive counts differ from the tree traversal.")
 
 
 def validate_cultivation_scene(scene: CultivationScene) -> dict[str, Any]:
@@ -278,15 +409,44 @@ def validate_cultivation_scene(scene: CultivationScene) -> dict[str, Any]:
     }
 
 
-def _validate_axis(axis: Axis, warnings: list[dict[str, str]]) -> int:
+def _validate_axis(axis: Axis, warnings: list[dict[str, str]], params: dict | None,
+                   stage: str, errors: list) -> int:
+    _validate_registered_axis_pose(axis, params, stage, errors)
     parent_radius = _max_axis_radius(axis)
     node_count = 0
+    for index, internode in enumerate(axis.internodes):
+        if internode.order != axis.order:
+            _warn(errors, "integrity", f"{internode.id} order differs from its axis.")
+        for field in ("length_cm", "radius_cm"):
+            value = getattr(internode, field)
+            if not math.isfinite(value) or value <= 0:
+                _warn(errors, "integrity", f"{internode.id} has nonpositive/nonfinite {field}.")
+        if params is not None:
+            table = params.get("internode", {}).get("radius_cm_by_order", {})
+            bounds = table.get(str(axis.order))
+            if bounds is None:
+                _warn(errors, "parameter_contract", f"No radius parameters for enabled order {axis.order}.")
+            elif stage == "generated":
+                sampling = internode.provenance.get("radius_sampling")
+                budgeted = params.get("growth", {}).get("mode", {}).get("value") == "incremental_budgeted"
+                # Actual axes can stop before their requested node budget. A
+                # taper reconstructed from final length would create false alarms.
+                taper = float(sampling["taper_factor"]) if sampling else 1.0
+                # Continuity may lower a sampled radius; never mistake its
+                # declared reduction for a different botanical sampling range.
+                continuity = internode.provenance.get("radius_continuity", {})
+                minimum = 0.0 if continuity else float(bounds["min"]) * (
+                    taper if sampling or not budgeted else .52)
+                maximum = float(bounds["max"]) * taper
+                if not minimum - .001 <= internode.radius_cm <= maximum + .001:
+                    _warn(warnings, "parameter_contract", f"{internode.id} radius is outside its effective tapered range.")
     for node in axis.nodes:
         node_count += 1
-        _validate_node(node, axis, warnings)
+        _validate_node(node, axis, warnings, params, stage, errors)
 
     for child_axis in axis.child_axes:
         if child_axis.order != axis.order + 1:
+            _warn(errors, "integrity", f"{child_axis.id} has inconsistent branch order.")
             _warn(
                 warnings,
                 "out_of_range_morphology",
@@ -294,14 +454,69 @@ def _validate_axis(axis: Axis, warnings: list[dict[str, str]]) -> int:
             )
         child_radius = _max_axis_radius(child_axis)
         if child_radius is not None and parent_radius is not None:
-            if child_radius >= parent_radius:
+            if child_radius > parent_radius + 1e-9:
                 _warn(
                     warnings,
                     "out_of_range_morphology",
                     f"{child_axis.id} radius does not decrease relative to {axis.id}.",
                 )
-        node_count += _validate_axis(child_axis, warnings)
+        if params is not None:
+            positions = {node.id: i for i, node in enumerate(axis.nodes)}
+            position = positions.get(child_axis.parent_node_id)
+            if position is None or position >= len(axis.internodes):
+                _warn(errors, "integrity", f"{child_axis.id} has no valid parent insertion node/internode.")
+            elif child_radius is not None and child_radius > axis.internodes[position].radius_cm + 1e-9:
+                _warn(errors, "parameter_contract", f"{child_axis.id} radius exceeds the parent at insertion {child_axis.parent_node_id}.")
+        node_count += _validate_axis(child_axis, warnings, params, stage, errors)
     return node_count
+
+
+def _validate_registered_axis_pose(axis: Axis, params: dict | None, stage: str, errors: list) -> None:
+    """Keep generated angle ranges and bound cumulative adapted nodal changes."""
+    if not params or axis.order == 0:
+        return
+    branching = params.get("branching", {})
+    if branching.get("frame", {}).get("value") != "local_cone_v1":
+        return
+    bounds = branching.get("branch_angle_deg_by_order", {}).get(str(axis.order))
+    if not bounds:
+        _warn(errors,"parameter_contract",f"{axis.id} lacks an effective branch angle range.")
+        return
+    low,high = float(bounds["min"]),float(bounds["max"])
+    if not math.isfinite(axis.branch_angle_deg) or not low-1e-8 <= axis.branch_angle_deg <= high+1e-8:
+        _warn(errors,"parameter_contract",f"{axis.id} branch angle is outside its effective range at {stage} stage.")
+    if not math.isfinite(axis.azimuth_deg):
+        _warn(errors,"integrity",f"{axis.id} azimuth is nonfinite.")
+    record = axis.provenance.get("axis_pose_repair_v1")
+    if record is None:
+        return
+    if stage != "adapted" or record.get("stage") != "adapted":
+        _warn(errors,"parameter_contract",f"{axis.id} repaired axis pose requires the adapted stage.")
+    if not axis.provenance.get("branch_frame_v140") or axis.resolved_direction is not None:
+        _warn(errors,"parameter_contract",f"{axis.id} repaired pose does not have an unambiguous local branch frame.")
+    try:
+        from .axis_pose_repair import local_pose_distance_deg
+        original = tuple(float(v) for v in record["generated_pose"])
+        effective = tuple(float(v) for v in record["effective_pose"])
+        maximum = float(params["growth"]["max_final_axis_correction_deg"]["value"])
+        if (len(original) != 2 or len(effective) != 2
+                or not all(math.isfinite(v) for v in (*original,*effective,maximum))):
+            raise ValueError("nonfinite or malformed pose")
+        actual = (axis.azimuth_deg,axis.branch_angle_deg)
+        if any(abs(a-b)>1e-6 for a,b in zip(effective,actual)):
+            raise ValueError("effective pose does not match the axis")
+        if not low-1e-8 <= original[1] <= high+1e-8:
+            raise ValueError("original angle is outside generated range")
+        if record.get("angle_range_deg") != [low,high] or abs(float(record["max_correction_deg"])-maximum)>1e-8:
+            raise ValueError("registered bounds differ from the effective parameters")
+        if record.get("frame") != "local_cone_v1" or not record.get("changes"):
+            raise ValueError("missing frame or change history")
+        if local_pose_distance_deg(original,actual)>maximum+1e-6 or abs((actual[0]-original[0]+180)%360-180)>maximum+1e-6:
+            raise ValueError("cumulative correction exceeds the effective maximum")
+        if record["changes"][0]["from_pose"] != list(original) or record["changes"][-1]["to_pose"] != list(effective):
+            raise ValueError("change history endpoints differ from registered poses")
+    except (KeyError,TypeError,ValueError) as exc:
+        _warn(errors,"parameter_contract",f"{axis.id} invalid axis pose repair record: {exc}.")
 
 
 def _validate_leaf_light_response(
@@ -387,8 +602,139 @@ def _validate_leaf_light_response(
     }
 
 
-def _validate_node(node: Node, axis: Axis, warnings: list[dict[str, str]]) -> None:
+def _validate_leaf_pose_contract(leaf: Any, leaf_params: dict, stage: str,
+                                 warnings: list, errors: list) -> None:
+    """Validate opt-in pose sampling without treating adapted poses as samples.
+
+    Historical presets did not expose this contract. Their interpretation and
+    provenance remain unchanged rather than retroactively claiming a range.
+    """
+    frame = leaf_params.get("insertion_frame")
+    if frame is not None:
+        expected = frame.get("value") if isinstance(frame, dict) else None
+        if expected not in {"orthogonal_local_v1", "local_cone_v2"}:
+            _warn(errors, "parameter_contract", f"{leaf.id} has an unsupported effective insertion frame.")
+        elif leaf.provenance.get("insertion_frame") != expected:
+            _warn(errors, "parameter_contract", f"{leaf.id} insertion_frame differs from its effective parameters.")
+
+    bounds = leaf_params.get("insertion_angle_deg_range")
+    if bounds is None:
+        return
+    try:
+        low, high = float(bounds["min"]), float(bounds["max"])
+        valid = math.isfinite(low) and math.isfinite(high) and 0 <= low <= high <= 180
+    except (TypeError, ValueError, KeyError):
+        valid = False
+    if not valid:
+        _warn(errors, "parameter_contract", f"{leaf.id} has an invalid effective insertion angle range.")
+        return
+
+    sampled = leaf.provenance.get("pose_sampling", {})
+    try:
+        recorded_low = float(sampled["range_min_deg"])
+        recorded_high = float(sampled["range_max_deg"])
+        provenance_valid = (math.isfinite(recorded_low) and math.isfinite(recorded_high)
+            and abs(recorded_low-low) <= 1e-9 and abs(recorded_high-high) <= 1e-9
+            and sampled.get("status") == bounds.get("status")
+            and bool(sampled.get("method")))
+    except (TypeError, ValueError, KeyError):
+        provenance_valid = False
+    if not provenance_valid:
+        _warn(errors, "parameter_contract", f"{leaf.id} pose_sampling differs from its effective range/provenance.")
+
+    values = {}
+    for field in ("preferred_insertion_angle_deg", "insertion_angle_deg"):
+        try:
+            value = float(getattr(leaf, field))
+            finite_angle = math.isfinite(value) and 0 <= value <= 180
+        except (TypeError, ValueError):
+            finite_angle = False
+        if not finite_angle:
+            _warn(errors, "integrity", f"{leaf.id} has missing/nonfinite/out-of-angle {field}.")
+            continue
+        values[field] = value
+        if field == "preferred_insertion_angle_deg" or stage == "generated":
+            if not low-.01 <= value <= high+.01:
+                _warn(errors, "parameter_contract", f"{leaf.id} {field}={value} is outside its effective sampled range.")
+    if len(values) != 2:
+        return
+    difference = abs(values["insertion_angle_deg"]-values["preferred_insertion_angle_deg"])
+    if stage == "generated" and difference > .011:
+        _warn(errors, "parameter_contract", f"{leaf.id} generated insertion angle differs from its preferred sample.")
+    elif stage == "adapted" and difference > .011:
+        documented = (bool(leaf.orientation_cost_terms) or bool(leaf.orientation_adjustment_deg)
+                      or bool(leaf.provenance.get("mesh_feedback_pose")))
+        if not documented:
+            _warn(warnings, "parameter_contract", f"{leaf.id} adapted insertion angle has no leaf-level pose-adjustment record.")
+
+
+def _validate_mesh_feedback_pose(target: Any, *, kind: str, organ_id: str, node_id: str,
+                                  stage: str, warnings: list, errors: list) -> None:
+    """Validate the separate engineering contract of post-contact angular poses.
+
+    These bounds do not replace generated sampling ranges or preferred poses.
+    Older v2 artifacts retain only their last local record; their available
+    record is checked without inventing missing history.
+    """
+    record=target.provenance.get("mesh_feedback_pose_v2")
+    history=target.provenance.get("mesh_feedback_pose_history_v2")
+    if record is None and history is None:
+        return
+    from .blender_pose_repair_v2 import ADAPTED_ANGLE_LIMITS
+    low,high=ADAPTED_ANGLE_LIMITS[kind]
+    if stage!="adapted":
+        _warn(errors,"parameter_contract",f"{organ_id} mesh-feedback pose requires the adapted stage.")
+    try:
+        angle=target.insertion_angle_deg if kind=="leaf" else target.angle_deg
+        actual=(float(target.azimuth_deg),float(angle))
+        if not all(math.isfinite(v) for v in actual) or not 0 <= actual[0] <= 360 or not low <= actual[1] <= high:
+            raise ValueError(f"effective pose outside adapted {kind} limits {low}..{high}")
+        if not isinstance(record,dict):
+            raise ValueError("missing last mesh-feedback record")
+        available=history if history is not None else [record]
+        if not isinstance(available,list) or not available or available[-1]!=record:
+            raise ValueError("history and last record disagree")
+        if history is not None and target.provenance.get("mesh_feedback_pose_history_prefix_v2") not in {
+                "complete_since_first_mesh_repair","only_last_legacy_record_available"}:
+            raise ValueError("unknown cumulative history prefix")
+        previous=None
+        for item in available:
+            if item.get("organ_id")!=organ_id or item.get("node_id")!=node_id or item.get("kind")!=kind:
+                raise ValueError("record identifies a different organ, node or kind")
+            before=tuple(float(v) for v in item["before_deg"])
+            after=tuple(float(v) for v in item["after_deg"])
+            if (len(before)!=2 or len(after)!=2 or not all(math.isfinite(v) for v in (*before,*after))
+                    or not 0 <= before[0] <= 360 or not 0 <= before[1] <= 180
+                    or not 0 <= after[0] <= 360 or not low <= after[1] <= high):
+                raise ValueError("nonfinite/malformed pose or adapted range violation in history")
+            if previous is not None and any(abs(a-b)>1e-6 for a,b in zip(before,previous)):
+                raise ValueError("noncontiguous cumulative pose history")
+            limits=item.get("angular_limits_deg")
+            if limits is not None and limits!={"azimuth":[0,360],"inclination":[low,high]}:
+                raise ValueError("recorded adapted limits differ from the v2 engineering contract")
+            if item.get("dimensions_unchanged") is not True or item.get("status")!="engineering_heuristic":
+                raise ValueError("missing dimension-preservation or engineering provenance")
+            previous=after
+        if any(abs(a-b)>1e-6 for a,b in zip(actual,previous)):
+            raise ValueError("recorded after_deg differs from the current pose")
+        if history is None:
+            message="Legacy mesh-feedback v2 artifacts preserve the last per-organ record only; missing cumulative history is not reconstructed."
+            if not any(w.get("message")==message for w in warnings):
+                _warn(warnings,"provenance_limitation",message)
+    except (KeyError,TypeError,ValueError,AttributeError) as exc:
+        _warn(errors,"parameter_contract",f"{organ_id} invalid mesh-feedback pose: {exc}.")
+
+
+def _validate_node(node: Node, axis: Axis, warnings: list[dict[str, str]],
+                   params: dict | None, stage: str, errors: list) -> None:
+    if node.leaf is not None:
+        ratio = node.leaf.transverse_arch_ratio
+        if not 0.0 <= ratio <= 0.2:
+            _warn(warnings, "out_of_range_morphology", f"{node.leaf.id} has invalid transverse_arch_ratio={ratio}.")
+        if ratio != 0.0 and node.leaf.provenance.get("surface_relief_ratio", 0.0) != 0.0:
+            _warn(warnings, "out_of_range_morphology", f"{node.leaf.id} combines smooth arch and legacy corrugation.")
     if node.order != axis.order:
+        _warn(errors, "integrity", f"{node.id} order differs from its axis.")
         _warn(
             warnings,
             "out_of_range_morphology",
@@ -398,21 +744,40 @@ def _validate_node(node: Node, axis: Axis, warnings: list[dict[str, str]]) -> No
     if node.leaf is None:
         _warn(warnings, "out_of_range_morphology", f"{node.id} has no leaf.")
     elif node.leaf.node_id != node.id:
+        _warn(errors, "integrity", f"{node.leaf.id} is associated with the wrong node.")
         _warn(
             warnings,
             "out_of_range_morphology",
             f"{node.leaf.id} is attached to {node.leaf.node_id}, expected {node.id}.",
         )
-    elif abs(node.leaf.curl) > 0.08 or abs(node.leaf.twist_deg) > 4.0:
-        _warn(
-            warnings,
-            "out_of_range_morphology",
-            f"{node.leaf.id} exceeds the calibrated near-planar leaf range.",
-        )
+    if node.leaf is not None:
+        leaf = node.leaf
+        _validate_mesh_feedback_pose(leaf,kind="leaf",organ_id=leaf.id,node_id=node.id,
+                                     stage=stage,warnings=warnings,errors=errors)
+        for field in ("length_cm", "width_cm", "petiole_length_cm"):
+            value = getattr(leaf, field)
+            if not math.isfinite(value) or value <= 0:
+                _warn(errors, "integrity", f"{leaf.id} has nonpositive/nonfinite {field}.")
+        if params is not None:
+            _validate_leaf_pose_contract(leaf, params["leaf"], stage, warnings, errors)
+            for field, key in (("curl", "curl_range"), ("twist_deg", "twist_deg_range"),
+                               ("petiole_length_cm", "petiole_length_cm_range")):
+                bounds = params["leaf"].get(key)
+                value = getattr(leaf, field)
+                if bounds and not float(bounds["min"]) - .001 <= value <= float(bounds["max"]) + .001:
+                    _warn(warnings, "parameter_contract", f"{leaf.id} {field}={value} is outside its effective {stage} range.")
+            if stage == "generated":
+                factor = 1.0
+                if params.get("growth", {}).get("mode", {}).get("value") == "incremental_budgeted":
+                    factor = leaf_length_factor(params, axis.order, axis.vigor)
+                bounds = params["leaf"]["length_cm_range"]
+                if not float(bounds["min"]) * factor - .002 <= leaf.length_cm <= float(bounds["max"]) * factor + .002:
+                    _warn(warnings, "parameter_contract", f"{leaf.id} length is outside its effective order/vigor range.")
 
     if node.axillary_bud is None:
         _warn(warnings, "out_of_range_morphology", f"{node.id} has no axillary bud.")
     elif node.axillary_bud.node_id != node.id:
+        _warn(errors, "integrity", f"{node.axillary_bud.id} is associated with the wrong node.")
         _warn(
             warnings,
             "out_of_range_morphology",
@@ -420,6 +785,38 @@ def _validate_node(node: Node, axis: Axis, warnings: list[dict[str, str]]) -> No
         )
 
     if node.reproductive_unit is not None:
+        unit = node.reproductive_unit
+        pedicel=unit.pedicel
+        from .reproductive_orientation import KEY, organ_direction
+        orientation = (params or {}).get("reproduction", {}).get("organ_orientation")
+        if orientation and KEY not in unit.provenance:
+            _warn(errors, "parameter_contract", f"{unit.id} lacks its required gravity-referenced organ posture.")
+        if KEY in unit.provenance:
+            try:
+                organ_direction(unit)
+                pose = unit.provenance[KEY]
+                if orientation and (pose["policy"] != orientation["value"] or
+                        pose["inclination_bounds_deg"] != orientation["inclination_from_down_deg_range"]):
+                    raise ValueError("Orientation differs from effective parameter snapshot")
+            except (ValueError, KeyError, TypeError, OverflowError) as exc:
+                _warn(errors, "parameter_contract", f"{unit.id} invalid reproductive orientation: {exc}")
+        for name in ("angle_deg","azimuth_deg"):
+            value=getattr(pedicel,name)
+            maximum=180 if name=="angle_deg" else 360
+            if not math.isfinite(value) or not 0 <= value <= maximum:
+                _warn(errors,"integrity",f"{pedicel.id} has nonfinite/out-of-angle {name}.")
+        if params and stage=="generated":
+            bounds=params.get("reproduction",{}).get("pedicel_angle_deg_range")
+            if bounds and not float(bounds["min"])-.01 <= pedicel.angle_deg <= float(bounds["max"])+.01:
+                _warn(errors,"parameter_contract",f"{pedicel.id} angle is outside its effective generated range.")
+        _validate_mesh_feedback_pose(pedicel,kind="reproductive",organ_id=unit.id,node_id=node.id,
+                                     stage=stage,warnings=warnings,errors=errors)
+        if unit.node_id != node.id or unit.pedicel.node_id != node.id or unit.pedicel.connects_to != unit.id:
+            _warn(errors, "integrity", f"{unit.id} is not connected to its node through its pedicel.")
+        if unit.stage in {"young_fruit_with_calyx", "mature_fruit_with_calyx", "exposed_fruit"} and (
+            unit.fruit is None or unit.calyx is None
+        ):
+            _warn(errors, "integrity", f"{unit.id} lacks fruit/calyx required by its recorded stage.")
         _validate_reproductive_unit(node, warnings)
 
 
@@ -527,8 +924,8 @@ def _validate_calyx(node: Node, warnings: list[dict[str, str]]) -> None:
         if fruit_diameter > inner_width * 0.92 or fruit_diameter > calyx.length_cm * 0.92:
             _warn(
                 warnings,
-                "out_of_range_morphology",
-                f"{unit.fruit.id} is too large for {calyx.id}; fruit may sit outside the capacho.",
+                "morphology_proxy",
+                f"{unit.fruit.id} nominal dimensions approach/exceed {calyx.id}; evaluate final mesh envelopes and surfaces before inferring containment or intersection.",
             )
     if unit.fruit_visibility == "hidden" and calyx.openness > 0.0:
         _warn(
@@ -608,9 +1005,16 @@ def _collect_calyx_states(axis: Axis, counts: dict[str, int]) -> None:
 def _validate_phenology_coherence(
     plant: Plant,
     warnings: list[dict[str, str]],
+    params: dict[str, Any] | None = None,
+    errors: list[dict[str, str]] | None = None,
 ) -> dict[str, Any]:
     model = str(plant.metadata.get("phenology_model", "legacy_independent"))
+    branching = (params or {}).get("branching", {})
+    independent = branching.get("activation_policy", {}).get("value") == "vegetative_onset_independent_v1"
     if model != "literature_cohort_v1":
+        if independent:
+            _warn(errors if errors is not None else warnings, "parameter_contract",
+                  "Independent vegetative activation requires the recorded literature-cohort reproductive landmark; an unknown transition cannot be silently substituted.")
         return {
             "status": "legacy_not_evaluated",
             "model": model,
@@ -687,12 +1091,59 @@ def _validate_phenology_coherence(
 
     snapshot = plant.metadata.get("phenology_snapshot") or {}
     threshold = snapshot.get("first_bifurcation_node")
+    vegetative_threshold = branching.get("vegetative_first_main_node", {}).get("value") if independent else None
+    contract = plant.metadata.get("vegetative_branching_contract", {})
+    if independent:
+        effective_threshold = (params or {}).get("reproduction", {}).get("first_bifurcation_node", {}).get("value")
+        if (isinstance(effective_threshold, bool) or not isinstance(effective_threshold, int)
+                or effective_threshold < 2):
+            _warn(errors if errors is not None else warnings, "parameter_contract",
+                  "Independent vegetative activation is missing a valid effective reproductive landmark.")
+            effective_threshold = None
+        if threshold != effective_threshold:
+            _warn(errors if errors is not None else warnings, "parameter_contract",
+                  "Phenology reproductive landmark disagrees with the effective parameter snapshot.")
+        threshold = effective_threshold
+        main_node_count = (params or {}).get("axis", {}).get("main_node_count", {}).get("value", 0)
+        if (isinstance(vegetative_threshold, bool) or not isinstance(vegetative_threshold, int)
+                or not 2 <= vegetative_threshold < main_node_count):
+            _warn(errors if errors is not None else warnings, "parameter_contract",
+                  "Independent vegetative activation has an invalid effective first main-axis node.")
+            vegetative_threshold = None
+        expected = {"policy": "vegetative_onset_independent_v1",
+                    "first_eligible_main_node": vegetative_threshold,
+                    "reproductive_landmark_node": threshold}
+        for key, value in expected.items():
+            if contract.get(key) != value:
+                _warn(errors if errors is not None else warnings, "parameter_contract",
+                      f"Vegetative branching contract {key} disagrees with effective parameters.")
     if threshold is not None:
         for main_axis in plant.axes:
             positions = {node.id: node.position_index + 1 for node in main_axis.nodes}
+            nodes = {node.id: node for node in main_axis.nodes}
+            if independent:
+                for node in main_axis.nodes:
+                    if node.reproductive_unit and node.position_index + 1 < int(threshold):
+                        _warn(errors if errors is not None else warnings, "integrity",
+                              f"{node.reproductive_unit.id} precedes reproductive landmark {threshold}; vegetative branching does not advance reproduction.")
             for child in main_axis.child_axes:
                 parent_position = positions.get(str(child.parent_node_id))
-                if parent_position is not None and parent_position < int(threshold):
+                if independent:
+                    origin = child.provenance.get("branch_origin", {})
+                    node = nodes.get(child.parent_node_id)
+                    axillary_origin = node.axillary_bud.provenance.get("branch_origin", {}) if node and node.axillary_bud else {}
+                    expected_origin = {"policy": "vegetative_onset_independent_v1",
+                                       "parent_node_number": parent_position,
+                                       "first_eligible_main_node": vegetative_threshold,
+                                       "reproductive_landmark_node": threshold,
+                                       "interpretation": "vegetative_axillary_branch_not_reproductive_transition"}
+                    if any(origin.get(key) != value for key, value in expected_origin.items()) or origin != axillary_origin:
+                        _warn(errors if errors is not None else warnings, "parameter_contract",
+                              f"{child.id} has inconsistent vegetative branch_origin provenance.")
+                    if vegetative_threshold is not None and parent_position is not None and parent_position < int(vegetative_threshold):
+                        _warn(errors if errors is not None else warnings, "integrity",
+                              f"{child.id} starts before independent vegetative node {vegetative_threshold}.")
+                elif parent_position is not None and parent_position < int(threshold):
                     _warn(
                         warnings,
                         "out_of_range_morphology",
@@ -704,6 +1155,8 @@ def _validate_phenology_coherence(
         "evaluated_unit_count": len(units),
         "severe_inversion_count": severe_inversions,
         "first_bifurcation_node": threshold,
+        "vegetative_activation_policy": "vegetative_onset_independent_v1" if independent else "legacy_reproductive_gate",
+        "first_eligible_vegetative_main_node": vegetative_threshold,
     }
 
 
@@ -736,8 +1189,8 @@ def _validate_individual_scope(
     if ratio > max_ratio:
         _warn(
             warnings,
-            "out_of_range_morphology",
-            "Individual plant lateral span is high; use CultivationScene neighbors instead of widening one plant.",
+            "morphology_proxy",
+            "Sum of projected branch spans is high; this is not a crown envelope. Measure evaluated world-space mesh bounds before interpreting plant width.",
         )
 
 

@@ -1,0 +1,218 @@
+{
+  "version": "split-integrity-audit/1",
+  "created_utc": "2026-10-21T07:06:03.290630+00:00",
+  "status": "PASS",
+  "command": ".venv-training/Scripts/python.exe outputs/multiscale_dataset_20261020/audit_split_integrity_v1.py",
+  "script_sha256": "8ef9b9abdf2358b7f7350f201ed6627e77e4100691b567f16eac4e6f13b364f9",
+  "elapsed_seconds": 40.1835582999629,
+  "errors": [],
+  "warnings": [],
+  "checks": {
+    "assertions": 868156
+  },
+  "evidence_sha256": {
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\protocol.json": "85c8e31ceb103be9d5aa4ff07a8ac9c1f8b2854f847522a6739dd2bbc5868149",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\render_multiscale.py": "aec3eb4d6f4783fb1dbd813f167ed26d0a52ef02d225dc9c5ac2bb20b6cb65e0",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\source_snapshot\\v142_materials.py": "312985e61e31080a2ba040438880441a87aeec5887b19576736e41bcf9531c3d",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C01.json": "50ddb116292cd7f6af6a42ecac8e613a7fdb233dc1e908e5dfbbfeccec65a34b",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C02.json": "d5ff43f4d0626ce4d342a77ad2055cc97c7cde8b8b89eba1cf4fcda763265870",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C03.json": "4ea445d93f32b0069c17d4f836a941633f7895d8a0dd147962ec4a05e5648e85",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C04.json": "2e73f9146c1d9ed525212faff1a59c777dcc5c877d26d726bf0957b63ffbdb6d",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C06.json": "d22f87ac969833f21a99e3b6679c9b10f0b957a87f591adecd03705dfc907c11",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C07.json": "33ea8e066c5a64aee1ed646f3c3b2362d01023b3e77428d0ebc340d7716f9e6b",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C09.json": "f601d931726dab31bbfe3f8d00b28f25c1a588f844523f909051d8caba25fc8e",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\inputs\\C10.json": "477280c6a3ec4bfb6449ee74d26a849d5b8ad4e8adfb713220fe6fcbede4a771",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\source_snapshot\\v142_materials.py": "312985e61e31080a2ba040438880441a87aeec5887b19576736e41bcf9531c3d",
+    "C:/dev/SyntheticPlantGeneration/outputs/frozen_field_pilot_20261019/training_runs/training/weights/last.pt": "79c3dad74e7cf9caab3c82a3e37ea72235352568d7dfacbd5c9e8284cb190073",
+    "protocol.json": "85c8e31ceb103be9d5aa4ff07a8ac9c1f8b2854f847522a6739dd2bbc5868149",
+    "split_plan.json": "73309457121663631096bb716ca7409d208785979eb08e92ce1c306326577a58",
+    "dataset/raster_manifest.json": "2f38aec78c7c92b02b8dda812521a558d987a7d9938207b064c32d4bacc19426",
+    "patches/dataset/raster_manifest.json": "cade87fc69ec750cd69e147dc3163997aa65d56b7d08615f69c0c6609c1d7e76",
+    "export_static.py": "f9ab52423e2705da98562f5ded348fe762000af62309e9991c52e896b722b013",
+    "prepare_patches.py": "d973b4cbfd659ccec8e64674d7b03e3e4797b1405f817812f54627c6b2099e9c",
+    "render_multiscale.py": "aec3eb4d6f4783fb1dbd813f167ed26d0a52ef02d225dc9c5ac2bb20b6cb65e0",
+    "native_raster_trainer.py": "163a78a3e2c966894c74a9f2b4688c92e40f7dc13b8a802926d8c4238e6c218f"
+  },
+  "source_seed_sets": {
+    "train": [
+      814200,
+      814201,
+      814202,
+      814203
+    ],
+    "val": [
+      814205,
+      814206
+    ],
+    "test": [
+      814208,
+      814209
+    ]
+  },
+  "source_hash_sets": {
+    "train": [
+      "2e73f9146c1d9ed525212faff1a59c777dcc5c877d26d726bf0957b63ffbdb6d",
+      "4ea445d93f32b0069c17d4f836a941633f7895d8a0dd147962ec4a05e5648e85",
+      "50ddb116292cd7f6af6a42ecac8e613a7fdb233dc1e908e5dfbbfeccec65a34b",
+      "d5ff43f4d0626ce4d342a77ad2055cc97c7cde8b8b89eba1cf4fcda763265870"
+    ],
+    "val": [
+      "33ea8e066c5a64aee1ed646f3c3b2362d01023b3e77428d0ebc340d7716f9e6b",
+      "d22f87ac969833f21a99e3b6679c9b10f0b957a87f591adecd03705dfc907c11"
+    ],
+    "test": [
+      "477280c6a3ec4bfb6449ee74d26a849d5b8ad4e8adfb713220fe6fcbede4a771",
+      "f601d931726dab31bbfe3f8d00b28f25c1a588f844523f909051d8caba25fc8e"
+    ]
+  },
+  "cross_split_source_overlap": {
+    "train_val": {
+      "seeds": [],
+      "source_hashes": []
+    },
+    "train_test": {
+      "seeds": [],
+      "source_hashes": []
+    },
+    "val_test": {
+      "seeds": [],
+      "source_hashes": []
+    }
+  },
+  "scenes": {
+    "train_a": {
+      "split": "train",
+      "instances": 6,
+      "neighbors": 4,
+      "source_hashes": [
+        "50ddb116292cd7f6af6a42ecac8e613a7fdb233dc1e908e5dfbbfeccec65a34b",
+        "d5ff43f4d0626ce4d342a77ad2055cc97c7cde8b8b89eba1cf4fcda763265870"
+      ],
+      "seeds": [
+        814200,
+        814201
+      ],
+      "all_neighbors_from_own_scene": true,
+      "label_entries_verified": 474
+    },
+    "train_b": {
+      "split": "train",
+      "instances": 6,
+      "neighbors": 4,
+      "source_hashes": [
+        "2e73f9146c1d9ed525212faff1a59c777dcc5c877d26d726bf0957b63ffbdb6d",
+        "4ea445d93f32b0069c17d4f836a941633f7895d8a0dd147962ec4a05e5648e85"
+      ],
+      "seeds": [
+        814202,
+        814203
+      ],
+      "all_neighbors_from_own_scene": true,
+      "label_entries_verified": 570
+    },
+    "validation": {
+      "split": "val",
+      "instances": 6,
+      "neighbors": 4,
+      "source_hashes": [
+        "33ea8e066c5a64aee1ed646f3c3b2362d01023b3e77428d0ebc340d7716f9e6b",
+        "d22f87ac969833f21a99e3b6679c9b10f0b957a87f591adecd03705dfc907c11"
+      ],
+      "seeds": [
+        814205,
+        814206
+      ],
+      "all_neighbors_from_own_scene": true,
+      "label_entries_verified": 714
+    },
+    "test": {
+      "split": "test",
+      "instances": 6,
+      "neighbors": 4,
+      "source_hashes": [
+        "477280c6a3ec4bfb6449ee74d26a849d5b8ad4e8adfb713220fe6fcbede4a771",
+        "f601d931726dab31bbfe3f8d00b28f25c1a588f844523f909051d8caba25fc8e"
+      ],
+      "seeds": [
+        814208,
+        814209
+      ],
+      "all_neighbors_from_own_scene": true,
+      "label_entries_verified": 858
+    }
+  },
+  "image_counts": {
+    "whole_train": 192,
+    "patch_train": 1152,
+    "whole_val": 96,
+    "patch_val": 576,
+    "whole_test": 96
+  },
+  "negatives": {
+    "whole_train": 0,
+    "patch_train": 0,
+    "whole_val": 0,
+    "patch_val": 0,
+    "whole_test": 0
+  },
+  "distance_counts": {
+    "train_near": 64,
+    "train_middle": 64,
+    "train_far": 64,
+    "val_near": 32,
+    "val_middle": 32,
+    "val_far": 32,
+    "test_near": 32,
+    "test_middle": 32,
+    "test_far": 32
+  },
+  "class_instance_counts": {
+    "whole": {
+      "train": {
+        "2": 6492,
+        "1": 12256,
+        "0": 10021
+      },
+      "val": {
+        "0": 6071,
+        "1": 8601,
+        "2": 4482
+      },
+      "test": {
+        "1": 10124,
+        "2": 4611,
+        "0": 8440
+      }
+    },
+    "patch": {
+      "train": {
+        "1": 40348,
+        "0": 32857,
+        "2": 21147
+      },
+      "val": {
+        "1": 28239,
+        "2": 14781,
+        "0": 19972
+      },
+      "test": {}
+    }
+  },
+  "cross_split_exact_duplicates": {
+    "rgb_file": [],
+    "rgb_pixels": [],
+    "mask_file": [],
+    "mask_pixels": []
+  },
+  "patch_negative_flag_mismatches": [],
+  "reserved_seed_files_accessed": false,
+  "masks_labels_preserved": true,
+  "canonical_crops_pixel_exact": true,
+  "limitations": [
+    "Shared V142 D topology; no independent botanical family holdout.",
+    "Validation/test plants historically inspected; test is development only.",
+    "Exact byte/pixel duplicate audit is not a perceptual-near-duplicate or domain-generalization proof.",
+    "Repeated local unit IDs and neighbor aliases are scene scoped; canonical key includes source SHA256 and scene instance.",
+    "No GPU, no rendering, no palette revalidation, no training readiness decision."
+  ]
+}

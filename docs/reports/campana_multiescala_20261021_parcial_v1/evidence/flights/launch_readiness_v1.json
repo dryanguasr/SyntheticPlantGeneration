@@ -1,0 +1,26 @@
+{
+  "version": "full-route-launch-readiness/1",
+  "passed": true,
+  "reviewed_utc": "2026-10-21T12:20:53.390094+00:00",
+  "joint_preflight_passed": true,
+  "independent_target_and_public_isolation_review_passed": true,
+  "only_new_flights": true,
+  "total_frames": 627,
+  "campaign_complete": false,
+  "metric_localization_performed": false,
+  "preflight_memory_minimum_gib": 15.28237533569336,
+  "known_limitations": [
+    "Orbit partial: C06 covers180degrees and C07 covers225degrees; blocked sectors retained.",
+    "Camera projection coverage is not actual visibility or an occlusion rate.",
+    "Single frontal marker; no independent C07 marker or guaranteed rear acquisition.",
+    "Tracking negative remains; no parameter changes.",
+    "Context graph validation has10 unrelated historical text locator failures; no graph module changed."
+  ],
+  "protocol_sha256": "86dabc5a22a59aa53207547e565bd9408a05e3dac8c47df037d11aff71b78026",
+  "pipeline_cpu_check_sha256": "75f1989c56b04c77cddfca569e5048ce37cec1b77cae6e9b74d2b083c8edfb41",
+  "preparation_manifest_sha256": "bc09c005049009bf16158fed83d580c49159b442ebe8e728d01f85d8cba6880d",
+  "preflight_report_sha256": "92fc8999060ade1b4645da6bb0e387b208a9226f69e7fc5cab705f6c499aab25",
+  "delivery_stage_sha256": "542bf93b0cf2baa63499ae76d54ce67bbfeed456f4a42e0487c6fb1cc5838f17",
+  "presentation_protocol_sha256": "d5ac7c25feed5577a88940794055559bd0ed21fa11f053e2e0fe88ec24f5d723",
+  "sensor_protocol_sha256": "e1caef9b9b6bd2ca322c2848144005871d7461a9d726377f141d0d0a9fcdc00b"
+}

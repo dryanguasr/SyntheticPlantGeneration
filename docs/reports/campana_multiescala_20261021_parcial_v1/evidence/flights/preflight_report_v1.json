@@ -1,0 +1,2114 @@
+{
+  "version": "full-routes-evaluated-preflight/1",
+  "passed": true,
+  "root": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1",
+  "created_unix": 1792585106.268491,
+  "elapsed_seconds": 22.691933393478394,
+  "seed": 18102,
+  "parameter_preset": "unchanged_C06_C07_both_faces_camera_only",
+  "no_rgb_render": true,
+  "no_inference": true,
+  "scene_constructed_once": true,
+  "scene_geometry_unchanged": true,
+  "constructor_sha256": "6fbf1f73d2c3f4cf15ab7f757fc1861c24074680297a479375662db08615f60a",
+  "source_renderer_sha256": "e3e2e559e3853497648bb1e8ece89338c743ded58e66b56a264d69192c4fd7bd",
+  "settings_sha256": "533f38d72f54c19ec0638f7db75bd5c43fe94fa3a3edc0af8a2ccc9d7130b5c6",
+  "proposal_protocol_sha256": "155bbe69e818d640f17e456f30f9909a7d1ec71d45152970d2b974d891be454a",
+  "scene_bounds_world_bu": {
+    "min": [
+      -28.68741798400879,
+      -5.405569076538086,
+      -0.2601346969604492
+    ],
+    "max": [
+      21.3834171295166,
+      35.051361083984375,
+      13.02500057220459
+    ]
+  },
+  "plant_bounds_world_bu": {
+    "C06": {
+      "min": [
+        -10.88741683959961,
+        -5.405569076538086,
+        0.02203238569200039
+      ],
+      "max": [
+        -3.6590752601623535,
+        4.837278366088867,
+        6.402412414550781
+      ]
+    },
+    "C07": {
+      "min": [
+        3.336224317550659,
+        -4.417004108428955,
+        -0.2601346969604492
+      ],
+      "max": [
+        10.583415985107422,
+        4.051363945007324,
+        5.703586578369141
+      ]
+    },
+    "neighbor_0": {
+      "min": [
+        -18.68741798400879,
+        8.594430923461914,
+        0.02203238569200039
+      ],
+      "max": [
+        -11.459075927734375,
+        18.837278366088867,
+        6.402412414550781
+      ]
+    },
+    "neighbor_1": {
+      "min": [
+        -2.8637754917144775,
+        12.582995414733887,
+        -0.2601346969604492
+      ],
+      "max": [
+        4.383416175842285,
+        21.05136489868164,
+        5.703586578369141
+      ]
+    },
+    "neighbor_2": {
+      "min": [
+        -28.68741798400879,
+        24.594430923461914,
+        0.02203238569200039
+      ],
+      "max": [
+        -21.459075927734375,
+        34.8372802734375,
+        6.402412414550781
+      ]
+    },
+    "neighbor_3": {
+      "min": [
+        14.136224746704102,
+        26.58299446105957,
+        -0.2601346969604492
+      ],
+      "max": [
+        21.3834171295166,
+        35.051361083984375,
+        5.703586578369141
+      ]
+    }
+  },
+  "foliage_bounds_world_bu": {
+    "C06": {
+      "min": [
+        -10.88741683959961,
+        -5.405569076538086,
+        0.02203238569200039
+      ],
+      "max": [
+        -3.6590752601623535,
+        4.837278366088867,
+        6.402412414550781
+      ]
+    },
+    "C07": {
+      "min": [
+        3.336224317550659,
+        -4.417004108428955,
+        -0.2601346969604492
+      ],
+      "max": [
+        10.583415985107422,
+        4.051363945007324,
+        5.703586578369141
+      ]
+    }
+  },
+  "evaluated_obstacle_count": 9886,
+  "clearance_margin_m": 0.2,
+  "clearance_method": "Exact segment slab intersection against expanded evaluated mesh AABBs; every emitted segment and screened access column",
+  "checked_segment_queries": 802,
+  "transit_altitude_m": 1.9781250715255738,
+  "outer_x_bu": [
+    -31.087417984008788,
+    23.7834171295166
+  ],
+  "routes": {
+    "legacy": {
+      "passed": true,
+      "clearance_passed": true,
+      "framing_passed": true,
+      "continuity_passed": true,
+      "budget_passed": true,
+      "trajectory_sha256": "7e45035c871bde59ae8df2693f89b7219b0d2c1eb53556a2aaee24341e400ada",
+      "frames": 178,
+      "duration_seconds": 44.5,
+      "first_to_last_seconds": 44.25,
+      "phase_frames": {
+        "acquisition": 4,
+        "transit": 131,
+        "inspection_legacy": 40,
+        "return_anchor": 3
+      },
+      "max_speed_m_s": 0.9907559703672639,
+      "max_angular_speed_deg_s": 23.40399537195305,
+      "clearance_errors": [],
+      "framing_errors": [],
+      "continuity_errors": [],
+      "geometric_foliage_center_coverage": {
+        "C06": {
+          "front": {
+            "foliage_centers_projected_at_least_once": 891,
+            "total": 891,
+            "fraction": 1.0
+          },
+          "back": {
+            "foliage_centers_projected_at_least_once": 891,
+            "total": 891,
+            "fraction": 1.0
+          }
+        },
+        "C07": {
+          "front": {
+            "foliage_centers_projected_at_least_once": 899,
+            "total": 899,
+            "fraction": 1.0
+          },
+          "back": {
+            "foliage_centers_projected_at_least_once": 899,
+            "total": 899,
+            "fraction": 1.0
+          }
+        }
+      },
+      "framing_sample_checks": [
+        {
+          "frame": 10,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 11,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 12,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 13,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 14,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 15,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 16,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 17,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 18,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 19,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 20,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 21,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 22,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 23,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 24,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 25,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 26,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 27,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 28,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 29,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 30,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 31,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 32,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 33,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 97,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 98,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 99,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 100,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 101,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 102,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 103,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 899,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 104,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 105,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 106,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 107,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 108,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 109,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 110,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 111,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 112,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 891,
+          "foliage_centers_total": 891
+        }
+      ],
+      "partial_orbit": false,
+      "blocked_sectors": [],
+      "exceeds_soft_frame_budget": false,
+      "duration_reason": "Continuous conservative exterior/above-obstacle transits, access columns and declared angular speed are included; no equal-budget claim."
+    },
+    "vertical": {
+      "passed": true,
+      "clearance_passed": true,
+      "framing_passed": true,
+      "continuity_passed": true,
+      "budget_passed": true,
+      "trajectory_sha256": "3919622e87a2d2885a14d4161bd2452593d3fc3361519d3a20239e516bc8d560",
+      "frames": 167,
+      "duration_seconds": 41.75,
+      "first_to_last_seconds": 41.5,
+      "phase_frames": {
+        "acquisition": 4,
+        "transit": 126,
+        "inspection_vertical": 34,
+        "return_anchor": 3
+      },
+      "max_speed_m_s": 0.9875000408717565,
+      "max_angular_speed_deg_s": 45.59633469846491,
+      "clearance_errors": [],
+      "framing_errors": [],
+      "continuity_errors": [],
+      "geometric_foliage_center_coverage": {
+        "C06": {
+          "front": {
+            "foliage_centers_projected_at_least_once": 889,
+            "total": 891,
+            "fraction": 0.9977553310886644
+          },
+          "back": {
+            "foliage_centers_projected_at_least_once": 891,
+            "total": 891,
+            "fraction": 1.0
+          }
+        },
+        "C07": {
+          "front": {
+            "foliage_centers_projected_at_least_once": 899,
+            "total": 899,
+            "fraction": 1.0
+          },
+          "back": {
+            "foliage_centers_projected_at_least_once": 899,
+            "total": 899,
+            "fraction": 1.0
+          }
+        }
+      },
+      "framing_sample_checks": [
+        {
+          "frame": 9,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 545,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 10,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 545,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 11,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 681,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 12,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 808,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 13,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 868,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 14,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 878,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 15,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 865,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 16,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 814,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 17,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 744,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 26,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 570,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 27,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 570,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 28,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 733,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 29,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 848,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 30,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 31,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 887,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 32,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 846,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 33,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 763,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 75,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 601,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 76,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 601,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 77,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 761,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 78,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 850,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 79,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 883,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 80,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 81,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 836,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 82,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 755,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 104,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 501,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 105,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 501,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 106,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 692,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 107,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 817,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 108,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 859,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 109,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 865,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 110,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 863,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 111,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 820,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 112,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 725,
+          "foliage_centers_total": 891
+        }
+      ],
+      "partial_orbit": false,
+      "blocked_sectors": [],
+      "exceeds_soft_frame_budget": false,
+      "duration_reason": "Continuous conservative exterior/above-obstacle transits, access columns and declared angular speed are included; no equal-budget claim."
+    },
+    "orbit": {
+      "passed": true,
+      "clearance_passed": true,
+      "framing_passed": true,
+      "continuity_passed": true,
+      "budget_passed": true,
+      "trajectory_sha256": "02b610cad407db1b1f793b2ea07353867a1aee7102b1f64e575e7f5759e05869",
+      "frames": 282,
+      "duration_seconds": 70.5,
+      "first_to_last_seconds": 70.25,
+      "phase_frames": {
+        "acquisition": 4,
+        "transit": 190,
+        "inspection_orbit": 85,
+        "return_anchor": 3
+      },
+      "max_speed_m_s": 0.9945209764173519,
+      "max_angular_speed_deg_s": 45.36163454284512,
+      "clearance_errors": [],
+      "framing_errors": [],
+      "continuity_errors": [],
+      "geometric_foliage_center_coverage": {
+        "C06": {
+          "front": {
+            "foliage_centers_projected_at_least_once": 888,
+            "total": 891,
+            "fraction": 0.9966329966329966
+          },
+          "back": {
+            "foliage_centers_projected_at_least_once": 866,
+            "total": 891,
+            "fraction": 0.9719416386083053
+          }
+        },
+        "C07": {
+          "front": {
+            "foliage_centers_projected_at_least_once": 898,
+            "total": 899,
+            "fraction": 0.9988876529477196
+          },
+          "back": {
+            "foliage_centers_projected_at_least_once": 890,
+            "total": 899,
+            "fraction": 0.9899888765294772
+          }
+        }
+      },
+      "framing_sample_checks": [
+        {
+          "frame": 12,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 866,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 13,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 862,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 14,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 864,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 15,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 865,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 16,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 863,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 17,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 863,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 18,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 867,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 19,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 871,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 20,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 872,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 21,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 879,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 22,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 879,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 23,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 880,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 24,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 25,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 26,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 27,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 28,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 29,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 30,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 31,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 32,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 33,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 883,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 34,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 35,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 36,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 37,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 880,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 38,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 875,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 39,
+          "plant": "C06",
+          "side": "front",
+          "foliage_centers_inside": 876,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 93,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 864,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 94,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 864,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 95,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 861,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 96,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 863,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 97,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 862,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 98,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 860,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 99,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 858,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 100,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 858,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 101,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 856,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 102,
+          "plant": "C06",
+          "side": "back",
+          "foliage_centers_inside": 856,
+          "foliage_centers_total": 891
+        },
+        {
+          "frame": 149,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 886,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 150,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 885,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 151,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 887,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 152,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 887,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 153,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 887,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 154,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 887,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 155,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 887,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 156,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 879,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 157,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 879,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 158,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 159,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 160,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 161,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 162,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 163,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 879,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 164,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 165,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 166,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 167,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 168,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 886,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 169,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 885,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 170,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 885,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 171,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 883,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 172,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 885,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 173,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 885,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 174,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 885,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 175,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 886,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 176,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 889,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 177,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 890,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 178,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 893,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 179,
+          "plant": "C07",
+          "side": "front",
+          "foliage_centers_inside": 893,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 207,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 208,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 209,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 210,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 211,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 212,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 881,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 213,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 214,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 215,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 216,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 883,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 217,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 218,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 882,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 219,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 885,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 220,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 221,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 884,
+          "foliage_centers_total": 899
+        },
+        {
+          "frame": 222,
+          "plant": "C07",
+          "side": "back",
+          "foliage_centers_inside": 887,
+          "foliage_centers_total": 899
+        }
+      ],
+      "partial_orbit": true,
+      "blocked_sectors": {
+        "C06": {
+          "blocked_sectors": [
+            {
+              "start_yaw_deg": -165,
+              "end_yaw_deg": -150,
+              "obstacles": [
+                "uchuva_hierarchy_axis_86_apex.002",
+                "uchuva_hierarchy_axis_86_node_5_low_leaf_v142.002",
+                "uchuva_hierarchy_axis_88_apex.002",
+                "uchuva_hierarchy_axis_88_node_11_refill_leaf.002",
+                "uchuva_hierarchy_axis_88_node_11_refill_leaf_midrib.002",
+                "uchuva_hierarchy_axis_88_node_11_refill_leaf_petiole.002",
+                "uchuva_hierarchy_axis_88_node_4_reproductive_v142_calyx.002",
+                "uchuva_hierarchy_axis_88_node_8_refill_leaf.002",
+                "uchuva_hierarchy_axis_88_node_8_refill_leaf_midrib.002",
+                "uchuva_hierarchy_axis_88_node_8_refill_leaf_petiole.002",
+                "uchuva_hierarchy_axis_88_node_8_reproductive_v142_calyx.001",
+                "uchuva_hierarchy_axis_88_node_8_reproductive_v142_fruit.001",
+                "uchuva_hierarchy_axis_88_node_8_reproductive_v142_pedicel.001"
+              ]
+            },
+            {
+              "start_yaw_deg": -150,
+              "end_yaw_deg": -135,
+              "obstacles": [
+                "row_string_neighbor_0",
+                "uchuva_axis_0_0_branch_0_node_3_leaf.002",
+                "uchuva_axis_0_0_branch_0_node_3_leaf_midrib.002",
+                "uchuva_axis_0_0_branch_10_branch_3_branch_0_node_1_leaf.002",
+                "uchuva_axis_0_0_branch_10_branch_3_branch_0_node_1_leaf_midrib.002",
+                "uchuva_axis_0_0_branch_10_branch_3_branch_0_node_1_leaf_petiole.002",
+                "uchuva_axis_0_0_branch_10_branch_3_branch_0_node_1_reproductive_unit_flower.002",
+                "uchuva_hierarchy_axis_86_apex.002",
+                "uchuva_hierarchy_axis_88_apex.002",
+                "uchuva_hierarchy_axis_88_node_11_refill_leaf.002",
+                "uchuva_hierarchy_axis_88_node_11_refill_leaf_midrib.002",
+                "uchuva_hierarchy_axis_88_node_11_refill_leaf_petiole.002",
+                "uchuva_hierarchy_axis_88_node_4_refill_leaf.002",
+                "uchuva_hierarchy_axis_88_node_4_refill_leaf_midrib.002",
+                "uchuva_hierarchy_axis_88_node_4_refill_leaf_petiole.002",
+                "uchuva_hierarchy_axis_88_node_4_reproductive_v142_calyx.002",
+                "uchuva_hierarchy_axis_88_node_4_reproductive_v142_fruit.002",
+                "uchuva_hierarchy_axis_88_node_4_reproductive_v142_pedicel.002",
+                "uchuva_hierarchy_axis_88_node_8_refill_leaf.002",
+                "uchuva_hierarchy_axis_88_node_8_refill_leaf_midrib.002"
+              ]
+            },
+            {
+              "start_yaw_deg": -135,
+              "end_yaw_deg": -120,
+              "obstacles": [
+                "row_string_neighbor_0"
+              ]
+            },
+            {
+              "start_yaw_deg": -120,
+              "end_yaw_deg": -105,
+              "obstacles": [
+                "row_string_neighbor_0"
+              ]
+            },
+            {
+              "start_yaw_deg": -105,
+              "end_yaw_deg": -90,
+              "obstacles": [
+                "row_post_-15"
+              ]
+            },
+            {
+              "start_yaw_deg": -90,
+              "end_yaw_deg": -75,
+              "obstacles": [
+                "row_post_-15"
+              ]
+            },
+            {
+              "start_yaw_deg": 60,
+              "end_yaw_deg": 75,
+              "obstacles": [
+                "uchuva_hierarchy_axis_63_node_11_refill_leaf.001",
+                "uchuva_hierarchy_axis_63_node_11_refill_leaf_midrib.001"
+              ]
+            },
+            {
+              "start_yaw_deg": 75,
+              "end_yaw_deg": 90,
+              "obstacles": [
+                "row_overhead",
+                "row_string_neighbor_1",
+                "uchuva_axis_0_0_branch_0_node_4_leaf.001",
+                "uchuva_axis_0_0_branch_0_node_4_leaf_midrib.001",
+                "uchuva_axis_0_0_branch_8_branch_1_node_5_leaf.001",
+                "uchuva_axis_0_0_branch_8_branch_1_node_5_leaf_midrib.001",
+                "uchuva_hierarchy_axis_63_node_11_refill_leaf.001",
+                "uchuva_hierarchy_axis_63_node_11_refill_leaf_midrib.001"
+              ]
+            },
+            {
+              "start_yaw_deg": 90,
+              "end_yaw_deg": 105,
+              "obstacles": [
+                "row_overhead",
+                "row_string_neighbor_1",
+                "uchuva_axis_0_0_branch_0_node_4_leaf.001",
+                "uchuva_axis_0_0_branch_0_node_4_leaf_midrib.001",
+                "uchuva_axis_0_0_branch_8_branch_1_node_5_leaf.001",
+                "uchuva_axis_0_0_branch_8_branch_1_node_5_leaf_midrib.001",
+                "uchuva_hierarchy_axis_63_node_11_refill_leaf.001",
+                "uchuva_hierarchy_axis_63_node_11_refill_leaf_midrib.001"
+              ]
+            },
+            {
+              "start_yaw_deg": 105,
+              "end_yaw_deg": 120,
+              "obstacles": [
+                "row_string_neighbor_1"
+              ]
+            },
+            {
+              "start_yaw_deg": 120,
+              "end_yaw_deg": 135,
+              "obstacles": [
+                "row_string_neighbor_1"
+              ]
+            },
+            {
+              "start_yaw_deg": 135,
+              "end_yaw_deg": 150,
+              "obstacles": [
+                "row_string_neighbor_1"
+              ]
+            }
+          ],
+          "clear_edge_count": 12,
+          "total_edge_count": 24,
+          "partial_orbit": true,
+          "runs": [
+            [
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            [
+              22,
+              23,
+              0
+            ]
+          ]
+        },
+        "C07": {
+          "blocked_sectors": [
+            {
+              "start_yaw_deg": -165,
+              "end_yaw_deg": -150,
+              "obstacles": [
+                "row_string_neighbor_1"
+              ]
+            },
+            {
+              "start_yaw_deg": -150,
+              "end_yaw_deg": -135,
+              "obstacles": [
+                "row_string_neighbor_1"
+              ]
+            },
+            {
+              "start_yaw_deg": -135,
+              "end_yaw_deg": -120,
+              "obstacles": [
+                "row_string_neighbor_1"
+              ]
+            },
+            {
+              "start_yaw_deg": -120,
+              "end_yaw_deg": -105,
+              "obstacles": [
+                "uchuva_hierarchy_axis_8_node_11_refill_leaf"
+              ]
+            },
+            {
+              "start_yaw_deg": -105,
+              "end_yaw_deg": -90,
+              "obstacles": [
+                "row_overhead",
+                "uchuva_axis_0_0_branch_10_branch_4_branch_1_node_2_reproductive_unit_flower",
+                "uchuva_hierarchy_axis_8_node_11_refill_leaf",
+                "uchuva_hierarchy_axis_8_node_11_refill_leaf_midrib"
+              ]
+            },
+            {
+              "start_yaw_deg": -90,
+              "end_yaw_deg": -75,
+              "obstacles": [
+                "row_overhead",
+                "uchuva_hierarchy_axis_8_node_11_refill_leaf"
+              ]
+            },
+            {
+              "start_yaw_deg": 75,
+              "end_yaw_deg": 90,
+              "obstacles": [
+                "row_post_15",
+                "row_string_neighbor_3"
+              ]
+            },
+            {
+              "start_yaw_deg": 90,
+              "end_yaw_deg": 105,
+              "obstacles": [
+                "row_post_15",
+                "row_string_neighbor_3"
+              ]
+            },
+            {
+              "start_yaw_deg": 105,
+              "end_yaw_deg": 120,
+              "obstacles": [
+                "row_string_neighbor_3"
+              ]
+            }
+          ],
+          "clear_edge_count": 15,
+          "total_edge_count": 24,
+          "partial_orbit": true,
+          "runs": [
+            [
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16
+            ],
+            [
+              20,
+              21,
+              22,
+              23,
+              0
+            ]
+          ]
+        }
+      },
+      "exceeds_soft_frame_budget": true,
+      "duration_reason": "Continuous conservative exterior/above-obstacle transits, access columns and declared angular speed are included; no equal-budget claim."
+    }
+  },
+  "planning_decisions": {
+    "legacy": {
+      "C06_front": {
+        "attempts": [
+          {
+            "yaw": -15,
+            "radius_m": 3.6,
+            "hits": []
+          }
+        ],
+        "selected": {
+          "yaw": -15,
+          "radius_m": 3.6,
+          "hits": []
+        }
+      },
+      "C07_front": {
+        "attempts": [
+          {
+            "yaw": -15,
+            "radius_m": 3.6,
+            "hits": []
+          }
+        ],
+        "selected": {
+          "yaw": -15,
+          "radius_m": 3.6,
+          "hits": []
+        }
+      },
+      "C07_back": {
+        "attempts": [
+          {
+            "yaw": 165,
+            "radius_m": 3.6,
+            "hits": [
+              "uchuva_axis_0_0_branch_3_branch_1_node_3_reproductive_unit_calyx.005",
+              "uchuva_axis_0_0_branch_5_branch_1_branch_1_node_3_leaf_petiole.005",
+              "uchuva_axis_0_0_branch_5_branch_1_branch_1_node_3_leaf.005",
+              "uchuva_axis_0_0_branch_8_branch_4_branch_1_node_2_leaf_petiole.005",
+              "uchuva_axis_0_0_branch_8_branch_4_branch_1_node_2_leaf.005",
+              "uchuva_hierarchy_axis_59_node_9_reproductive_v142_pedicel.005",
+              "uchuva_hierarchy_axis_59_node_9_reproductive_v142_calyx.005",
+              "uchuva_hierarchy_axis_59_node_9_reproductive_v142_fruit.005",
+              "uchuva_hierarchy_axis_59_node_11_refill_leaf_petiole.005",
+              "uchuva_hierarchy_axis_59_node_11_refill_leaf.005",
+              "uchuva_hierarchy_axis_59_node_11_refill_leaf_midrib.005",
+              "uchuva_hierarchy_axis_59_node_11_reproductive_v142_pedicel.002",
+              "uchuva_hierarchy_axis_59_node_11_reproductive_v142_calyx.002",
+              "uchuva_hierarchy_axis_59_node_11_reproductive_v142_fruit.002",
+              "uchuva_hierarchy_axis_59_apex.005",
+              "uchuva_hierarchy_axis_60_node_9_low_leaf_v142_petiole.005",
+              "uchuva_hierarchy_axis_60_node_9_low_leaf_v142.005",
+              "uchuva_hierarchy_axis_60_node_9_low_leaf_v142_midrib.005",
+              "uchuva_hierarchy_axis_60_node_11_low_leaf_v142_petiole.005",
+              "uchuva_hierarchy_axis_60_node_11_low_leaf_v142.005"
+            ]
+          },
+          {
+            "yaw": 180,
+            "radius_m": 3.6,
+            "hits": []
+          }
+        ],
+        "selected": {
+          "yaw": 180,
+          "radius_m": 3.6,
+          "hits": []
+        }
+      },
+      "C06_back": {
+        "attempts": [
+          {
+            "yaw": 165,
+            "radius_m": 3.6,
+            "hits": []
+          }
+        ],
+        "selected": {
+          "yaw": 165,
+          "radius_m": 3.6,
+          "hits": []
+        }
+      }
+    },
+    "vertical": {
+      "C06_front": {
+        "attempts": [
+          {
+            "yaw": -15,
+            "radius_m": 1.2,
+            "hits": []
+          }
+        ],
+        "selected": {
+          "yaw": -15,
+          "radius_m": 1.2,
+          "hits": []
+        },
+        "foliage_height_bu": [
+          0.02203238569200039,
+          6.402412414550781
+        ],
+        "aim_band_bu": [
+          1.2981083914637566,
+          5.126336408779025
+        ]
+      },
+      "C07_front": {
+        "attempts": [
+          {
+            "yaw": -15,
+            "radius_m": 1.2,
+            "hits": []
+          }
+        ],
+        "selected": {
+          "yaw": -15,
+          "radius_m": 1.2,
+          "hits": []
+        },
+        "foliage_height_bu": [
+          -0.2601346969604492,
+          5.703586578369141
+        ],
+        "aim_band_bu": [
+          0.9326095581054688,
+          4.510842323303223
+        ]
+      },
+      "C07_back": {
+        "attempts": [
+          {
+            "yaw": 165,
+            "radius_m": 1.2,
+            "hits": []
+          }
+        ],
+        "selected": {
+          "yaw": 165,
+          "radius_m": 1.2,
+          "hits": []
+        },
+        "foliage_height_bu": [
+          -0.2601346969604492,
+          5.703586578369141
+        ],
+        "aim_band_bu": [
+          0.9326095581054688,
+          4.510842323303223
+        ]
+      },
+      "C06_back": {
+        "attempts": [
+          {
+            "yaw": 165,
+            "radius_m": 1.2,
+            "hits": []
+          }
+        ],
+        "selected": {
+          "yaw": 165,
+          "radius_m": 1.2,
+          "hits": []
+        },
+        "foliage_height_bu": [
+          0.02203238569200039,
+          6.402412414550781
+        ],
+        "aim_band_bu": [
+          1.2981083914637566,
+          5.126336408779025
+        ]
+      }
+    },
+    "orbit": {
+      "C06": {
+        "blocked_sectors": [
+          {
+            "start_yaw_deg": -165,
+            "end_yaw_deg": -150,
+            "obstacles": [
+              "uchuva_hierarchy_axis_86_apex.002",
+              "uchuva_hierarchy_axis_86_node_5_low_leaf_v142.002",
+              "uchuva_hierarchy_axis_88_apex.002",
+              "uchuva_hierarchy_axis_88_node_11_refill_leaf.002",
+              "uchuva_hierarchy_axis_88_node_11_refill_leaf_midrib.002",
+              "uchuva_hierarchy_axis_88_node_11_refill_leaf_petiole.002",
+              "uchuva_hierarchy_axis_88_node_4_reproductive_v142_calyx.002",
+              "uchuva_hierarchy_axis_88_node_8_refill_leaf.002",
+              "uchuva_hierarchy_axis_88_node_8_refill_leaf_midrib.002",
+              "uchuva_hierarchy_axis_88_node_8_refill_leaf_petiole.002",
+              "uchuva_hierarchy_axis_88_node_8_reproductive_v142_calyx.001",
+              "uchuva_hierarchy_axis_88_node_8_reproductive_v142_fruit.001",
+              "uchuva_hierarchy_axis_88_node_8_reproductive_v142_pedicel.001"
+            ]
+          },
+          {
+            "start_yaw_deg": -150,
+            "end_yaw_deg": -135,
+            "obstacles": [
+              "row_string_neighbor_0",
+              "uchuva_axis_0_0_branch_0_node_3_leaf.002",
+              "uchuva_axis_0_0_branch_0_node_3_leaf_midrib.002",
+              "uchuva_axis_0_0_branch_10_branch_3_branch_0_node_1_leaf.002",
+              "uchuva_axis_0_0_branch_10_branch_3_branch_0_node_1_leaf_midrib.002",
+              "uchuva_axis_0_0_branch_10_branch_3_branch_0_node_1_leaf_petiole.002",
+              "uchuva_axis_0_0_branch_10_branch_3_branch_0_node_1_reproductive_unit_flower.002",
+              "uchuva_hierarchy_axis_86_apex.002",
+              "uchuva_hierarchy_axis_88_apex.002",
+              "uchuva_hierarchy_axis_88_node_11_refill_leaf.002",
+              "uchuva_hierarchy_axis_88_node_11_refill_leaf_midrib.002",
+              "uchuva_hierarchy_axis_88_node_11_refill_leaf_petiole.002",
+              "uchuva_hierarchy_axis_88_node_4_refill_leaf.002",
+              "uchuva_hierarchy_axis_88_node_4_refill_leaf_midrib.002",
+              "uchuva_hierarchy_axis_88_node_4_refill_leaf_petiole.002",
+              "uchuva_hierarchy_axis_88_node_4_reproductive_v142_calyx.002",
+              "uchuva_hierarchy_axis_88_node_4_reproductive_v142_fruit.002",
+              "uchuva_hierarchy_axis_88_node_4_reproductive_v142_pedicel.002",
+              "uchuva_hierarchy_axis_88_node_8_refill_leaf.002",
+              "uchuva_hierarchy_axis_88_node_8_refill_leaf_midrib.002"
+            ]
+          },
+          {
+            "start_yaw_deg": -135,
+            "end_yaw_deg": -120,
+            "obstacles": [
+              "row_string_neighbor_0"
+            ]
+          },
+          {
+            "start_yaw_deg": -120,
+            "end_yaw_deg": -105,
+            "obstacles": [
+              "row_string_neighbor_0"
+            ]
+          },
+          {
+            "start_yaw_deg": -105,
+            "end_yaw_deg": -90,
+            "obstacles": [
+              "row_post_-15"
+            ]
+          },
+          {
+            "start_yaw_deg": -90,
+            "end_yaw_deg": -75,
+            "obstacles": [
+              "row_post_-15"
+            ]
+          },
+          {
+            "start_yaw_deg": 60,
+            "end_yaw_deg": 75,
+            "obstacles": [
+              "uchuva_hierarchy_axis_63_node_11_refill_leaf.001",
+              "uchuva_hierarchy_axis_63_node_11_refill_leaf_midrib.001"
+            ]
+          },
+          {
+            "start_yaw_deg": 75,
+            "end_yaw_deg": 90,
+            "obstacles": [
+              "row_overhead",
+              "row_string_neighbor_1",
+              "uchuva_axis_0_0_branch_0_node_4_leaf.001",
+              "uchuva_axis_0_0_branch_0_node_4_leaf_midrib.001",
+              "uchuva_axis_0_0_branch_8_branch_1_node_5_leaf.001",
+              "uchuva_axis_0_0_branch_8_branch_1_node_5_leaf_midrib.001",
+              "uchuva_hierarchy_axis_63_node_11_refill_leaf.001",
+              "uchuva_hierarchy_axis_63_node_11_refill_leaf_midrib.001"
+            ]
+          },
+          {
+            "start_yaw_deg": 90,
+            "end_yaw_deg": 105,
+            "obstacles": [
+              "row_overhead",
+              "row_string_neighbor_1",
+              "uchuva_axis_0_0_branch_0_node_4_leaf.001",
+              "uchuva_axis_0_0_branch_0_node_4_leaf_midrib.001",
+              "uchuva_axis_0_0_branch_8_branch_1_node_5_leaf.001",
+              "uchuva_axis_0_0_branch_8_branch_1_node_5_leaf_midrib.001",
+              "uchuva_hierarchy_axis_63_node_11_refill_leaf.001",
+              "uchuva_hierarchy_axis_63_node_11_refill_leaf_midrib.001"
+            ]
+          },
+          {
+            "start_yaw_deg": 105,
+            "end_yaw_deg": 120,
+            "obstacles": [
+              "row_string_neighbor_1"
+            ]
+          },
+          {
+            "start_yaw_deg": 120,
+            "end_yaw_deg": 135,
+            "obstacles": [
+              "row_string_neighbor_1"
+            ]
+          },
+          {
+            "start_yaw_deg": 135,
+            "end_yaw_deg": 150,
+            "obstacles": [
+              "row_string_neighbor_1"
+            ]
+          }
+        ],
+        "clear_edge_count": 12,
+        "total_edge_count": 24,
+        "partial_orbit": true,
+        "runs": [
+          [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          [
+            22,
+            23,
+            0
+          ]
+        ]
+      },
+      "C07": {
+        "blocked_sectors": [
+          {
+            "start_yaw_deg": -165,
+            "end_yaw_deg": -150,
+            "obstacles": [
+              "row_string_neighbor_1"
+            ]
+          },
+          {
+            "start_yaw_deg": -150,
+            "end_yaw_deg": -135,
+            "obstacles": [
+              "row_string_neighbor_1"
+            ]
+          },
+          {
+            "start_yaw_deg": -135,
+            "end_yaw_deg": -120,
+            "obstacles": [
+              "row_string_neighbor_1"
+            ]
+          },
+          {
+            "start_yaw_deg": -120,
+            "end_yaw_deg": -105,
+            "obstacles": [
+              "uchuva_hierarchy_axis_8_node_11_refill_leaf"
+            ]
+          },
+          {
+            "start_yaw_deg": -105,
+            "end_yaw_deg": -90,
+            "obstacles": [
+              "row_overhead",
+              "uchuva_axis_0_0_branch_10_branch_4_branch_1_node_2_reproductive_unit_flower",
+              "uchuva_hierarchy_axis_8_node_11_refill_leaf",
+              "uchuva_hierarchy_axis_8_node_11_refill_leaf_midrib"
+            ]
+          },
+          {
+            "start_yaw_deg": -90,
+            "end_yaw_deg": -75,
+            "obstacles": [
+              "row_overhead",
+              "uchuva_hierarchy_axis_8_node_11_refill_leaf"
+            ]
+          },
+          {
+            "start_yaw_deg": 75,
+            "end_yaw_deg": 90,
+            "obstacles": [
+              "row_post_15",
+              "row_string_neighbor_3"
+            ]
+          },
+          {
+            "start_yaw_deg": 90,
+            "end_yaw_deg": 105,
+            "obstacles": [
+              "row_post_15",
+              "row_string_neighbor_3"
+            ]
+          },
+          {
+            "start_yaw_deg": 105,
+            "end_yaw_deg": 120,
+            "obstacles": [
+              "row_string_neighbor_3"
+            ]
+          }
+        ],
+        "clear_edge_count": 15,
+        "total_edge_count": 24,
+        "partial_orbit": true,
+        "runs": [
+          [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          [
+            20,
+            21,
+            22,
+            23,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "preparation_errors": [],
+  "limitations": [
+    "Diagnostic only; no production promotion.",
+    "Validation plants historically inspected; not external holdout.",
+    "AABB path clearance is conservative engineering screening, not flight certification.",
+    "No plants, neighbors, materials, terrain, sky, marker or training changes.",
+    "No implicit reidentification or metric localization claim; common marker may be outside near views or invisible on its back.",
+    "If preflight fails preserve evidence and do not jump camera, relocate plants or markers.",
+    "Private geometry permits camera construction and evaluator checks only; never estimator input.",
+    "Projection coverage is geometric frustum coverage, not actual visibility or an occlusion rate.",
+    "One unchanged common front ArUco8 only. C07 has no independent marker acquisition and backside marker visibility is not promised.",
+    "Orbit blocked sectors remain negative evidence; no full circle claim for partial routes.",
+    "Different route durations include declared inspection, acquisition and transit phases."
+  ],
+  "reserved_seeds_used": false,
+  "automatic_launch_authorized": false
+}

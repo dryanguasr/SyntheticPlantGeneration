@@ -52,6 +52,8 @@ def tag_annotation_object(
     axis_parent_node_id: str = "",
     internode_index: int = -1,
     parent_node_id: str = "",
+    node_start_id: str | None = None,
+    node_end_id: str | None = None,
     axis_order: int = -1,
     orientation_adjustment_deg: float = 0.0,
     clearance_lift_cm: float = 0.0,
@@ -62,6 +64,10 @@ def tag_annotation_object(
         return
     if semantic_class not in SEMANTIC_CLASSES and semantic_class != "ignore":
         raise ValueError(f"Unknown semantic annotation class: {semantic_class}")
+    if node_start_id is not None:
+        obj["uchuva_node_start_id"] = node_start_id
+    if node_end_id is not None:
+        obj["uchuva_node_end_id"] = node_end_id
     obj["uchuva_semantic_class"] = semantic_class
     obj["uchuva_plant_id"] = plant_id
     obj["uchuva_plant_role"] = plant_role

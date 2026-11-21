@@ -1,0 +1,401 @@
+
+# Uchuvas sintéticas
+<br/>Guía de la campaña multiescala
+
+<b>Entrega final de diagnóstico · 22 de octubre de 2026 (UTC)</b>
+
+Esta guía explica qué se construyó, cómo se evaluó y qué puede concluirse de la campaña actual. El objetivo es facilitar la apropiación del experimento y la revisión de sus evidencias sin volver a diseñar los arbustos.
+
+Imagen: images/vertical_lower_median_031.jpg
+
+Vista completa de inspección vertical con máscaras e identidades predichas. Los vecinos permanecen en la imagen. Los colores identifican tracks, no necesariamente las clases de apariencia.
+
+Entregado y verificado | Alcance del cierre
+
+384 vistas; entrenamiento de 10 épocas; comparación estática auditada. | Cierre de la campaña como diagnóstico sintético.
+
+627 fotogramas; tres videos PiP revisados; seguimiento y localización 3D evaluados. | Sin promoción a producción ni validación en campo real.
+
+<b>Resultado principal:</b> el nuevo modelo mejora F1 en las vistas completas de prueba de desarrollo de 51,34% a 59,86%. En vuelo, los acercamientos aumentan la detección del objetivo, pero el seguimiento presenta muchos cambios de identidad. No es un modelo promovido a producción.
+
+Abrir index.html para los videos y las matrices a resolución completa. El paquete conserva resultados negativos y separa explícitamente evaluación, predicción y verdad sintética.
+
+
+# 1. Qué pregunta responde la campaña
+
+La campaña anterior mostró una debilidad de escala: entrenar sobre vistas predominantemente lejanas y después recortarlas no aporta el detalle óptico de una cámara realmente cercana. Por instrucción del usuario se canceló aquella campaña de vuelos y se inició un dataset con nuevas posiciones de cámara.
+
+## Qué se mantuvo fijo
+
+Se conservaron los arbustos aprobados V142/V181, sin plántulas geométricas en la base, y el generador, las hojas, ramas, materiales, suelo, cielo y vecinos. La variación autorizada fue la cámara: distancia, azimut y elevación. Esta campaña no es otra búsqueda estética ni un barrido de colisiones.
+
+## Cadena de trabajo
+
+Etapa | Entrada y salida | Situación
+
+Generación | Estructura morfológica congelada → RGB y máscaras raster originales. | Terminada
+
+Aprendizaje | Parches train + aumentación nativa → peso nuevo. | Terminado
+
+Evaluación estática | Dos pesos, mismas vistas completas, mismo preprocesado. | Auditada
+
+Vuelos | Tres trayectorias nuevas → inferencia, IDs y matrices. | Evaluados
+
+Localización | Marcador decodificado + movimiento relativo ruidoso → estimación métrica. | Evaluada
+
+## Tres conceptos que no deben mezclarse
+
+<b>Segmentación:</b> asignar una máscara y clase al capacho en una imagen. <b>Seguimiento:</b> mantener la identidad del mismo objeto entre imágenes. <b>Localización 3D:</b> estimar su posición métrica respecto de un marco. Una buena máscara aislada no garantiza identidad estable ni exactitud 3D.
+
+Las clases pintona, madura y sobremadura describen la <b>apariencia del capacho</b>. No son una validación de la madurez interna del fruto. Blender interpreta la estructura morfológica; no sustituye su fuente de verdad.
+
+
+# 2. Dataset multiescala y prevención de fugas
+
+Partición | Fuentes / semillas | Vistas | Parches
+
+Train | C01-C04 / 814200-814203 | 192 | 1152
+
+Validación | C06-C07 / 814205-814206 | 96 | 576
+
+Prueba de desarrollo | C09-C10 / 814208-814209 | 96 | Vistas completas
+
+Cada planta se observa a 1,2 / 2,2 / 3,6 m del punto de mira, en ocho azimuts y dos elevaciones. Las imágenes son de 1280 × 720. Estas distancias no son la separación de todos los vecinos ni la distancia mínima al follaje.
+
+La separación se hace por JSON fuente y semilla antes de crear poses, vecinos clonados, recortes o aumentaciones. Todos los derivados heredan el split de origen. No se incorporaron imágenes mixtas de la campaña cancelada. Las semillas reservadas 914140-914145 permanecen intactas.
+
+Imagen: dataset_sample/val_near_mediano_mask.png
+
+Imagen: dataset_sample/val_far_mediano_mask.png
+
+Ejemplos de validación cercano y lejano: RGB completo con supervisión original superpuesta. Cian: pintona; amarillo: madura; violeta: sobremadura. La galería incluye 18 vistas train/val, seleccionadas por cobertura de tamaños y no por rendimiento del modelo.
+
+<b>Límite:</b> hay topología compartida y la prueba fue inspeccionada históricamente. La disjunción de fuentes no convierte este conjunto en un holdout externo de familias independientes. No hay imágenes ni parches totalmente negativos.
+
+
+# 3. Cómo se entrenó realmente
+
+Parámetro | Configuración ejecutada
+
+Inicialización | Peso final del piloto congelado: SHA256 79c3dad7…
+
+Parches / entrada de red | 640 × 640, stride 448; entrada 960. El escalado no crea detalle óptico.
+
+Entrenamiento | 10 épocas; batch 1; nbs 1; warmup 0; AdamW; lr inicial 0,0002.
+
+Carga / memoria | workers 0; threads 4; cache False; plots False; validación batch 1.
+
+Aumentación nativa | Ultralytics RandomHSV: h=0, s=0, v=0,1; RandomFlip horizontal p=0,5, solo train.
+
+Deshabilitado | Mosaic, mixup, copy-paste y transformaciones afines en este piloto raster.
+
+El adaptador nativo sincroniza imagen, cajas y máscara raster de IDs, preservando componentes desconectados. El cargador histórico ignoraba argumentos de aumentación: esta campaña usa un adaptador verificado mediante llamadas reales. Val y test no reciben aumentación.
+
+## Evidencia de aprendizaje, no solo de proceso vivo
+
+Se registraron <b>11.520 lotes y 11.513 actualizaciones reales del optimizador</b>; los parámetros cambiaron en cada época. Se verificaron 11.520 llamadas a RandomHSV y otras tantas a RandomFlip. La ejecución de RandomFlip no significa que todas las imágenes se inviertan: el muestreo usa probabilidad 0,5.
+
+El mínimo de RAM libre superó 14 GiB durante entrenamiento y validación; se conservó la reserva requerida de 2 GiB. El nuevo checkpoint publicado es last.pt, SHA256 9c660824…; no se selecciona un checkpoint por resultados de prueba.
+
+## Qué no debe trasladarse a la pose
+
+El flip horizontal se usa para reconocimiento de capachos. No se utiliza para localizar ArUco. Un marcador reflejado no constituye una observación física equivalente para estimar pose.
+
+Fuentes: training_args.yaml, training_results.csv, training_readiness.json y native_augmentation_integration_check.json en evidence/dataset y metrics.
+
+
+# 4. Qué significan las métricas
+
+<b>Precisión P = TP / (TP + FP)</b>: cuántas predicciones contadas son correctas. <b>Recall R = TP / (TP + FN)</b>: cuántos capachos verdaderos se recuperan. <b>F1 = 2PR / (P + R)</b>: balance entre ambos. Una máscara se empareja por solapamiento IoU y la clase debe coincidir para contar un acierto.
+
+En vistas completas y vuelos se congelaron confianza 0,25 e IoU de máscara 0,5. Una clase incorrecta afecta FP y FN. No tener pareja espacial puede significar ausencia de propuesta o máscara con IoU insuficiente; no demuestra que el objeto fuera invisible.
+
+<b>AP</b> resume la curva precisión-recall al variar el corte de confianza; <b>mAP50</b> promedia AP entre clases a IoU 0,50. <b>mAP50-95</b> promedia además umbrales IoU 0,50 a 0,95 en pasos de 0,05. Es más exigente con la forma de la máscara.
+
+Época 10, validación por parches | P | R | mAP50 | mAP50-95
+
+Máscaras | 66,35% | 43,19% | 43,14% | 18,15%
+
+Cajas | 74,50% | 52,67% | 56,47% | 34,72%
+
+<b>Estos mAP corresponden exclusivamente a los 576 parches de validación del entrenador.</b> No son mAP de vuelos ni de vistas completas. Sus P/R no representan necesariamente el mismo punto de confianza del evaluador nativo. No hay mAP completo de vuelos calculado en este corte.
+
+## Todos frente a elegibles
+
+Se reporta siempre el conjunto completo y un subconjunto con al menos 100 píxeles de máscara visible y lado mínimo de caja de 8 píxeles en la imagen original. Es una heurística de ingeniería para estudiar tamaño, no un límite universal de YOLO. Su F1 debe leerse junto a la fracción de objetos que cubre.
+
+El área de máscara visible no es una tasa de oclusión. El subconjunto elegible no debe ocultar la dificultad del resto de objetos ni justificar por sí solo promoción científica.
+
+
+# 5. Comparación en vistas completas
+
+Referencia y modelo multiescala reciben exactamente las mismas vistas val/test y máscaras raster originales. Ambos usan parches exhaustivos de 640, stride 448 y entrada 960. No hay ROI seleccionada con verdad, HSV en inferencia ni adaptación de decisiones con prueba.
+
+Partición / alcance | Modelo | P | R | F1
+
+Validación / todos | Referencia | 67,28% | 42,77% | 52,29%
+
+Validación / todos | Multiescala | 75,24% | 50,48% | 60,42%
+
+Validación / elegibles | Referencia | 60,48% | 76,03% | 67,37%
+
+Validación / elegibles | Multiescala | 68,66% | 84,59% | 75,80%
+
+Desarrollo / todos | Referencia | 67,83% | 41,30% | 51,34%
+
+Desarrollo / todos | Multiescala | 75,56% | 49,57% | 59,86%
+
+Desarrollo / elegibles | Referencia | 62,36% | 75,69% | 68,38%
+
+Desarrollo / elegibles | Multiescala | 70,22% | 85,18% | 76,98%
+
+En prueba de desarrollo, F1 global sube <b>8,52 puntos porcentuales</b>. El recall nuevo es 49,57%: todavía se omite o clasifica mal aproximadamente la mitad de las observaciones bajo esta regla. El F1 elegible 76,98% cubre solo 9.036 de 23.175 observaciones (38,99%).
+
+Modelo nuevo, desarrollo | Cerca | Intermedia | Lejos
+
+F1, todos los tamaños | 64,86% | 62,13% | 54,73%
+
+Se conservan resultados negativos: cae la precisión en casos lejanos/elegibles. La confusión madura → pintona aumenta de 172 a 297, aunque pintona → madura baja de 838 a 538. Esto impide afirmar que la separación de transición quedó resuelta.
+
+Las cifras nuevas no son directamente comparables con las históricas de parches 384 y ROI heurística. Esta comparación controla el preprocesado entre los dos pesos actuales. Fuente completa: metrics/static_full_views.json.
+
+
+# 6. Diseño de los tres vuelos nuevos
+
+Ruta | Frames / total | Inspección | Tránsito
+
+Legacy | 178 / 44,50 s | 10,00 s | 32,75 s
+
+Vertical | 167 / 41,75 s | 8,50 s | 31,50 s
+
+Órbita parcial | 282 / 70,50 s | 21,25 s | 47,50 s
+
+Todas las rutas muestrean a 4 fps. Los totales ya incluyen 1,75 s de adquisición/retorno por ruta, además de inspección y tránsito. Los presupuestos y las vistas difieren: no es una comparación de estrategias a igual duración.
+
+Imagen: images/routes.png
+
+<b>Legacy:</b> recorrido por ambas caras manteniendo la planta completa proyectada. <b>Vertical:</b> cuatro barridos dentro del follaje real, C06 y C07 por frente/reverso, con inclinación de cámara para la banda baja. <b>Órbita:</b> solo sectores transitables, 180° en C06 y 225° en C07; no se logró una vuelta de 360°.
+
+El preflight revisó 9.886 obstáculos evaluados, continuidad, proyección y margen conservador. Los sectores bloqueados por plantas, postes, cuerdas o columnas de acceso se conservaron. El tránsito puede ir por el extremo exterior y a 1,978 m de altura. No se movieron plantas para acomodar el vuelo.
+
+La cobertura geométrica acumulada 99,78-100% de los barridos no garantiza visibilidad de cada fruto ni mide oclusión. Solo existe un ArUco8 frontal común; C07 no tiene marcador propio.
+
+
+# 7. Detección e identidad durante inspección
+
+Objetivo C06/C07 | Legacy | Vertical | Órbita parcial
+
+Precisión, todos | 70,45% | 72,45% | 71,53%
+
+Recall, todos | 51,10% | 67,53% | 68,16%
+
+F1, todos | 59,24% | 69,91% | 69,80%
+
+Precisión, elegibles | 63,46% | 71,75% | 70,87%
+
+Recall, elegibles | 88,10% | 79,86% | 80,25%
+
+F1, elegibles | 73,78% | 75,59% | 75,27%
+
+Fracción elegible | 36,85% | 80,51% | 80,93%
+
+Los acercamientos aumentan la proporción de observaciones con tamaño elegible. La órbita no mejora F1 frente al vertical en estas observaciones, pese a dedicar más tiempo a inspección. No se puede aislar causalmente solo el efecto de distancia con rutas y duraciones distintas.
+
+Seguimiento de elegibles | Legacy | Vertical | Órbita parcial
+
+Cambios ID / pares emparejados | 580 / 1054 | 1186 / 1447 | 2618 / 4272
+
+Tasa condicional de cambios | 55,03% | 81,96% | 61,28%
+
+Cobertura de pares consecutivos | 94,11% | 79,81% | 79,82%
+
+<b>El seguimiento sigue siendo una limitación grave.</b> La tasa cuenta cambios de track entre pares adyacentes que el evaluador logra emparejar espacialmente en ambos fotogramas. No es IDF1, HOTA ni MOTA, y no evalúa reidentificación después de huecos.
+
+Los FP exclusivos del objetivo se atribuyen aproximadamente por centroide dentro de su envolvente visible. El matching global se hace primero y no se rematchea de forma favorable. Esta región pertenece al evaluador privado, no a una selección automática del estimador.
+
+
+# 8. Legacy: matrices y caso difícil
+
+Inspección del objetivo actual C06/C07. Izquierda: todos los tamaños. Derecha: elegibles (100 píxeles y lado mínimo 8). Filas: verdad; columnas: predicción. La última fila/columna representa predicciones u observaciones sin pareja.
+
+Imagen: images/legacy_worst_104.jpg
+
+Caso de menor F1 de inspección según regla predeclarada: frame 104, objetivo C06, cara back. TP 15, FP 12, FN 32; F1 40,54%. El HTML incluye también el caso mediano y el mejor, conservando la imagen completa.
+
+En las vistas alejadas muchos capachos quedan pequeños. El alto recall del subconjunto elegible no describe el 63,15% restante de observaciones de inspección. No atribuir cada omisión a tamaño sin comprobar la correspondencia individual.
+
+
+# 8. Barrido vertical: matrices y caso difícil
+
+Inspección del objetivo actual C06/C07. Izquierda: todos los tamaños. Derecha: elegibles (100 píxeles y lado mínimo 8). Filas: verdad; columnas: predicción. La última fila/columna representa predicciones u observaciones sin pareja.
+
+Imagen: images/vertical_worst_015.jpg
+
+Caso de menor F1 de inspección según regla predeclarada: frame 15, objetivo C06, cara front. TP 49, FP 37, FN 38; F1 56,65%. El HTML incluye también el caso mediano y el mejor, conservando la imagen completa.
+
+Acercarse mejora F1 total, pero no elimina confusiones ni fragmentación temporal. En esta ruta corregida la cámara recorre bandas de follaje; que una banda salga del encuadre no es el fallo de overshoot del fragmento antiguo.
+
+
+# 8. Órbita parcial: matrices y caso difícil
+
+Inspección del objetivo actual C06/C07. Izquierda: todos los tamaños. Derecha: elegibles (100 píxeles y lado mínimo 8). Filas: verdad; columnas: predicción. La última fila/columna representa predicciones u observaciones sin pareja.
+
+Imagen: images/orbit_worst_163.jpg
+
+Caso de menor F1 de inspección según regla predeclarada: frame 163, objetivo C07, cara front. TP 57, FP 45, FN 40; F1 57,29%. El HTML incluye también el caso mediano y el mejor, conservando la imagen completa.
+
+En inspección orbital quedan 2.149 observaciones objetivo sin pareja espacial y 359 clases incorrectas; entre elegibles, 934 y 325. Hojas, fragmentos de silueta y bordes aparecen en las muestras; son observaciones visuales, no causas individuales demostradas.
+
+
+# 9. Negativos que deben conservarse
+
+Hallazgo | Evidencia | Interpretación permitida
+
+Transición de clase | Madura → pintona: 172 a 297 en desarrollo. | El nuevo entrenamiento no resuelve todas las confusiones.
+
+Identidad inestable | Replay CPU idéntico al baseline; 27 de 32 cambios elegibles por competencia involucraron tracks antiguos. | La competencia antigua es una hipótesis causal plausible, no una corrección probada.
+
+Costura de parches | Caso con silueta dividida en x=640. | Puede fragmentar una instancia; no demuestra que explique todos los errores.
+
+Piloto vertical antiguo | C06 pasó de 96 a 10 capachos visibles al elevar cámara y punto de mira fuera del follaje. | Fallo demostrado de cámara; no atribuirlo al detector.
+
+Recuadro externo | En los tres videos completos la escena y el proxy se ven pequeños. | Útil como contexto espacial; limitada legibilidad del movimiento fino.
+
+La receta futura del barrido se corrigió mediante un único preflight conjunto. El fragmento negativo no se sustituyó: está incluido en videos/negative_pilot_vertical_presentation_v1.mp4. Legacy conserva también sus versiones v1 y v2 de presentación; v2 corrige únicamente el recorte del proxy del observador.
+
+Los tres videos se decodificaron íntegros (178, 167 y 282 frames, H264, 4 fps). Se revisaron inicio, mitad, final y las transiciones predeclaradas. Las máscaras e IDs son las mismas salidas evaluadas; el observador y el proxy no alimentan la inferencia.
+
+El cierre diagnóstico no oculta estos negativos ni autoriza variar el tracker, los pesos o los umbrales. La investigación posterior debe plantear experimentos acotados y predeclarados, sin seleccionar decisiones con test.
+
+
+# 10. Pose métrica: método y resultados
+
+La localización ya se ejecutó en CPU. El estimador recibió RGB público, tiempos, intrínsecos, tamaño físico del marcador, incrementos relativos ruidosos y centroides/IDs predichos persistidos. Las poses exactas, máscaras verdaderas y geometría 3D entraron únicamente en un proceso evaluador posterior.
+
+ArUco8: lado codificado 0,20 m y marco 0,2667 m. Los incrementos tienen intervalo real 0,25 s, ruido independiente de 2,5 mm y 1 mrad; no simulan sesgo ni deriva correlacionada. La covarianza de esquinas usa 0,5 px heurísticos. No es calibración de sensores reales.
+
+Método congelado | Reglas
+
+Pose del marcador | IPPE, profundidad positiva, reproyección <=3 px, separación de hipótesis 0,25 px.
+
+Fusión | Ancla en un ID realmente decodificado; movimiento relativo público; gate de innovación 16,8.
+
+Triangulación | Mínimo 3 vistas, paralaje >=3 grados y reproyección <=3 px; hasta 40 hipótesis deterministas. Sin corregir IDs ni reconciliar tracks.
+
+Ruta | Cobertura pose | Mediana cm | RMSE cm | P95 cm | P95 grados
+
+legacy | 100,00% | 10,55 | 9,99 | 13,13 | 1.00
+
+vertical | 100,00% | 3,22 | 4,31 | 7,62 | 0.84
+
+orbit | 100,00% | 5,81 | 7,52 | 12,22 | 1.94
+
+Errores de la cámara respecto del marco del marcador, sobre todos los fotogramas. Cobertura 100% significa que la fusión produjo una pose; no que cada fotograma contenga un marcador ni que la pose sea exacta. El JSON incluye errores por fase y la referencia sin fusión.
+
+Las plantas C06/C07 pertenecen a validación y comparten estructura. No se ajustó ningún umbral usando estos errores. Los sensores ideales y el escenario sintético limitan la transferencia de estas cifras al campo real.
+
+
+# 10b. Evolución de la pose y fallo del marcador
+
+Imagen: images/camera_pose_errors.png
+
+Error de posición de cámara de la fusión en centímetros, sin ocultar los tránsitos largos. Los tiempos y presupuestos difieren entre rutas.
+
+Ruta | Poses visuales >90° | Detrás del plano | Aceptadas por fusión
+
+legacy | 18 | 18 | 0
+
+vertical | 6 | 5 | 0
+
+orbit | 19 | 19 | 0
+
+Un ensayo 2D acotado comprobó que el patrón ArUco8 conserva una decodificación ID8 al reflejarlo horizontal o verticalmente. En esta escena el reverso de la superficie también puede verse. Decodificar el ID y obtener baja reproyección no certifica la correspondencia frontal de sus esquinas. El diagnóstico privado enumera los casos y su lado real; no se usa para corregir el estimador.
+
+La fusión conserva su filtro de innovación original. No se movió, tapó ni sustituyó el marcador para mejorar estos resultados; tampoco se borraron las poses visuales incorrectas. El error residual de fusión y su cobertura deben leerse juntos.
+
+
+# 10c. Capachos 3D: error, cobertura y rechazos
+
+Se triangula el centroide de la máscara predicha, que cambia con la vista y la visibilidad. La referencia evaluadora es el <b>centro de la caja 3D alineada a los ejes del mundo de la geometría del capacho</b>, transformado al marcador. No es el centro interno del fruto ni una pose 6D del fruto.
+
+Una estimación se atribuye estrictamente solo si todos sus inliers (al menos 3) tienen un emparejamiento 2D global IoU>=0,5 y corresponden a la misma identidad verdadera. Los casos mixtos o sin correspondencia se conservan como no atribuidos. No se busca la verdad más cercana en 3D para mejorar el error.
+
+Objetivo elegible | Únicos cubiertos | Mediana cm | P95 cm | Tracks medidos
+
+legacy | 161/196 (82,14%) | 10,11 | 19,23 | 414
+
+vertical | 163/235 (69,36%) | 4,33 | 13,20 | 310
+
+orbit | 217/237 (91,56%) | 7,00 | 15,45 | 733
+
+Cobertura del mapa al terminar la ruta sobre instancias que alguna vez fueron visibles y elegibles como objetivo C06/C07. No es cobertura instantánea. Errores por track: los fragmentos repetidos del mismo capacho no aumentan el numerador de instancias únicas. Las métricas globales incluyen vecinos y están en los JSON.
+
+Imagen: images/calyx_3d_histograms.png
+
+Histogramas: todos los tracks estrictamente atribuidos a C06/C07, incluidos los no elegibles. Se muestra el rango completo; las frecuencias incluyen fragmentos repetidos de una identidad.
+
+Ruta | Tracks estimados | Atribución estricta | Sin 3 observaciones
+
+legacy | 1183 | 765 | 12818
+
+vertical | 636 | 507 | 9242
+
+orbit | 1230 | 960 | 16381
+
+Los errores son condicionales a la atribución estricta; no ocultan la baja duración de numerosos tracks. Los archivos completos conservan hipótesis rechazadas, reproyección, paralaje, inliers, identidades mezcladas y distancias de todos los inliers que pudieron emparejarse, incluidos tracks mixtos.
+
+
+# 11. Cómo apropiarse del material
+
+Archivo / carpeta del paquete | Uso recomendado
+
+guia_estudiantes.pdf | Lectura metodológica y límites del corte.
+
+index.html | Comparación portable: videos, matrices y vistas completas. Descargar el directorio; GitHub no ejecuta HTML como una web.
+
+dataset_sample/ | 18 ejemplos completos train/val con máscaras originales y selección documentada.
+
+metrics/ | Resultados de entrenamiento, comparación estática y agregados de las tres rutas.
+
+evidence/ | Protocolos, manifiestos, auditorías y JSON completos de vuelos comprimidos sin pérdida. Contiene información privada de evaluación: no usar como entrada del estimador.
+
+models/ | Peso multiescala y referencia exacta, vinculados por SHA256.
+
+source_snapshot/ | Lectura de las implementaciones efectivamente usadas. Incluyen dependencias y rutas históricas; no constituyen un pipeline autónomo listo para lanzar.
+
+videos/ | Tres rutas completas PiP y cuatro clips de diagnóstico conservados.
+
+## Primera sesión de trabajo propuesta
+
+1. Leer las definiciones de las páginas 5-6 y reproducir P/R/F1 de una matriz. 2. Ver legacy, vertical y órbita parcial, separando adquisición, inspección y tránsito. 3. Contrastar el peor, mediano y mejor caso con la matriz de su ruta. 4. Registrar dudas como evidencia observada o hipótesis, manteniendo la distinción.
+
+Para verificar el paquete, ejecutar <b>python verify_package.py</b> desde este directorio: usa solo la biblioteca estándar y compara tamaños/SHA256. Para explorar una evaluación completa: descomprimir evidence/flights/*_full_evaluation.json.gz; el JSON compacto conserva métricas y omite listas largas de cambios de IDs.
+
+Este repositorio publica resultados y ejemplos, no una copia completa de las 384 imágenes, 627 capturas y todas las cachés de predicciones. Sus hashes/manifiestos y evaluaciones están incluidos; los datos masivos permanecen en outputs del equipo de origen. No relanzar render ni entrenamiento para leer esta entrega.
+
+
+# 12. Trazabilidad, límites y cierre diagnóstico
+
+## Fuentes de las cifras
+
+<b>Datos y aprendizaje:</b> evidence/dataset/protocol.json, split_plan.json, split_integrity_audit_v1.json, training_readiness.json, native_augmentation_integration_check.json; metrics/training_results.csv. La auditoría de separación pasó 868.156 comprobaciones; la de entrega estática, 166.846 comprobaciones y 768 recomputaciones CPU.
+
+<b>Vuelos:</b> evidence/flights/protocol.json, preflight_delivery_v1.json, example_selection.json y los recibos de cada ruta. Las auditorías aritméticas pasaron 284.009 / 266.543 / 459.377 comprobaciones para legacy / vertical / órbita. Los JSON originales se preservan comprimidos sin pérdida.
+
+<b>Identidad y pose:</b> evidence/diagnosis/tracking_failure_diagnosis_v1.json y historical_reprojection_recovery_review_v1.json. El informe cronológico completo está en evidence/context/dataset_multiescala_2026-10-20.md.
+
+## Identidades de artefactos
+
+<b>Modelo nuevo SHA256</b><br/>9c660824319f2c436321d2545cf9b267<br/>348c7be64d7780a396d8382555eb05cd
+
+<b>Referencia SHA256</b><br/>79c3dad74e7cf9caab3c82a3e37ea722<br/>35352568d7dfacbd5c9e8284cb190073
+
+<b>Protocolo de vuelos SHA256</b><br/>86dabc5a22a59aa53207547e565bd940<br/>8a05e3dac8c47df037d11aff71b78026
+
+## Condiciones de uso e interpretación
+
+Resultados exclusivamente sintéticos, con topología compartida, test de desarrollo inspeccionado, ausencia de negativos completos y ruido de sensores idealizado. No se ha probado transferencia a campo real, navegación autónoma segura ni madurez interna del fruto. Las métricas condicionales y la decodificación ArUco no bastan para promoción.
+
+El código propio conserva la licencia del repositorio; esta publicación no relicencia pesos ni componentes de terceros. Los checkpoints derivados de Ultralytics conservan las obligaciones de su origen. Consultar LICENSE y los avisos de dependencias antes de redistribuirlos fuera del equipo.
+
+La campaña termina como diagnóstico: se completaron los entregables y su evaluación, incluidos resultados desfavorables. No se alcanzó ni se afirma el objetivo científico global. El corte parcial anterior permanece inmutable. Cualquier mejora del tracker, marcador, ruido o detector requiere otro experimento explícito.

@@ -17,15 +17,27 @@ def _rendered_node_frames(plant):
     """Replay renderer transforms for pose trials, without changing morphology."""
     from mathutils import Vector
     from .blender_geometry import _axis_direction, _bend_direction, _apply_axis_load_deflection
+    from .organ_frames import branch_direction_3d
     frames={}
     def visit(axis,start,parent):
         direction=(Vector(axis.resolved_direction).normalized() if axis.resolved_direction
                    else _axis_direction(parent,axis.azimuth_deg,axis.branch_angle_deg))
+        if axis.provenance.get('branch_frame_v140'):
+            direction=Vector(branch_direction_3d(parent,axis.azimuth_deg,axis.branch_angle_deg))
         current=start.copy()
         for index,internode in enumerate(axis.internodes):
-            direction=_bend_direction(direction,internode.bend_azimuth_deg,internode.bend_angle_deg)
+            turns=axis.provenance.get('y_fork_continuations_v142',{})
+            turn=turns.get(axis.nodes[index-1].id) if index>0 else None
+            if turn:
+                direction=Vector(branch_direction_3d(direction,turn['azimuth_deg'],turn['angle_deg']))
+            direction=_bend_direction(direction,internode.bend_azimuth_deg,internode.bend_angle_deg,
+                minimum_z=-1.0 if axis.provenance.get('terminal_load_droop_v139') else -0.15)
             direction=_apply_axis_load_deflection(direction,axis=axis,segment_index=index,
                                                   segment_count=len(axis.internodes))
+            if 'nodal_growth_repulsion_v1' in internode.provenance:
+                from .nodal_repulsion import segment_directions
+                _,recorded=segment_directions(internode,axis.internodes[index-1] if index else None)
+                direction=Vector(recorded)
             current=current+direction*(internode.length_cm*.08)
             if index<len(axis.nodes):frames[axis.nodes[index].id]=(current.copy(),direction.copy())
         for child in axis.child_axes:

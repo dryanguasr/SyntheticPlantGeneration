@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "protocol_sha256": "74a23fea44c324633105486bda976f1bab7cf023ccd20d91278d7e67c06950dc",
+  "cpu_check_sha256": "b3b14887be5397483309ade5e6ab8883b63bfbc157a159c6922dacdaa2ebf0cd",
+  "controller_sha256": "c5684842ddb9ba319ec8b345eebda349160e9ad6cffa63acedb36bfe3ed126d8",
+  "free_gib": 12.554115295410156
+}

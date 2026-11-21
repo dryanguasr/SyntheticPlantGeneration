@@ -1,0 +1,658 @@
+{
+  "version": "evaluation-delivery-audit/1",
+  "created_utc": "2026-10-21T10:04:37.981030+00:00",
+  "passed": true,
+  "errors": [],
+  "checks": {
+    "assertions": 166846
+  },
+  "elapsed_seconds": 12.39268579997588,
+  "command": ".venv-training/Scripts/python.exe outputs/multiscale_dataset_20261020/audit_evaluation_delivery_v1.py",
+  "script_sha256": "befaa86c28f7bf1da0fd6cb3be8a71914f002dd4f9fab1713d9a0295af49079d",
+  "evidence_sha256": {
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\evaluate_multiscale_v1.py": "111f4359578dae14adaef24626b82bc94b644efef82d1b4076d54a7906b34527",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\evaluation_protocol_v1.json": "969af3b6457a6d0fc7fd09e214ac734eef6a76804f27cc2f32366cbd890823bb",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\dataset\\raster_manifest.json": "2f38aec78c7c92b02b8dda812521a558d987a7d9938207b064c32d4bacc19426",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\training_runs\\training\\weights\\last.pt": "79c3dad74e7cf9caab3c82a3e37ea72235352568d7dfacbd5c9e8284cb190073",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\training_runs\\training\\weights\\last.pt": "9c660824319f2c436321d2545cf9b267348c7be64d7780a396d8382555eb05cd",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\confusion_val_all.png": "51ee4b93a74b1b540ceb681307497551809a983648b646dabdcfb34e4404abb1",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\confusion_val_eligible.png": "561b4cc5e59eeba5a1c162d92b6a712f29122fe17a4ab5adc946c6e57662538f",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\confusion_test_all.png": "e8154cbe06cc08bcfacd9f00bd88942d8457e3a0e4dd7677bdc3e5b7ade90b19",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\confusion_test_eligible.png": "f59d8294af62668b4909d64707132a5b51f3df1f099c2ff3f4ea04362cf81543",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\summary.json": "a33cb8d42b013bb2bbffdcea0fd61111fcd24dedc5020c099fdcf75fd883197b",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\run_binding.json": "f474b1fea9088280e266720eddf5c770cf62b798ed4ee6c45fa8cb4d93d2db42",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\training_runs\\training\\execution_summary.json": "dbccbed08920ed6cd48a058d4b549c306dd3e2863b63a8250c65c5797fb33cc8",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\training_runs\\training\\parameter_updates.jsonl": "07f336776e7d8c7db1c8396d618a36638cfeb1df363c68dc3173b54cf5d1b185",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\evaluation_readiness_v1.json": "60465e154377aaa5f0c5314d8f053e09931b54d4fea0b5996973a187c46e57a9"
+  },
+  "run_binding": {
+    "evaluator_sha256": "111f4359578dae14adaef24626b82bc94b644efef82d1b4076d54a7906b34527",
+    "protocol_sha256": "969af3b6457a6d0fc7fd09e214ac734eef6a76804f27cc2f32366cbd890823bb",
+    "manifest_sha256": "2f38aec78c7c92b02b8dda812521a558d987a7d9938207b064c32d4bacc19426",
+    "weights": {
+      "reference": "79c3dad74e7cf9caab3c82a3e37ea72235352568d7dfacbd5c9e8284cb190073",
+      "new": "9c660824319f2c436321d2545cf9b267348c7be64d7780a396d8382555eb05cd"
+    }
+  },
+  "cache_counts": {
+    "reference": {
+      "records": 192,
+      "payloads": 192,
+      "metrics": 192
+    },
+    "new": {
+      "records": 192,
+      "payloads": 192,
+      "metrics": 192
+    }
+  },
+  "native_mask_metric_recomputations": 768,
+  "models": 2,
+  "views_per_model": 192,
+  "inference_rerun": false,
+  "report_rerun": false,
+  "gpu_used": false,
+  "reference_and_new_use_same_pipeline": true,
+  "comparison": {
+    "val": {
+      "all_distances": {
+        "all": {
+          "reference": {
+            "precision": 0.6727989487516426,
+            "recall": 0.42769134384462776,
+            "f1": 0.5229492499202043
+          },
+          "new": {
+            "precision": 0.7523928098980625,
+            "recall": 0.5048031742716926,
+            "f1": 0.6042180909232933
+          },
+          "delta_percentage_points": {
+            "precision": 7.959386114641987,
+            "recall": 7.711183042706487,
+            "f1": 8.126884100308896
+          },
+          "truth_total": 19154,
+          "truth_in_scope": 19154,
+          "truth_excluded_small": 0
+        },
+        "eligible": {
+          "reference": {
+            "precision": 0.6047690979715149,
+            "recall": 0.7603092783505154,
+            "f1": 0.6736778846153846
+          },
+          "new": {
+            "precision": 0.6866329002422374,
+            "recall": 0.8459034183396635,
+            "f1": 0.7579919776346177
+          },
+          "delta_percentage_points": {
+            "precision": 8.186380227072254,
+            "recall": 8.559413998914811,
+            "f1": 8.43140930192331
+          },
+          "truth_total": 19154,
+          "truth_in_scope": 7372,
+          "truth_excluded_small": 11782
+        }
+      },
+      "near": {
+        "all": {
+          "reference": {
+            "precision": 0.5686094538779256,
+            "recall": 0.48789131718842293,
+            "f1": 0.5251668962594045
+          },
+          "new": {
+            "precision": 0.7655263157894737,
+            "recall": 0.5727505414451664,
+            "f1": 0.6552539700416714
+          },
+          "delta_percentage_points": {
+            "precision": 19.691686191154812,
+            "recall": 8.485922425674342,
+            "f1": 13.008707378226692
+          },
+          "truth_total": 5079,
+          "truth_in_scope": 5079,
+          "truth_excluded_small": 0
+        },
+        "eligible": {
+          "reference": {
+            "precision": 0.5258240332208669,
+            "recall": 0.6952642415923129,
+            "f1": 0.5987882370326585
+          },
+          "new": {
+            "precision": 0.7413151364764268,
+            "recall": 0.820178448867536,
+            "f1": 0.7787552948843272
+          },
+          "delta_percentage_points": {
+            "precision": 21.549110325555986,
+            "recall": 12.491420727522307,
+            "f1": 17.996705785166867
+          },
+          "truth_total": 5079,
+          "truth_in_scope": 2914,
+          "truth_excluded_small": 2165
+        }
+      },
+      "middle": {
+        "all": {
+          "reference": {
+            "precision": 0.7403598971722365,
+            "recall": 0.47035766780989713,
+            "f1": 0.575252172176171
+          },
+          "new": {
+            "precision": 0.7658815132048536,
+            "recall": 0.5257226849583537,
+            "f1": 0.6234747239976758
+          },
+          "delta_percentage_points": {
+            "precision": 2.5521616032617156,
+            "recall": 5.5365017148456594,
+            "f1": 4.8222551821504815
+          },
+          "truth_total": 6123,
+          "truth_in_scope": 6123,
+          "truth_excluded_small": 0
+        },
+        "eligible": {
+          "reference": {
+            "precision": 0.6944632005401755,
+            "recall": 0.8124012638230648,
+            "f1": 0.7488168911539862
+          },
+          "new": {
+            "precision": 0.7105775470473719,
+            "recall": 0.8649289099526066,
+            "f1": 0.7801923762023513
+          },
+          "delta_percentage_points": {
+            "precision": 1.6114346507196342,
+            "recall": 5.252764612954186,
+            "f1": 3.137548504836507
+          },
+          "truth_total": 6123,
+          "truth_in_scope": 2532,
+          "truth_excluded_small": 3591
+        }
+      },
+      "far": {
+        "all": {
+          "reference": {
+            "precision": 0.7214867617107943,
+            "recall": 0.3563883299798793,
+            "f1": 0.4771043771043771
+          },
+          "new": {
+            "precision": 0.7304042904290429,
+            "recall": 0.4452967806841046,
+            "f1": 0.55328125
+          },
+          "delta_percentage_points": {
+            "precision": 0.891752871824858,
+            "recall": 8.890845070422532,
+            "f1": 7.617687289562286
+          },
+          "truth_total": 7952,
+          "truth_in_scope": 7952,
+          "truth_excluded_small": 0
+        },
+        "eligible": {
+          "reference": {
+            "precision": 0.6204647370566653,
+            "recall": 0.7902388369678089,
+            "f1": 0.6951358757707239
+          },
+          "new": {
+            "precision": 0.5965417867435159,
+            "recall": 0.8598130841121495,
+            "f1": 0.704381114419396
+          },
+          "delta_percentage_points": {
+            "precision": -2.3922950313149394,
+            "recall": 6.957424714434057,
+            "f1": 0.9245238648672105
+          },
+          "truth_total": 7952,
+          "truth_in_scope": 1926,
+          "truth_excluded_small": 6026
+        }
+      }
+    },
+    "test": {
+      "all_distances": {
+        "all": {
+          "reference": {
+            "precision": 0.6782879818594104,
+            "recall": 0.41303128371089537,
+            "f1": 0.5134229087885859
+          },
+          "new": {
+            "precision": 0.7555745576530948,
+            "recall": 0.495663430420712,
+            "f1": 0.5986242117880035
+          },
+          "delta_percentage_points": {
+            "precision": 7.728657579368436,
+            "recall": 8.263214670981661,
+            "f1": 8.520130299941764
+          },
+          "truth_total": 23175,
+          "truth_in_scope": 23175,
+          "truth_excluded_small": 0
+        },
+        "eligible": {
+          "reference": {
+            "precision": 0.6235980669280569,
+            "recall": 0.7568614431164232,
+            "f1": 0.6837974303854422
+          },
+          "new": {
+            "precision": 0.7021528918080642,
+            "recall": 0.8518149623727312,
+            "f1": 0.7697769776977698
+          },
+          "delta_percentage_points": {
+            "precision": 7.855482488000732,
+            "recall": 9.495351925630802,
+            "f1": 8.59795473123276
+          },
+          "truth_total": 23175,
+          "truth_in_scope": 9036,
+          "truth_excluded_small": 14139
+        }
+      },
+      "near": {
+        "all": {
+          "reference": {
+            "precision": 0.5746615477874318,
+            "recall": 0.47622237106496984,
+            "f1": 0.5208314256936178
+          },
+          "new": {
+            "precision": 0.7593799146259268,
+            "recall": 0.565974547890154,
+            "f1": 0.6485656720713806
+          },
+          "delta_percentage_points": {
+            "precision": 18.471836683849496,
+            "recall": 8.975217682518416,
+            "f1": 12.773424637776277
+          },
+          "truth_total": 5972,
+          "truth_in_scope": 5972,
+          "truth_excluded_small": 0
+        },
+        "eligible": {
+          "reference": {
+            "precision": 0.5401624548736462,
+            "recall": 0.6847826086956522,
+            "f1": 0.6039354187689203
+          },
+          "new": {
+            "precision": 0.7366917683718515,
+            "recall": 0.8114988558352403,
+            "f1": 0.7722880087110385
+          },
+          "delta_percentage_points": {
+            "precision": 19.652931349820523,
+            "recall": 12.671624713958806,
+            "f1": 16.83525899421182
+          },
+          "truth_total": 5972,
+          "truth_in_scope": 3496,
+          "truth_excluded_small": 2476
+        }
+      },
+      "middle": {
+        "all": {
+          "reference": {
+            "precision": 0.75016880486158,
+            "recall": 0.4484660925726588,
+            "f1": 0.5613473684210526
+          },
+          "new": {
+            "precision": 0.7786336914656395,
+            "recall": 0.5168191603875134,
+            "f1": 0.6212697128993125
+          },
+          "delta_percentage_points": {
+            "precision": 2.8464886604059547,
+            "recall": 6.835306781485462,
+            "f1": 5.992234447825995
+          },
+          "truth_total": 7432,
+          "truth_in_scope": 7432,
+          "truth_excluded_small": 0
+        },
+        "eligible": {
+          "reference": {
+            "precision": 0.7180440377466399,
+            "recall": 0.807395498392283,
+            "f1": 0.7601029211442409
+          },
+          "new": {
+            "precision": 0.7366847826086956,
+            "recall": 0.8717041800643087,
+            "f1": 0.7985272459499264
+          },
+          "delta_percentage_points": {
+            "precision": 1.8640744862055691,
+            "recall": 6.430868167202575,
+            "f1": 3.8424324805685472
+          },
+          "truth_total": 7432,
+          "truth_in_scope": 3110,
+          "truth_excluded_small": 4322
+        }
+      },
+      "far": {
+        "all": {
+          "reference": {
+            "precision": 0.7192796610169492,
+            "recall": 0.34745675979940643,
+            "f1": 0.468566696570285
+          },
+          "new": {
+            "precision": 0.7331156556109297,
+            "recall": 0.43659809640773717,
+            "f1": 0.5472738935214881
+          },
+          "delta_percentage_points": {
+            "precision": 1.383599459398055,
+            "recall": 8.914133660833073,
+            "f1": 7.870719695120315
+          },
+          "truth_total": 9771,
+          "truth_in_scope": 9771,
+          "truth_excluded_small": 0
+        },
+        "eligible": {
+          "reference": {
+            "precision": 0.6366030283080975,
+            "recall": 0.7958847736625514,
+            "f1": 0.7073884418434528
+          },
+          "new": {
+            "precision": 0.6263480034975226,
+            "recall": 0.8843621399176955,
+            "f1": 0.7333219587101177
+          },
+          "delta_percentage_points": {
+            "precision": -1.025502481057483,
+            "recall": 8.847736625514413,
+            "f1": 2.5933516866664896
+          },
+          "truth_total": 9771,
+          "truth_in_scope": 2430,
+          "truth_excluded_small": 7341
+        }
+      }
+    }
+  },
+  "regressions": [
+    {
+      "split": "val",
+      "distance": "far",
+      "mode": "eligible",
+      "metric": "precision",
+      "delta_percentage_points": -2.3922950313149394
+    },
+    {
+      "split": "test",
+      "distance": "far",
+      "mode": "eligible",
+      "metric": "precision",
+      "delta_percentage_points": -1.025502481057483
+    }
+  ],
+  "per_class_changes": {
+    "val": {
+      "all": {
+        "f1_delta_percentage_points": {
+          "pintona": 12.1230890381751,
+          "madura": 6.747192014434312,
+          "sobremadura": 6.649976101103928
+        },
+        "pintona_to_madura": {
+          "reference": 661,
+          "new": 436
+        },
+        "madura_to_pintona": {
+          "reference": 161,
+          "new": 252
+        }
+      },
+      "eligible": {
+        "f1_delta_percentage_points": {
+          "pintona": 10.38797352877755,
+          "madura": 7.512239136031907,
+          "sobremadura": 7.847792282100629
+        },
+        "pintona_to_madura": {
+          "reference": 432,
+          "new": 209
+        },
+        "madura_to_pintona": {
+          "reference": 127,
+          "new": 173
+        }
+      }
+    },
+    "test": {
+      "all": {
+        "f1_delta_percentage_points": {
+          "pintona": 13.44741933338473,
+          "madura": 6.413420082950361,
+          "sobremadura": 7.205149443851633
+        },
+        "pintona_to_madura": {
+          "reference": 838,
+          "new": 538
+        },
+        "madura_to_pintona": {
+          "reference": 172,
+          "new": 297
+        }
+      },
+      "eligible": {
+        "f1_delta_percentage_points": {
+          "pintona": 11.30102417907296,
+          "madura": 6.59669718030872,
+          "sobremadura": 9.876773974185394
+        },
+        "pintona_to_madura": {
+          "reference": 510,
+          "new": 231
+        },
+        "madura_to_pintona": {
+          "reference": 129,
+          "new": 179
+        }
+      }
+    }
+  },
+  "representative_full_view_artifacts": [
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\validation_view_000.jpg",
+      "sha256": "e2b1ec73318ef0ddf18a1864d3c580ce76eaf2e9e7ec199502c31c730e88e2ea",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\validation_view_048.jpg",
+      "sha256": "13a9d9d0f0df938c8ec628251f3b42dde53642f88d4c1fefaa14a697ce33ebe9",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\validation_view_093.jpg",
+      "sha256": "7990ea66457b207ac2f946797edfd9ce792e11e95106c033d74270c44e50422c",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\validation_view_001.jpg",
+      "sha256": "ee073177c823475050c10c0789b9d410c40c60228075a7375fa0d291afe17918",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\validation_view_049.jpg",
+      "sha256": "75dd35384cbe5546da66eb613e01c43311b22f67b27d998943a360d178557dee",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\validation_view_094.jpg",
+      "sha256": "0db0711e985eb6f183bcd4675cc8bbc62a5b1acfc0ebaf33b7fb60705e8192b1",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\validation_view_002.jpg",
+      "sha256": "c5909c49b09f1adb0858e4bb068ee3628189dd76b809a066c7e381992b464bef",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\validation_view_050.jpg",
+      "sha256": "71a89992e6ac87f11f35092df35cd68f5da730d5e9ab7408c02d1a9ad3bc6003",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\validation_view_095.jpg",
+      "sha256": "015f65325443b639e470e2b3e479a517887d40c0a2dd5253c9229a887094d6f5",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\test_view_000.jpg",
+      "sha256": "3b9d709591f5f973f4ef6a1de4bad37fe82e8c503d70699404b5b1b75e9d00fd",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\test_view_048.jpg",
+      "sha256": "6316e097e1fe06f54db19725841463e6dee920699de246dac82520d1cdd002a4",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\test_view_093.jpg",
+      "sha256": "6ea57b25f3020d626f6edb26e771727ce7e5d371fe1a4c9f0c49b4b637049737",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\test_view_001.jpg",
+      "sha256": "f475bf9ebc9fe9f30311a9e16dff94385ff087da72bca5dbf503f0f0d6bf6dc8",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\test_view_049.jpg",
+      "sha256": "af018c85ac25092717ab20d96bba83ceddf728e176a08fdc2b00b6a8ae105168",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\test_view_094.jpg",
+      "sha256": "d65ed62e08c77336f1600912c85e27ac882ec470940e7f593a4fa1ca1493dd41",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\test_view_002.jpg",
+      "sha256": "9998df9f88068b191d18eb00427d6e7186675aa51b55db1baf7554f2690d3512",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\test_view_050.jpg",
+      "sha256": "77b7331bbe4dc064cdb204c5d791a40d36a5a99c59a12ceed6866ebaa6953fdf",
+      "size": [
+        3840,
+        752
+      ]
+    },
+    {
+      "path": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_evaluation_v1\\examples\\test_view_095.jpg",
+      "sha256": "12b9beb12df7bd44389df875b39a515f15601b14ed126f5093139bf0bfe195c4",
+      "size": [
+        3840,
+        752
+      ]
+    }
+  ],
+  "limitations": [
+    "Validation/test plants have been historically inspected; this is not an external untouched holdout.",
+    "Shared V142 D topology; instance/seed split disjoint but not independent botanical families.",
+    "Distance stratification is camera-to-aim-point per complete view; background plants may be at other distances.",
+    "Native patch resizing adds no optical detail; camera captures provide the different scale.",
+    "Eligible filtering is not a universal YOLO limit and must always be accompanied by all-object metrics.",
+    "Class labels describe calyx appearance, not internal fruit maturity.",
+    "Source dataset currently contains no complete negative views or empty crops.",
+    "Fixed-threshold precision/recall/F1, not AP; wrong-class spatial matches count as FP andFN.",
+    "max_det=300 per tile is identical and fixed for both models. Some dataset crops contain more than300true instances (observed maximum342); the prediction cap can limit dense-scene recall. It is not raised based on test results.",
+    "Every metric counts visible object observations per frame; not unique fruit recovery or tracking accuracy.",
+    "All visible plants including neighbors are evaluated; distance bins describe view aim point, not each fruit's distance.",
+    "Same640/448 pipeline comparison isolates checkpoint performance under this pipeline; not historical384/256 end-to-end replication.",
+    "No negative full images or crops: pure-background false-alarm rate is unmeasured.",
+    "Eligible subset covers only a fraction of all visible truth; it must not replace full-denominator results.",
+    "Visual inspection and flight continuity/localization are separate from this numerical delivery audit."
+  ],
+  "diagnostic_flight_recommendations": [
+    "Proceed only to a short bounded diagnostic flight with unchanged plants, frozen new checkpoint and same reference/pipeline/thresholds.",
+    "Use continuous consecutive frames; retain near/middle/far and angle metadata, separate transit from inspection.",
+    "Keep backgrounds, original private masks and identities; infer only fromRGB and allowed noisy relative sensors for later tracking/localization.",
+    "Report all/eligible metrics and target-only scope explicitly; do not infer target selection automatically from an evaluator ROI.",
+    "Preserve far-eligible precision regressions and all-class confusions; do not retune on development test or promote scientifically from this pilot."
+  ],
+  "scientific_promotion": false,
+  "training_summary": {
+    "epochs": 10,
+    "batches": 11520,
+    "optimizer_steps": 11513,
+    "min_train_free_gib": 14.10342025756836,
+    "min_validation_free_gib": 14.029411315917969
+  }
+}

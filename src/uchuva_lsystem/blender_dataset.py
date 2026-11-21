@@ -42,6 +42,7 @@ from .cultivation import generate_cultivation_morphologies
 from .composition_calibration import load_schedule_rates
 from .domain_analysis import load_reference_profile
 from .parameters import get_morphology_parameters
+from .provenance import override_parameter
 from .scene import create_cultivation_scene
 from .validation import validate_cultivation_scene, validate_morphology_tree
 from .yolo_export import (
@@ -102,8 +103,11 @@ class DatasetConfig:
     keep_masks: bool = False
     inspection_blend_path: str | Path | None = None
     annotation_palette_version: str = "rgb_lattice_4095_v1"
+    morphology_preset: str | None = None
 
     def validate(self) -> None:
+        if self.morphology_preset is not None:
+            get_morphology_parameters(self.morphology_preset)
         if self.annotation_palette_version != "rgb_lattice_4095_v1":
             raise ValueError("Unsupported annotation palette version")
         if self.image_count <= 0 or self.captures_per_scene <= 0:
@@ -145,6 +149,10 @@ class DatasetConfig:
 
     def to_dict(self) -> dict[str, Any]:
         result = asdict(self)
+        if self.morphology_preset is None:
+            # Retain the serialized historical config when no new route was
+            # requested; explicit new presets participate in resume checks.
+            result.pop("morphology_preset")
         result["output_dir"] = str(self.output_dir)
         result["asset_dir"] = str(self.asset_dir) if self.asset_dir is not None else None
         result["reference_profile_path"] = (
@@ -323,7 +331,25 @@ def _weighted_schedule(
     return [key for key, _ in tokens]
 
 
+def morphology_parameters_for_capture(
+    target: dict[str, Any] | None = None,
+    *,
+    preset_name: str = "trained_trellis_audit_v2",
+) -> dict[str, Any]:
+    """Select plant parameters independently of count/area/camera targets.
+
+    ``target`` is accepted to make migration explicit, but is not consumed.
+    Cameras and view selection may change; nodal architecture and load may not.
+    """
+    params = get_morphology_parameters(preset_name)
+    policy = params.get("reproduction", {}).get("load_policy", {}).get("value")
+    if policy != "architecture_driven":
+        raise ValueError("Independent capture route requires architecture_driven plant policy")
+    return params
+
+
 def _morphology_params_for_target(target: dict[str, Any]) -> dict[str, Any]:
+    """Historical frame-coupled route, retained only for old dataset configs."""
     params = get_morphology_parameters("trained_trellis")
     # Dense dataset-facing canopy: compact internodes, more active nodal
     # branches, broader blades, and shorter petioles keep foliage layered
@@ -343,7 +369,11 @@ def _morphology_params_for_target(target: dict[str, Any]) -> dict[str, Any]:
     params["leaf"]["width_to_length_ratio_range"].update(
         {"min": 0.64, "max": 0.90}
     )
-    params["leaf"]["petiole_length_cm_range"].update({"min": 3.5, "max": 5.8})
+    override_parameter(
+        params["leaf"]["petiole_length_cm_range"], min=3.5, max=5.8,
+        status="manual_initial_guess",
+        method="legacy_dataset_canopy_petiole_override_not_a_Kew_measurement",
+    )
     params["leaf"]["senescence_range"].update({"min": 0.0, "max": 0.16})
     band = target["object_count_band"]
     ranges = {
@@ -455,7 +485,11 @@ def generate_annotation_dataset(config: DatasetConfig) -> dict[str, Any]:
             "object_count_band": "one_to_five",
             "environment_mode": "canopy_close",
         }
-        morphology_params = _morphology_params_for_target(scene_target)
+        morphology_params = (
+            morphology_parameters_for_capture(scene_target, preset_name=config.morphology_preset)
+            if config.morphology_preset is not None
+            else _morphology_params_for_target(scene_target)
+        )
         accepted = False
         while candidate_seed < candidate_limit:
             scene_seed = candidate_seed

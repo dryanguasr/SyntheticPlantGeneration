@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "tests": [
+    "Known marker/camera transform and Blender-to-optical conversion give zero error",
+    "Global highest-confidence native mask wins even with wrong class; duplicate remains FP",
+    "Missing estimates remain undefined; error statistics have explicit support"
+  ],
+  "protocol_sha256": "74a23fea44c324633105486bda976f1bab7cf023ccd20d91278d7e67c06950dc",
+  "evaluator_sha256": "75be38d707c7d6c1c26a75a4c30e320dc83908ed3063799345c10345e5aa53b4",
+  "smoke_helper_sha256": "a2f0feaf7624c826ae1305b66ab349690dbd2affc6c08e94c395f31fa69e987b",
+  "prediction_helper_sha256": "111f4359578dae14adaef24626b82bc94b644efef82d1b4076d54a7906b34527",
+  "predeclared_evaluation_criteria_preserved": true,
+  "truth_not_used_by_estimator": true
+}

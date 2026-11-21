@@ -15,6 +15,7 @@ from typing import Any, Iterable
 from .morphology import Axis, Plant
 from .scene import CultivationScene, PlantInstance
 from .spatial import ContactPolicy, classify_contact
+from .geometry_contracts import axis_sag_factor, stem_centerline_points
 
 
 Vec3 = tuple[float, float, float]
@@ -471,11 +472,13 @@ def _circular_distance(left_deg: float, right_deg: float) -> float:
 def build_scene_proxies(
     scene: CultivationScene,
     plants_by_id: dict[str, Plant],
+    *, frame_output: dict | None = None, bone_output: dict | None = None,
 ) -> list[CollisionProxy]:
     instances = {item.plant_id: item for item in scene.plant_instances}
     proxies: list[CollisionProxy] = []
     for plant_id in sorted(plants_by_id):
         instance = instances[plant_id]
+        node_frames={};bone_frames={}
         for axis in plants_by_id[plant_id].axes:
             _append_axis_proxies(
                 proxies,
@@ -483,8 +486,10 @@ def build_scene_proxies(
                 instance=instance,
                 start=(0.0, 0.0, 0.0),
                 parent_direction=_normalise((0.05, -0.03, 1.0)),
-                node_frames={},
+                node_frames=node_frames, bone_frames=bone_frames,
             )
+        if frame_output is not None:frame_output[plant_id]=node_frames
+        if bone_output is not None:bone_output[plant_id]=bone_frames
     proxies.extend(_support_proxy(support) for support in scene.supports)
     proxies.extend(_support_system_proxies(scene))
     return proxies
@@ -784,6 +789,7 @@ def _append_axis_proxies(
     start: Vec3,
     parent_direction: Vec3,
     node_frames: dict[str, tuple[Vec3, Vec3]],
+    bone_frames: dict | None = None,
 ) -> None:
     scale = CM_TO_SCENE_UNIT * instance.scale
     direction = (
@@ -795,34 +801,36 @@ def _append_axis_proxies(
             axis.branch_angle_deg,
         )
     )
+    if axis.provenance.get("branch_frame_v140"):
+        from .organ_frames import branch_direction_3d
+        direction = branch_direction_3d(parent_direction, axis.azimuth_deg, axis.branch_angle_deg)
     current = start
     local_frames: dict[str, tuple[Vec3, Vec3]] = {}
     for index, internode in enumerate(axis.internodes):
-        direction = _bend_direction(direction, internode.bend_azimuth_deg, internode.bend_angle_deg)
+        turns = axis.provenance.get("y_fork_continuations_v142", {})
+        turn = turns.get(axis.nodes[index - 1].id) if index > 0 else None
+        if turn:
+            from .organ_frames import branch_direction_3d
+            direction = branch_direction_3d(direction, turn["azimuth_deg"], turn["angle_deg"])
+        incoming_tangent = direction
+        direction = _bend_direction(direction, internode.bend_azimuth_deg, internode.bend_angle_deg,
+                                    minimum_z=-1.0 if axis.provenance.get("terminal_load_droop_v139") else -0.15)
         direction = _load_deflection(direction, axis, index, len(axis.internodes))
+        if 'nodal_growth_repulsion_v1' in internode.provenance:
+            from .nodal_repulsion import segment_directions
+            incoming_tangent,direction=segment_directions(internode,axis.internodes[index-1] if index else None)
         end = _add(current, _mul(direction, internode.length_cm * scale))
+        if bone_frames is not None:bone_frames[internode.id]=dict(start=current,end=end,incoming=incoming_tangent,direction=direction)
         world_start = _world_point(current, instance)
         world_end = _world_point(end, instance)
-        segment_vector = _sub(world_end, world_start)
-        segment_length = _length(segment_vector)
-        flatness = math.sqrt(segment_vector[0] ** 2 + segment_vector[1] ** 2) / max(
-            segment_length,
-            1e-9,
-        )
-        sag_factor = (
-            0.012 + axis.reproductive_load * 0.025
-            if axis.order == 0
-            else 0.045 + axis.reproductive_load * 0.115
-        )
-        sag = segment_length * sag_factor * (flatness**1.35)
-        # Blender renders loaded axes as a six-point sagging polyline. Matching
-        # that curve here is essential: a straight capsule can clear a leaf
-        # while the evaluated stem mesh bends through it.
-        curve_points: list[Vec3] = []
-        for point_index in range(6):
-            t = point_index / 5.0
-            point = _add(world_start, _mul(segment_vector, t))
-            curve_points.append((point[0], point[1], point[2] - sag * math.sin(math.pi * t)))
+        # Reuse the rendered interpretation. Bezier proxies remain a sampled
+        # approximation; only the evaluated mesh audit can certify intersections.
+        tangents = None
+        if axis.provenance.get("continuous_tangent_v140"):
+            tangents = (_world_direction(incoming_tangent, instance),
+                        _world_direction(direction, instance))
+        curve_points = stem_centerline_points(world_start, world_end, axis_sag_factor(axis),
+            points_count=13 if tangents else 6, endpoint_tangents=tangents)
         for sub_index, (sub_start, sub_end) in enumerate(zip(curve_points, curve_points[1:])):
             output.append(
                 CollisionProxy(
@@ -864,6 +872,7 @@ def _append_axis_proxies(
                 start=frame[0],
                 parent_direction=frame[1],
                 node_frames=node_frames,
+                bone_frames=bone_frames,
             )
 
 
@@ -878,12 +887,20 @@ def _append_leaf_proxies(
     angle = math.radians(leaf.insertion_angle_deg)
     radial = _radial(leaf.azimuth_deg)
     direction = _normalise(_add(_mul(axis_direction, math.cos(angle)), _mul(radial, math.sin(angle))))
+    if leaf.provenance.get('insertion_frame') == 'orthogonal_local_v1':
+        from .organ_frames import orthogonal_leaf_direction
+        direction = orthogonal_leaf_direction(axis_direction, leaf.azimuth_deg, leaf.insertion_angle_deg)
+    elif leaf.provenance.get('insertion_frame') == 'local_cone_v2':
+        from .organ_frames import local_cone_leaf_direction
+        direction = local_cone_leaf_direction(axis_direction, leaf.azimuth_deg, leaf.insertion_angle_deg)
     petiole_length = leaf.petiole_length_cm * scale
     direction = _leaf_direction_with_clearance_lift(
         direction,
         petiole_length,
         float(getattr(leaf, "clearance_lift_cm", 0.0)) * scale,
     )
+    from .nodal_repulsion import pose_direction
+    direction = pose_direction(leaf,direction)
     petiole_end = _add(node, _mul(direction, petiole_length))
     world_node = _world_point(node, instance)
     world_petiole = _world_point(petiole_end, instance)
@@ -967,10 +984,15 @@ def _append_reproductive_proxies(
     node: Vec3,
     instance: PlantInstance,
 ) -> None:
-    if unit.calyx is None:
+    from .reproductive_orientation import KEY, organ_direction, pedicel_direction
+    # Historical proxy scenes omitted flowers. The explicit new reproductive
+    # frame also renders their stalks: retain those connections in the search
+    # rather than dropping measured flower/axis contacts or creating a calyx.
+    if unit.calyx is None and KEY not in unit.provenance:
         return
     scale = CM_TO_SCENE_UNIT * instance.scale
-    direction = _reproductive_direction(unit.pedicel.azimuth_deg, unit.pedicel.angle_deg)
+    direction = pedicel_direction(unit)
+    distal_direction = organ_direction(unit, direction)
     pedicel_end = _add(node, _mul(direction, unit.pedicel.length_cm * scale))
     world_node = _world_point(node, instance)
     world_pedicel = _world_point(pedicel_end, instance)
@@ -991,10 +1013,12 @@ def _append_reproductive_proxies(
             group_id=attachment,
         )
     )
+    if unit.calyx is None:
+        return
     length = unit.calyx.length_cm * scale
     radius = unit.calyx.radius_cm * scale * unit.calyx.inflation
-    center_local = _add(pedicel_end, _mul(direction, length * 0.5))
-    long_axis = _world_direction(direction, instance)
+    center_local = _add(pedicel_end, _mul(distal_direction, length * 0.5))
+    long_axis = _world_direction(distal_direction, instance)
     output.append(
         CollisionProxy(
             proxy_id=f"{instance.plant_id}:{unit.calyx.id}",
@@ -1361,19 +1385,23 @@ def _axis_direction(parent: Vec3, azimuth_deg: float, angle_deg: float) -> Vec3:
     return _normalise(_add(_mul(parent, math.cos(angle)), _mul(radial, math.sin(angle))))
 
 
-def _bend_direction(direction: Vec3, azimuth_deg: float, angle_deg: float) -> Vec3:
+def _bend_direction(direction: Vec3, azimuth_deg: float, angle_deg: float,
+                    minimum_z: float = -0.15) -> Vec3:
     current = _normalise(direction)
     radial = _radial(azimuth_deg)
     radial = _normalise(_sub(radial, _mul(current, _dot(radial, current))))
     angle = math.radians(max(-12.0, min(12.0, angle_deg)))
     bent = _normalise(_add(_mul(current, math.cos(angle)), _mul(radial, math.sin(angle))))
-    return _normalise((bent[0], bent[1], max(-0.15, bent[2])))
+    return _normalise((bent[0], bent[1], max(minimum_z, bent[2])))
 
 
 def _load_deflection(direction: Vec3, axis: Axis, index: int, count: int) -> Vec3:
     if axis.mechanical_deflection_deg <= 0.0 or count <= 0:
         return direction
-    horizontal = _normalise((direction[0], direction[1], 0.0))
+    horizontal = (direction[0], direction[1], 0.0)
+    if _length(horizontal) < 1e-6:
+        horizontal = _radial(axis.azimuth_deg)
+    horizontal = _normalise(horizontal)
     tilt = math.atan2(direction[2], math.hypot(direction[0], direction[1]))
     gain = 0.45 + 0.55 * ((index + 1) / count)
     target = max(math.radians(-35.0), tilt - math.radians(axis.mechanical_deflection_deg) / count * gain)

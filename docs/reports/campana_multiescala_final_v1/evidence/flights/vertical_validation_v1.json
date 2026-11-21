@@ -1,0 +1,3609 @@
+{
+  "version": "full-route-validation-public-export/1",
+  "passed": true,
+  "frames": 167,
+  "fps": 4,
+  "hashes_palette_classes_ids_passed": true,
+  "private_camera_continuity_passed": true,
+  "native_instance_pixel_checks": 137441,
+  "native_bbox_checks": 137441,
+  "source_hashes": {
+    "captures\\vertical\\class_mapping_private.json": "c161899b9c8c3aab4308ba1d185f9501c44411f3a716f4da0a6178b29c92c156",
+    "captures\\vertical\\board_private.json": "a849debda12d2bb609436ae781b0e7ac038bd68d96b9c425d9b24b8bb7b834d8",
+    "captures\\vertical\\environment_protocol.json": "7106a61a727be31622d5e0197afaddd513065aad70b823484bbe0f2f1f8c97c1",
+    "captures\\vertical\\path_clearance_private.json": "0bb79fe879ab32abdb23b7b1bb05ce6316ecd022e7c57cb7dea3c2baa3a728eb",
+    "captures\\vertical\\view_000\\rgb.png": "aee830c940c0c1c0ed9903d55cbfe3e68f917b91eeb83969cee3545677f6386e",
+    "captures\\vertical\\view_000\\mask_calyx_crisp_v2.png": "31b08f485fe303c1630b80d0d4774f1a5824c828799c0ea4f13bc45cfd59f6a0",
+    "captures\\vertical\\view_000\\capture.json": "6b2b4530bce9d491481178a85222e87216569a49c12dbb499b82f51f0bac0b54",
+    "captures\\vertical\\view_000\\annotations_private.json": "f7dac390c0a3045a3bd237acd9fdad99e7451c6cd56c9d60e44c22e1b2256237",
+    "captures\\vertical\\view_000\\camera_private.json": "00b13c4f3a527289120d53f51698fb823e58bfdb515ae49cb480b8c51289ea08",
+    "captures\\vertical\\view_000\\camera_sample.json": "034ee16bda86d727cdc8aac8501387eac778139bbe330f6fe0614dbc488a32e7",
+    "captures\\vertical\\view_001\\rgb.png": "d19ef6aa15ca8acf199edbb382e7158562b947e466d1796ac1e184d3621f3330",
+    "captures\\vertical\\view_001\\mask_calyx_crisp_v2.png": "31b08f485fe303c1630b80d0d4774f1a5824c828799c0ea4f13bc45cfd59f6a0",
+    "captures\\vertical\\view_001\\capture.json": "1259e614336d4c3e7b28888e7e4fbae98619a95378dc6c3d9c541ecdf4140f40",
+    "captures\\vertical\\view_001\\annotations_private.json": "9a08f5ed5c0868be8fb8de2e3a8cae567e308eb9293f03650e22bc0462116fbf",
+    "captures\\vertical\\view_001\\camera_private.json": "00b13c4f3a527289120d53f51698fb823e58bfdb515ae49cb480b8c51289ea08",
+    "captures\\vertical\\view_001\\camera_sample.json": "41920ee2a29a45210bdc159df8fb962b9bee5b33e9ffba0737422c82a527e95f",
+    "captures\\vertical\\view_002\\rgb.png": "45dc8db8389a9c791ef102a13d53ae0ef556c97454c4475faed5b70569b8cffc",
+    "captures\\vertical\\view_002\\mask_calyx_crisp_v2.png": "31b08f485fe303c1630b80d0d4774f1a5824c828799c0ea4f13bc45cfd59f6a0",
+    "captures\\vertical\\view_002\\capture.json": "ab7a9a273df91c351b71be99b585847a7bf8d77fc7a40c501489cf138444f476",
+    "captures\\vertical\\view_002\\annotations_private.json": "d531c93f4a065783bf9cdfc7e6c97a0f0644e9162c339810b582926e5f301c49",
+    "captures\\vertical\\view_002\\camera_private.json": "00b13c4f3a527289120d53f51698fb823e58bfdb515ae49cb480b8c51289ea08",
+    "captures\\vertical\\view_002\\camera_sample.json": "3034ca1f57cd7ede56a5f1a3a1f2ebb160e5019b023ba6632da5c5930d92f26b",
+    "captures\\vertical\\view_003\\rgb.png": "866bdef33f93759038136f1cab238b3198e5cf8597d86369a04ece7d09f2daca",
+    "captures\\vertical\\view_003\\mask_calyx_crisp_v2.png": "31b08f485fe303c1630b80d0d4774f1a5824c828799c0ea4f13bc45cfd59f6a0",
+    "captures\\vertical\\view_003\\capture.json": "332f0d4dc0185ec774dd60b76865d43b2f0ea72dbeb955cba27e47ee235ef94c",
+    "captures\\vertical\\view_003\\annotations_private.json": "b3efb06c6ac72e8b44dd011dd34054896c24959992932655f4ba02790c4d828d",
+    "captures\\vertical\\view_003\\camera_private.json": "00b13c4f3a527289120d53f51698fb823e58bfdb515ae49cb480b8c51289ea08",
+    "captures\\vertical\\view_003\\camera_sample.json": "bd9224d9b72ba2ce5d874656a31889b6a572cd8898e8defcddbc51e9434b9df7",
+    "captures\\vertical\\view_004\\rgb.png": "13161858d8f5109b313410e18b5e5a5d627026bd44cfebf55e3094b8558d1348",
+    "captures\\vertical\\view_004\\mask_calyx_crisp_v2.png": "46d9202798066bb040bd390eccfc4ed286649a364f201d1959a6a8c405ac96f4",
+    "captures\\vertical\\view_004\\capture.json": "46ac1d597b9d5805af1ba743aab1836aa566c94f4b46cb284e60e82350ea0bca",
+    "captures\\vertical\\view_004\\annotations_private.json": "6cae64c0b613b33723c31cd225c6d320f4bd4133c744ae6c3ee3446567e7f931",
+    "captures\\vertical\\view_004\\camera_private.json": "a98ce9c17fb7d96b842093b00ec39fd821412098e488bdde473ca94da59e10cc",
+    "captures\\vertical\\view_004\\camera_sample.json": "231d312a14c4711bea260c883a75a43e1d0526b85ac36dddfc916ff3c7e5aaff",
+    "captures\\vertical\\view_005\\rgb.png": "2c8bfb4c990798f602c27a8555ab593fd2dcbd64a752a6dc213e076b9d961302",
+    "captures\\vertical\\view_005\\mask_calyx_crisp_v2.png": "e9c65e27280831afc0fd3fbf445bd3ca3ff6f470eceed12c9d12ec5a4cc56a68",
+    "captures\\vertical\\view_005\\capture.json": "655f532c4cc340b3e67a3007e26cce55694bc58c36ac5ba4548f14c9bd6ed041",
+    "captures\\vertical\\view_005\\annotations_private.json": "a3e51c0972ef39843f799e1ab6626724ff87c61dafaa09efef612d1ffdf24c98",
+    "captures\\vertical\\view_005\\camera_private.json": "28f440db843e59fa5d9a1016f78e08f8dcf031911a739f655dbfa19705279d9d",
+    "captures\\vertical\\view_005\\camera_sample.json": "3d60e3e527f35812f80b01af79c94561a03cfb025aac742e5358853ecd900ca3",
+    "captures\\vertical\\view_006\\rgb.png": "2f1b34d0cd16d6493433866229af3922b1f2f6c9f5628753ae5763557a40ab1f",
+    "captures\\vertical\\view_006\\mask_calyx_crisp_v2.png": "6b8da0c7d6ce9fc606b010f4a41a208ede77afe7005a213203ba441d83400f36",
+    "captures\\vertical\\view_006\\capture.json": "b602b6b092a4e4740f5055a8aed00462e94474195d46d8b0a605646dfc80395f",
+    "captures\\vertical\\view_006\\annotations_private.json": "72c937107af0cecc09d33c6a04302246077b76dc1648eb96c975ce5c8f8cffb4",
+    "captures\\vertical\\view_006\\camera_private.json": "d14952187be13e0e43954cf6d41505a0a096fd234ca7d36e547f614911012c19",
+    "captures\\vertical\\view_006\\camera_sample.json": "d54188203689e13fbf61d171066c64a057adff9e45a1982e04ed5eba6d4c214f",
+    "captures\\vertical\\view_007\\rgb.png": "54e58552d2a20b47f29efa1d096dbf73c4ebd02f794497e796a361c76d774d93",
+    "captures\\vertical\\view_007\\mask_calyx_crisp_v2.png": "ccfc77d254563c0e862ba612683f7b98fe07aff89a0ce058fc19a4bf5b483f18",
+    "captures\\vertical\\view_007\\capture.json": "aecf1dcef8af4f308398c8d1df9228117e5566ede56462dc01e4ac62ac6d052f",
+    "captures\\vertical\\view_007\\annotations_private.json": "a60c28ee5348e58ae16d3cf5ef434f504f838cf749f0a1b580fc4abe6cf140c5",
+    "captures\\vertical\\view_007\\camera_private.json": "10b857a77a99a59bc2e1040d0544f7dad5fb996a228cca5a66fca631b3998601",
+    "captures\\vertical\\view_007\\camera_sample.json": "13e517920471dbe4a7b633e0962fbfe059eecbb17a08f77ac4fd3791f0a8e7b1",
+    "captures\\vertical\\view_008\\rgb.png": "fa229c7d50fc3c5148afca3bed89c46f7686f9047ac9b05dd47586f33843ab03",
+    "captures\\vertical\\view_008\\mask_calyx_crisp_v2.png": "c71d0a630018a7ed6a2ee25f58d3e95a9374ff16d9053f27fc6509d412c06d5e",
+    "captures\\vertical\\view_008\\capture.json": "d6c8a33774be676abec205d978482c327220ee86ab8134b2496f961bc11b2e17",
+    "captures\\vertical\\view_008\\annotations_private.json": "ab1ad4167229b241885b7b45cab3822376dc9f23f7414857b2dd7d3bd1489d97",
+    "captures\\vertical\\view_008\\camera_private.json": "c9b67a8849b2d98e25b19fed2ba55548f8ba06bad98f0c7e1aa0afcb850650be",
+    "captures\\vertical\\view_008\\camera_sample.json": "1cec8c548c00d5c25817b073cd4369a95161b6bec98b87af47d145de646d2d4f",
+    "captures\\vertical\\view_009\\rgb.png": "5e605fef5aa089e085a0b61ca0b74ba435eafe057b7d8a78000d23696eb96737",
+    "captures\\vertical\\view_009\\mask_calyx_crisp_v2.png": "c71d0a630018a7ed6a2ee25f58d3e95a9374ff16d9053f27fc6509d412c06d5e",
+    "captures\\vertical\\view_009\\capture.json": "0512ef4f6c25e80e466cfe2761fa079f96357d4b15d62dc385d846f1d47ad95c",
+    "captures\\vertical\\view_009\\annotations_private.json": "64a6db845b575cf72018abf01111fb4c80ff46608d4b6dfe52a4f689b982de62",
+    "captures\\vertical\\view_009\\camera_private.json": "c9b67a8849b2d98e25b19fed2ba55548f8ba06bad98f0c7e1aa0afcb850650be",
+    "captures\\vertical\\view_009\\camera_sample.json": "68a69e5d3d79bb64559c295bb0630369208cf5629bcf1b23761137e3ccd68f28",
+    "captures\\vertical\\view_010\\rgb.png": "ae4979c8fb0479724c6c234369ed91e7eb0390e9dbe2a83f2b45fc34c73920f3",
+    "captures\\vertical\\view_010\\mask_calyx_crisp_v2.png": "c71d0a630018a7ed6a2ee25f58d3e95a9374ff16d9053f27fc6509d412c06d5e",
+    "captures\\vertical\\view_010\\capture.json": "8e13fa332cc6514a70d74d2e47c2e46fd971ad79e5cc32859582ded39f5fde79",
+    "captures\\vertical\\view_010\\annotations_private.json": "4975a7549753ae6053bb06c5ef3da9e3f70af23d22ea6f9fea6461eb6599a3c5",
+    "captures\\vertical\\view_010\\camera_private.json": "c9b67a8849b2d98e25b19fed2ba55548f8ba06bad98f0c7e1aa0afcb850650be",
+    "captures\\vertical\\view_010\\camera_sample.json": "e08442dda2cdfb128f4381f19c845c5cf7fcb66f36ed5b36eb9077a6072954e7",
+    "captures\\vertical\\view_011\\rgb.png": "6861190b5a939c5a29f3b175af04137337788dbe89a36559f0de7ea5b9e5848e",
+    "captures\\vertical\\view_011\\mask_calyx_crisp_v2.png": "72633614ef42611b092e4029b3756b2ee850eb77d93dbc5c2cbf452d17b9a614",
+    "captures\\vertical\\view_011\\capture.json": "c88d455649eb2c34a4ebe58015064f167606a7e5f54768256dbbe2aae6315257",
+    "captures\\vertical\\view_011\\annotations_private.json": "6b22790ba31669ea233c6afe9cbef585d849efb18a54619d56d513679bdd5a95",
+    "captures\\vertical\\view_011\\camera_private.json": "c4840ec3f795f3a24dd7223c8e17f1b1b7f9f5a8a2a4e564bf7ad5866692a94e",
+    "captures\\vertical\\view_011\\camera_sample.json": "2141f24e8add86fafcc5b0c079522a8e76a0b1a816b03ad3c45b50c52ea70165",
+    "captures\\vertical\\view_012\\rgb.png": "2349c99c39053ae46e1e323756a3f553a492659d16d49f7c558e6eaf332a41d9",
+    "captures\\vertical\\view_012\\mask_calyx_crisp_v2.png": "01b817e517c1ddf8354dd4386800b8143d0b2ffa1e03392143752cbac7bf25ab",
+    "captures\\vertical\\view_012\\capture.json": "7016ed24cffa73b4dfc6fbd7bf2a30cc38a757e0595710d117c4bf490b55b5f3",
+    "captures\\vertical\\view_012\\annotations_private.json": "a68ace1e879d9ee616ff9f75cfa421ae19647075df42c97e887483aac8bd4c4a",
+    "captures\\vertical\\view_012\\camera_private.json": "44f19a6b43b9bacb9e32a32d362a780fad491eabcfc4af662f658f866f176ba1",
+    "captures\\vertical\\view_012\\camera_sample.json": "9b73d57da2cdfe18bcdcee9a0362c633dfc48d13a65f18bbd8c61942a533497e",
+    "captures\\vertical\\view_013\\rgb.png": "4fb8c54a00818544497b2a7c3be5b5a7842dd261a30f86b5ce8c87fafb0bfcfa",
+    "captures\\vertical\\view_013\\mask_calyx_crisp_v2.png": "2493e98683135bee9a0a7d4e54adc38da9933fc6d696f7cbde55dd8185ecaf4d",
+    "captures\\vertical\\view_013\\capture.json": "4f14bfc26daf86a24ce63c2ab69e93e08582eae05db98fe81ceae9372e7a6e47",
+    "captures\\vertical\\view_013\\annotations_private.json": "1f8ca1570639849e65a8d51b8e8366d61cd325c8f4cf66e6bc9e2123638d480e",
+    "captures\\vertical\\view_013\\camera_private.json": "453b0b6c1b475a5548eea5995a2822deae50dcb33976afe9ab17aa8d93f204ec",
+    "captures\\vertical\\view_013\\camera_sample.json": "8333762768176701e48a00010c6caf284d95c856f6558975e74437b3da0fd054",
+    "captures\\vertical\\view_014\\rgb.png": "07c12409177957bdc902f5c1de2b2dba0fa124023e9de1802ffb34208c15da26",
+    "captures\\vertical\\view_014\\mask_calyx_crisp_v2.png": "3e17e7c2bfa8df60083bf195dab4b7e7755686689559e428d0ac989423a9fd5e",
+    "captures\\vertical\\view_014\\capture.json": "9384ee4d7d941a2921aaf1fab3f45429a699472a021312583dd676ac62067348",
+    "captures\\vertical\\view_014\\annotations_private.json": "755c19c5898f9325ef7fb0f10bad38cabc4626ff5fa222660ddb9a8895f82909",
+    "captures\\vertical\\view_014\\camera_private.json": "658771fca22bdca50d20cf9ff2a42ec8e062a5382b08e84c0988b09c9eb09df8",
+    "captures\\vertical\\view_014\\camera_sample.json": "4c6c5a860737b782555deb1b3112a47306130e11dfcab28ae4cca4f527c7e0aa",
+    "captures\\vertical\\view_015\\rgb.png": "a7aa20b609aa08bf78f72013de45437d60d70ccc02f668236b8dbaf8d1118a9a",
+    "captures\\vertical\\view_015\\mask_calyx_crisp_v2.png": "772b25ba21c161916e477aa38067bfa8b949d7ea8250304ad530448d1fb7d95b",
+    "captures\\vertical\\view_015\\capture.json": "5622954a20e0ee035f6a6fc59d33aab5f8306317d8ab6a8012677be73db81e4d",
+    "captures\\vertical\\view_015\\annotations_private.json": "0fc038f2d8290cfa6c09d427a86dd651f16b2be3238c48daf62eda03a21be7bd",
+    "captures\\vertical\\view_015\\camera_private.json": "25eb1695374bd97fbac4625def4bbc0c29cee147aed17c18231d9fbab3bf38a1",
+    "captures\\vertical\\view_015\\camera_sample.json": "17535dd6c75010ed1487801bf9503bee5a5612d62003945df68c8b4ad49a9429",
+    "captures\\vertical\\view_016\\rgb.png": "47d4313a25db2e427fecf4563c59ec3537b2841c5403d3d8fb2675b74b00f81e",
+    "captures\\vertical\\view_016\\mask_calyx_crisp_v2.png": "a8bd417becb2958f17ee71a4a66351cee5bd64ba1eca3cafec8842efa7b15308",
+    "captures\\vertical\\view_016\\capture.json": "906ad5b50ca5257eb09027ee5a697b1f609b089205a0365afe417c6853c5c4da",
+    "captures\\vertical\\view_016\\annotations_private.json": "cd2992abbd7b0857bdbc764342c491ec8d49060e92a094753fca383903d2484a",
+    "captures\\vertical\\view_016\\camera_private.json": "2ee0be004429cea5a65f00410968a139646d8ba6e42d37e0eca15771c0387182",
+    "captures\\vertical\\view_016\\camera_sample.json": "801a3063b385c55520f57db100c1b7d6f7f6347495a33e6c695368a1354ddc47",
+    "captures\\vertical\\view_017\\rgb.png": "3952e7639f67fffd1979c982c87b2c8162b74e231ad4aaab7ac6a48907e870d7",
+    "captures\\vertical\\view_017\\mask_calyx_crisp_v2.png": "894e3896dc04fee494de3325fbb9be2fe110f2fb3da64cf706acb09e69684b79",
+    "captures\\vertical\\view_017\\capture.json": "a4fa0c5de81a888415b7daa2df8f2e48976828af22896e4b574f0c163d7e7cba",
+    "captures\\vertical\\view_017\\annotations_private.json": "be2a523ca31b9768d1e2efa46d2f6d3f74eadf745048d316635ca592ea3a4b01",
+    "captures\\vertical\\view_017\\camera_private.json": "ef4a05fec5e2baf84acb490e6fa4c204e3335d635798b60d2ee6554403dd2fbb",
+    "captures\\vertical\\view_017\\camera_sample.json": "372ec10b439a76c27c611ca4334eeaed509b3c918535ced29b52f29edefc2c28",
+    "captures\\vertical\\view_018\\rgb.png": "2c99af7ac38c1ca53adfa0c793d03696880ae6f72bb7898a0ccebe4e77a9726e",
+    "captures\\vertical\\view_018\\mask_calyx_crisp_v2.png": "f74a8b75f6fed5e64055a0fa25664a1f4d2487989e432cadd1456c38e51f716c",
+    "captures\\vertical\\view_018\\capture.json": "b03f40ba3198451e3e17b7f8b55471f98cbc04dd95bd78b7a193e28eb94ceb50",
+    "captures\\vertical\\view_018\\annotations_private.json": "e40cad36e1a7bb7e9992dcfe1c3dd3c76ea3892b17fa9d9031c7df1b04f795be",
+    "captures\\vertical\\view_018\\camera_private.json": "ee075c969106a37db4068db35dc412b5b08ee885aa4ce61926bfe26603467a5c",
+    "captures\\vertical\\view_018\\camera_sample.json": "de6f17801472aaa3eae0962768e12aae31a8275be218ecba474f144eeae4090c",
+    "captures\\vertical\\view_019\\rgb.png": "1444140f39f6edb6491e79a13f209af9eb13d8d1ced4f320e94e6cbed42885fb",
+    "captures\\vertical\\view_019\\mask_calyx_crisp_v2.png": "3f40fde3811135626e20b59ef5ac1513db53a0b8f5d5331b7285f20147cb1779",
+    "captures\\vertical\\view_019\\capture.json": "b1a2c73afd7265e2f354ae1568096bc548ef38aff33468e85157488438f042f5",
+    "captures\\vertical\\view_019\\annotations_private.json": "fe2e9412702960c564756bf3724d5eb719d2c75e593afcace1224f4d09e8bbe1",
+    "captures\\vertical\\view_019\\camera_private.json": "449fbe6f752755c39dcbb6cefc370342b6b01e545401dea885140a5e09df6819",
+    "captures\\vertical\\view_019\\camera_sample.json": "29e822591d96f47485b20154fc473d935cbfaf50d86feccfdcfbe4f5620174bd",
+    "captures\\vertical\\view_020\\rgb.png": "8ec689b767969f4e5c405b821e1baf7791c3fa0e820251110780bec7895ef4d6",
+    "captures\\vertical\\view_020\\mask_calyx_crisp_v2.png": "cc56ce285e7b6c051b3d434e2fa2f590b542a35f8be03b39bb0af4678798acc3",
+    "captures\\vertical\\view_020\\capture.json": "34c83805e32abf231f150f2bde769826318d0acfe9debb8af2fe36eecc813344",
+    "captures\\vertical\\view_020\\annotations_private.json": "16858345744f33f3a2a1f2e91a3232ca636e23dbe26fef63494e6b71003a19ba",
+    "captures\\vertical\\view_020\\camera_private.json": "7d61795c2bce882ec1caab64331e1455dabd5d97ca67affb9dc6f0ab9398e572",
+    "captures\\vertical\\view_020\\camera_sample.json": "b6fcc27143bb1c0dbae6b39738cd415cfc84c65fa5169fc4e594827bd38da2be",
+    "captures\\vertical\\view_021\\rgb.png": "6f9791d04c5525e8f8396f49d1366870fc41965513f1a1e0c03c84a853c7e586",
+    "captures\\vertical\\view_021\\mask_calyx_crisp_v2.png": "cd4d89020c4dc9ddec880685c161390d2a0ae41481e7f5948846c6038814cea2",
+    "captures\\vertical\\view_021\\capture.json": "c08ac77455736d95220e90f230547c9b1813a03d34ef879292f9d879e0d9b0b0",
+    "captures\\vertical\\view_021\\annotations_private.json": "39fd7210c2975386e26f56a2c384448f1edd8e0dada12cea096fc628b93a51c8",
+    "captures\\vertical\\view_021\\camera_private.json": "f0d291c5628a3607800e2a3fc60eeb47f11658c42151cc4cbc21d81ebce6a44f",
+    "captures\\vertical\\view_021\\camera_sample.json": "26c0c9a8758f8d91f8dd194fb392ce46e195576344ce2a0e9d0ce81fb1c499af",
+    "captures\\vertical\\view_022\\rgb.png": "b888d4900b8079c379c104c90f25fd3d104e0a0618f338399a84306f35993708",
+    "captures\\vertical\\view_022\\mask_calyx_crisp_v2.png": "90cbadefc71bba20af2d736d2fa90fe19d14bf31cdc0443614d48e792c9f0d32",
+    "captures\\vertical\\view_022\\capture.json": "cc34f316eb727c9dc7c300724a05cae08e7c2bd3af4e9b34a33b17e78038afac",
+    "captures\\vertical\\view_022\\annotations_private.json": "c77e8501feff434b05162cbf60c87385388d956cf106cceaa639cb0a7b9b736e",
+    "captures\\vertical\\view_022\\camera_private.json": "a8b7205aed769d5002c9e8ad9ce93cafca462b6a9a6d6de3decf6a0ec45e64d5",
+    "captures\\vertical\\view_022\\camera_sample.json": "1ef8d890585c78b253e57d1a78eee8977b37ff783f8f88258791a07da240bc39",
+    "captures\\vertical\\view_023\\rgb.png": "b24f5074645cea6e39b8b8dd3640e06562a4b4fdd5aa0a6a737671dd801cb643",
+    "captures\\vertical\\view_023\\mask_calyx_crisp_v2.png": "f47156a30272d1638f396fb293dcce590cbc96156ba495fa982607fadfac004f",
+    "captures\\vertical\\view_023\\capture.json": "e714e130e359116a0ccd372631f441f7204660ae3484a16e6e605ee1fbc39313",
+    "captures\\vertical\\view_023\\annotations_private.json": "c96c55c81219cd63fd9a26136b4d79de0426f69dd1b03b53d5dbef69bd180287",
+    "captures\\vertical\\view_023\\camera_private.json": "52b27907960af604253a39a56cd8be89eb954f9a0bb910fbb67c44c1a5b65a35",
+    "captures\\vertical\\view_023\\camera_sample.json": "1292f818bfe42cad3cf51611037a11ce34f21f3b07a2c5f74839053cbd5424b0",
+    "captures\\vertical\\view_024\\rgb.png": "a9d380e1b2bf16ad24f3381d6c84e8331ea1eff0f6911d7de218f4f6c9ff8b06",
+    "captures\\vertical\\view_024\\mask_calyx_crisp_v2.png": "8dfcf013106ad0cad761ea9a1bbb5030b9f141f97b0f374ff20efe0b94b55652",
+    "captures\\vertical\\view_024\\capture.json": "5c5d0cbec2463d3e16612e0bb0c6e0ce9aafd7b615e8295f609ac0457ac4f4a9",
+    "captures\\vertical\\view_024\\annotations_private.json": "7facc52a81de624e0900a972c2135d2c8585fe7526ba0adcb232661d02ac1f6d",
+    "captures\\vertical\\view_024\\camera_private.json": "21d380cb2d510ccfc3799dc91448b894bbaca1f57fc67e110d5832daad74b19f",
+    "captures\\vertical\\view_024\\camera_sample.json": "2cbd180a89a9de1a6158026bbc48ecfda770d35a928d2403da7c6be486f137ea",
+    "captures\\vertical\\view_025\\rgb.png": "22754386db780568533c91bccab02d24fdd15e4de48a985f50056272adc896b2",
+    "captures\\vertical\\view_025\\mask_calyx_crisp_v2.png": "22c10b90a6c6f61d0b5584ef289a5131f16ede345d53cb669d285ad73348e20c",
+    "captures\\vertical\\view_025\\capture.json": "246ba5813a7f7c18408fb2946f26ab437c37f49ec5cb1026137e75eef4d09464",
+    "captures\\vertical\\view_025\\annotations_private.json": "53a133510fd921aaccebdf15e73b47aa8e7cfefc741e541ba48c5709a33e484f",
+    "captures\\vertical\\view_025\\camera_private.json": "8211d2d2eaf78e93f625d1f08e9110438bdab7cf269f47fbb0e8cf4943e46b73",
+    "captures\\vertical\\view_025\\camera_sample.json": "40818dba3b269f3b0a83cf8420633bfc203dd04a2ebe99838436461bedb8a4d0",
+    "captures\\vertical\\view_026\\rgb.png": "44cb1bc231e511615a76de2bb4a5b9997d64bb2fab451a51d0cec41b728ed137",
+    "captures\\vertical\\view_026\\mask_calyx_crisp_v2.png": "22c10b90a6c6f61d0b5584ef289a5131f16ede345d53cb669d285ad73348e20c",
+    "captures\\vertical\\view_026\\capture.json": "46631439afb04a0927500e80ac30d20b2e60646b1c85e7ffc06da37fc025fc6a",
+    "captures\\vertical\\view_026\\annotations_private.json": "863a71510a7e5bb6286c7c272ec47531dbaefd6e655276e8a9baa959dfa7c154",
+    "captures\\vertical\\view_026\\camera_private.json": "8211d2d2eaf78e93f625d1f08e9110438bdab7cf269f47fbb0e8cf4943e46b73",
+    "captures\\vertical\\view_026\\camera_sample.json": "906b1d79c64e93149cebeee9af3adc3e403f1056f4d1cc88b7aa05cd21304b21",
+    "captures\\vertical\\view_027\\rgb.png": "631c3db7415f249c34686c8677a2cae52e67e763cfd5b1b503014a05ab531c9d",
+    "captures\\vertical\\view_027\\mask_calyx_crisp_v2.png": "22c10b90a6c6f61d0b5584ef289a5131f16ede345d53cb669d285ad73348e20c",
+    "captures\\vertical\\view_027\\capture.json": "3e506d21eb4a0dc93ec0da825f7f1a03c2763c328b02db08b676c2cc8f4bd0a1",
+    "captures\\vertical\\view_027\\annotations_private.json": "902d18f0f0992d5c037c0e8e2013b2c8bebb0569ff0b0a256422673d2ab1e911",
+    "captures\\vertical\\view_027\\camera_private.json": "8211d2d2eaf78e93f625d1f08e9110438bdab7cf269f47fbb0e8cf4943e46b73",
+    "captures\\vertical\\view_027\\camera_sample.json": "874a90de6259a3a83a458100651a97c150a5a1e7144fdcea079f8b10927981aa",
+    "captures\\vertical\\view_028\\rgb.png": "f320fd54654c639eea7d1dc2294e01527f4015b2d0db4eada316c5ee3d122e25",
+    "captures\\vertical\\view_028\\mask_calyx_crisp_v2.png": "67f29061e08531f3d3ba8eec769aafc535100bc9ef0b7afb873034b59446bc2c",
+    "captures\\vertical\\view_028\\capture.json": "6d1351c94bb6093ee7b401a24d407d423d9ceb9684b7eb058f253b8f374277d9",
+    "captures\\vertical\\view_028\\annotations_private.json": "98c69a26164df4088e3ce0550fe30aaa7d9d8d5f2778ffb639b280d3f64479dd",
+    "captures\\vertical\\view_028\\camera_private.json": "c1d1e1da1fdaf8581a33a2584e3c3f3f503f3a98ff94d6981fd39a1aac9b7fca",
+    "captures\\vertical\\view_028\\camera_sample.json": "1f32a84f8a2f933f6b63969d52aecdbd0d5edb97132906be5d55b2fd91d77d6c",
+    "captures\\vertical\\view_029\\rgb.png": "277aa07f0c6ec8056de1b197927ce1c4bb7194dbf25d1ac4c7120bf94778ade6",
+    "captures\\vertical\\view_029\\mask_calyx_crisp_v2.png": "c2833ae361e8ccb2d7387f2e55115bf0343e555f634944f942295db5262bf9dd",
+    "captures\\vertical\\view_029\\capture.json": "2f92ea9d9e89c35fb87d60118f369424bdcdf4736d2c7955c1ec3b80e6cb068f",
+    "captures\\vertical\\view_029\\annotations_private.json": "a4d5742333a54a9d124eb8c04069301b687460eb7d3a8a8eca5f5e301a82a40e",
+    "captures\\vertical\\view_029\\camera_private.json": "299f6a30250bf3d62cfe44cb01b4731e15ac8500d63319f1ed17df2f6e73fced",
+    "captures\\vertical\\view_029\\camera_sample.json": "90fa35e184b1931cf6c29106025751024b46da550d31d050b4522e5887cc055f",
+    "captures\\vertical\\view_030\\rgb.png": "68de25a803458b907b870ca0593bee0102c0ca195bfccc9e2321103c382d43f4",
+    "captures\\vertical\\view_030\\mask_calyx_crisp_v2.png": "bbfd706fe1339fd058e1dfdebeba402718f7c0696a0f3974f831318f98791cee",
+    "captures\\vertical\\view_030\\capture.json": "d5db8729b3bb117e2e6207f4e3137731435466c0b03532fb4514fb0efafa0eb6",
+    "captures\\vertical\\view_030\\annotations_private.json": "1d6c08ee26cb80bd835fd7040d065c29d47e6bb41b99ad90b3d4a45acec30278",
+    "captures\\vertical\\view_030\\camera_private.json": "26cae632bc40c0c3ba01f34d8d461e109f7e8b71224a31e986b7893b2c4105ff",
+    "captures\\vertical\\view_030\\camera_sample.json": "6aaca884771aff7060b5bec41cd00d33af270408069707a0cc70cd26d2363c75",
+    "captures\\vertical\\view_031\\rgb.png": "b12409a3958ebaa3843da3845ea438df3a701f83b7719eeb2406353eb754b2ed",
+    "captures\\vertical\\view_031\\mask_calyx_crisp_v2.png": "410bb8bf14305956b2725f824ab5853ec869b7bdb2c294f626a19da64482f27b",
+    "captures\\vertical\\view_031\\capture.json": "e39d28cc4f4e65b7ba63db22bffb31eb190e98d3796a1fa89af2d0ab9771f55b",
+    "captures\\vertical\\view_031\\annotations_private.json": "2274d74ca59dbffd06d5dc32680794106e9c438fd24430356d7acc218935c79d",
+    "captures\\vertical\\view_031\\camera_private.json": "91a4083090535b624796ddb654f2bb0be95c2928239d7643084bd4b843f118f8",
+    "captures\\vertical\\view_031\\camera_sample.json": "a6487e16457e0cab8e9f0ff9e53e81b8177e6f275ebf10651f91b2aa596398a1",
+    "captures\\vertical\\view_032\\rgb.png": "cce7d07a6cdceb9a0d5c7a5d4d3899d4f61f2604dd8afd9794345f17a32801df",
+    "captures\\vertical\\view_032\\mask_calyx_crisp_v2.png": "fe6ac0959932857d84a618c2871bc94984f1996f65fe99f851dcd198b7928ec5",
+    "captures\\vertical\\view_032\\capture.json": "d7dc74ac5ef1dc389a214c4f2bfde1000a301533f29c1db6f410f9837509907b",
+    "captures\\vertical\\view_032\\annotations_private.json": "8698d143c61c81c78d0a04046168c693a437c2eb192bbcca7de037aabdd7cda2",
+    "captures\\vertical\\view_032\\camera_private.json": "4d833f61eea702b11026b216ca473300ff5602d3ad2aa7516e24162943a96df5",
+    "captures\\vertical\\view_032\\camera_sample.json": "b1222e5e958208601bb018239482c27a2e9759d44d64a13a57e2fac4c1e7f935",
+    "captures\\vertical\\view_033\\rgb.png": "a57c452458c9b0953455b168de02ed27beb2a00d2624e68d630dde4dd6ab510e",
+    "captures\\vertical\\view_033\\mask_calyx_crisp_v2.png": "2a695568b3c6750a507a2236cf0486995145bbe645386641a90957e44595212d",
+    "captures\\vertical\\view_033\\capture.json": "5946d9a81de04d449be22da1c6062c9836fa8d65edf54487105feafacc62f99e",
+    "captures\\vertical\\view_033\\annotations_private.json": "167c2e902b2bee5ff8a49bb24d7119de2a07d6237b1a8640fbe3f03329a64f8e",
+    "captures\\vertical\\view_033\\camera_private.json": "8249136aa2e5fab43d966f4a39a696432c7bb2deb2f3fd9f76e026dcdeef732a",
+    "captures\\vertical\\view_033\\camera_sample.json": "5c212095d1e1e6d2ad3e7868ada8883752bb2ab0c5a56a2996e85be5820f3fff",
+    "captures\\vertical\\view_034\\rgb.png": "16fd884be87e80426991e4b4c861cd553071b614360f0ae686697b2ae7d033c9",
+    "captures\\vertical\\view_034\\mask_calyx_crisp_v2.png": "0ae5af75b82e16eed4a18561cbe15d3759037339124b9ac4ec984387544bd5eb",
+    "captures\\vertical\\view_034\\capture.json": "6f90c3cf6abc8afaa278ea72d84ad96684cb29792f51171f6a01e2dfc5f69002",
+    "captures\\vertical\\view_034\\annotations_private.json": "fb638f706da15f1adf8a584a9cb4868c66a64294e034d03ec0e0a2d2880e2c19",
+    "captures\\vertical\\view_034\\camera_private.json": "18ac95661f13a546b54a5da7895eb3e994b6a0d0b3dcf04dd322548269af02d3",
+    "captures\\vertical\\view_034\\camera_sample.json": "6acded544ada09f56d52db31220147d6a82ff645919bfefd813bf8091d31b489",
+    "captures\\vertical\\view_035\\rgb.png": "c39de7165d3e96291e6e8e9cb0d4526667589025e8f95c19982c95b3276b7506",
+    "captures\\vertical\\view_035\\mask_calyx_crisp_v2.png": "b8cc08d2d44b141592dcda8f183c3b57915a815257d39ca9ad098a34e471f597",
+    "captures\\vertical\\view_035\\capture.json": "564742ae74a0d90a748e538b7dfad35278bbf73d306152772ee28cff58eeb3b3",
+    "captures\\vertical\\view_035\\annotations_private.json": "0bcae8dd39ee0880bcd1416f7ad077f322d06e13bf82ead5b19424328cc407fc",
+    "captures\\vertical\\view_035\\camera_private.json": "4eaa3ddd1436f3f71bc510c3d8202dcb6e0fb23092f5e3e0fda45707e7575967",
+    "captures\\vertical\\view_035\\camera_sample.json": "fb325d3f26eac594a20f120c27e44450a560c6fca4d06abff3f6949f0b06822a",
+    "captures\\vertical\\view_036\\rgb.png": "f3a02ff9bf8c9ff812cd7d2efbead811562f6f478691ef530e476cb9f04aaa27",
+    "captures\\vertical\\view_036\\mask_calyx_crisp_v2.png": "e111a9692ec30fd500ce2c0cc117db865bb35e0e0665f639ccbfdcb2b5eb8072",
+    "captures\\vertical\\view_036\\capture.json": "101691173bd651b8010888b924b3b8d3ccf1a60622f715a11a88adddd654e0eb",
+    "captures\\vertical\\view_036\\annotations_private.json": "6e76d883913bfb14a9b33816d4d8a82430045c8111bd6888a757346cea41ab18",
+    "captures\\vertical\\view_036\\camera_private.json": "7999cbe45809d59dd9aa5430c5affb30f0dd96411cc0397155cf4ca0fe7fcaa0",
+    "captures\\vertical\\view_036\\camera_sample.json": "5fc88120570bff030dcbf9986fc13c70450b8c833e56a216a019b3b92e7bbc34",
+    "captures\\vertical\\view_037\\rgb.png": "4d478d76e4ece6dedf8feed87b811bed7532d65efc0629d4ae81e7287f0f29aa",
+    "captures\\vertical\\view_037\\mask_calyx_crisp_v2.png": "de283d660b4369d899b500f379dde2ab7053357e3f4fe1743766cc2e7539d5aa",
+    "captures\\vertical\\view_037\\capture.json": "be4cfd21400a300a75f0c89cf9a0ae7a5b9895a3e3521032692e66bc78bdee9f",
+    "captures\\vertical\\view_037\\annotations_private.json": "1a8d55858fc6d5a3bc7ba85b32300936566b14e0042a4d1ac9c030e90f805f90",
+    "captures\\vertical\\view_037\\camera_private.json": "447df837ebf44c51b13d301751345b7d123ee3de5b3fa6870e4af3cdec0cff1c",
+    "captures\\vertical\\view_037\\camera_sample.json": "552b286efe2a1fa77341f26c246d26ccb3ab3435e38c09558a614858acc4abf4",
+    "captures\\vertical\\view_038\\rgb.png": "410a82bb575b248f629c052216eb1b4977400d319a06bf4e9ac0898607367ae3",
+    "captures\\vertical\\view_038\\mask_calyx_crisp_v2.png": "97a101038428e755e1ed60111f3bc33aed5079063ce026506e073175e8360db1",
+    "captures\\vertical\\view_038\\capture.json": "80bbf1201a5449be3fd2572124ce34265fb2d873a8c5e7711910389a1010fd7b",
+    "captures\\vertical\\view_038\\annotations_private.json": "ac76187afc4fdf13e7447a893e9366bd7d9c5a44cbe746ebed917561e45a4dda",
+    "captures\\vertical\\view_038\\camera_private.json": "de2c063071319aa29239169f5cce530a4700487022c819c207450d90c04e739c",
+    "captures\\vertical\\view_038\\camera_sample.json": "13af1d7d5fac24c727d4abc23abd29469078760244c51c9512745d017d8fd21f",
+    "captures\\vertical\\view_039\\rgb.png": "c88d4f76975d299f1537fe6e0ec9a1c0d6c8f9a4a19a6799753927c6d53ab3d9",
+    "captures\\vertical\\view_039\\mask_calyx_crisp_v2.png": "25bc03be5100c677251fb43c474c5c33d084369517e1d4dcd8f06f14f2cc8971",
+    "captures\\vertical\\view_039\\capture.json": "7e791c7689ba7a233efbb3897de9af18f2b367a8af2900e6ef2e53a73f1e6906",
+    "captures\\vertical\\view_039\\annotations_private.json": "f054bbc938b42771b662f99ac20c6ab430a714c597bf3006f1f29be498408326",
+    "captures\\vertical\\view_039\\camera_private.json": "67ce14917704ab3a9609537834b574e181b5e82c681f01fdd26bf20eae7f6da9",
+    "captures\\vertical\\view_039\\camera_sample.json": "fb80a4095207a545f6519410c6ed68e7a4afcb3b0323df5611bd253a1de718b8",
+    "captures\\vertical\\view_040\\rgb.png": "632d00b84e8295879e0a5529953f72e884f4ecc2b782ed6889d5c2944ad2c4f4",
+    "captures\\vertical\\view_040\\mask_calyx_crisp_v2.png": "446ff90c01704dc19a23306f6aecf119f1be541b4e7db8faf9b376fc316edd5b",
+    "captures\\vertical\\view_040\\capture.json": "631e2685d2d37c49a153851c8c848e4598172a4c5e967a6f61686b87af46886e",
+    "captures\\vertical\\view_040\\annotations_private.json": "0718d21134d97b1d61eb2108ec9377522cf53cd8713c5d27e741ea28738af31e",
+    "captures\\vertical\\view_040\\camera_private.json": "be48bc8cdf7b88f445608226785c0add89b7247fbce7a0543177fe823c294879",
+    "captures\\vertical\\view_040\\camera_sample.json": "3173f434f63486628364fa07f8c156ab76797ddafa8382e7fbd5dc72be4f2b7d",
+    "captures\\vertical\\view_041\\rgb.png": "0d026867f537b4a23a72fb059e352d52353893f60ab6203c05e0194e63d2c6dc",
+    "captures\\vertical\\view_041\\mask_calyx_crisp_v2.png": "ce0df42ad9d9e16cec079da3c3da6e02c8e090f662f8c695fbaca628960d1e50",
+    "captures\\vertical\\view_041\\capture.json": "5915d0a2d313c077ff5435c42261de971bad078ea30aaff9c98a68357628e707",
+    "captures\\vertical\\view_041\\annotations_private.json": "e99eeb0952755dcc240f1b944400f7a2566b9cb63d7dabe8fd898e7a4e81d825",
+    "captures\\vertical\\view_041\\camera_private.json": "e7f1dbdac1a6674223ee446697d840641b85e5f496eb020cf91c8b6893f3acc8",
+    "captures\\vertical\\view_041\\camera_sample.json": "3fce5c3aa1b83d1da5359ac4189a85d41a9150acc09617a98da64b14e621b0fb",
+    "captures\\vertical\\view_042\\rgb.png": "819a360b439a95cfc4e9f8e5b1f3df2797484d4a55ffc0763d3b8896c746aa13",
+    "captures\\vertical\\view_042\\mask_calyx_crisp_v2.png": "aaa60e8a12f6437b3c7f31ef3b55ec32ee2023dbf990e003d937c8ecc1e2eec1",
+    "captures\\vertical\\view_042\\capture.json": "14169f5bd2b25a0fc2618fa0efb2349e68f41238856f82edd01ce1d8089a34aa",
+    "captures\\vertical\\view_042\\annotations_private.json": "b06a8e1fc3caa8dcb023d466018d7add52cf466d1db12bcf67014a07f606289f",
+    "captures\\vertical\\view_042\\camera_private.json": "eb253553d97e377836c1f33c92d391e07ddc2889a794c9129fc1e57a27783aa3",
+    "captures\\vertical\\view_042\\camera_sample.json": "e04e16b730699eeec1529cc571da45471ddec84d814aab936d2bd93e34859022",
+    "captures\\vertical\\view_043\\rgb.png": "dd13f7781e09fc5fd974221dabb1d77088033710080e4443c5a9cf6cf9b8adb1",
+    "captures\\vertical\\view_043\\mask_calyx_crisp_v2.png": "8110c95e2c2ec8c2328c00f8064a3769ac2f3ff4ac2b810bda327987c5bd9a92",
+    "captures\\vertical\\view_043\\capture.json": "4be95601020cddb048b9b85e4714c95ff645f3b0ea4fcec3a6683b12517a15cf",
+    "captures\\vertical\\view_043\\annotations_private.json": "b15197cc1b64f8be2420b9ec448fd9a6ceea95fd40500067cc2159b1b1eb8013",
+    "captures\\vertical\\view_043\\camera_private.json": "6979b26013434e1917c36f9a905a03c8606b50240666a6b6c96bd16f585a05af",
+    "captures\\vertical\\view_043\\camera_sample.json": "4825ba027922bfa9dcd63b2d8ec07bb992083afe8939aa138448666958f970a0",
+    "captures\\vertical\\view_044\\rgb.png": "e2574c99d11554400bf3dfe8b09f0c9f50ba0ac7898bd12fbe560b62a39bbc80",
+    "captures\\vertical\\view_044\\mask_calyx_crisp_v2.png": "6b67ea35225dd833e14a4101f48ee53b648d738c824da2dbfb95d3c60a65496c",
+    "captures\\vertical\\view_044\\capture.json": "328a356035fbefbc353aef67b7f045aff8a921770beb74a532eb18ce49d73a10",
+    "captures\\vertical\\view_044\\annotations_private.json": "95f276a4c824196a1c9e6b3aad54d5e23be75ebc9d0f440504dea61c9f3bfd3d",
+    "captures\\vertical\\view_044\\camera_private.json": "8ac50991cc1885ed72186ff8b9cece2036d4f6cd4015ab8efaa3157d45646a08",
+    "captures\\vertical\\view_044\\camera_sample.json": "e13042f9d187d9c68fbc43126b981d737330f84990f58aa90adf0c2376ef6822",
+    "captures\\vertical\\view_045\\rgb.png": "6a04b068ad6666f11567fa61b487b999a70edae0a86ede9ebaea8ba7a9fe5a72",
+    "captures\\vertical\\view_045\\mask_calyx_crisp_v2.png": "9dce97481e5048d8d6b51300aac099bf845ad3cf1b391c4e792915b1caefe641",
+    "captures\\vertical\\view_045\\capture.json": "2c0a3af38d263e22f38bf2c137b49365fd8173d40e3c4271e7e2c2ac14ffd6b5",
+    "captures\\vertical\\view_045\\annotations_private.json": "9a5e45795e9a59cbe3ca730ece8e6b108fa7c606b4e843cb2907ccb1d8e838bb",
+    "captures\\vertical\\view_045\\camera_private.json": "f2714f7877f675cf55e5127e40522c7af6f3df348fc85ba247ec142ff5e17f64",
+    "captures\\vertical\\view_045\\camera_sample.json": "b87efb09a77918d629457dfedde7fc4e7c6010dc6c0e8725f355d91d497ef8df",
+    "captures\\vertical\\view_046\\rgb.png": "eab46f7cd205f0fef111b5e4c48259b3bcb2a18155495a98a786040357d4b7d8",
+    "captures\\vertical\\view_046\\mask_calyx_crisp_v2.png": "95838076007f74a9a046c3e359a38bced8c9638f9be144fd4eb29fe6ec1a6354",
+    "captures\\vertical\\view_046\\capture.json": "3130a0a69aeeb382715cf42d9573c2c1adabf07c2fca08fb9aeac9e4dd53b4c3",
+    "captures\\vertical\\view_046\\annotations_private.json": "e8ae2373cbffe50314fda711b6512102562802106fa255d6f40088dd53eeeadf",
+    "captures\\vertical\\view_046\\camera_private.json": "a321d517479ee1b4aa81716ca80cfb69a429c726e7d7ab0ef76443214d460843",
+    "captures\\vertical\\view_046\\camera_sample.json": "7c5695041ce1faf42698bb70c9d2e5c3a28304af62801387952917a7a07cb044",
+    "captures\\vertical\\view_047\\rgb.png": "bcd8f16f63040a35f38f4d87efa3ac42dd93c33f8bc6d2c704268b608368e607",
+    "captures\\vertical\\view_047\\mask_calyx_crisp_v2.png": "90b07681d5626398e82a6f3525f7893a8195ab4b545120a5f23426ec6b65f9d3",
+    "captures\\vertical\\view_047\\capture.json": "f95bd528361ac39431976c47e9dd8f248c56dfe44625774d3cc9e6de0953b53b",
+    "captures\\vertical\\view_047\\annotations_private.json": "03971c9757958c4e3a4ddcb76b9f94df5873288a8dc7c1abfe247e0c8ca86cd3",
+    "captures\\vertical\\view_047\\camera_private.json": "c6615f06414f73e1d2809124a3112a094eb0363e135a5530b978e52c2379d06c",
+    "captures\\vertical\\view_047\\camera_sample.json": "1bb09998387f0d3a59bd09eec9053e31dcb339a39b643f1b0aaf7bc7e5c26c1c",
+    "captures\\vertical\\view_048\\rgb.png": "8e843f870fbab725f0cc02a0f7be3e91ac2e0aa12e71172d4bcac72840397692",
+    "captures\\vertical\\view_048\\mask_calyx_crisp_v2.png": "de997bc83fae2db1371fc7d054ad3e142dfcc8c233221214522350b9b5124fbd",
+    "captures\\vertical\\view_048\\capture.json": "a7f5955939fee4c98f7157e4d89e5ac3abb981fbd6629007cacf8cf5a1d8b0e8",
+    "captures\\vertical\\view_048\\annotations_private.json": "5f150b92f0d91fcaa78ba89a49a05314981c7e75bb086254a0c21a63dc2f371c",
+    "captures\\vertical\\view_048\\camera_private.json": "3ab7f09c0ce4b087202f20ca39188e7a48e7f1c3afe7224d41c6a1e8af8f2092",
+    "captures\\vertical\\view_048\\camera_sample.json": "0f38c38eba1e1e9495467559f9a2f00a9b04fc373860d520492d5bb5b4000a02",
+    "captures\\vertical\\view_049\\rgb.png": "b7f7dff524280982fb5db32a664c80390e53a2e74032bd7ac22249a96c1999f8",
+    "captures\\vertical\\view_049\\mask_calyx_crisp_v2.png": "1f3345b0d1969a621dd2163a41ac9f8d21da713c92153819189151b42565dc8a",
+    "captures\\vertical\\view_049\\capture.json": "18be7a161a05980178076c33a35e6cb71a11a2028f6494bd5d5efb8c3b21dfa5",
+    "captures\\vertical\\view_049\\annotations_private.json": "78ddf67f26c7aa93a5ff251c3245df00923db976affe5bcc3df6f1944b5e36bc",
+    "captures\\vertical\\view_049\\camera_private.json": "55748aedd9952ff1a3a9f7e1b4a3920b3b8527b80005e716efd4652dddfe08d6",
+    "captures\\vertical\\view_049\\camera_sample.json": "b9958ce00d8b907644c5838f29b1689c6c4ed759be24c64947eb0db15d8fdf75",
+    "captures\\vertical\\view_050\\rgb.png": "c520e532eebd6856d58fc25059d67f853df08f8b2dd6deaa6892353e6dcbb9cc",
+    "captures\\vertical\\view_050\\mask_calyx_crisp_v2.png": "50d778cf18be9f03bb402c56d30c2beadaed8643253a26a180dacf39519a1bff",
+    "captures\\vertical\\view_050\\capture.json": "df95463763355725bd9ce421dd9b9fe2c2558c2e003a7ca2d97e86ca80f01239",
+    "captures\\vertical\\view_050\\annotations_private.json": "2a34b4d3358061323576c112ca34189bf6926f262aa08fc8557ce6e388797bac",
+    "captures\\vertical\\view_050\\camera_private.json": "f8115c85d5e0b0427ec29c682dde8f66641e0351a3a460378ff6d3699e39acee",
+    "captures\\vertical\\view_050\\camera_sample.json": "a1ae8370c73e0f2d5b7af6a677df70a4bdaf826ee5c0d4538e3ba4a55dcd54f8",
+    "captures\\vertical\\view_051\\rgb.png": "5768bfcc283973975f7cbb74fde6a972ff7bad23df15dbb60408252d7326d459",
+    "captures\\vertical\\view_051\\mask_calyx_crisp_v2.png": "76abcc08fc8add2edbfd82c7554759bfca81119e4d1331a878ae467e20eff1a2",
+    "captures\\vertical\\view_051\\capture.json": "b3d4e512695f5265c5ae954cadeb190ad2e9d3d699ea94ee2d5cf707cbaf9449",
+    "captures\\vertical\\view_051\\annotations_private.json": "a754d9090bf6c926f82bd3d38f9f2d062e5d06aba04050a6a389e5604907337a",
+    "captures\\vertical\\view_051\\camera_private.json": "5701257024b4be3ae45b730ff21f04c2766534735ea9c92ee23ed50caec330ea",
+    "captures\\vertical\\view_051\\camera_sample.json": "3af9e423c24c5c2ef0e7d009eea8d50a81443f004b6a0dc94242279d9a485dd4",
+    "captures\\vertical\\view_052\\rgb.png": "a8824759c349ad4643b1f54d9b1a18ff0f1964506dd4bd8bf9c3b21abf6d7c3e",
+    "captures\\vertical\\view_052\\mask_calyx_crisp_v2.png": "df098c027a3ea2d2a14e187bc891e50516374d05157e00bc1c070e112c3ecf49",
+    "captures\\vertical\\view_052\\capture.json": "f93885a7a1a33dc29dbf18ad24f50cce4c7087fa969900bf555c95aa5fbef95c",
+    "captures\\vertical\\view_052\\annotations_private.json": "2b3f07386b9eade04116b116cf88a9d0b5df0d8777feaf8dcd27e4a9ff3f66ff",
+    "captures\\vertical\\view_052\\camera_private.json": "9a9cacbc8f78381bf8fde960c3e63af759b45f564a366a49950af82f66e0dc7b",
+    "captures\\vertical\\view_052\\camera_sample.json": "1f73b161d86ee420d3592198664719854c4fb9bcf65266af24c823d5d6a9af3b",
+    "captures\\vertical\\view_053\\rgb.png": "d1f7e8e13d0ef8b05a6ba36ced0cd65757929116e78d581e4a962dadd815897d",
+    "captures\\vertical\\view_053\\mask_calyx_crisp_v2.png": "1bcd369d2d4e7a76278b214b894064cceeb090e08e7ce6eb181a6e6db0f6b2ff",
+    "captures\\vertical\\view_053\\capture.json": "5c514cb15f71395cd4a947c425dcb95983bc1ce2c89cf36cd7e5b012b6e0d1fa",
+    "captures\\vertical\\view_053\\annotations_private.json": "966367feaf33883aa66ba3a9b9b7dadc08b2c784de37d6442c272fea7146d136",
+    "captures\\vertical\\view_053\\camera_private.json": "920241f440f556792c7fbce561613f1e8ca202872ec3f40cddab45723481949f",
+    "captures\\vertical\\view_053\\camera_sample.json": "07fb60f6fae86f22dbae8501e818dc5bd0103763030640b77126b4dd0d819d6b",
+    "captures\\vertical\\view_054\\rgb.png": "59cf38bf096390d8afb0987341e574cc409bdbaa350ab1cafc72cddf5c1137ba",
+    "captures\\vertical\\view_054\\mask_calyx_crisp_v2.png": "09d788841ea45f0e3c5e181d021223afce749b3f70af74194bc0d6f87fe5abc0",
+    "captures\\vertical\\view_054\\capture.json": "9d25be469ec098e763620282bc50080301a7e01ff26dcb2cf1952601f1a355aa",
+    "captures\\vertical\\view_054\\annotations_private.json": "8845bff349f8756f4230b218f335f6d3de56a2e8c25d225f6ae0c58d849e4d1d",
+    "captures\\vertical\\view_054\\camera_private.json": "ebb22e5f335951dd1deace2c15ee3da44243bd41cc144924bd3167039f0e9b98",
+    "captures\\vertical\\view_054\\camera_sample.json": "c7fa444e68ddad320c3a2aea25ca9a0be6923bc17b25f9c134eef6715af7cdf9",
+    "captures\\vertical\\view_055\\rgb.png": "40d50d08d7a88e29f12b5f40db40110ca982285eb76c57603910a58a0883e0b1",
+    "captures\\vertical\\view_055\\mask_calyx_crisp_v2.png": "7b3b8690b6e2c52e0cc6778e1f9a35268a860d564cebc9f15b0fe65b4c36d91a",
+    "captures\\vertical\\view_055\\capture.json": "aab9af945eee381e8759e6b6482735b0bd93762aa03478ec3a1660627a1556de",
+    "captures\\vertical\\view_055\\annotations_private.json": "2bd0b127f0bfe8a25c289d7d82a91a3bf9d609766ec9d2922a304ec2f3b1fdda",
+    "captures\\vertical\\view_055\\camera_private.json": "48b46b6d22fb3fb0a0c6cb7b8718807fea8598c18f832ca2c6c192bc5e5c034f",
+    "captures\\vertical\\view_055\\camera_sample.json": "5d9ef3c0b7a8908356192153044b5ab137618f34e20269fb43efe6c2ea8a85c4",
+    "captures\\vertical\\view_056\\rgb.png": "8886bf84d646a4fb489a8503789103eb5beec1c6f4f2a7fd5c6172d7f3e5dc9b",
+    "captures\\vertical\\view_056\\mask_calyx_crisp_v2.png": "560d455fbb10a2e73de22ead8bb1d2b0b853f970dbd189441f22b92666dbdf45",
+    "captures\\vertical\\view_056\\capture.json": "1e86bf09bfcbd20ab90bc0400fa656c097615ec241fd120956d29e65c84a4c1b",
+    "captures\\vertical\\view_056\\annotations_private.json": "0ef47689ec77d3efbfeae71b105e0cc8d0660c43598ae77458abfd0c59e1b2e1",
+    "captures\\vertical\\view_056\\camera_private.json": "e36f2ba8122aae8771617f67d5e80ef392e0db702bf42e54566c06e553e3ad11",
+    "captures\\vertical\\view_056\\camera_sample.json": "ede217ee926a0e203ec94b0d5cf964a092ee1011f0360c5578db0279fe5a9c02",
+    "captures\\vertical\\view_057\\rgb.png": "9a2729964255ab9d06aca75a985e8b8aec42abec977e01d8101da658051f881c",
+    "captures\\vertical\\view_057\\mask_calyx_crisp_v2.png": "d698df7fb627bdd0ff6f3a8c60000b310635befc8fcacf9ac07c9e60920bb5a4",
+    "captures\\vertical\\view_057\\capture.json": "891e3bc70492c5b89773e82b23acb0aa71e81b2891d31c2ed242e2059fec3e8f",
+    "captures\\vertical\\view_057\\annotations_private.json": "5d80668f8a708efe69dd37d167f67275a0d2cedc0cc19aafb841f8a1fc68cb41",
+    "captures\\vertical\\view_057\\camera_private.json": "34380b3352181a787246e713c470380a0bf8453ba29197572bef5d14653dff90",
+    "captures\\vertical\\view_057\\camera_sample.json": "8ce566f424bc4bc2e7e36f3709bcd34aed4655eac01af5a89f697a80fb3d0b0b",
+    "captures\\vertical\\view_058\\rgb.png": "422c57332893b7d483e2e152840c8be3a7ed4a747e559a8e4bebdd1769ea5ceb",
+    "captures\\vertical\\view_058\\mask_calyx_crisp_v2.png": "e390bf0d7debb26c1e545037fb6c888242ac13cb1c0175604bd7055beaf6ea83",
+    "captures\\vertical\\view_058\\capture.json": "45d978732363fb9ff84b6bc926640b45a0a808000230d1f3d6f4ee1a1b110069",
+    "captures\\vertical\\view_058\\annotations_private.json": "a058368878ec57269a4b76361ef2681df2aea9a3368e2cbfff2ed78b7e2907fe",
+    "captures\\vertical\\view_058\\camera_private.json": "1d587a888c678f47e1a58469d85d75c18ab25d6affc3131f1c742a1a431d65a2",
+    "captures\\vertical\\view_058\\camera_sample.json": "2550fd194cbbae028099412da39bc84b6ed583bfcce5227d51e66545e362ff74",
+    "captures\\vertical\\view_059\\rgb.png": "841b8b1aa9b9db45c99db1f9f6a2347bf5cb49641283be873f0062b37281d4aa",
+    "captures\\vertical\\view_059\\mask_calyx_crisp_v2.png": "f50b317af4cf4bbf53cdd6e443da79ef2b3eb36a15be5ea84d54697b2c362263",
+    "captures\\vertical\\view_059\\capture.json": "f44f3938fcc1afb8f32a603157620db11a99226ecb4860b9d8057bf7ba1b9aec",
+    "captures\\vertical\\view_059\\annotations_private.json": "919803cd1f115209d2a54b10a6068c72c8632059734d2852cc4193beab6bbba5",
+    "captures\\vertical\\view_059\\camera_private.json": "4f1aa0e3c2c0e7a6fdff8f46daed64cc6b5a467a0d3fdd0ef96fe6cac495b7fb",
+    "captures\\vertical\\view_059\\camera_sample.json": "012c78a5f9b33a5cd6ff6918919e552bb6d8841f9a5ccc81b2294a00520759bf",
+    "captures\\vertical\\view_060\\rgb.png": "196282ba173ac82334a7e574788849458485e05fbd478a70df370205b7161f53",
+    "captures\\vertical\\view_060\\mask_calyx_crisp_v2.png": "f15964d273d2f61d5af5ad0bc380e6094decaff6f42933fe217b858af4f4eb9c",
+    "captures\\vertical\\view_060\\capture.json": "cd766b22238af227a30a189ca442cd7b3a74c15112972bffb12aa6b3655462ba",
+    "captures\\vertical\\view_060\\annotations_private.json": "fae81a264e9676cb0e22fde4d9bf83b404a407a6ff365e52119dc9152be7a521",
+    "captures\\vertical\\view_060\\camera_private.json": "9790a91d0a90fc431864c42efbdae3803ddffd2fed63dfe75f04d22afd29e920",
+    "captures\\vertical\\view_060\\camera_sample.json": "2636f883a979ac8afebfffa8b1ef66b06acb4584540d712a4dfab8966aa329b1",
+    "captures\\vertical\\view_061\\rgb.png": "578f8b3742feff028130151337572c24084ae1c78c4b95ac0636545b4abce140",
+    "captures\\vertical\\view_061\\mask_calyx_crisp_v2.png": "490df32f64a8825a0796e6a4d8dcc870b377abb21846bd3ae89a9b06783d6bf7",
+    "captures\\vertical\\view_061\\capture.json": "2d58f5fac83aeb58b80435bb99fb01a8eb179d4e032c49b8b616fb5e7525a3f8",
+    "captures\\vertical\\view_061\\annotations_private.json": "ee41aea1d040c6b9a974a96acf504a762b2d36b3f168dfc4667aeac70be82b9b",
+    "captures\\vertical\\view_061\\camera_private.json": "d9c97b824db319fd07c998fc5b33265ceaf0a680226705fd6054f5ccdc1f8662",
+    "captures\\vertical\\view_061\\camera_sample.json": "99f468f348a9cc3e20ba5f3966aa2e8774fe6a8988a17365aede1c01bdc93ea0",
+    "captures\\vertical\\view_062\\rgb.png": "dbf54b0482954eb108fc922174c7d888fe192e13f21e6397fc07776fb78017c7",
+    "captures\\vertical\\view_062\\mask_calyx_crisp_v2.png": "ec781c317a18d0ee1af3f9addc1e79c760b114ea11cbcaa4e76df99ea9b979da",
+    "captures\\vertical\\view_062\\capture.json": "0ed16a6fb3de12f1f0ffe05c3b167a76e3ea5821afed4400d5e4bd04c042dab0",
+    "captures\\vertical\\view_062\\annotations_private.json": "522334030c8ffc6cc63be74864d659b62234d0d4609e40c9221560f882276d96",
+    "captures\\vertical\\view_062\\camera_private.json": "6b91dee9428659d3614d345f1da178d253f2589cf36215e53d82d4399d4702f7",
+    "captures\\vertical\\view_062\\camera_sample.json": "385a30596886d0f1c1f569376b13a5aaaa165cd0eb07c9f658d184a7d299ef9c",
+    "captures\\vertical\\view_063\\rgb.png": "891d17b4cd90c04fc7146d03e5b3cfcb4c805fff83926302c4dc31a037799a59",
+    "captures\\vertical\\view_063\\mask_calyx_crisp_v2.png": "a71f42b670f09ade5ba65f844dbafec68ee98f65dfd980fabe1cb78359191794",
+    "captures\\vertical\\view_063\\capture.json": "e1f7a5afc27aeed337b69547d01e874c4825964e72289bdd4451723d59943251",
+    "captures\\vertical\\view_063\\annotations_private.json": "e46142d6947c02695987f38943875f64b139a6e584f7d0cf24f778a64aa91789",
+    "captures\\vertical\\view_063\\camera_private.json": "79c33c01d040b1906afbf3a09c31963d17ca8a91f2a633521ef71a400f30cd82",
+    "captures\\vertical\\view_063\\camera_sample.json": "ac0cb85dc3f1f32e4fda4ed0722e229dfefa2135c0c9f286e2658966da0cd496",
+    "captures\\vertical\\view_064\\rgb.png": "cd2b2f6450237a3e3684e5cea0d52071b59cf85a15e2c18185a9c5db7a3b5ce2",
+    "captures\\vertical\\view_064\\mask_calyx_crisp_v2.png": "979d56d71a2e82c8ba60029a0e2c93ebced7b4802ca69ef3a21ab41c8f23d7a7",
+    "captures\\vertical\\view_064\\capture.json": "f9713d19e831fd2d3d8eb2148af154f480bda1fab148342b386e4568b807dfcd",
+    "captures\\vertical\\view_064\\annotations_private.json": "a320b3b0267c3bad6034c268d25546df6249579b02f90daf133a672665726653",
+    "captures\\vertical\\view_064\\camera_private.json": "6a603c6283ef08904d6191895bb4e19ff839e05b367a8450cd053c4c453676a2",
+    "captures\\vertical\\view_064\\camera_sample.json": "ade25f2869bba8172ccc5dedb64a71e7b34e2a23e168a911cb7698faa3836136",
+    "captures\\vertical\\view_065\\rgb.png": "3d8f64411a868024c7dfbacced174384c39a0129b9606081d35d4ac1170d3057",
+    "captures\\vertical\\view_065\\mask_calyx_crisp_v2.png": "b4dac4fa1cd4c5b2641e6b0087a5b6528316a65593e35f123d1ac695acb7b114",
+    "captures\\vertical\\view_065\\capture.json": "4fb508e8825e0206fbba8ae93da5409b61d49e96f531f9454e90a69ea5875748",
+    "captures\\vertical\\view_065\\annotations_private.json": "f9667f9c43e99a6fea168cbbe1da3c6ebda6ce7e26563f3fd5ae8aeb580e25e6",
+    "captures\\vertical\\view_065\\camera_private.json": "88ca8ee7a548acf819c1ba0db453afa0a3182421c33179ba63b3a0ccc3925477",
+    "captures\\vertical\\view_065\\camera_sample.json": "cc3ec26f07459659cb8761ec03a87d55acd89b5f97c32ab605221743590b178b",
+    "captures\\vertical\\view_066\\rgb.png": "3f570165cc4707efd9ad0ea96919e502579ea48d898c285a0fb09760b31ae53b",
+    "captures\\vertical\\view_066\\mask_calyx_crisp_v2.png": "7f81af87496b13f9d1d592572cba3958092df986f7ea869f30325c37bfd047d9",
+    "captures\\vertical\\view_066\\capture.json": "ea15bc67c422243bd576dae0410b26ff00b11d09f14eed0f3b4e9d944ce768d4",
+    "captures\\vertical\\view_066\\annotations_private.json": "bc7ba2a3fa8165da790d17909e09dc5fa2c522914e32c98c0bde136fd69363a8",
+    "captures\\vertical\\view_066\\camera_private.json": "a1de8d672f6f8d845cf47d0b358bb1ae39697c58fb638f1e0b26f6712c471195",
+    "captures\\vertical\\view_066\\camera_sample.json": "4c227ad07cfd301d4954f2bdc10a253ba26393cf4038f3197f59790fcaab7b20",
+    "captures\\vertical\\view_067\\rgb.png": "8abb27458d02660bf1d0861a3c8874aa73fb36c709c98795c41fb7af82298f46",
+    "captures\\vertical\\view_067\\mask_calyx_crisp_v2.png": "38f80aeb194273ccdb4d0c3a1e72dea90b24edc5c18e6d7dd594f27da3580d2c",
+    "captures\\vertical\\view_067\\capture.json": "8004fce17dabf490c3e6aee118f5f7bf65a2d49cd97bedaa80fbdaa2ec555bab",
+    "captures\\vertical\\view_067\\annotations_private.json": "40d9713bd3e6bc33ef4760c756667c8d024f81f5b6abc65d46b25df025f46d95",
+    "captures\\vertical\\view_067\\camera_private.json": "6bc3b56fc0ad46632df26360fec66feb91ea7290cb7897ded3811c1dfcf839e4",
+    "captures\\vertical\\view_067\\camera_sample.json": "1c5bfe280a4401cd16f0e797bdf9245dc634389fcf4a5ce7191fe76f675f39e4",
+    "captures\\vertical\\view_068\\rgb.png": "e1872be56ba3e60ea6eabaa50be339b4d0408eb1d1555c59b62277da90d959b1",
+    "captures\\vertical\\view_068\\mask_calyx_crisp_v2.png": "d012062e4427c57fbfbb2b57225f4bf031f762867d9237e46c72c8090303f502",
+    "captures\\vertical\\view_068\\capture.json": "47c7cc21ced77b5237fb1386986a77dadc6ac8ea43f5710564c0601531a0f6a4",
+    "captures\\vertical\\view_068\\annotations_private.json": "a3ccfa11acdfabe5377d0e51d1f50cb87d72b10e581ec9f73c3bf58e056e3253",
+    "captures\\vertical\\view_068\\camera_private.json": "1472fd6417918781ea8a472d72ebed1b3a133d54bc24dd24d69338f0593ecfbe",
+    "captures\\vertical\\view_068\\camera_sample.json": "3574b94024a4234c5a2b7963f025719122e1a188768460a2422dcdbcc6a99825",
+    "captures\\vertical\\view_069\\rgb.png": "73b351f1d29a540eba711c928395eb0bcf2816ac63eb16cfd50dff69a8211c70",
+    "captures\\vertical\\view_069\\mask_calyx_crisp_v2.png": "149fdaea1b04f99c4a5e6120d92cac7966f3e44e8cd2b6a7e756c8f4313a00ed",
+    "captures\\vertical\\view_069\\capture.json": "2b9203550c3a6e7eca29499e6aeaaeb669e4dff37599099c1511ac5bd7778905",
+    "captures\\vertical\\view_069\\annotations_private.json": "c5275823e9cb754018448d18c15b5c6236d43975085359cea1ad7da5cd9aa819",
+    "captures\\vertical\\view_069\\camera_private.json": "65452aeeb2f2af878635c4111d8292e6cd4f08bf15e7045aa0f037379f9df768",
+    "captures\\vertical\\view_069\\camera_sample.json": "b73f2846cdb805ee9f96756b2af2124208570f3536257e5d647dc8ea5ab3c920",
+    "captures\\vertical\\view_070\\rgb.png": "c25a9c8db3c72648790a25aa2febb2e82bc867ba6044f6882df10f90874044ac",
+    "captures\\vertical\\view_070\\mask_calyx_crisp_v2.png": "99b68a742404b000c85c362d925abdacdf9331f025489616391fcb7d940911b9",
+    "captures\\vertical\\view_070\\capture.json": "6b4bb1bbbe3e3cff01139a1cf69e4ef5d679f6bc931cf5874e7732f7733d05e0",
+    "captures\\vertical\\view_070\\annotations_private.json": "9acd0b9905d0fce25dccff407e9def06d1b9d147755ee9271f719a011e9bb4e3",
+    "captures\\vertical\\view_070\\camera_private.json": "d862d6557961bebd6178050eb5ec319804e9638acdb8018001c4a22dd1fe8c06",
+    "captures\\vertical\\view_070\\camera_sample.json": "25097c72e18528fe0ee0feed3a9f8151cba280d9ead995569f325801e880a424",
+    "captures\\vertical\\view_071\\rgb.png": "690be4c8e96271b0b2fe9a2d43a4438c4c52016cfccff4ebcbfbd4190269199e",
+    "captures\\vertical\\view_071\\mask_calyx_crisp_v2.png": "b86c34707ef994d7b0e0c873463a4b140d84022f07aa2223c26e8858d9b34381",
+    "captures\\vertical\\view_071\\capture.json": "03d4bdc534b24dc3ec7b942b389645856e2e3daea0d80a7896ed49d4086a14f6",
+    "captures\\vertical\\view_071\\annotations_private.json": "8fc68cf0026f396d4319f85d9b98876ecedb2921ed27d0c5dab59c0735e1de3e",
+    "captures\\vertical\\view_071\\camera_private.json": "5b681b6be63ed27a30b9d298b528718662ec7ca213acbf3b77955953225a47e0",
+    "captures\\vertical\\view_071\\camera_sample.json": "c74942815b39d0f97fb370bae71891c7a995e7756510c77fab4c4070e88422af",
+    "captures\\vertical\\view_072\\rgb.png": "2b8adbe1b5cc05bb9dd6df250a496a218b405323436df04e61dfb6ee34e24778",
+    "captures\\vertical\\view_072\\mask_calyx_crisp_v2.png": "c8e5345925d9bb78a34bb484353cf921819100c876c7a21586f82e46109cd542",
+    "captures\\vertical\\view_072\\capture.json": "e84073e66a52e96bf11e75f1ac7d08b021050e833d83617abc1dd1f1abc79a94",
+    "captures\\vertical\\view_072\\annotations_private.json": "bfe8073a7e49cd4d7f41445b9faf43198b3f011d7f666fcf8e6ea154ca2d1cb7",
+    "captures\\vertical\\view_072\\camera_private.json": "77ab3458458c2f4737b64915899fb658bdb8989ffc03db7342facff624aaf382",
+    "captures\\vertical\\view_072\\camera_sample.json": "06c84d6987a9c152789472d677edb887a10f579185de8520ab1d7550ddbdc5b9",
+    "captures\\vertical\\view_073\\rgb.png": "69ef15b3afa9cbaf9934149a26747ff46dd25ea468c88a69c5e75c83f1713032",
+    "captures\\vertical\\view_073\\mask_calyx_crisp_v2.png": "4e102e01708d0f2b7216b94db68ac41e00fe21140992f26ff1e0f5f6ec5e00c4",
+    "captures\\vertical\\view_073\\capture.json": "931d865f38991166a208a54223946a1b30f598bd0fe333a1842481160f863902",
+    "captures\\vertical\\view_073\\annotations_private.json": "cfdde8e0b972f848fa4aeabe998ab3d73460d3a8ae9f3fc0ef6ba771124e2b01",
+    "captures\\vertical\\view_073\\camera_private.json": "c03e18d9a5db3c1ef837de8aad65a683c3a452a598b7c876d56bc4073924ba90",
+    "captures\\vertical\\view_073\\camera_sample.json": "8c110d9c5bba46e177377391e56f3e7b7d3dfe24832cc151fef9a6b2ceb80f57",
+    "captures\\vertical\\view_074\\rgb.png": "4228a20645b77909bd28b78a5f34c63a2f9aa72fa8ccb00896dd8e56f6da8e63",
+    "captures\\vertical\\view_074\\mask_calyx_crisp_v2.png": "bc42a9a71181b6d36704a3429443990c53e925e29a95f7b6f99cf7669b1e7cb3",
+    "captures\\vertical\\view_074\\capture.json": "af67e4f4c1e43edace7262219e562e1eed844bc70f331c2c2aa353e97f8a15c0",
+    "captures\\vertical\\view_074\\annotations_private.json": "19140b8410c5cf6d58a9ac0434fcc231558ac2456ae491f51aedcbcc57a6e204",
+    "captures\\vertical\\view_074\\camera_private.json": "26130f2d30f4d95ffeeaa07b2b6814a2e2d565383b3f9afbdceb36428294a049",
+    "captures\\vertical\\view_074\\camera_sample.json": "8b5018d1f911704e648346b13c1f678f9d633b0117653277b81e85222bcdee86",
+    "captures\\vertical\\view_075\\rgb.png": "b08924f8bf70fa4dc630b4a9d9de834d49f04e3aac9c3933d2926441f02bf28b",
+    "captures\\vertical\\view_075\\mask_calyx_crisp_v2.png": "bc42a9a71181b6d36704a3429443990c53e925e29a95f7b6f99cf7669b1e7cb3",
+    "captures\\vertical\\view_075\\capture.json": "b47c1927c102ae1346e11bfa45c992d8e663861a2ade8d5ef940b2a9aa5a39a0",
+    "captures\\vertical\\view_075\\annotations_private.json": "4fcf9b0ff73996131d083f5ecbd813c57ce4db9ca115a0447774bb0a18ebf923",
+    "captures\\vertical\\view_075\\camera_private.json": "26130f2d30f4d95ffeeaa07b2b6814a2e2d565383b3f9afbdceb36428294a049",
+    "captures\\vertical\\view_075\\camera_sample.json": "8013c4ac192e91c4249a29af8f6b88b82054e075fc628ad1807caa2c1d04e67c",
+    "captures\\vertical\\view_076\\rgb.png": "0579679b4e04eedaef5e0a9309d9bc453b058b40d2cbeed4ef92d8b8476be169",
+    "captures\\vertical\\view_076\\mask_calyx_crisp_v2.png": "bc42a9a71181b6d36704a3429443990c53e925e29a95f7b6f99cf7669b1e7cb3",
+    "captures\\vertical\\view_076\\capture.json": "a2109964412f0a6d6e7a16adf74dcf983446e2c81f17ecc113d9f1ce49a38957",
+    "captures\\vertical\\view_076\\annotations_private.json": "f6a28f0fd0ae48b50559f5ddcd93b64fb939944a94cf293806fd8338bfea1d47",
+    "captures\\vertical\\view_076\\camera_private.json": "26130f2d30f4d95ffeeaa07b2b6814a2e2d565383b3f9afbdceb36428294a049",
+    "captures\\vertical\\view_076\\camera_sample.json": "d6fb058d4eabba0ca61812a5767d190be0e4ecbeee37b396b6a741adafd8b455",
+    "captures\\vertical\\view_077\\rgb.png": "77db8f75d0303296fad4f70ab601404c630c7ee3385569accccdd349e815e00d",
+    "captures\\vertical\\view_077\\mask_calyx_crisp_v2.png": "7b97d3feede562b3cb0b2be8e464b4525b480149b26be49d0057a04f653918f2",
+    "captures\\vertical\\view_077\\capture.json": "630eafb3d11fb5cd5314a969a0f8581445ea52c9db178581c0d30b742a5c899d",
+    "captures\\vertical\\view_077\\annotations_private.json": "002f1bb803fb0da247d15bb4656d7724ddb7d7711f32e27d9c732c7e24257f4d",
+    "captures\\vertical\\view_077\\camera_private.json": "68d2247d0135738e5c8006a1437c2b683422b4f65664cc53f09917bd3e24b407",
+    "captures\\vertical\\view_077\\camera_sample.json": "bf2581d1ef8539273c06e796ae465dcbe149a33039cee26c9abb2227b061ec4f",
+    "captures\\vertical\\view_078\\rgb.png": "1dbaebd6715caa59d3968f5119bfa2e032787aa72fb0d2a7a058c05d379e4957",
+    "captures\\vertical\\view_078\\mask_calyx_crisp_v2.png": "5a83e01b55a2768f503edb1948cf6b2f8697945e2091e854a439c0b9e2e52110",
+    "captures\\vertical\\view_078\\capture.json": "377f0c72b4349049dc15bc5d2dbc16e14598d090113deefcd7851cb6df93c037",
+    "captures\\vertical\\view_078\\annotations_private.json": "bf633dbfe7b9b9c859e634e4ef76b11a4001b2551465804806e84313c907ef95",
+    "captures\\vertical\\view_078\\camera_private.json": "93c9866d08a3d23575b2b2f94a056a16c89fe44961029e823be9f93c5fcc0d6d",
+    "captures\\vertical\\view_078\\camera_sample.json": "6d611af36b8a839d08393d597c2e74577b9fe37dc5f2e7cc904ccf6ae48b906c",
+    "captures\\vertical\\view_079\\rgb.png": "a4609019a9f487fc44c983b551a2b1da3c7151f18db3d3e0f03b872ecfc66ffc",
+    "captures\\vertical\\view_079\\mask_calyx_crisp_v2.png": "7656ef2da3e4e0f272d47bcadb7fa137f82990b6a199789a6385839a9c7bd135",
+    "captures\\vertical\\view_079\\capture.json": "ea2bda3bba772480dfb7d615c3dd4fe630dc4d937d8cfcb95ebc639473313636",
+    "captures\\vertical\\view_079\\annotations_private.json": "0973bd29c6bc8ead8e3fd6fee1636042a33d2fb924b7f6a773311d65df92be6b",
+    "captures\\vertical\\view_079\\camera_private.json": "0887ca6bf950bb16919a2463372f113384feab267d84c7ceb8d0b70b9b9ac6f6",
+    "captures\\vertical\\view_079\\camera_sample.json": "ae9c74543f6ac88343816957ad2e5193b564cd453b22e639dab2d5cc4fb77c9b",
+    "captures\\vertical\\view_080\\rgb.png": "7eadc9ee3d98915d87b680dd895b31c6d6b2c2cb415c72f289ea1ce97aae14ad",
+    "captures\\vertical\\view_080\\mask_calyx_crisp_v2.png": "54988ba0be462f382107fc567cb09c3a7712a676b9f3ba2cdb6439b4f5bf2494",
+    "captures\\vertical\\view_080\\capture.json": "1671e50c44e5228a2e4aece942d134a4659a3c996c56a80eab2c4ee8f21122e8",
+    "captures\\vertical\\view_080\\annotations_private.json": "eae5d071e9bec062199a6349f906bb77aa900bdf99b21463ed6b3b719a8241f9",
+    "captures\\vertical\\view_080\\camera_private.json": "8c9dcd8c1416e28651fd65f6bb558d44d928691b56afaea2936d301bd05f1157",
+    "captures\\vertical\\view_080\\camera_sample.json": "4755b0059a954999530ac778c277b1ed913efba44a84883dbc72426428dd9777",
+    "captures\\vertical\\view_081\\rgb.png": "ccd652c16b2ec9652cb4295934721445493129e2583f2a1126a1617dcce30fd2",
+    "captures\\vertical\\view_081\\mask_calyx_crisp_v2.png": "673771df082cb3d14c896b04bf4344b49445f1fc7fe0193128a438744568c58a",
+    "captures\\vertical\\view_081\\capture.json": "ad5ebd9c38c1c775df77b961412096a4f446c66c7779b28cf3d391a1f1519446",
+    "captures\\vertical\\view_081\\annotations_private.json": "97c9c41da1e2bf0bf11d91fbc8b9cdc1e915cac10ccf93458690f8f29ae0da93",
+    "captures\\vertical\\view_081\\camera_private.json": "bdb2841951e8b339b181d73413a5588a6aa12be8b957aec8aa5eaec65148dad9",
+    "captures\\vertical\\view_081\\camera_sample.json": "ef2af604907f6bc1622f1a63f04af45b7b7db6fa569d7a5fb1b0dbaeb91fe1cf",
+    "captures\\vertical\\view_082\\rgb.png": "4cf26bae836b65de5e0005062467b34041e127d0dac24a9f74b9381c5aff9d09",
+    "captures\\vertical\\view_082\\mask_calyx_crisp_v2.png": "760fc748e161c310db0dbf8e418d2650eb42d57307c448a61d3b690b9464208b",
+    "captures\\vertical\\view_082\\capture.json": "9a3ce2a1723c0715b8f1867f0f794cde72ed225ed9e8b006ad2f4757f6a1bbec",
+    "captures\\vertical\\view_082\\annotations_private.json": "c1edbab625f2e0184c279ca70c18c969324eb197017dab4216f6aa509cc3fae0",
+    "captures\\vertical\\view_082\\camera_private.json": "0bf5368f6b7857d0dd33330d821fed63be2f4102f80838bd28f969a0baa6f094",
+    "captures\\vertical\\view_082\\camera_sample.json": "c931a84fec1e5033a871474324681057799b1267e2879fbc16e7826abf228f40",
+    "captures\\vertical\\view_083\\rgb.png": "e7ec037452faf24a1d0191717c3875054d2e6ba12b31fac55ca22021e58ae183",
+    "captures\\vertical\\view_083\\mask_calyx_crisp_v2.png": "f7a59b9c8ebbb996168cd767b4e26e7e71f49bea4ce0c02fe47043207d819d67",
+    "captures\\vertical\\view_083\\capture.json": "dbcc13817d9a95398d67f25cee8f1e57772d079b01f2dc50f78f07d352d026eb",
+    "captures\\vertical\\view_083\\annotations_private.json": "d0f245b01a392210eb018508375c6441bca6664ea6696c3e43bcc333ed701872",
+    "captures\\vertical\\view_083\\camera_private.json": "976b678a23557032b34f8dddbd3f799783918d8376fcdd9ed0c80d4db8002c18",
+    "captures\\vertical\\view_083\\camera_sample.json": "57613f3de057a2cbd925acb7c5589eae777fdbef6259f642a8434f265093083a",
+    "captures\\vertical\\view_084\\rgb.png": "3fe53830cd9512bee230f55b18dc041565c789eb0a01b469c3c7af01831556b2",
+    "captures\\vertical\\view_084\\mask_calyx_crisp_v2.png": "6f0ba250bcf9371cd9cdd0f3d817010cd8e0ec1c834b3c29bfab1cbadd640f23",
+    "captures\\vertical\\view_084\\capture.json": "4f9a34810993f13ee1a9c24d113a618b8835c3c5a16828a370a9d1cfb7acaed5",
+    "captures\\vertical\\view_084\\annotations_private.json": "5bc1e631ca63fb982fbcb4092568bc1f79ff23ab790af0d6ea55248cdd923f30",
+    "captures\\vertical\\view_084\\camera_private.json": "e33cd74d81f6042910c48837e7a37ba890e1acfe183e1f55f4e03402e218d106",
+    "captures\\vertical\\view_084\\camera_sample.json": "9ce24197b0ed053886b9dc91bb52d8db6505aa45fa58f4c4987a1002a8903805",
+    "captures\\vertical\\view_085\\rgb.png": "cf43327fe3b68ad6fb62f37358d510f205aad64e0124719ec8a7905eee41c1db",
+    "captures\\vertical\\view_085\\mask_calyx_crisp_v2.png": "7984f1c232b8127fe9054a6966f2e762b20fd4e84d062f97c04aa93631dfd519",
+    "captures\\vertical\\view_085\\capture.json": "bafc35b796da7afe216e5f10fe2cef0a8ff714626ac19c0621e2aacca899cadc",
+    "captures\\vertical\\view_085\\annotations_private.json": "ea76a01c7e7466f88e7a10b4b98e26387ca016b4871743c548a9fec893b823a0",
+    "captures\\vertical\\view_085\\camera_private.json": "7fec47ac99472dde823da10ee0b55559121256f77596514f5e6f6c4a2de75439",
+    "captures\\vertical\\view_085\\camera_sample.json": "4abdd0c351919d2ad3b4b494a1c0a577b924af263f456ecd41b9ebffb05795ae",
+    "captures\\vertical\\view_086\\rgb.png": "4117ecccdf7590fa79d09d3e01ae2a355fc2db7f394d414eec0348707a60b8d2",
+    "captures\\vertical\\view_086\\mask_calyx_crisp_v2.png": "7e0db022c439a72d643c4345589d1d78152a1ba3aad075a638637b611688bdb5",
+    "captures\\vertical\\view_086\\capture.json": "488ed6e30d67e859edc9dd8dac14eb847dcd2d8187103f6dc5f6e36cd89cae35",
+    "captures\\vertical\\view_086\\annotations_private.json": "6eedabe1de3d6eb5d29d6d6e5f83dc29de907fe441d93b8dd6598508c0c991c9",
+    "captures\\vertical\\view_086\\camera_private.json": "04e7aeedd2812882eb98033e591e1fa60821bab404a30c587ead0cf5930e7c09",
+    "captures\\vertical\\view_086\\camera_sample.json": "ce0512a39f66538a3436eb62f759d2454eaacf9928cdfa161f8112cd9ecb0893",
+    "captures\\vertical\\view_087\\rgb.png": "f9c93529104dd41107b35bd8a8ea124eeaee17fc4efff90beb301681b0cbaaba",
+    "captures\\vertical\\view_087\\mask_calyx_crisp_v2.png": "d0d7cc1caf56fd9185855361b6ffd23d6688c145ee3e9d11c1360eda44b83dd7",
+    "captures\\vertical\\view_087\\capture.json": "40591af19e8175e200b31d429cebab3c57b545c2dbd39cd8fb3ba59e81ebf370",
+    "captures\\vertical\\view_087\\annotations_private.json": "56df99b40c029964f0f15e4e2b4e8ca67bf747c9b0c660bd25ca11b26810e341",
+    "captures\\vertical\\view_087\\camera_private.json": "5125abb730cf4c8611feed6937a1ba55bea387c4990a935dfbb2eeb1220a8858",
+    "captures\\vertical\\view_087\\camera_sample.json": "7cc302183f36e9c7033653ed671b3c87ef2f48f49b9175a765c177eb3bff14e4",
+    "captures\\vertical\\view_088\\rgb.png": "3e1792305aee8d4d1f5545b6fe5415b1e1406556e90a6d9a23d3426e4cc46edf",
+    "captures\\vertical\\view_088\\mask_calyx_crisp_v2.png": "bf8478908f14874cd676bb448ca5c7175376fc8d082e44250c10ecebfbcff589",
+    "captures\\vertical\\view_088\\capture.json": "5330ac16bba8726a10fae29bb899a25942c6d60841a1b33e6ea4a9ea1a5b8280",
+    "captures\\vertical\\view_088\\annotations_private.json": "92c8d8b078eea1222af81ff7bd89de62ea00a47650ec51abdf31c15b9b73096e",
+    "captures\\vertical\\view_088\\camera_private.json": "ea14adbc056201a410a57d281fc5d4f802373027010e657a03dc5b8818437da3",
+    "captures\\vertical\\view_088\\camera_sample.json": "0c08de82ff6161d907d2785b0f7f401dbfcf77a9deb8a6a0cccb92921aa1546f",
+    "captures\\vertical\\view_089\\rgb.png": "e0557f3d4f1257ae673361dd89a5b94e8aa8379e5bc509c2119c2139773a150e",
+    "captures\\vertical\\view_089\\mask_calyx_crisp_v2.png": "87e1aeb5e2099a4fc0d8e3dea04f61aac2a28791ee5dc87bc93121b49818f439",
+    "captures\\vertical\\view_089\\capture.json": "eed41b3c4359209eb418a463dc01c845ec1a83d32d50f77107bf6447d83510f5",
+    "captures\\vertical\\view_089\\annotations_private.json": "f2044d03c516faccfb791ec20b9974b650c60657055a10e497825b3b2433e06f",
+    "captures\\vertical\\view_089\\camera_private.json": "fd0e182498f36e3dab0f1c7d05ec0b1d4c7ed297aa07d154376a67bb4091a843",
+    "captures\\vertical\\view_089\\camera_sample.json": "31c473bada592ca49bf51cb1b33b966557eada7d436f74556c4367e33a489d45",
+    "captures\\vertical\\view_090\\rgb.png": "96039f3af99d7ae670bb20843cce83112ad844d92af9e60ed164a340c67e3ec4",
+    "captures\\vertical\\view_090\\mask_calyx_crisp_v2.png": "428216156c3928a7a33c5f88d84fa7d6e44d7ae5d415077b50fd8fb0cdc198f4",
+    "captures\\vertical\\view_090\\capture.json": "b9927e05efd8112f1fd52930786ccdfc09e17a3d65af3bd88375e3ac7be1f729",
+    "captures\\vertical\\view_090\\annotations_private.json": "47a1dd4e1b2cfe7bff6d9a1fbb6d9332f2d32fe7688c613cfb67b53addb44078",
+    "captures\\vertical\\view_090\\camera_private.json": "07f904de1d6b7b9324344616779a33d9d18c92a0fccf10826a4ae40c3c86fd54",
+    "captures\\vertical\\view_090\\camera_sample.json": "c68bc0fba3cde560d8e2597bf8cc47ed3d8bb4774acd10e4caa21963afcff8c6",
+    "captures\\vertical\\view_091\\rgb.png": "14e0381b3f5f54f06fbd1e7eff9272b1c8d56349b796f6de368f8b545e95eb01",
+    "captures\\vertical\\view_091\\mask_calyx_crisp_v2.png": "f2189afd5bd612e02c80f155d51639ab4058a41196234fe4c9f2a9e8987d88e5",
+    "captures\\vertical\\view_091\\capture.json": "2c7b89733a76128e0922a88716ef7dc04ec4a2e13cc0e493b4fbff41f9da425f",
+    "captures\\vertical\\view_091\\annotations_private.json": "c3ed2990be9f080d742a488987571552ac65e48479233a8f029b20f1abbca561",
+    "captures\\vertical\\view_091\\camera_private.json": "de888588850f603ef1fb133954578ddb27998a088dc8276f22c31a0e385ac086",
+    "captures\\vertical\\view_091\\camera_sample.json": "fca92ba359498ff386f65481da64609fe7df1dfe53a263ee77acf891d02e9322",
+    "captures\\vertical\\view_092\\rgb.png": "7661c1fb08bc55bd2ddf5adaefc17140c35839ac77ba56de0b0a6260285131b0",
+    "captures\\vertical\\view_092\\mask_calyx_crisp_v2.png": "c6d468896a2358318098ae975e00abb2ec87670e5beec3a06f6de42a92d39aff",
+    "captures\\vertical\\view_092\\capture.json": "ac7f45e502777a673bb1a51c5c553ab982a116d7f915e5717f7066784a63e212",
+    "captures\\vertical\\view_092\\annotations_private.json": "0ad15e43b534e760b31dfb63838c805817e0c855f8e966fd7c17e9c92ad78d8f",
+    "captures\\vertical\\view_092\\camera_private.json": "e59e86485fddcbf8d0fc05e3ea40ec94d7e78686b98f2256e433bec79558b8df",
+    "captures\\vertical\\view_092\\camera_sample.json": "f4bb58c39731e7371e3db427252cf4180233917e81305c430ea7a08820bef39b",
+    "captures\\vertical\\view_093\\rgb.png": "09014b4413a664058d079b222d8af0d23469fdff8ed9ffbd860ce805f76057cb",
+    "captures\\vertical\\view_093\\mask_calyx_crisp_v2.png": "10672bbd3038121d56cf3e2f5fdb17be821f3755d7b588457e348a532b0133b5",
+    "captures\\vertical\\view_093\\capture.json": "a959b3cfb079a6038c4ee193be8a0968a7e82f07b2b72df60d5ee380df420f63",
+    "captures\\vertical\\view_093\\annotations_private.json": "2ca687b372da8d16e0b8ac326476a66cc9e73195b0a82e360ba8347a42ecfcac",
+    "captures\\vertical\\view_093\\camera_private.json": "95595142a8f87ce5488589c33845b776f3e302dd3ca997969a82f3e88c3a339a",
+    "captures\\vertical\\view_093\\camera_sample.json": "8b30db804cf4a01971a69222bf449291c1edc6a032c6280de60e1790cda094bf",
+    "captures\\vertical\\view_094\\rgb.png": "2947e696d5047415f974a9b03a408ae7e6c0d204193da047addae36aa8869abf",
+    "captures\\vertical\\view_094\\mask_calyx_crisp_v2.png": "521fc47f2ab1e20b1b001449ea26a1adc1133e7206d4b26d84e6d1cd800653fd",
+    "captures\\vertical\\view_094\\capture.json": "eab4d3f60e91f86feef09367b0f84daa7f48b8a98b14fd55b7cbb16636637e62",
+    "captures\\vertical\\view_094\\annotations_private.json": "96d4c2ce14e6dedfe802251991aa45bdc6978c1aa66fc034ccc7d3411e934f3b",
+    "captures\\vertical\\view_094\\camera_private.json": "2e701c532dae44d043bf568a151bc26ce9a41a01c5db0e2ac69cd4bf81462cc2",
+    "captures\\vertical\\view_094\\camera_sample.json": "ee7e96048e5d27724f0b1b596137ee7cce288ac636453475084c718b5bcba207",
+    "captures\\vertical\\view_095\\rgb.png": "46d52eddb5b96a1b103fc91bee923cbef2324db84e567a40276464b2c8fba7e2",
+    "captures\\vertical\\view_095\\mask_calyx_crisp_v2.png": "9419bc5448b285475d53d5872987bc367cda50f2c06b8187f79035005127ab44",
+    "captures\\vertical\\view_095\\capture.json": "05513aea19dc479446654834e8f86566b56615fefef864a9425fb67e932e2f9c",
+    "captures\\vertical\\view_095\\annotations_private.json": "7c20d86292d0d476daf0a9adf607695be7a911ac3b4217a2f9a1c1f751ad3b20",
+    "captures\\vertical\\view_095\\camera_private.json": "a023c82b604af3d453ff83b8607d17bb216c35631d9d89433f3ba7fdf3d3d2b1",
+    "captures\\vertical\\view_095\\camera_sample.json": "67dd0267485e7a36ca8652588bb0dbd1d0e037929758d3b4b0df411151ed31fd",
+    "captures\\vertical\\view_096\\rgb.png": "8f2949b29dac72308929befd454d91674683679a671c298da7fd4d8017bf2fcf",
+    "captures\\vertical\\view_096\\mask_calyx_crisp_v2.png": "2ea22708af3be2cf7208e0ad465902dc338dd1b5f74778b1cfaa3894c487496b",
+    "captures\\vertical\\view_096\\capture.json": "4c831b06e8a6926be2701dee3d4583d4bf0f95cd583be168983d71c1ba3ec74f",
+    "captures\\vertical\\view_096\\annotations_private.json": "c033725985f4987b0fcf8844ea00265aa8c9bafb8dc4722cfc529d900fb7663a",
+    "captures\\vertical\\view_096\\camera_private.json": "e73c143fa74764ff502b76748343ad1795b6f6038f75ad49e9241c80b22a86f1",
+    "captures\\vertical\\view_096\\camera_sample.json": "83b5a2a93c5ecabe219c41b7fad80897bf98ff205746c2b4a45337db1b9f65ba",
+    "captures\\vertical\\view_097\\rgb.png": "fdff085636e1829c2a07e0c4c7ee3fa466870af55de2adeb56d03171138123c3",
+    "captures\\vertical\\view_097\\mask_calyx_crisp_v2.png": "8c5239208f829cd294853cf8ee00a598ba850efd19847ab16d53e766788f4b52",
+    "captures\\vertical\\view_097\\capture.json": "6b70744d81f104115614aea5af6bb5fb650085a221bb6deb72e9b50da3d54848",
+    "captures\\vertical\\view_097\\annotations_private.json": "c3bccbab9db6f012ecc80198f0cb2e21c02dae21f01cb0bcd362690dab27501d",
+    "captures\\vertical\\view_097\\camera_private.json": "bfa7dcc2d704314fb2534c91b20fd17a577debdd3e067b3cbd4ea92cdc2f5d08",
+    "captures\\vertical\\view_097\\camera_sample.json": "b77e7c1d2cceb0f54ba946520c81223571ba5dc835ecc3c7e9ec4252836fc2b7",
+    "captures\\vertical\\view_098\\rgb.png": "b7e584af940a02661b394d328921ec87b589d332dc74e0674920696e4888f1be",
+    "captures\\vertical\\view_098\\mask_calyx_crisp_v2.png": "bc725530c99e5644ca0f8b9bf09396f6f6867e7cfd9f8a26ca05d5c4d1cfe6e3",
+    "captures\\vertical\\view_098\\capture.json": "9f02df02722feaac4ee012bba4d659da5b26a9ac6f157a6b48c686e8192a346f",
+    "captures\\vertical\\view_098\\annotations_private.json": "eb897a0cafb89de489e683c8466e2b52f022427e7ddb5bbf527b3c93401adad4",
+    "captures\\vertical\\view_098\\camera_private.json": "f6f2d5636a22ad4e8f2fde80b8b5b3219f90c6cf2426ce17204e5847095d0060",
+    "captures\\vertical\\view_098\\camera_sample.json": "42b050be4010f07ed90740fb559970291230f49184943887dcd3f7d001e9a9fc",
+    "captures\\vertical\\view_099\\rgb.png": "2e7dcaa42e17aa57b05c49de9f027be564b3e27181d3c7277556d8061e78d600",
+    "captures\\vertical\\view_099\\mask_calyx_crisp_v2.png": "a560cd9d9862812a144c95c14a6b2f6a44cd34f918f0fb853180cc8befb7d28c",
+    "captures\\vertical\\view_099\\capture.json": "5b89a96d5e2c5d2380d79952721d877cbbbc3073171235edb9f4c99754ec077c",
+    "captures\\vertical\\view_099\\annotations_private.json": "e4017b62d65a9f96c93833038a1099174c08666db7cd9cdd9c955bc149711323",
+    "captures\\vertical\\view_099\\camera_private.json": "af9fb4034d488c882b337c0631e10ce19a8de0d47d7778e59e73050f94316178",
+    "captures\\vertical\\view_099\\camera_sample.json": "a13e0228d83ea427516d6b0110e68d8430da3a8801be0b23f882cda7d81a18dc",
+    "captures\\vertical\\view_100\\rgb.png": "626ecedd2a35d2d7d972595adec9ef3c36cb596a09b1e4382af04f6de232950d",
+    "captures\\vertical\\view_100\\mask_calyx_crisp_v2.png": "8a3b66fbbb14919992576f2982cc94c7d757db62e05685ea1f0237eff505ee02",
+    "captures\\vertical\\view_100\\capture.json": "82662dcf7ab46e688a64056d3788ac595e6d445b31df41f6ed5a19f335492a33",
+    "captures\\vertical\\view_100\\annotations_private.json": "6a219d6425b5337e1d14640beb2144ddd1ff49597f022554b71c9c3f1cc33b01",
+    "captures\\vertical\\view_100\\camera_private.json": "f1805255548da5b2609e049b9cfd3fb4efeddd1b35dcce3183b03ec2e212bb45",
+    "captures\\vertical\\view_100\\camera_sample.json": "90ad438d71bc02116310a6a35b57a149cc34524aa687d1aae227dafd95bf7dc9",
+    "captures\\vertical\\view_101\\rgb.png": "e113fff46680aacf35ca840e9e9c0f55f01d45f8ce8015b308fa89c2f4086b1b",
+    "captures\\vertical\\view_101\\mask_calyx_crisp_v2.png": "7e5d4343bbc9dc40d07a1a4eee4ecc01246bcb5d048fa346514b00756d0e5261",
+    "captures\\vertical\\view_101\\capture.json": "6f210f360623ac13ef2088e3d1001e61536543b90281c75b92d3650b70a5f61e",
+    "captures\\vertical\\view_101\\annotations_private.json": "8f57c5c514e3439ff95038b57f0d0ab1a0a78fd4c90b71aaa5a74404b937d57c",
+    "captures\\vertical\\view_101\\camera_private.json": "9791ee6577e4723acbe6dddca65b1957ef9d92f8b74065b78ad80537d5b2d371",
+    "captures\\vertical\\view_101\\camera_sample.json": "60305732eb93ed523f4e7212616b2587c93978463d65af9148062ccf760f5e5a",
+    "captures\\vertical\\view_102\\rgb.png": "299a143ac6f7730ddb1ccbd3175d745c7c38975f9faac29df18c4119a326523c",
+    "captures\\vertical\\view_102\\mask_calyx_crisp_v2.png": "85c64ccbd98f14e7da1ef6110eb0e916be870d3f319df7deb0b43ac38618cce2",
+    "captures\\vertical\\view_102\\capture.json": "0dcfbda2436cc6f965d8a4ea6a3fc20dbb7f2ecf7e7c1f4fd40c304e59f9dfdb",
+    "captures\\vertical\\view_102\\annotations_private.json": "74761fb88b7052e58e1071dd8427b8a3d537013d0017fded615e4a86ee6dbbf9",
+    "captures\\vertical\\view_102\\camera_private.json": "8531ecb1f7b24ef75f13f90f2d952c572519a147ebb50cfa05929b99e5c69ff8",
+    "captures\\vertical\\view_102\\camera_sample.json": "d2979e588c570513d3ad9676192c4c91965143318eb464890d687523da451259",
+    "captures\\vertical\\view_103\\rgb.png": "ba02ef7e7635bd4be160707edb0c63c9aa3fca6d2a25d6d65fa067df7cb643a3",
+    "captures\\vertical\\view_103\\mask_calyx_crisp_v2.png": "f434abe2c2f3048c7fdfd73374c43021f8d35f7378aa01123d276457a9fff3fa",
+    "captures\\vertical\\view_103\\capture.json": "fbbd6d1d9eea352cbf82e7487cb31412abbdf1c2859a839876b17162b1e859cb",
+    "captures\\vertical\\view_103\\annotations_private.json": "17303e4ea5ec3c2b92f9d2ffcf7c0096c58a62518bd9f5ff3f76941b403af994",
+    "captures\\vertical\\view_103\\camera_private.json": "7cf786d5d1a6c4eac9a6ea551a30a1ca3043ed251793fa8e129c3254c4809192",
+    "captures\\vertical\\view_103\\camera_sample.json": "a8001106ea86f864a70ddd3cc9b3bd979513e63d926fa720fb20645081c2f02c",
+    "captures\\vertical\\view_104\\rgb.png": "5b48ee401606539a8678ed272f6335e69b90f7c61d5eb552e952482bc7a506ad",
+    "captures\\vertical\\view_104\\mask_calyx_crisp_v2.png": "f434abe2c2f3048c7fdfd73374c43021f8d35f7378aa01123d276457a9fff3fa",
+    "captures\\vertical\\view_104\\capture.json": "179c9fb12a6d1e5d07a141eeab482c183bc65aac22b4e2da494153c41037d4db",
+    "captures\\vertical\\view_104\\annotations_private.json": "ef7735bb3134770283d3a65e5183316082c1770886f07742308227479b8f02f7",
+    "captures\\vertical\\view_104\\camera_private.json": "7cf786d5d1a6c4eac9a6ea551a30a1ca3043ed251793fa8e129c3254c4809192",
+    "captures\\vertical\\view_104\\camera_sample.json": "8cd3cef9736b11022f0e3aab19a410df80bc8be5b35b3ac7dc328f0f87aa904c",
+    "captures\\vertical\\view_105\\rgb.png": "9a88ed881922ab22a5fbbd23dd7538bef82c3640ed32b914fe72823e9f79de1d",
+    "captures\\vertical\\view_105\\mask_calyx_crisp_v2.png": "f434abe2c2f3048c7fdfd73374c43021f8d35f7378aa01123d276457a9fff3fa",
+    "captures\\vertical\\view_105\\capture.json": "686c090e6d27df39647214b9e2218239cb3aa617483b214f256bcb8ff3008d14",
+    "captures\\vertical\\view_105\\annotations_private.json": "e368a50d5bcd68f24ecd81df0baabbb2a301029652128d42da760e37646f5c8a",
+    "captures\\vertical\\view_105\\camera_private.json": "7cf786d5d1a6c4eac9a6ea551a30a1ca3043ed251793fa8e129c3254c4809192",
+    "captures\\vertical\\view_105\\camera_sample.json": "49e1120fc0ace52563b59f5379eb91da85fecb3af0b07cf120fd46e6e447ac0e",
+    "captures\\vertical\\view_106\\rgb.png": "b280f75e839461362a56ec605162687d9ce04255b58e8e67b9df81ea98103e1e",
+    "captures\\vertical\\view_106\\mask_calyx_crisp_v2.png": "6e67dbfe3c4fb3e54183ca9d7bb624e9f39c757fe126de64ae9c7d8960366142",
+    "captures\\vertical\\view_106\\capture.json": "bb54f7a9b44a442fb08e534b1da6d526b382639f44afab20529806e376d5f067",
+    "captures\\vertical\\view_106\\annotations_private.json": "a2ce506cb043c9058b7154798b6d3df05b4428962756127636901d6d5a72110b",
+    "captures\\vertical\\view_106\\camera_private.json": "6e91056b40f483adcbd5d69aaea8b05a57ae6ca190e80ac8b1d3ad4c559c2a1b",
+    "captures\\vertical\\view_106\\camera_sample.json": "5f18b06548e02e6182f1744b5d1a22378952ba8c7cc19be437146ff115acbe09",
+    "captures\\vertical\\view_107\\rgb.png": "cdcc994c2ba839affbb517bb26f58cc09574cde19c21259f7f7d4987b5bdd8d7",
+    "captures\\vertical\\view_107\\mask_calyx_crisp_v2.png": "df134590431b25aca988bf3fbd8e6b37d2249470fb07f08e1c7f039cde036f57",
+    "captures\\vertical\\view_107\\capture.json": "22b9a815f1f4f6d8d9b1c926f51a9c09e67eed20c3b7f02191321a3cae480e7a",
+    "captures\\vertical\\view_107\\annotations_private.json": "15bc75bbdf43049522a72c568b878b1435e63892bfa0473141260cd115a950fd",
+    "captures\\vertical\\view_107\\camera_private.json": "ffc962260c490bd18c48e684f3911d92b087812223254ef288f59160a7c700d3",
+    "captures\\vertical\\view_107\\camera_sample.json": "cd9eaef6fea47eb3ef2e1fd32df0d2eab930f1b23706de2d51c54b099588cc40",
+    "captures\\vertical\\view_108\\rgb.png": "0c87b868b089dc02f9606523a5c8cc87722bea9da215fa3e214d9a7d80250de7",
+    "captures\\vertical\\view_108\\mask_calyx_crisp_v2.png": "45a5da4b2270f6262a81eb48683f14e92a5601b30b6e5acbbe20da59f836f8d2",
+    "captures\\vertical\\view_108\\capture.json": "90c1e474db16a8e5699a2378dbf922f8f999afb419f851647c8fee6384742a07",
+    "captures\\vertical\\view_108\\annotations_private.json": "b2e24590eec6634ec27f607f28db2d7e95c401eecf0e82c4df2148ca3613d474",
+    "captures\\vertical\\view_108\\camera_private.json": "c4117b3b9deabf16da4f0b35b3c5bf3b3f8527722a4b2049cb438d7ff01d4851",
+    "captures\\vertical\\view_108\\camera_sample.json": "483f4191e66d0a8a2e619ddc98abfb9fa3b19dff257d7d0d8ff7152ce74df4f3",
+    "captures\\vertical\\view_109\\rgb.png": "7581ee2b39360be4946dc3f788101e1442b06d00a8a42821789ae35cb5247d7c",
+    "captures\\vertical\\view_109\\mask_calyx_crisp_v2.png": "ce94fe72e8b1dd948afd2a9b0beeac467937bb4cf7e76f69ae135bf7b4f04db7",
+    "captures\\vertical\\view_109\\capture.json": "36e805ff0f5f80b3deb45ba49de50430fc9a995cbb58b842985007d823627006",
+    "captures\\vertical\\view_109\\annotations_private.json": "8f4eb6f77a3868b36003510cbf0f89c75fbb279a723195899e25972737478ae0",
+    "captures\\vertical\\view_109\\camera_private.json": "8790699a218e5199e8daf78b89a947e1885fe2666df8028762c516a26f374950",
+    "captures\\vertical\\view_109\\camera_sample.json": "d9ddbae880ffd8ca915d69ea56f0456ac20139b4a4dc66b6ca924e07f769d856",
+    "captures\\vertical\\view_110\\rgb.png": "ecf998a06002ae5d0411ff4931128a9d48f421793e1e911ac9fd22a7ab90a504",
+    "captures\\vertical\\view_110\\mask_calyx_crisp_v2.png": "3ceafe83581b97ed3c9f6e31c56c10e271aae35ea89c61be6d1e8941d46872f1",
+    "captures\\vertical\\view_110\\capture.json": "1d648fe0a9b794cc13d60fb26508902ba757269514e985697dcd73ed4e1740e4",
+    "captures\\vertical\\view_110\\annotations_private.json": "48d754d10b7fb307cb4d8a07a84fc048e48455125fded38cd2865ca27f551561",
+    "captures\\vertical\\view_110\\camera_private.json": "f3f3c898b2a1a1df291e8561d9f09df525111e6a402bdf97dfe482b971da99ea",
+    "captures\\vertical\\view_110\\camera_sample.json": "3eb654f70ba5adf84ccd6eb58bff4119f89b4bf66079fd8afc9f39f2da79c8e4",
+    "captures\\vertical\\view_111\\rgb.png": "631b028d72429d25d94d618f24f3d5bc995b21e6f9b7af43525d8edec811f6ed",
+    "captures\\vertical\\view_111\\mask_calyx_crisp_v2.png": "09186ab7d675380c18446f3117c355b28bdf138d7fcb208e3cde3bff068fba16",
+    "captures\\vertical\\view_111\\capture.json": "e04c0921bc9577b411faa9da6ec9d12434d852c924e957758c59604c403f686d",
+    "captures\\vertical\\view_111\\annotations_private.json": "35cf0b2ff3c077913135eab1349b36c6e6d3a82d75113b9b68d5ab3bb274dbe1",
+    "captures\\vertical\\view_111\\camera_private.json": "31b89b0d684f29eeb5189163d423988ac1dcb14dec11bb649bba9d4eea6cd5c9",
+    "captures\\vertical\\view_111\\camera_sample.json": "a7e3fdb4da826f8e667f260d2479482ff03eaa261a6106fea33d8479b43f58c5",
+    "captures\\vertical\\view_112\\rgb.png": "d0feeebf5ffbf6ff94506e2edd037837811a2e12b8008af3ef3a741c2639ae04",
+    "captures\\vertical\\view_112\\mask_calyx_crisp_v2.png": "eec924809381ef4c599f416c42b979a639f6df8633e735f17bb40f55d30d5f98",
+    "captures\\vertical\\view_112\\capture.json": "28b5adc02b9bd60ae338716d983c9213d8587c8eaa8e6ec870554dbe9ba0116f",
+    "captures\\vertical\\view_112\\annotations_private.json": "7b4161fcbc69d288b8a0af65099463e5a161590fd47913f1e7b1ab47fdcfe90d",
+    "captures\\vertical\\view_112\\camera_private.json": "36c8133fa4b1ab8b5318ba5c7abcebc0288b9e10f5335a4fe511a269547156a0",
+    "captures\\vertical\\view_112\\camera_sample.json": "c17b10f219c838c3355f93c568b3f929dd2056795faaa59a23d1229693f9b140",
+    "captures\\vertical\\view_113\\rgb.png": "52f0232a6ffdd5d9dc823403e60b900bf2930902b2e99e00bfbf24c5df1428b2",
+    "captures\\vertical\\view_113\\mask_calyx_crisp_v2.png": "3734db3aa9ee943086cf2e82038d6740708fe6fe88b1de98f798790d0cb4d44b",
+    "captures\\vertical\\view_113\\capture.json": "d5766057fd49c297e06e89459684fcddcce50729b42b27fc99ce58f276f46e5c",
+    "captures\\vertical\\view_113\\annotations_private.json": "40c613b54ee056ac01734361fcf8823fc9d3542c27dadc554c5b45525ebea9a5",
+    "captures\\vertical\\view_113\\camera_private.json": "8f992101ab00a4c0718b5886148a62e8294c2afc051585e5d4d852e9cb0f590d",
+    "captures\\vertical\\view_113\\camera_sample.json": "1ca91d8fb82526e3f6b1a1ee8d4f0388933a71fb318f69b6e0a67e33f4cfae9c",
+    "captures\\vertical\\view_114\\rgb.png": "6c86ef9df77299bd9511f457fdcd4bfee16e2b22ac3a7684318216bdb490da7d",
+    "captures\\vertical\\view_114\\mask_calyx_crisp_v2.png": "bf7f2615408bae2a00834df82ae7d2d566d1789afae66eb1dd4647a45678e118",
+    "captures\\vertical\\view_114\\capture.json": "6fb6c6ba5613c845ea31d2d802850863b3ed34bd294902b1e3bd643ab303a494",
+    "captures\\vertical\\view_114\\annotations_private.json": "ecd9941882be04c90c4fa2afef5927dec30d0d724c1d86d6d92821ecb2ca0470",
+    "captures\\vertical\\view_114\\camera_private.json": "24a9e64f545a081744ad03a44644e0c2a6568126e889e5ed3875a253e892b992",
+    "captures\\vertical\\view_114\\camera_sample.json": "5571102fe9de7b17b8715b1d207733f69995c350d3287acb452730dcd3a49591",
+    "captures\\vertical\\view_115\\rgb.png": "d3258431bed2e0649c0e28ded0dc8b1d16239fa920a0cc84ccb6b09ab1de7d6d",
+    "captures\\vertical\\view_115\\mask_calyx_crisp_v2.png": "7e626f3a4929a3564f031671c527a27b1b7f465b748a3e0cbefde4fbc5ce5137",
+    "captures\\vertical\\view_115\\capture.json": "5656b2a6e7cda696c000aba9b4927415d19676d806748e63ac13033383fa15fb",
+    "captures\\vertical\\view_115\\annotations_private.json": "211c8470005b21438e0f8cda2633a3fa18a129599b86e95cd2abfc61e039f6eb",
+    "captures\\vertical\\view_115\\camera_private.json": "cdb5efcb13b12e36157a450ddd0b0e13bf207c4e1299b31d63d7050358362150",
+    "captures\\vertical\\view_115\\camera_sample.json": "a734792e233627a651b086878fb7d1a2c74e07a74e63ed97a6a58d74f67c915b",
+    "captures\\vertical\\view_116\\rgb.png": "ba965a4f85aa7c61ad9dc0e1e0fd4d0480c7d806a51ba66fa4ca1e6ff41c66fe",
+    "captures\\vertical\\view_116\\mask_calyx_crisp_v2.png": "63577e405316cad8da9eb6f1cda8ab63befd9e30b667aee4b2c5e45a6441df7d",
+    "captures\\vertical\\view_116\\capture.json": "c7e8d7f830bcb61667a8384551180f6e8b9c55cbd9567e5c0576cc36fd56c9d1",
+    "captures\\vertical\\view_116\\annotations_private.json": "dbdc3d4b273251cf22c07bacf7049b95d2bf7b9b8e3b42e54ac414ccac53b7fc",
+    "captures\\vertical\\view_116\\camera_private.json": "3781f6037c89bd5332f2af468a8196abf7be3a0f375d8813ae7f58fd15662d94",
+    "captures\\vertical\\view_116\\camera_sample.json": "dd97b1c43d797a81d16fe9f27aeee282bb32ef4039fa5c493fd8c99573d8cf91",
+    "captures\\vertical\\view_117\\rgb.png": "d8a13aba8942a7fb99d226822b5796eed061ef2109a30b83e5ca957aa7a17320",
+    "captures\\vertical\\view_117\\mask_calyx_crisp_v2.png": "4dd9d38bde895c4aff65cf66b3e6e5efda5be78c8d61453269d59c8643696d4d",
+    "captures\\vertical\\view_117\\capture.json": "2e94ccfdd97faa6aa276affa1bdf667c6a9135bedf670713fa47883f76aeeac0",
+    "captures\\vertical\\view_117\\annotations_private.json": "bac8432c5f3033e17ab6e415c0cc811dcc4d8b901b654af94f5d6eb0bedb45ff",
+    "captures\\vertical\\view_117\\camera_private.json": "d6b39ba80643f126bab4e9dcde6678aa9a402dab020dffa3078122cfc810fe73",
+    "captures\\vertical\\view_117\\camera_sample.json": "43ddc6d3cac8d4c61f5e605277e83dc792562ed58d0596a90b488eb2061854f2",
+    "captures\\vertical\\view_118\\rgb.png": "b0615573ef384ee382cfeeed2083ea4aee39ec22dca6a88895db183c2e6f07b9",
+    "captures\\vertical\\view_118\\mask_calyx_crisp_v2.png": "cf7509f94adb7cf10bd49448917106190ab17e3164b019f40f27672b452de5db",
+    "captures\\vertical\\view_118\\capture.json": "30a5f3167b5ee2a5ef5855fac5b14d0fce8ca76c398b01af76ce13fa30bdd6e8",
+    "captures\\vertical\\view_118\\annotations_private.json": "1bf8b973578b129e4da84fcaf00f382f2f07074fc93a6cf74e73b43016d2e83b",
+    "captures\\vertical\\view_118\\camera_private.json": "921843de895f4346f958834e812b4fbcbff0fd6e77dce90b719fff5e41da554f",
+    "captures\\vertical\\view_118\\camera_sample.json": "92e78047064bfde67c493fc113482a55a7763d69408213c220afcc4aac20abcf",
+    "captures\\vertical\\view_119\\rgb.png": "3fba2e5fe58859075c594dec062291d2cf582a87a4036d617a9711e874488078",
+    "captures\\vertical\\view_119\\mask_calyx_crisp_v2.png": "19db2de574c1553099804693c09deb71e1528927d7a75e1532a5bcf312d8451b",
+    "captures\\vertical\\view_119\\capture.json": "ecd04a0e9a03938e1e65b40f2843f81520915c321ae4bf7bfc4067b835cb5662",
+    "captures\\vertical\\view_119\\annotations_private.json": "e1891929c1bb8b73c41d7f997828387eb8b89a08f40b2ea3aeab1ea440157997",
+    "captures\\vertical\\view_119\\camera_private.json": "1029daa27f94355fcae1852796d200dad3d322f25305b0e556e0e2e87e5d3b4a",
+    "captures\\vertical\\view_119\\camera_sample.json": "a82cf0320830a8d0a28d0cfe73d26dacdd2fb8b06ed650ca6c8a01b609cbba25",
+    "captures\\vertical\\view_120\\rgb.png": "ec07c1fe4c0273afff5101a4dbe3673e5b9a02d91b19f30b27b6c79585e0f468",
+    "captures\\vertical\\view_120\\mask_calyx_crisp_v2.png": "5bb357f7bb86865138e0b39c6676c2a6fd089e6726704f63a17dd2764b7e5286",
+    "captures\\vertical\\view_120\\capture.json": "c3b72a247eb79f00e703f58566f9142cafe1d7ca2ce9acebbc80bc96bd92f03f",
+    "captures\\vertical\\view_120\\annotations_private.json": "82f76530149f775fb7e861d36c7f025432b209a400158372ce161f336f427c85",
+    "captures\\vertical\\view_120\\camera_private.json": "93f53c0791f2f20349516f28b9c113f3715087e5363c3fe112094a6c37405f06",
+    "captures\\vertical\\view_120\\camera_sample.json": "659b7fe471ffeefc70863373a8780e4a0fd67af8ad7d40d3d70ca54e68bd8a59",
+    "captures\\vertical\\view_121\\rgb.png": "a3b16d15cf68fc491f48e4e972661d22d142255cb1b7c38257c5030ed18eef37",
+    "captures\\vertical\\view_121\\mask_calyx_crisp_v2.png": "d07d35437c3c3fb5edd1d1c0e4b2882c0edc5a43bb4939d3f57e60a5abed0a0f",
+    "captures\\vertical\\view_121\\capture.json": "3caa7fde448f3229d0f134190334da993951edf19ffe4b4782820858fdf653a1",
+    "captures\\vertical\\view_121\\annotations_private.json": "7ecb8a367217d6a8da9114cb429893ae3cee0dbb45acce512530ff493efe7136",
+    "captures\\vertical\\view_121\\camera_private.json": "ebfeb3db313fe5d2facf2d26b4af8ecd22c1fec2e5dd278e7910a260180d4b43",
+    "captures\\vertical\\view_121\\camera_sample.json": "54c21f547348c59851e60123b9c699eb87b63fc16d0d529e8edb149c4c64f4a0",
+    "captures\\vertical\\view_122\\rgb.png": "79bbd664f40181a5ddf5b5566cf5676b8f7a848bdb56b9e09f72789ba352b043",
+    "captures\\vertical\\view_122\\mask_calyx_crisp_v2.png": "eb5304671a39972511953cb5194125049e0240577160fdd53e28db78106106e1",
+    "captures\\vertical\\view_122\\capture.json": "192130b686d5d50275436d1307b40c077a92799c564ee9138253e5197973a46e",
+    "captures\\vertical\\view_122\\annotations_private.json": "34fc0942ebc3eca5ccb548a175bc89bb2e6c9a891547b662a3c92eaa21c8ee6b",
+    "captures\\vertical\\view_122\\camera_private.json": "419ff7ddc2e5cb384279b4a0a4462cd44436164a62a315140d4f1a52a95a0a88",
+    "captures\\vertical\\view_122\\camera_sample.json": "a86d989fec42a5d68085b16a52741a33fc539bc2f2dff3c613a52e1eb176849d",
+    "captures\\vertical\\view_123\\rgb.png": "bc768a5dadb09fa5c24b8adf365cd38f99dc5529d8ac8e686d7c303ae500a5cb",
+    "captures\\vertical\\view_123\\mask_calyx_crisp_v2.png": "fae28e31535e8519baae5062f02616b78de41ee53b58a80fa6436acd5292e6cc",
+    "captures\\vertical\\view_123\\capture.json": "effb6834508f98cf5402c9b346d21c318120494bc5f61d56203f381ee3b1c6b2",
+    "captures\\vertical\\view_123\\annotations_private.json": "8d0f635d8c02656faf2fa6e3fdedecb488e6f8c32bdbd2499e59c82a4182c791",
+    "captures\\vertical\\view_123\\camera_private.json": "772d91eb49d8954f146d7e4d2e05421452aff7aae54cc0b86151beda24a21cf6",
+    "captures\\vertical\\view_123\\camera_sample.json": "d7dbd274f7d14f4171255c3f2672f042353e5013d943aaf95a376103a474ef1c",
+    "captures\\vertical\\view_124\\rgb.png": "4d9ab63264a4f4a08887054687baebf08f2969a726ea6fce689104bcf8948469",
+    "captures\\vertical\\view_124\\mask_calyx_crisp_v2.png": "19a40780e5c63dd2ca2a66b3660b91198b5ee3421b20af89d95ae082d191aeb9",
+    "captures\\vertical\\view_124\\capture.json": "7bc86352d706f147ae025e721b24e7493f2d149e3e6343c7b5d5e82b595f3718",
+    "captures\\vertical\\view_124\\annotations_private.json": "0f944a32695dd4c1e8cdd220ac4a7c1eb0c0626801254251ff85159affc32415",
+    "captures\\vertical\\view_124\\camera_private.json": "a7457912d6e94d07ea4d7e7333a292a56f7ab42b16d7ca5194b056205ab2e855",
+    "captures\\vertical\\view_124\\camera_sample.json": "5ae0cb5b361745b0fa540264f67e07b27f517e1d623c8f8e575518fb17a53d4e",
+    "captures\\vertical\\view_125\\rgb.png": "a4c0e30ccb66abebd2279a66e7e33bd69c4cb4ddaa1e8917ff578d284319e5b1",
+    "captures\\vertical\\view_125\\mask_calyx_crisp_v2.png": "77e2116fb9065dd924130ff0f960c7b580ebbf6be7cbe82636c4d8069c26b55f",
+    "captures\\vertical\\view_125\\capture.json": "6fed5c76626037664ebaab7f04e410722c4855a133479fff1312350ccb3cbbb7",
+    "captures\\vertical\\view_125\\annotations_private.json": "d0c4919f33b53a129a63dc88476723a3c9c4b5973c55101a94f5d63fe70e5ed8",
+    "captures\\vertical\\view_125\\camera_private.json": "2b0ed16d8dd829cb4dafaf8121d3d7befd7d68a4b721cedfbf4d264fc2976f2a",
+    "captures\\vertical\\view_125\\camera_sample.json": "a999c3c67ab6de0deed7454218bd31b6b7b86a7dbee207b34e2b61929835d76e",
+    "captures\\vertical\\view_126\\rgb.png": "447112464e811b9116010ada38ecfd781cb1a152b5212c21068d884e682a77af",
+    "captures\\vertical\\view_126\\mask_calyx_crisp_v2.png": "77bdd5dceb9937dd42ada33978f7d836563c732795b6da5ee5e6a60e3d146579",
+    "captures\\vertical\\view_126\\capture.json": "8551221af777a6416b3f877af523f331e81e315f684ea9d7f8a5ad48699245a0",
+    "captures\\vertical\\view_126\\annotations_private.json": "1d0b14416d7aa596dba050e4235fe684a3c0499adfbc45899f743df248e832a9",
+    "captures\\vertical\\view_126\\camera_private.json": "41be6a06a0c5ab17efbe6691fbbf5d4705e7dc8638ce106fa955ef923a16c3d1",
+    "captures\\vertical\\view_126\\camera_sample.json": "45a375493e9238aa2ab70ee9b96755c1fd5ead9f1ff65563afc8e03e97823bbf",
+    "captures\\vertical\\view_127\\rgb.png": "64920ed7704347de6a39f9c5a6c932122c8a4dcef921585f30c86da120076ede",
+    "captures\\vertical\\view_127\\mask_calyx_crisp_v2.png": "05cda9e12c2c40d334835dd5f1e700f81f695a9eb32a054eb9fabdd362aeff2d",
+    "captures\\vertical\\view_127\\capture.json": "6fff95f1f7a73cd4ca96b206d1bdbbc86c4b88de7b340e20188b3853b95fa62a",
+    "captures\\vertical\\view_127\\annotations_private.json": "229fe02496a9930e3936b203cc82c45574eea16272ab2932d8f00ca881286ffc",
+    "captures\\vertical\\view_127\\camera_private.json": "2f32aecae860bb74921796a6eb56c178ac80d3efd6a2ed192631f72f27100618",
+    "captures\\vertical\\view_127\\camera_sample.json": "5ecf586bd6b9b99f3793bd527e153cfb0bad8a937236da4a57127cea7439df7a",
+    "captures\\vertical\\view_128\\rgb.png": "f6d9162fe238b427748635e7504b9e38f2e7983305fcc8a4be3285eaa1ede6fa",
+    "captures\\vertical\\view_128\\mask_calyx_crisp_v2.png": "0bb3e8671a755c2e36073f764f7fa883d740521086cb9089fe6b881b3134d336",
+    "captures\\vertical\\view_128\\capture.json": "d75acb5cde932c22aca99b77f0da448a987f2cc64f3cf8cf8fd74fac2bea0d7f",
+    "captures\\vertical\\view_128\\annotations_private.json": "d52a767532eb13fcd4c8cb337ed97b9e9129e01ea733b79e39eb6e9f3b575d73",
+    "captures\\vertical\\view_128\\camera_private.json": "0ea59efd1c714cf889fef96600bac0c798704bd5721039db3cbc849b4d12bee9",
+    "captures\\vertical\\view_128\\camera_sample.json": "500b1347e2de26ed450b8563bbc6c1dc0c9abc7b7f7c745a1b7cf0880d78b0d0",
+    "captures\\vertical\\view_129\\rgb.png": "3d83069cfd149be4dacb1ebc82fe6a535b5a8d3447d5391e9b0835955a374a55",
+    "captures\\vertical\\view_129\\mask_calyx_crisp_v2.png": "c7230c25c90bb94e2b41320f270cbf13202ff23803432906adffa2d2a6ca5e40",
+    "captures\\vertical\\view_129\\capture.json": "200a0982c5fefd2ae5535a2b9b5050642293f1683a667e7989fd862da92291af",
+    "captures\\vertical\\view_129\\annotations_private.json": "a061c37e451d6c908388c22e26c76ed578c9e6ddec11171d5712b23864d62453",
+    "captures\\vertical\\view_129\\camera_private.json": "e26b04e10ea60feef918214fb8c5b6a64ac577ac80ad619e4e5b048fa27f804b",
+    "captures\\vertical\\view_129\\camera_sample.json": "517fcc2218710845072a978396659073e2e662280ad2fd6b0d78f884f3f5b713",
+    "captures\\vertical\\view_130\\rgb.png": "bfafd914e9e24c690bf309592b524a69f12c07d96db73daf7aee00368dc0b1f2",
+    "captures\\vertical\\view_130\\mask_calyx_crisp_v2.png": "2bb7d72f7d9d93bbc0b7242522e7b20c32decec51f95f73e8de7e7cef42fc621",
+    "captures\\vertical\\view_130\\capture.json": "2608c844b05190189b47354c0538161a0a51ec27fd33d226445ebd5190752444",
+    "captures\\vertical\\view_130\\annotations_private.json": "fc1a2b6bc782232d86c09091ae096acb9f2da7d109592dd5559d4571c37ce6cb",
+    "captures\\vertical\\view_130\\camera_private.json": "3b70bfa51baa454a32cd01cf930b8fe31264d836d76c986576d62e8f4b8caa28",
+    "captures\\vertical\\view_130\\camera_sample.json": "ce77be5aa65c7ccea8c4d357efaa6f6d3c4b1943b7d2ecde92c87458053b11fa",
+    "captures\\vertical\\view_131\\rgb.png": "5258b25189db31bd08e0d0c439b2d793869dc3d8e5bfca274139e24454c7c9d8",
+    "captures\\vertical\\view_131\\mask_calyx_crisp_v2.png": "9016200904adec84d28c8b84f7be81a64aecca8a423143ee7eaffeab6813e4a0",
+    "captures\\vertical\\view_131\\capture.json": "baee73691440b4844794fbd77eab1b37f041924816a464ab4608d6898d7d6a4a",
+    "captures\\vertical\\view_131\\annotations_private.json": "fa12473c0fb7200017f1c86b08139101023230a4dc855e1fde4d0338e5018c3c",
+    "captures\\vertical\\view_131\\camera_private.json": "704d6a6adb402b473961f407e76473a819d51ad3e3bd9e41ab03962cdb90e653",
+    "captures\\vertical\\view_131\\camera_sample.json": "1efe60d13552f01e7d2f5b5a41f7b677f29e8620455bf7c4fc9e909d628ae270",
+    "captures\\vertical\\view_132\\rgb.png": "6d6768f659e773b1557998b36c058023a0bc89510ec01fd16edee2e543804731",
+    "captures\\vertical\\view_132\\mask_calyx_crisp_v2.png": "d44ec582dedccd8b06660be019f6d84c156d2b6f17b958c45fc15813115142fc",
+    "captures\\vertical\\view_132\\capture.json": "e309b62a393f638c5d175b5abf13919169d2a5ce880b4a675a7ec6fe1aeae87f",
+    "captures\\vertical\\view_132\\annotations_private.json": "e4c5f16b573164bedccb01817fe9d8440422cea178c20c11b0fb0e9f9daab35e",
+    "captures\\vertical\\view_132\\camera_private.json": "ddb21518755e0d6a9690848aa8dd89bb34ee36a795906da0e4f6efc57ff678f7",
+    "captures\\vertical\\view_132\\camera_sample.json": "af09390db012bbf32f63f0f3bcdfb03fd121f7a692ba4493cbb8fae01dafc6fa",
+    "captures\\vertical\\view_133\\rgb.png": "7a2f271c8dc18c3581a00c92012ee78d9752024d22986348a5211be58fc1e295",
+    "captures\\vertical\\view_133\\mask_calyx_crisp_v2.png": "94e8e2229278884b51a031b09ba89d333a6ede8de251094a1a58146735fbe61d",
+    "captures\\vertical\\view_133\\capture.json": "a6cf13ea0ce176b9ee78027cc4239427401ae59bfded33b4fab00f14e54cca59",
+    "captures\\vertical\\view_133\\annotations_private.json": "363a70394d102da33811a39b380f7d9e9cb3a78ecf960c0f12cef5b126cdce7d",
+    "captures\\vertical\\view_133\\camera_private.json": "451bc54af1366cf82c8a5129152a29bdec427aa397fcc1155533216204db5b45",
+    "captures\\vertical\\view_133\\camera_sample.json": "775f25694a1c0415dd0d4fb89a5039c78bd39c9332690ec48cf1934534178b95",
+    "captures\\vertical\\view_134\\rgb.png": "4d75ad8c2eb6201318fd801dda051f3d1c23684e06a3c7db63b0f3f99385e2a3",
+    "captures\\vertical\\view_134\\mask_calyx_crisp_v2.png": "54bbb15ab68aaa2cf06bde26aa3d6c4ed09cd8835f30f28bd8a55b0b90587a1d",
+    "captures\\vertical\\view_134\\capture.json": "e16348b27307d9edf4f710ddc46e876b156421a4143707c630e0c909965f96a9",
+    "captures\\vertical\\view_134\\annotations_private.json": "bb880fd7c4fbdd0bfa1aeb2a6e01849977c955e847a840be97be96644505e461",
+    "captures\\vertical\\view_134\\camera_private.json": "f214cfff02fd7f9ebc0e0185bfbaa263d8023350c00a97cbd2c3b320b0caa50a",
+    "captures\\vertical\\view_134\\camera_sample.json": "4982261b0757a6e47647edc0467015f8d12f0549e5960eb70a02f23e20c1ba13",
+    "captures\\vertical\\view_135\\rgb.png": "2896d6e6a04477fbb89a88a3a57c08e6bb3165e76949991f9026c25e3f4e42d8",
+    "captures\\vertical\\view_135\\mask_calyx_crisp_v2.png": "29b9bedd5a3995348a859016e0de86fb19b82f19cd05b163bb776bd7a0b24c43",
+    "captures\\vertical\\view_135\\capture.json": "2cb2272a142ed259f0d84f40e4b2445a4e8d4826eb01b0ecc56b07b63315a204",
+    "captures\\vertical\\view_135\\annotations_private.json": "4b14e5044e349d4728f13ab0e41ea0bd07950fe200d7fc5f7b56eae731a731b6",
+    "captures\\vertical\\view_135\\camera_private.json": "139144f0cfe517b6faccdc866dc45ff191097cbafd04e431b5bbc3c83bb843e3",
+    "captures\\vertical\\view_135\\camera_sample.json": "9a33c9dbe2dc1632422fb59893f3f6907206c29dd103794a8d8e0c10fa98c0ba",
+    "captures\\vertical\\view_136\\rgb.png": "f395a7e9373f2748d05fac65ff8aa4d97728fb13c54d133a09b11fab4693e4dc",
+    "captures\\vertical\\view_136\\mask_calyx_crisp_v2.png": "a19b276529f054aaa21c70b5985aec1484c5c9ca0562caa4fc2fd44343b05a37",
+    "captures\\vertical\\view_136\\capture.json": "f7ffd160ad10435a0e28a5f1af6e680fa218da357c573ce14622ab840cdc412b",
+    "captures\\vertical\\view_136\\annotations_private.json": "1a356728a2901c0337d691c9a73a215668e929c04e565785222a6e0887d0020b",
+    "captures\\vertical\\view_136\\camera_private.json": "402f29db117f19ab1a1726bff177e8e3b7c0fcb0da5d849707c7670a886bc11d",
+    "captures\\vertical\\view_136\\camera_sample.json": "1c837ebb1f8e0d232bf0214942eed73841c81d3e1972dc3e910a2838561da844",
+    "captures\\vertical\\view_137\\rgb.png": "aca1c834b1929fd74d0daa8804c4c7a7046f95704f9c21a1ee6f8c491ed294ce",
+    "captures\\vertical\\view_137\\mask_calyx_crisp_v2.png": "c88940d070dbea94fd113e7e2eb04e2edeba258a88c0d00f266feb0002d78218",
+    "captures\\vertical\\view_137\\capture.json": "31cdcbd81a188513fe6753b27e46d2e85acc027e923fb2beddd22006fe492cb7",
+    "captures\\vertical\\view_137\\annotations_private.json": "b8cc676a05eb8293e14143c968c4c4d64b49b04d907de0cfe1f703823611a858",
+    "captures\\vertical\\view_137\\camera_private.json": "1cfa8fbb0817425dbf2570fb3cc987fd078b7b01e3a7148de77ea6767e3b5de0",
+    "captures\\vertical\\view_137\\camera_sample.json": "657a51e6a9f2d9e01a6a442743da584708f88677528bc84d8c619f683d2af8df",
+    "captures\\vertical\\view_138\\rgb.png": "c9016066efc465fa5ec2099281165758fe0d3a96b82dda4e5342a98e04b96446",
+    "captures\\vertical\\view_138\\mask_calyx_crisp_v2.png": "d7e9742edf15fdc9f116779271e94ca18dacddffc79539638c90b669c0f52b54",
+    "captures\\vertical\\view_138\\capture.json": "0f5e1075584c5c9a3251dbb9d668d47288e53d6103a7333961fec809995d817c",
+    "captures\\vertical\\view_138\\annotations_private.json": "3c617dc32359b84f6680bde6f402a9949587bf8a9a4b8562876f706e264d7e92",
+    "captures\\vertical\\view_138\\camera_private.json": "a0fb6911d3802686fdcda83476ac98de318f1c3d39e7cf1bb11f303d5bc9507c",
+    "captures\\vertical\\view_138\\camera_sample.json": "a45a6bb0a5e1cb9219c4eb7375a0c3233bb3fe0034d3ff1fe0c370ba2ce4c8d1",
+    "captures\\vertical\\view_139\\rgb.png": "62ae6b8acb778404cb19f0f9907b973a3f60694a89382c4e217f5288c756432c",
+    "captures\\vertical\\view_139\\mask_calyx_crisp_v2.png": "6a3bd252b859000fe173fe5ec41ca4e3412d0db7cb541b20a7a43e4157e268d5",
+    "captures\\vertical\\view_139\\capture.json": "977c197db6a5604ebce894d4014206ea8e27dbc6388e98e67f15df2158fc272e",
+    "captures\\vertical\\view_139\\annotations_private.json": "8d36fa00feb5149e68699fa213ab4ffd118617bd752aec68fa8a5940a879233e",
+    "captures\\vertical\\view_139\\camera_private.json": "29bd228abdeac0aaf40fda5d082b4fcfdf1b6d5bf4a62aab96af96534bdc8f1c",
+    "captures\\vertical\\view_139\\camera_sample.json": "b33fd8af524fe77540bf519d414b77d750272c7fb032eb53f82132b05205ade3",
+    "captures\\vertical\\view_140\\rgb.png": "ddd9040e3e877b3c73edbc46772ed7d0da0798be32e4499b335fd4378347fc8d",
+    "captures\\vertical\\view_140\\mask_calyx_crisp_v2.png": "b3618171b064548e9d2dae5ba71567ecde611b10ff3abb522c8c067ae9419a3d",
+    "captures\\vertical\\view_140\\capture.json": "9b5b54096d7af692fce270b915cc091b4daf63fa582b085a8128407ba1a2ad09",
+    "captures\\vertical\\view_140\\annotations_private.json": "9187274e32933055c6ccec4dfef3dddd19bfc323aa3ff3a918045105078b5aed",
+    "captures\\vertical\\view_140\\camera_private.json": "1d94557f8a13038e3a902cf27590af7567b819e3475ae458b78f21e0a2a22b4a",
+    "captures\\vertical\\view_140\\camera_sample.json": "1c6183c11977315319852228584a9ff956b687b35cf5689c3cf7e36e9642724f",
+    "captures\\vertical\\view_141\\rgb.png": "3548b172f7da73388cab4a3b15f19ffdf8e770fa1c6537acb2bf6afb1e104553",
+    "captures\\vertical\\view_141\\mask_calyx_crisp_v2.png": "c489be7788cc65186bef9d0d0131c3ef43fe76551f6b74360a98fb812221ca36",
+    "captures\\vertical\\view_141\\capture.json": "8035c1dcbae807c502dbe2e80fb31ec85779ce1242cda52aee92f052a5874567",
+    "captures\\vertical\\view_141\\annotations_private.json": "8ecf6dc7c6f421a4a650cdf2ec75edf5507dfcc79a7a703d1c073b3339f3ad3f",
+    "captures\\vertical\\view_141\\camera_private.json": "724b6db2f89aa9276ce02cbd697643f91b2fd05b9e63e7b963e0d8a62c93519e",
+    "captures\\vertical\\view_141\\camera_sample.json": "4ec124f3fc4c6b49293789e4f98bc73cb907d334351db705655a879329d67929",
+    "captures\\vertical\\view_142\\rgb.png": "7944474ad04ec59cc9e15f982c86749d3391d6a8fd0d78da8457fccbcb6f2e4e",
+    "captures\\vertical\\view_142\\mask_calyx_crisp_v2.png": "dfd10ff10e59b870e7f161d358414f09992b87af82f3cfec6a20a0adfb988356",
+    "captures\\vertical\\view_142\\capture.json": "cc4d5ee8d48059746e6eb488bb6cbbb163d84b0e69fed1c4e72e7adaf05b23d4",
+    "captures\\vertical\\view_142\\annotations_private.json": "254bff02c4e56e2db5111a89179ce653e49a7c144792f9f50ded89ba574957d8",
+    "captures\\vertical\\view_142\\camera_private.json": "bcdb4287cccd0481b825c9fa9f299fb7ff9508d5477ef3cc05538409816cf897",
+    "captures\\vertical\\view_142\\camera_sample.json": "f1b3b2b01674a45827d83e4b2d838bf6778d0f339b50d7c3c76d76d47f3b05d1",
+    "captures\\vertical\\view_143\\rgb.png": "63ca0d7ddc15f2e5f2c0c793708316e561e2e5e47a630e86bfd5588b811499a1",
+    "captures\\vertical\\view_143\\mask_calyx_crisp_v2.png": "4d3f8e8438d7dce97c7ec6d066ca1596dd75b0eaa3533a5b754ad0fcdda25081",
+    "captures\\vertical\\view_143\\capture.json": "62c13da9a1f050bfaa43b62e8d78babf3b95fbc5640af048ec7372f195d6fa15",
+    "captures\\vertical\\view_143\\annotations_private.json": "441a559ec4ab84645d8b78ef292d2dec883a42bb1f23b0baf3f1b4069e644cd3",
+    "captures\\vertical\\view_143\\camera_private.json": "627a663264e6a77a5cdd1fbd0b8167fefdf448f12aa21447c516e51d228ea68a",
+    "captures\\vertical\\view_143\\camera_sample.json": "4d4903ed991e5921835480236b4582963bd32ff589764eedc1895c4ffe8e13cb",
+    "captures\\vertical\\view_144\\rgb.png": "d8c87c9efcd57f5adb5d57cee0387366547b586c7aa678cc0993a54c85f333fb",
+    "captures\\vertical\\view_144\\mask_calyx_crisp_v2.png": "0558b7f48b549d50054b2906de367df5311ed655e46f6cd26e66f0d8ad874a96",
+    "captures\\vertical\\view_144\\capture.json": "190ed8d155890f2fede95a4f83bef781444b8e67a309411b84b6cd604c96c556",
+    "captures\\vertical\\view_144\\annotations_private.json": "fbe33bf27ebf8573e1245312930ffe0d0e47fce34552fb34d98617b9972793f1",
+    "captures\\vertical\\view_144\\camera_private.json": "c8fc55a903988bb4cfe72bfdfb9c29a10bcd2496cc057fb7ea2c38b8aebf1d88",
+    "captures\\vertical\\view_144\\camera_sample.json": "d752ee5d9dc9441f26fe1cb6f3528a2e25b146f75f1115436a992b998b684d9a",
+    "captures\\vertical\\view_145\\rgb.png": "2e8b85eeafba6e79e5f98d823a43fdd1e4b983373aa741967f048395a46d16b7",
+    "captures\\vertical\\view_145\\mask_calyx_crisp_v2.png": "4a174ce0feb264ef3956a86606ba3151a6c07e912e6701b7ae1d4d269732bae4",
+    "captures\\vertical\\view_145\\capture.json": "3d2c09451875d0db75cdcb44600ac654cab4392607389e3de69318ce886f4c45",
+    "captures\\vertical\\view_145\\annotations_private.json": "32d2010718f7cf7c36adff2d473ca09e729c62567a3161edcc931fe5557975b4",
+    "captures\\vertical\\view_145\\camera_private.json": "a3a8f7cf3a3f6f30817ca3b65888715f91f54dd0e915c5d4d93d65eeaf9abafc",
+    "captures\\vertical\\view_145\\camera_sample.json": "1126994457c48fe6a4a172b5d77a8597a1f7a47c6c64ed256e2f8215513cdd99",
+    "captures\\vertical\\view_146\\rgb.png": "ef39f266feaa25b4cfed5cb5ebbf3a8c98f3e4ec3788e0a871c2675d33b0cc6d",
+    "captures\\vertical\\view_146\\mask_calyx_crisp_v2.png": "83ff015f6395022e9b26cbe919999e637679530b0379e86be2c8d0cf32dc7870",
+    "captures\\vertical\\view_146\\capture.json": "7d5d73dc367677daff3fbad2699cd8f694a84408da07b7de0454c0aff110a496",
+    "captures\\vertical\\view_146\\annotations_private.json": "5027e4bd80fe37b72286afb0fb9ebc0d1574f4d0895e08fa1f82f7b37c1a6fc1",
+    "captures\\vertical\\view_146\\camera_private.json": "a9af56060a3674eb1edd4f5131561f058578dfbf3385cf94a6072cb62021aad4",
+    "captures\\vertical\\view_146\\camera_sample.json": "57bfb0395d21e5f57016b123c56b0e239eb8768f151413b8b90f35cd8f7ddd67",
+    "captures\\vertical\\view_147\\rgb.png": "cac4f6bcd8a27417a3c5b2a977b9be3f4337ba3c2936b6fd1de913dab441fc86",
+    "captures\\vertical\\view_147\\mask_calyx_crisp_v2.png": "e878815d7e204058f6747bc4f0026462d609ed1459d246ee999c1fccba15e883",
+    "captures\\vertical\\view_147\\capture.json": "ddd01b81206cf014817ba0be01e1fe6521cfc017fce43262a9d06c71ced49822",
+    "captures\\vertical\\view_147\\annotations_private.json": "1f6452bf38f75dec4993a9eee2b8e8c88ed1b9eaf2a0d0b4c947a62361ed81e9",
+    "captures\\vertical\\view_147\\camera_private.json": "b6e3406d882a6a571dfbea61f4c2a12b98fc9b5cad14074521d8d09bc1641444",
+    "captures\\vertical\\view_147\\camera_sample.json": "80dbe7b6226f31b524311f811a544f9db0d1da7a5831de27fc9b9e2fb012f3f3",
+    "captures\\vertical\\view_148\\rgb.png": "b491dc0d532d6d9c7d438d209f041f9567a56bb4a984595e41a1f605baa2edf5",
+    "captures\\vertical\\view_148\\mask_calyx_crisp_v2.png": "e968404d3dffb851eeb741cce65811538ba918a0796a23b0652b2928dcce2269",
+    "captures\\vertical\\view_148\\capture.json": "e6328c50195d2ef16805473f9235c8128fce319e12d4ffe6b5e86b42b790c5db",
+    "captures\\vertical\\view_148\\annotations_private.json": "ffc80e77781151fe453eb1f024508e4dbbc92ccc3f5cb24f55c78f96dc53fb3d",
+    "captures\\vertical\\view_148\\camera_private.json": "2037fa98819f8c594fe9c173f90308b55e61d39b2bcccc08410a4eb7bf5ca54c",
+    "captures\\vertical\\view_148\\camera_sample.json": "bfddbc3c215a51cac169760a9b3afad372fa041898d7981d565d80f6a8160333",
+    "captures\\vertical\\view_149\\rgb.png": "b376c02ccb55ee8fe563cfe541362e4a712fb9c0d78bdaf672ff5858a032b3b3",
+    "captures\\vertical\\view_149\\mask_calyx_crisp_v2.png": "b5cfce1909d50f9e1aba6ed8c242378856550642db7b073a6d2d81a115566ec3",
+    "captures\\vertical\\view_149\\capture.json": "a92cc7c2cdf4f4b99841b4117191dcdd4e9e2e65fe923794867b49e4dee63aad",
+    "captures\\vertical\\view_149\\annotations_private.json": "f7e6d778b025a31b55b7e2b3c6be1797c6493ee2b05dae173b2a64f24dfeca76",
+    "captures\\vertical\\view_149\\camera_private.json": "5d61683a90bf4816317edaf687e184e3f4c3bee190bb0eae978c9ce71245c4d8",
+    "captures\\vertical\\view_149\\camera_sample.json": "ca2a6829c61673f6270505654efa62a743777333bebca858142873ddeeaf6079",
+    "captures\\vertical\\view_150\\rgb.png": "93716c62ca4a18ba179200de55889d165937caffabc1cb56a5f9500a359967b7",
+    "captures\\vertical\\view_150\\mask_calyx_crisp_v2.png": "d938133bed80b50f9c8dab1b264627e296a48a92cf563442829118a00f208181",
+    "captures\\vertical\\view_150\\capture.json": "bf592b63981c08be77a08b51b5c6aff2a5fb2d8190d8c93a5d380cdbf1f7f309",
+    "captures\\vertical\\view_150\\annotations_private.json": "6a48665c257881b84e3c7412958327aa883adacb78fa5da00daade4335965854",
+    "captures\\vertical\\view_150\\camera_private.json": "62eea44b163adb65ab3468a6affc19880c5738f52895fdab336499ec0b943e2f",
+    "captures\\vertical\\view_150\\camera_sample.json": "1d5337be01361d0e30fca96593e2c93c237122a054fb7a28ce17b753ae038cca",
+    "captures\\vertical\\view_151\\rgb.png": "6a854d632653204f7db82e938b7bc76bf6ea036017c4b334c4f88195f780ab74",
+    "captures\\vertical\\view_151\\mask_calyx_crisp_v2.png": "ccf2e1639e9b4d960f70ebff8f9b94e15161c0063e234fd2ec4d4c9e65fe08f3",
+    "captures\\vertical\\view_151\\capture.json": "96ad33c307bb497a2e57a988f5ef6bdf2683539a4c3e8b25a23fc7b1b0f2c442",
+    "captures\\vertical\\view_151\\annotations_private.json": "aa44bef56dc3620a39f76910c06b5bc3b8a6c1c2d4d99173335b0345ad5bd969",
+    "captures\\vertical\\view_151\\camera_private.json": "a9862660257189eafb8023f636c835affc046a79b9de97c891d2a266519ff45c",
+    "captures\\vertical\\view_151\\camera_sample.json": "5c06c5dbebabc979b78be2c13339fe6ef7126bbf3b18341cff38ebde1cf10a56",
+    "captures\\vertical\\view_152\\rgb.png": "595641f28d958ab9bee6eb0d885f646d95b879154d29f73dfaed306de5018f44",
+    "captures\\vertical\\view_152\\mask_calyx_crisp_v2.png": "1cc6784766ea323a99183d5880b898900a6c1a57d06ce9cafa46d7c37cb354b6",
+    "captures\\vertical\\view_152\\capture.json": "64efb324f5c227225fd2aafcabb67b707eef5e09c4b41334c9829be14a5c8c00",
+    "captures\\vertical\\view_152\\annotations_private.json": "8ae2ddb965524c9f806c143d6f4a1e33d4847e59f8ba177e958e0598325006e2",
+    "captures\\vertical\\view_152\\camera_private.json": "7fab7804bf9a629fad8daeea7d18fc6641ea3fc7898ebdc5cfd96e9c9cc70110",
+    "captures\\vertical\\view_152\\camera_sample.json": "64d53433956764395b746690f81326a37446055fbb20117c28e772e8527bb4db",
+    "captures\\vertical\\view_153\\rgb.png": "ae0b7c1e0c03240ae35ac876c7c6544386c0d6d1c4e74c736c8e4bd20c1989f6",
+    "captures\\vertical\\view_153\\mask_calyx_crisp_v2.png": "48bdb1a386006edcffd9d4740c65fa0986e449da0cf07bb9bfc44c0ee19d9387",
+    "captures\\vertical\\view_153\\capture.json": "d0983b97b7d82c46f98a741ec8c7b3c1169bf5085338d4b21e8a8d246ed68f33",
+    "captures\\vertical\\view_153\\annotations_private.json": "6abceab2a3c810da4cec5d5bab8b7b8cc4bb39bbfcffd2631a5b9ec58f13cfe6",
+    "captures\\vertical\\view_153\\camera_private.json": "46824add53eb8754a41e2b309bcba54e02b34682c8434e4738401dfc1f07635b",
+    "captures\\vertical\\view_153\\camera_sample.json": "846a04e41687e6f7527200f24a586cd8ffb38753ad68fa9b2ec654f94ddd8e8f",
+    "captures\\vertical\\view_154\\rgb.png": "ae0a7fa01a166e0dedb701e30979fc939234968f60b8509b39225cd9baae875d",
+    "captures\\vertical\\view_154\\mask_calyx_crisp_v2.png": "9aa0bcac17855da70dffad96d1458c3df227c655f7a9e12cca3b1f7af861f99d",
+    "captures\\vertical\\view_154\\capture.json": "7217fbc2c20af9d2bba7c476b3a362162ae4e107b3a270ac3f4f94190ce1c01a",
+    "captures\\vertical\\view_154\\annotations_private.json": "e2df5f53c61f28b73d680a665327508e1c593ce417e8e4d68335c7066784d544",
+    "captures\\vertical\\view_154\\camera_private.json": "641ccf61483f6874e87a0e5ad8949164a1ef353f07729b4080a10205592db4e0",
+    "captures\\vertical\\view_154\\camera_sample.json": "bf385b44a10722c6defda89a099dd210564f0dc402276cf7553df36865f9e727",
+    "captures\\vertical\\view_155\\rgb.png": "326dbe17a6b5cda432dcb5b5ba547d573b9918d393a31cd81b3ba4cf6f1ff52c",
+    "captures\\vertical\\view_155\\mask_calyx_crisp_v2.png": "1076614856af53a8df6b2d2934e25727d48a65b61c615c1ec0a8965d14550ed8",
+    "captures\\vertical\\view_155\\capture.json": "5535620a5bd8fc17cb216746bd78cb9cae950b4eb7218b144723724d7a98156d",
+    "captures\\vertical\\view_155\\annotations_private.json": "15c0fca2898096dc4ea5ef905feeb0dfd0ed3fd77af12c2864459adb1e058eae",
+    "captures\\vertical\\view_155\\camera_private.json": "7f00434060f12203ae632d4bd9919a46d9ac99d79af25a0fac4c79fd2824f468",
+    "captures\\vertical\\view_155\\camera_sample.json": "66d855fe4b1cb17cb625749ff59a46c27c1d196b77da773221892eacd702126b",
+    "captures\\vertical\\view_156\\rgb.png": "e81b7ea8b3ab66f03368a35742dd003a1248bc780ba6e45a03860e2a52169147",
+    "captures\\vertical\\view_156\\mask_calyx_crisp_v2.png": "0b4f6d2521c87fe82666b55f3e5b68a15135a6ffd55adc2425a084a400664817",
+    "captures\\vertical\\view_156\\capture.json": "40ce720187da5ce5256eb371d7c9a78d97c5e36c3e9b44d1f0a43a87e65d2b48",
+    "captures\\vertical\\view_156\\annotations_private.json": "67c53ebb8050b107910ff219aaf376260d10999dbdd6579ba72bf65a7ff783b2",
+    "captures\\vertical\\view_156\\camera_private.json": "f6985f6d812d7fa05170d2b33fa5d813d6b7dc4a16da34862f8d993d5a2941ee",
+    "captures\\vertical\\view_156\\camera_sample.json": "1b5a0697e12a8ec0eedf1a8a19fba96d75474f2054bf7fca0a66028b6eeb3482",
+    "captures\\vertical\\view_157\\rgb.png": "7f820a215e69dc69e2126ccfc7226019105d182eacf44370137ee0da48d1a291",
+    "captures\\vertical\\view_157\\mask_calyx_crisp_v2.png": "837212ef9831f72d7d51a24a279d243f7ff51a092dcdd6171a6f6c4211cd91e7",
+    "captures\\vertical\\view_157\\capture.json": "ae19723daf0d43f835ecdf229b11ec81ccfaf9fb9686d806a78b09fb2f76650b",
+    "captures\\vertical\\view_157\\annotations_private.json": "6784036836ab2c9fbae214b7216867d544077a12c3f5d24b4c34752309682dad",
+    "captures\\vertical\\view_157\\camera_private.json": "44daceaebe82229035267d34d9b0b9cfa571ec77e7fd7d5e5bd145f82a39aee5",
+    "captures\\vertical\\view_157\\camera_sample.json": "f3b5233ada21c17c2d7233737d4a4dd9d26a8dbc4911f7ced4763e12b80a2593",
+    "captures\\vertical\\view_158\\rgb.png": "e449d78f7a0f2ad79c9731948817989d89b1c29d3e86dc1849b0f9ab9eed6b47",
+    "captures\\vertical\\view_158\\mask_calyx_crisp_v2.png": "f49342bbe20de7c665604e43f102657c0e857cc85cc9d6962db1095ed7b6a066",
+    "captures\\vertical\\view_158\\capture.json": "c8f6eb6a32f5e16e44d75901264b2a885ca5f4a1d737f60a2e0b7d20aee0ee28",
+    "captures\\vertical\\view_158\\annotations_private.json": "9160b3bbd0443225f1d5aed83d437a0f670969412470d302d3e9f95be235c739",
+    "captures\\vertical\\view_158\\camera_private.json": "01d714156d14b433399334971fa17ec7f370676660ed660e0422fe0167577375",
+    "captures\\vertical\\view_158\\camera_sample.json": "1e7f1b2cb35098b949d693cb3c0ab105acb37ab3f6d17bd32c1faffd4042dbeb",
+    "captures\\vertical\\view_159\\rgb.png": "eb62ece6a0e8a9c6f73473587a863b47f8446f37f801651b08d6be8a21950f9f",
+    "captures\\vertical\\view_159\\mask_calyx_crisp_v2.png": "15edfd370b64295e3af855060c5a9dfa96629c931afd6867c26ace1e974a45e7",
+    "captures\\vertical\\view_159\\capture.json": "33d3c4a8d9718743a22185489a442f48f30811b48d82c89646f71cf2c4955eb9",
+    "captures\\vertical\\view_159\\annotations_private.json": "ab4903b55748c8b4f6ad76aa98382df685ceebabfaf40dae5dd0c718a79d48d6",
+    "captures\\vertical\\view_159\\camera_private.json": "96e11d4ab05059fa52d3bcfde1421eb6067ed2ec3a0a4a9056789040749c9636",
+    "captures\\vertical\\view_159\\camera_sample.json": "4fbad2ecdf53ce3bd840f2ad95ab67c5838a815e6384b0ff6cf7205782ecc425",
+    "captures\\vertical\\view_160\\rgb.png": "f7f8a8f13ff1a95e1bc87993392caa74031a43c5aa7b5d235cda6a5958631558",
+    "captures\\vertical\\view_160\\mask_calyx_crisp_v2.png": "05ee6e0df47ccb22081fc581ccad748f84b625fbbbb6eb45a9e6bb50c9ee3c8a",
+    "captures\\vertical\\view_160\\capture.json": "a55e0cd78368cb105cad316adc5c19c32312b9f898316994b1705bb4ec1a0ea0",
+    "captures\\vertical\\view_160\\annotations_private.json": "e4688dadbf58adbb4fe81175e12bfcfef60ebe3c32d471f545553e8da958b874",
+    "captures\\vertical\\view_160\\camera_private.json": "b2f535217adbeb62c7fe80df37138df6053f586e2bd69023357cd5923b4334e2",
+    "captures\\vertical\\view_160\\camera_sample.json": "e116b0d140857a72b8d167e8d99ec1408bd2e2aa970e38c8241a4f78b52e25b7",
+    "captures\\vertical\\view_161\\rgb.png": "af81be909fbafef3ebae1518c0ab42d55c4df5fd670c64b7fe45de6e79a5b080",
+    "captures\\vertical\\view_161\\mask_calyx_crisp_v2.png": "143f8be1698cab1e84effc764432ca59c64370af3dc095155a1847daaf3e0c76",
+    "captures\\vertical\\view_161\\capture.json": "aca70cac585f7715896169d7a4c2dd39c1834faa9f9a3b0918a50d171fc6f113",
+    "captures\\vertical\\view_161\\annotations_private.json": "8ff6e4ce50ed1ab1b779de281e00c999494c816a7632acfa3ef080f2703359ae",
+    "captures\\vertical\\view_161\\camera_private.json": "46d682c107edfb3173a76919abc0f7956548dda3d6efa87b1d545ff19578852f",
+    "captures\\vertical\\view_161\\camera_sample.json": "fe7ac2f7d3ee19985964c29ac5c697533aa0a17315ffea4089300b9cab29331b",
+    "captures\\vertical\\view_162\\rgb.png": "b87621060e7388fc8a145ea71897e629e35fcfad21a82c376805fbc181cbc227",
+    "captures\\vertical\\view_162\\mask_calyx_crisp_v2.png": "42e0e635f33134d1d613eb19b19901ad2291af7cda196273ed1eb11be49a93e7",
+    "captures\\vertical\\view_162\\capture.json": "358d47164c564447ff95789df8bc6ea0bcc2e11205226cffb6c96a6d003b5dd9",
+    "captures\\vertical\\view_162\\annotations_private.json": "d063cc4b4b305d54b1e274457a94f1529ec96bda5dce1069a51d5c8c5a22afb3",
+    "captures\\vertical\\view_162\\camera_private.json": "cd8e3a085cb26b55a10946b39a6742f356f10a517042d7c6def1eb2d21ab9391",
+    "captures\\vertical\\view_162\\camera_sample.json": "28a785ac31260798309ed30494387cd38a94ed21a216dd855c1446e013172082",
+    "captures\\vertical\\view_163\\rgb.png": "d3441d7e77f1246aef98237ad26318da768c5bbc1def5bbf084de4f55fd05e08",
+    "captures\\vertical\\view_163\\mask_calyx_crisp_v2.png": "31b08f485fe303c1630b80d0d4774f1a5824c828799c0ea4f13bc45cfd59f6a0",
+    "captures\\vertical\\view_163\\capture.json": "345730200a3bff47fb41990eaf7a99c0e1c239020438104d85251b85adfc2081",
+    "captures\\vertical\\view_163\\annotations_private.json": "553800a674bb56b9988febf862c55a282cd4c47f5cf9fee6c56ba2147a46d87f",
+    "captures\\vertical\\view_163\\camera_private.json": "00b13c4f3a527289120d53f51698fb823e58bfdb515ae49cb480b8c51289ea08",
+    "captures\\vertical\\view_163\\camera_sample.json": "f03c6945ef25628380180978c8b0c79c3ef75e98f17c85a8a845a7716d055ad8",
+    "captures\\vertical\\view_164\\rgb.png": "20edc5f4bb1d80b8f3a1ed56aea60eac2241c3d14d07ac88f539ae7e51b52a7d",
+    "captures\\vertical\\view_164\\mask_calyx_crisp_v2.png": "31b08f485fe303c1630b80d0d4774f1a5824c828799c0ea4f13bc45cfd59f6a0",
+    "captures\\vertical\\view_164\\capture.json": "8fa3a6a81ceeb95e3a8ffd4a23e0a9abd97c492139b7efa296a0aa5a4fd03234",
+    "captures\\vertical\\view_164\\annotations_private.json": "ef000d96ab85630b9091c5e362d9fd184da29a1548792a821b53f02f7403316b",
+    "captures\\vertical\\view_164\\camera_private.json": "00b13c4f3a527289120d53f51698fb823e58bfdb515ae49cb480b8c51289ea08",
+    "captures\\vertical\\view_164\\camera_sample.json": "7b17be3030bdce00e9d242a4c5ccc21b7fd2b57e314a891d7efeafc741c343f0",
+    "captures\\vertical\\view_165\\rgb.png": "3143027b44fbb13daf5d6357339f8a40a8cbcc2b9965bd92024e536e097f68bd",
+    "captures\\vertical\\view_165\\mask_calyx_crisp_v2.png": "31b08f485fe303c1630b80d0d4774f1a5824c828799c0ea4f13bc45cfd59f6a0",
+    "captures\\vertical\\view_165\\capture.json": "52550a006576d8df5f1f2cbbf0baf84794752ac61484ab709fcead313eb92e8b",
+    "captures\\vertical\\view_165\\annotations_private.json": "e6adb8be1222e744e089fbaaaa0988f633e236000b59ff3616f18a670103814f",
+    "captures\\vertical\\view_165\\camera_private.json": "00b13c4f3a527289120d53f51698fb823e58bfdb515ae49cb480b8c51289ea08",
+    "captures\\vertical\\view_165\\camera_sample.json": "e825a683472a73c2de356630a1930789a4bd2bd304834d560e25aed4a0a3628d",
+    "captures\\vertical\\view_166\\rgb.png": "56e61f21ac4daf2bb73083845388fb9ecb3bbfa76296c5dfc7f4beae11c9a150",
+    "captures\\vertical\\view_166\\mask_calyx_crisp_v2.png": "31b08f485fe303c1630b80d0d4774f1a5824c828799c0ea4f13bc45cfd59f6a0",
+    "captures\\vertical\\view_166\\capture.json": "06375582d4eafc4521aa682bbb5f2a8b61ccf601f493e89cfaa5caffbf84507a",
+    "captures\\vertical\\view_166\\annotations_private.json": "b14cf155fd3bafcf8e69045bb2813e86d5953af3cbf5fb3cf9d340f422dcd556",
+    "captures\\vertical\\view_166\\camera_private.json": "00b13c4f3a527289120d53f51698fb823e58bfdb515ae49cb480b8c51289ea08",
+    "captures\\vertical\\view_166\\camera_sample.json": "5729473923853cb14a9d597278d9f291be6bff85d335e579941998a3dbe99cc1"
+  },
+  "protocol_sha256": "86dabc5a22a59aa53207547e565bd9408a05e3dac8c47df037d11aff71b78026",
+  "validator_sha256": "ef86faa4a24cacea1467e0e5f127d03a1968a636611b472a5a02d8e03b753964",
+  "environment_and_scene_preserved": true,
+  "frames_private": [
+    {
+      "frame": 0,
+      "stamp_ns": 1000000000,
+      "visible_instances": 319,
+      "class_counts": {
+        "0": 103,
+        "1": 140,
+        "2": 76
+      },
+      "target_plant": "C06",
+      "phase": "acquisition",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 1,
+      "stamp_ns": 1250000000,
+      "visible_instances": 319,
+      "class_counts": {
+        "0": 103,
+        "1": 140,
+        "2": 76
+      },
+      "target_plant": "C06",
+      "phase": "acquisition",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 2,
+      "stamp_ns": 1500000000,
+      "visible_instances": 319,
+      "class_counts": {
+        "0": 103,
+        "1": 140,
+        "2": 76
+      },
+      "target_plant": "C06",
+      "phase": "acquisition",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 3,
+      "stamp_ns": 1750000000,
+      "visible_instances": 319,
+      "class_counts": {
+        "0": 103,
+        "1": 140,
+        "2": 76
+      },
+      "target_plant": "C06",
+      "phase": "acquisition",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 4,
+      "stamp_ns": 2000000000,
+      "visible_instances": 309,
+      "class_counts": {
+        "0": 97,
+        "1": 133,
+        "2": 79
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 5,
+      "stamp_ns": 2250000000,
+      "visible_instances": 296,
+      "class_counts": {
+        "0": 89,
+        "1": 141,
+        "2": 66
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 6,
+      "stamp_ns": 2500000000,
+      "visible_instances": 285,
+      "class_counts": {
+        "0": 80,
+        "1": 141,
+        "2": 64
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 7,
+      "stamp_ns": 2750000000,
+      "visible_instances": 246,
+      "class_counts": {
+        "0": 72,
+        "1": 115,
+        "2": 59
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 8,
+      "stamp_ns": 3000000000,
+      "visible_instances": 156,
+      "class_counts": {
+        "0": 43,
+        "1": 70,
+        "2": 43
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 9,
+      "stamp_ns": 3250000000,
+      "visible_instances": 156,
+      "class_counts": {
+        "0": 43,
+        "1": 70,
+        "2": 43
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 10,
+      "stamp_ns": 3500000000,
+      "visible_instances": 156,
+      "class_counts": {
+        "0": 43,
+        "1": 70,
+        "2": 43
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 11,
+      "stamp_ns": 3750000000,
+      "visible_instances": 211,
+      "class_counts": {
+        "0": 63,
+        "1": 100,
+        "2": 48
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 12,
+      "stamp_ns": 4000000000,
+      "visible_instances": 191,
+      "class_counts": {
+        "0": 57,
+        "1": 92,
+        "2": 42
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 13,
+      "stamp_ns": 4250000000,
+      "visible_instances": 217,
+      "class_counts": {
+        "0": 66,
+        "1": 101,
+        "2": 50
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 14,
+      "stamp_ns": 4500000000,
+      "visible_instances": 212,
+      "class_counts": {
+        "0": 66,
+        "1": 97,
+        "2": 49
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 15,
+      "stamp_ns": 4750000000,
+      "visible_instances": 220,
+      "class_counts": {
+        "0": 73,
+        "1": 96,
+        "2": 51
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 16,
+      "stamp_ns": 5000000000,
+      "visible_instances": 210,
+      "class_counts": {
+        "0": 65,
+        "1": 91,
+        "2": 54
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 17,
+      "stamp_ns": 5250000000,
+      "visible_instances": 229,
+      "class_counts": {
+        "0": 70,
+        "1": 102,
+        "2": 57
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 18,
+      "stamp_ns": 5500000000,
+      "visible_instances": 213,
+      "class_counts": {
+        "0": 65,
+        "1": 96,
+        "2": 52
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 19,
+      "stamp_ns": 5750000000,
+      "visible_instances": 221,
+      "class_counts": {
+        "0": 72,
+        "1": 106,
+        "2": 43
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 20,
+      "stamp_ns": 6000000000,
+      "visible_instances": 207,
+      "class_counts": {
+        "0": 65,
+        "1": 101,
+        "2": 41
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 21,
+      "stamp_ns": 6250000000,
+      "visible_instances": 215,
+      "class_counts": {
+        "0": 68,
+        "1": 103,
+        "2": 44
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 22,
+      "stamp_ns": 6500000000,
+      "visible_instances": 238,
+      "class_counts": {
+        "0": 74,
+        "1": 118,
+        "2": 46
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 23,
+      "stamp_ns": 6750000000,
+      "visible_instances": 241,
+      "class_counts": {
+        "0": 79,
+        "1": 118,
+        "2": 44
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 24,
+      "stamp_ns": 7000000000,
+      "visible_instances": 188,
+      "class_counts": {
+        "0": 56,
+        "1": 95,
+        "2": 37
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 25,
+      "stamp_ns": 7250000000,
+      "visible_instances": 169,
+      "class_counts": {
+        "0": 54,
+        "1": 83,
+        "2": 32
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 26,
+      "stamp_ns": 7500000000,
+      "visible_instances": 169,
+      "class_counts": {
+        "0": 54,
+        "1": 83,
+        "2": 32
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 27,
+      "stamp_ns": 7750000000,
+      "visible_instances": 169,
+      "class_counts": {
+        "0": 54,
+        "1": 83,
+        "2": 32
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 28,
+      "stamp_ns": 8000000000,
+      "visible_instances": 186,
+      "class_counts": {
+        "0": 63,
+        "1": 84,
+        "2": 39
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 29,
+      "stamp_ns": 8250000000,
+      "visible_instances": 203,
+      "class_counts": {
+        "0": 67,
+        "1": 93,
+        "2": 43
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 30,
+      "stamp_ns": 8500000000,
+      "visible_instances": 205,
+      "class_counts": {
+        "0": 68,
+        "1": 99,
+        "2": 38
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 31,
+      "stamp_ns": 8750000000,
+      "visible_instances": 197,
+      "class_counts": {
+        "0": 63,
+        "1": 99,
+        "2": 35
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 32,
+      "stamp_ns": 9000000000,
+      "visible_instances": 185,
+      "class_counts": {
+        "0": 60,
+        "1": 89,
+        "2": 36
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 33,
+      "stamp_ns": 9250000000,
+      "visible_instances": 161,
+      "class_counts": {
+        "0": 51,
+        "1": 78,
+        "2": 32
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 34,
+      "stamp_ns": 9500000000,
+      "visible_instances": 215,
+      "class_counts": {
+        "0": 66,
+        "1": 99,
+        "2": 50
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 35,
+      "stamp_ns": 9750000000,
+      "visible_instances": 204,
+      "class_counts": {
+        "0": 64,
+        "1": 98,
+        "2": 42
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 36,
+      "stamp_ns": 10000000000,
+      "visible_instances": 115,
+      "class_counts": {
+        "0": 37,
+        "1": 57,
+        "2": 21
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 37,
+      "stamp_ns": 10250000000,
+      "visible_instances": 79,
+      "class_counts": {
+        "0": 28,
+        "1": 33,
+        "2": 18
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 38,
+      "stamp_ns": 10500000000,
+      "visible_instances": 63,
+      "class_counts": {
+        "0": 22,
+        "1": 28,
+        "2": 13
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 39,
+      "stamp_ns": 10750000000,
+      "visible_instances": 67,
+      "class_counts": {
+        "0": 20,
+        "1": 33,
+        "2": 14
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 40,
+      "stamp_ns": 11000000000,
+      "visible_instances": 59,
+      "class_counts": {
+        "0": 18,
+        "1": 28,
+        "2": 13
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 41,
+      "stamp_ns": 11250000000,
+      "visible_instances": 53,
+      "class_counts": {
+        "0": 16,
+        "1": 26,
+        "2": 11
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 42,
+      "stamp_ns": 11500000000,
+      "visible_instances": 53,
+      "class_counts": {
+        "0": 18,
+        "1": 24,
+        "2": 11
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 43,
+      "stamp_ns": 11750000000,
+      "visible_instances": 77,
+      "class_counts": {
+        "0": 23,
+        "1": 36,
+        "2": 18
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 44,
+      "stamp_ns": 12000000000,
+      "visible_instances": 95,
+      "class_counts": {
+        "0": 29,
+        "1": 44,
+        "2": 22
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 45,
+      "stamp_ns": 12250000000,
+      "visible_instances": 138,
+      "class_counts": {
+        "0": 45,
+        "1": 61,
+        "2": 32
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 46,
+      "stamp_ns": 12500000000,
+      "visible_instances": 177,
+      "class_counts": {
+        "0": 58,
+        "1": 80,
+        "2": 39
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 47,
+      "stamp_ns": 12750000000,
+      "visible_instances": 204,
+      "class_counts": {
+        "0": 65,
+        "1": 89,
+        "2": 50
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 48,
+      "stamp_ns": 13000000000,
+      "visible_instances": 233,
+      "class_counts": {
+        "0": 74,
+        "1": 99,
+        "2": 60
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 49,
+      "stamp_ns": 13250000000,
+      "visible_instances": 273,
+      "class_counts": {
+        "0": 86,
+        "1": 116,
+        "2": 71
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 50,
+      "stamp_ns": 13500000000,
+      "visible_instances": 240,
+      "class_counts": {
+        "0": 76,
+        "1": 105,
+        "2": 59
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 51,
+      "stamp_ns": 13750000000,
+      "visible_instances": 218,
+      "class_counts": {
+        "0": 69,
+        "1": 100,
+        "2": 49
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 52,
+      "stamp_ns": 14000000000,
+      "visible_instances": 183,
+      "class_counts": {
+        "0": 62,
+        "1": 84,
+        "2": 37
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 53,
+      "stamp_ns": 14250000000,
+      "visible_instances": 129,
+      "class_counts": {
+        "0": 39,
+        "1": 61,
+        "2": 29
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 54,
+      "stamp_ns": 14500000000,
+      "visible_instances": 96,
+      "class_counts": {
+        "0": 29,
+        "1": 46,
+        "2": 21
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 55,
+      "stamp_ns": 14750000000,
+      "visible_instances": 92,
+      "class_counts": {
+        "0": 27,
+        "1": 48,
+        "2": 17
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 56,
+      "stamp_ns": 15000000000,
+      "visible_instances": 80,
+      "class_counts": {
+        "0": 22,
+        "1": 42,
+        "2": 16
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 57,
+      "stamp_ns": 15250000000,
+      "visible_instances": 85,
+      "class_counts": {
+        "0": 29,
+        "1": 41,
+        "2": 15
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 58,
+      "stamp_ns": 15500000000,
+      "visible_instances": 89,
+      "class_counts": {
+        "0": 28,
+        "1": 45,
+        "2": 16
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 59,
+      "stamp_ns": 15750000000,
+      "visible_instances": 95,
+      "class_counts": {
+        "0": 27,
+        "1": 48,
+        "2": 20
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 60,
+      "stamp_ns": 16000000000,
+      "visible_instances": 85,
+      "class_counts": {
+        "0": 25,
+        "1": 41,
+        "2": 19
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 61,
+      "stamp_ns": 16250000000,
+      "visible_instances": 74,
+      "class_counts": {
+        "0": 26,
+        "1": 32,
+        "2": 16
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 62,
+      "stamp_ns": 16500000000,
+      "visible_instances": 73,
+      "class_counts": {
+        "0": 24,
+        "1": 33,
+        "2": 16
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 63,
+      "stamp_ns": 16750000000,
+      "visible_instances": 73,
+      "class_counts": {
+        "0": 22,
+        "1": 33,
+        "2": 18
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 64,
+      "stamp_ns": 17000000000,
+      "visible_instances": 68,
+      "class_counts": {
+        "0": 22,
+        "1": 30,
+        "2": 16
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 65,
+      "stamp_ns": 17250000000,
+      "visible_instances": 67,
+      "class_counts": {
+        "0": 19,
+        "1": 32,
+        "2": 16
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 66,
+      "stamp_ns": 17500000000,
+      "visible_instances": 70,
+      "class_counts": {
+        "0": 24,
+        "1": 32,
+        "2": 14
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 67,
+      "stamp_ns": 17750000000,
+      "visible_instances": 71,
+      "class_counts": {
+        "0": 25,
+        "1": 33,
+        "2": 13
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 68,
+      "stamp_ns": 18000000000,
+      "visible_instances": 72,
+      "class_counts": {
+        "0": 23,
+        "1": 37,
+        "2": 12
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 69,
+      "stamp_ns": 18250000000,
+      "visible_instances": 73,
+      "class_counts": {
+        "0": 22,
+        "1": 38,
+        "2": 13
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 70,
+      "stamp_ns": 18500000000,
+      "visible_instances": 73,
+      "class_counts": {
+        "0": 22,
+        "1": 38,
+        "2": 13
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 71,
+      "stamp_ns": 18750000000,
+      "visible_instances": 77,
+      "class_counts": {
+        "0": 25,
+        "1": 36,
+        "2": 16
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 72,
+      "stamp_ns": 19000000000,
+      "visible_instances": 78,
+      "class_counts": {
+        "0": 21,
+        "1": 42,
+        "2": 15
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 73,
+      "stamp_ns": 19250000000,
+      "visible_instances": 83,
+      "class_counts": {
+        "0": 26,
+        "1": 43,
+        "2": 14
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 74,
+      "stamp_ns": 19500000000,
+      "visible_instances": 78,
+      "class_counts": {
+        "0": 25,
+        "1": 40,
+        "2": 13
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 75,
+      "stamp_ns": 19750000000,
+      "visible_instances": 78,
+      "class_counts": {
+        "0": 25,
+        "1": 40,
+        "2": 13
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 76,
+      "stamp_ns": 20000000000,
+      "visible_instances": 78,
+      "class_counts": {
+        "0": 25,
+        "1": 40,
+        "2": 13
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 77,
+      "stamp_ns": 20250000000,
+      "visible_instances": 84,
+      "class_counts": {
+        "0": 26,
+        "1": 42,
+        "2": 16
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 78,
+      "stamp_ns": 20500000000,
+      "visible_instances": 97,
+      "class_counts": {
+        "0": 27,
+        "1": 50,
+        "2": 20
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 79,
+      "stamp_ns": 20750000000,
+      "visible_instances": 102,
+      "class_counts": {
+        "0": 29,
+        "1": 51,
+        "2": 22
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 80,
+      "stamp_ns": 21000000000,
+      "visible_instances": 99,
+      "class_counts": {
+        "0": 28,
+        "1": 52,
+        "2": 19
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 81,
+      "stamp_ns": 21250000000,
+      "visible_instances": 91,
+      "class_counts": {
+        "0": 29,
+        "1": 45,
+        "2": 17
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 82,
+      "stamp_ns": 21500000000,
+      "visible_instances": 70,
+      "class_counts": {
+        "0": 24,
+        "1": 28,
+        "2": 18
+      },
+      "target_plant": "C07",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 83,
+      "stamp_ns": 21750000000,
+      "visible_instances": 68,
+      "class_counts": {
+        "0": 21,
+        "1": 31,
+        "2": 16
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 84,
+      "stamp_ns": 22000000000,
+      "visible_instances": 70,
+      "class_counts": {
+        "0": 24,
+        "1": 31,
+        "2": 15
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 85,
+      "stamp_ns": 22250000000,
+      "visible_instances": 68,
+      "class_counts": {
+        "0": 24,
+        "1": 32,
+        "2": 12
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 86,
+      "stamp_ns": 22500000000,
+      "visible_instances": 70,
+      "class_counts": {
+        "0": 23,
+        "1": 35,
+        "2": 12
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 87,
+      "stamp_ns": 22750000000,
+      "visible_instances": 71,
+      "class_counts": {
+        "0": 23,
+        "1": 36,
+        "2": 12
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 88,
+      "stamp_ns": 23000000000,
+      "visible_instances": 71,
+      "class_counts": {
+        "0": 25,
+        "1": 33,
+        "2": 13
+      },
+      "target_plant": "C07",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 89,
+      "stamp_ns": 23250000000,
+      "visible_instances": 79,
+      "class_counts": {
+        "0": 23,
+        "1": 40,
+        "2": 16
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 90,
+      "stamp_ns": 23500000000,
+      "visible_instances": 88,
+      "class_counts": {
+        "0": 26,
+        "1": 49,
+        "2": 13
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 91,
+      "stamp_ns": 23750000000,
+      "visible_instances": 99,
+      "class_counts": {
+        "0": 30,
+        "1": 53,
+        "2": 16
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 92,
+      "stamp_ns": 24000000000,
+      "visible_instances": 115,
+      "class_counts": {
+        "0": 37,
+        "1": 55,
+        "2": 23
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 93,
+      "stamp_ns": 24250000000,
+      "visible_instances": 86,
+      "class_counts": {
+        "0": 28,
+        "1": 38,
+        "2": 20
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 94,
+      "stamp_ns": 24500000000,
+      "visible_instances": 68,
+      "class_counts": {
+        "0": 20,
+        "1": 28,
+        "2": 20
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 95,
+      "stamp_ns": 24750000000,
+      "visible_instances": 64,
+      "class_counts": {
+        "0": 19,
+        "1": 25,
+        "2": 20
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 96,
+      "stamp_ns": 25000000000,
+      "visible_instances": 66,
+      "class_counts": {
+        "0": 22,
+        "1": 26,
+        "2": 18
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 97,
+      "stamp_ns": 25250000000,
+      "visible_instances": 73,
+      "class_counts": {
+        "0": 25,
+        "1": 26,
+        "2": 22
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 98,
+      "stamp_ns": 25500000000,
+      "visible_instances": 73,
+      "class_counts": {
+        "0": 23,
+        "1": 30,
+        "2": 20
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 99,
+      "stamp_ns": 25750000000,
+      "visible_instances": 65,
+      "class_counts": {
+        "0": 17,
+        "1": 26,
+        "2": 22
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 100,
+      "stamp_ns": 26000000000,
+      "visible_instances": 67,
+      "class_counts": {
+        "0": 16,
+        "1": 33,
+        "2": 18
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 101,
+      "stamp_ns": 26250000000,
+      "visible_instances": 61,
+      "class_counts": {
+        "0": 15,
+        "1": 29,
+        "2": 17
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 102,
+      "stamp_ns": 26500000000,
+      "visible_instances": 63,
+      "class_counts": {
+        "0": 18,
+        "1": 28,
+        "2": 17
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 103,
+      "stamp_ns": 26750000000,
+      "visible_instances": 60,
+      "class_counts": {
+        "0": 19,
+        "1": 28,
+        "2": 13
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 104,
+      "stamp_ns": 27000000000,
+      "visible_instances": 60,
+      "class_counts": {
+        "0": 19,
+        "1": 28,
+        "2": 13
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 105,
+      "stamp_ns": 27250000000,
+      "visible_instances": 60,
+      "class_counts": {
+        "0": 19,
+        "1": 28,
+        "2": 13
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 106,
+      "stamp_ns": 27500000000,
+      "visible_instances": 75,
+      "class_counts": {
+        "0": 22,
+        "1": 33,
+        "2": 20
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 107,
+      "stamp_ns": 27750000000,
+      "visible_instances": 80,
+      "class_counts": {
+        "0": 28,
+        "1": 36,
+        "2": 16
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 108,
+      "stamp_ns": 28000000000,
+      "visible_instances": 89,
+      "class_counts": {
+        "0": 33,
+        "1": 38,
+        "2": 18
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 109,
+      "stamp_ns": 28250000000,
+      "visible_instances": 88,
+      "class_counts": {
+        "0": 32,
+        "1": 32,
+        "2": 24
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 110,
+      "stamp_ns": 28500000000,
+      "visible_instances": 93,
+      "class_counts": {
+        "0": 34,
+        "1": 35,
+        "2": 24
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 111,
+      "stamp_ns": 28750000000,
+      "visible_instances": 87,
+      "class_counts": {
+        "0": 31,
+        "1": 34,
+        "2": 22
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 112,
+      "stamp_ns": 29000000000,
+      "visible_instances": 76,
+      "class_counts": {
+        "0": 28,
+        "1": 29,
+        "2": 19
+      },
+      "target_plant": "C06",
+      "phase": "inspection_vertical",
+      "side": "back",
+      "decoded_ids": []
+    },
+    {
+      "frame": 113,
+      "stamp_ns": 29250000000,
+      "visible_instances": 68,
+      "class_counts": {
+        "0": 20,
+        "1": 28,
+        "2": 20
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 114,
+      "stamp_ns": 29500000000,
+      "visible_instances": 56,
+      "class_counts": {
+        "0": 18,
+        "1": 22,
+        "2": 16
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 115,
+      "stamp_ns": 29750000000,
+      "visible_instances": 56,
+      "class_counts": {
+        "0": 18,
+        "1": 21,
+        "2": 17
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 116,
+      "stamp_ns": 30000000000,
+      "visible_instances": 64,
+      "class_counts": {
+        "0": 22,
+        "1": 23,
+        "2": 19
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 117,
+      "stamp_ns": 30250000000,
+      "visible_instances": 67,
+      "class_counts": {
+        "0": 23,
+        "1": 22,
+        "2": 22
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 118,
+      "stamp_ns": 30500000000,
+      "visible_instances": 64,
+      "class_counts": {
+        "0": 21,
+        "1": 24,
+        "2": 19
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 119,
+      "stamp_ns": 30750000000,
+      "visible_instances": 65,
+      "class_counts": {
+        "0": 22,
+        "1": 25,
+        "2": 18
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 120,
+      "stamp_ns": 31000000000,
+      "visible_instances": 61,
+      "class_counts": {
+        "0": 20,
+        "1": 25,
+        "2": 16
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 121,
+      "stamp_ns": 31250000000,
+      "visible_instances": 68,
+      "class_counts": {
+        "0": 22,
+        "1": 26,
+        "2": 20
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 122,
+      "stamp_ns": 31500000000,
+      "visible_instances": 83,
+      "class_counts": {
+        "0": 25,
+        "1": 37,
+        "2": 21
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 123,
+      "stamp_ns": 31750000000,
+      "visible_instances": 127,
+      "class_counts": {
+        "0": 44,
+        "1": 56,
+        "2": 27
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 124,
+      "stamp_ns": 32000000000,
+      "visible_instances": 155,
+      "class_counts": {
+        "0": 50,
+        "1": 71,
+        "2": 34
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 125,
+      "stamp_ns": 32250000000,
+      "visible_instances": 157,
+      "class_counts": {
+        "0": 49,
+        "1": 74,
+        "2": 34
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 126,
+      "stamp_ns": 32500000000,
+      "visible_instances": 170,
+      "class_counts": {
+        "0": 51,
+        "1": 80,
+        "2": 39
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 127,
+      "stamp_ns": 32750000000,
+      "visible_instances": 172,
+      "class_counts": {
+        "0": 55,
+        "1": 78,
+        "2": 39
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 128,
+      "stamp_ns": 33000000000,
+      "visible_instances": 172,
+      "class_counts": {
+        "0": 52,
+        "1": 80,
+        "2": 40
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 129,
+      "stamp_ns": 33250000000,
+      "visible_instances": 171,
+      "class_counts": {
+        "0": 55,
+        "1": 77,
+        "2": 39
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 130,
+      "stamp_ns": 33500000000,
+      "visible_instances": 164,
+      "class_counts": {
+        "0": 50,
+        "1": 75,
+        "2": 39
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 131,
+      "stamp_ns": 33750000000,
+      "visible_instances": 173,
+      "class_counts": {
+        "0": 54,
+        "1": 79,
+        "2": 40
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 132,
+      "stamp_ns": 34000000000,
+      "visible_instances": 189,
+      "class_counts": {
+        "0": 61,
+        "1": 88,
+        "2": 40
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 133,
+      "stamp_ns": 34250000000,
+      "visible_instances": 189,
+      "class_counts": {
+        "0": 60,
+        "1": 88,
+        "2": 41
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 134,
+      "stamp_ns": 34500000000,
+      "visible_instances": 197,
+      "class_counts": {
+        "0": 63,
+        "1": 93,
+        "2": 41
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 135,
+      "stamp_ns": 34750000000,
+      "visible_instances": 209,
+      "class_counts": {
+        "0": 69,
+        "1": 97,
+        "2": 43
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 136,
+      "stamp_ns": 35000000000,
+      "visible_instances": 212,
+      "class_counts": {
+        "0": 73,
+        "1": 93,
+        "2": 46
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 137,
+      "stamp_ns": 35250000000,
+      "visible_instances": 231,
+      "class_counts": {
+        "0": 77,
+        "1": 101,
+        "2": 53
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 138,
+      "stamp_ns": 35500000000,
+      "visible_instances": 256,
+      "class_counts": {
+        "0": 82,
+        "1": 113,
+        "2": 61
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 139,
+      "stamp_ns": 35750000000,
+      "visible_instances": 320,
+      "class_counts": {
+        "0": 102,
+        "1": 140,
+        "2": 78
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 140,
+      "stamp_ns": 36000000000,
+      "visible_instances": 342,
+      "class_counts": {
+        "0": 112,
+        "1": 148,
+        "2": 82
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 141,
+      "stamp_ns": 36250000000,
+      "visible_instances": 348,
+      "class_counts": {
+        "0": 114,
+        "1": 146,
+        "2": 88
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 142,
+      "stamp_ns": 36500000000,
+      "visible_instances": 352,
+      "class_counts": {
+        "0": 111,
+        "1": 158,
+        "2": 83
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 143,
+      "stamp_ns": 36750000000,
+      "visible_instances": 343,
+      "class_counts": {
+        "0": 109,
+        "1": 151,
+        "2": 83
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 144,
+      "stamp_ns": 37000000000,
+      "visible_instances": 341,
+      "class_counts": {
+        "0": 110,
+        "1": 151,
+        "2": 80
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 145,
+      "stamp_ns": 37250000000,
+      "visible_instances": 342,
+      "class_counts": {
+        "0": 107,
+        "1": 150,
+        "2": 85
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 146,
+      "stamp_ns": 37500000000,
+      "visible_instances": 372,
+      "class_counts": {
+        "0": 124,
+        "1": 160,
+        "2": 88
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 147,
+      "stamp_ns": 37750000000,
+      "visible_instances": 365,
+      "class_counts": {
+        "0": 125,
+        "1": 154,
+        "2": 86
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 148,
+      "stamp_ns": 38000000000,
+      "visible_instances": 361,
+      "class_counts": {
+        "0": 123,
+        "1": 154,
+        "2": 84
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 149,
+      "stamp_ns": 38250000000,
+      "visible_instances": 336,
+      "class_counts": {
+        "0": 114,
+        "1": 146,
+        "2": 76
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 150,
+      "stamp_ns": 38500000000,
+      "visible_instances": 308,
+      "class_counts": {
+        "0": 103,
+        "1": 136,
+        "2": 69
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 151,
+      "stamp_ns": 38750000000,
+      "visible_instances": 289,
+      "class_counts": {
+        "0": 90,
+        "1": 136,
+        "2": 63
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 152,
+      "stamp_ns": 39000000000,
+      "visible_instances": 269,
+      "class_counts": {
+        "0": 89,
+        "1": 118,
+        "2": 62
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 153,
+      "stamp_ns": 39250000000,
+      "visible_instances": 281,
+      "class_counts": {
+        "0": 93,
+        "1": 120,
+        "2": 68
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 154,
+      "stamp_ns": 39500000000,
+      "visible_instances": 259,
+      "class_counts": {
+        "0": 83,
+        "1": 112,
+        "2": 64
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 155,
+      "stamp_ns": 39750000000,
+      "visible_instances": 233,
+      "class_counts": {
+        "0": 77,
+        "1": 96,
+        "2": 60
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 156,
+      "stamp_ns": 40000000000,
+      "visible_instances": 212,
+      "class_counts": {
+        "0": 75,
+        "1": 88,
+        "2": 49
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "outer",
+      "decoded_ids": []
+    },
+    {
+      "frame": 157,
+      "stamp_ns": 40250000000,
+      "visible_instances": 237,
+      "class_counts": {
+        "0": 84,
+        "1": 97,
+        "2": 56
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 158,
+      "stamp_ns": 40500000000,
+      "visible_instances": 261,
+      "class_counts": {
+        "0": 90,
+        "1": 106,
+        "2": 65
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 159,
+      "stamp_ns": 40750000000,
+      "visible_instances": 322,
+      "class_counts": {
+        "0": 112,
+        "1": 132,
+        "2": 78
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 160,
+      "stamp_ns": 41000000000,
+      "visible_instances": 322,
+      "class_counts": {
+        "0": 105,
+        "1": 139,
+        "2": 78
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 161,
+      "stamp_ns": 41250000000,
+      "visible_instances": 312,
+      "class_counts": {
+        "0": 103,
+        "1": 131,
+        "2": 78
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 162,
+      "stamp_ns": 41500000000,
+      "visible_instances": 319,
+      "class_counts": {
+        "0": 101,
+        "1": 138,
+        "2": 80
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": []
+    },
+    {
+      "frame": 163,
+      "stamp_ns": 41750000000,
+      "visible_instances": 319,
+      "class_counts": {
+        "0": 103,
+        "1": 140,
+        "2": 76
+      },
+      "target_plant": "C06",
+      "phase": "transit",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 164,
+      "stamp_ns": 42000000000,
+      "visible_instances": 319,
+      "class_counts": {
+        "0": 103,
+        "1": 140,
+        "2": 76
+      },
+      "target_plant": "C06",
+      "phase": "return_anchor",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 165,
+      "stamp_ns": 42250000000,
+      "visible_instances": 319,
+      "class_counts": {
+        "0": 103,
+        "1": 140,
+        "2": 76
+      },
+      "target_plant": "C06",
+      "phase": "return_anchor",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    },
+    {
+      "frame": 166,
+      "stamp_ns": 42500000000,
+      "visible_instances": 319,
+      "class_counts": {
+        "0": 103,
+        "1": 140,
+        "2": 76
+      },
+      "target_plant": "C06",
+      "phase": "return_anchor",
+      "side": "front",
+      "decoded_ids": [
+        8
+      ]
+    }
+  ],
+  "public_allowlist_passed": true,
+  "public_root": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\flights\\vertical\\public",
+  "public_files": {
+    "calibration.json": "163bafa94b727de78b32fb43d15159d192a28bf5e404502aafaa2e2d3d33fe39",
+    "frames.json": "fac161a85149d22af0f57d78dc8d6adcc5c9cf8c4918ac14425eda4078312f2d",
+    "marker_dimensions.json": "4438aeb34f2df65bcb61ff76d59133750712ab9b420597d0c2e836c086b7dd7a",
+    "rgb/1000000000.png": "aee830c940c0c1c0ed9903d55cbfe3e68f917b91eeb83969cee3545677f6386e",
+    "rgb/10000000000.png": "f3a02ff9bf8c9ff812cd7d2efbead811562f6f478691ef530e476cb9f04aaa27",
+    "rgb/10250000000.png": "4d478d76e4ece6dedf8feed87b811bed7532d65efc0629d4ae81e7287f0f29aa",
+    "rgb/10500000000.png": "410a82bb575b248f629c052216eb1b4977400d319a06bf4e9ac0898607367ae3",
+    "rgb/10750000000.png": "c88d4f76975d299f1537fe6e0ec9a1c0d6c8f9a4a19a6799753927c6d53ab3d9",
+    "rgb/11000000000.png": "632d00b84e8295879e0a5529953f72e884f4ecc2b782ed6889d5c2944ad2c4f4",
+    "rgb/11250000000.png": "0d026867f537b4a23a72fb059e352d52353893f60ab6203c05e0194e63d2c6dc",
+    "rgb/11500000000.png": "819a360b439a95cfc4e9f8e5b1f3df2797484d4a55ffc0763d3b8896c746aa13",
+    "rgb/11750000000.png": "dd13f7781e09fc5fd974221dabb1d77088033710080e4443c5a9cf6cf9b8adb1",
+    "rgb/12000000000.png": "e2574c99d11554400bf3dfe8b09f0c9f50ba0ac7898bd12fbe560b62a39bbc80",
+    "rgb/12250000000.png": "6a04b068ad6666f11567fa61b487b999a70edae0a86ede9ebaea8ba7a9fe5a72",
+    "rgb/1250000000.png": "d19ef6aa15ca8acf199edbb382e7158562b947e466d1796ac1e184d3621f3330",
+    "rgb/12500000000.png": "eab46f7cd205f0fef111b5e4c48259b3bcb2a18155495a98a786040357d4b7d8",
+    "rgb/12750000000.png": "bcd8f16f63040a35f38f4d87efa3ac42dd93c33f8bc6d2c704268b608368e607",
+    "rgb/13000000000.png": "8e843f870fbab725f0cc02a0f7be3e91ac2e0aa12e71172d4bcac72840397692",
+    "rgb/13250000000.png": "b7f7dff524280982fb5db32a664c80390e53a2e74032bd7ac22249a96c1999f8",
+    "rgb/13500000000.png": "c520e532eebd6856d58fc25059d67f853df08f8b2dd6deaa6892353e6dcbb9cc",
+    "rgb/13750000000.png": "5768bfcc283973975f7cbb74fde6a972ff7bad23df15dbb60408252d7326d459",
+    "rgb/14000000000.png": "a8824759c349ad4643b1f54d9b1a18ff0f1964506dd4bd8bf9c3b21abf6d7c3e",
+    "rgb/14250000000.png": "d1f7e8e13d0ef8b05a6ba36ced0cd65757929116e78d581e4a962dadd815897d",
+    "rgb/14500000000.png": "59cf38bf096390d8afb0987341e574cc409bdbaa350ab1cafc72cddf5c1137ba",
+    "rgb/14750000000.png": "40d50d08d7a88e29f12b5f40db40110ca982285eb76c57603910a58a0883e0b1",
+    "rgb/1500000000.png": "45dc8db8389a9c791ef102a13d53ae0ef556c97454c4475faed5b70569b8cffc",
+    "rgb/15000000000.png": "8886bf84d646a4fb489a8503789103eb5beec1c6f4f2a7fd5c6172d7f3e5dc9b",
+    "rgb/15250000000.png": "9a2729964255ab9d06aca75a985e8b8aec42abec977e01d8101da658051f881c",
+    "rgb/15500000000.png": "422c57332893b7d483e2e152840c8be3a7ed4a747e559a8e4bebdd1769ea5ceb",
+    "rgb/15750000000.png": "841b8b1aa9b9db45c99db1f9f6a2347bf5cb49641283be873f0062b37281d4aa",
+    "rgb/16000000000.png": "196282ba173ac82334a7e574788849458485e05fbd478a70df370205b7161f53",
+    "rgb/16250000000.png": "578f8b3742feff028130151337572c24084ae1c78c4b95ac0636545b4abce140",
+    "rgb/16500000000.png": "dbf54b0482954eb108fc922174c7d888fe192e13f21e6397fc07776fb78017c7",
+    "rgb/16750000000.png": "891d17b4cd90c04fc7146d03e5b3cfcb4c805fff83926302c4dc31a037799a59",
+    "rgb/17000000000.png": "cd2b2f6450237a3e3684e5cea0d52071b59cf85a15e2c18185a9c5db7a3b5ce2",
+    "rgb/17250000000.png": "3d8f64411a868024c7dfbacced174384c39a0129b9606081d35d4ac1170d3057",
+    "rgb/1750000000.png": "866bdef33f93759038136f1cab238b3198e5cf8597d86369a04ece7d09f2daca",
+    "rgb/17500000000.png": "3f570165cc4707efd9ad0ea96919e502579ea48d898c285a0fb09760b31ae53b",
+    "rgb/17750000000.png": "8abb27458d02660bf1d0861a3c8874aa73fb36c709c98795c41fb7af82298f46",
+    "rgb/18000000000.png": "e1872be56ba3e60ea6eabaa50be339b4d0408eb1d1555c59b62277da90d959b1",
+    "rgb/18250000000.png": "73b351f1d29a540eba711c928395eb0bcf2816ac63eb16cfd50dff69a8211c70",
+    "rgb/18500000000.png": "c25a9c8db3c72648790a25aa2febb2e82bc867ba6044f6882df10f90874044ac",
+    "rgb/18750000000.png": "690be4c8e96271b0b2fe9a2d43a4438c4c52016cfccff4ebcbfbd4190269199e",
+    "rgb/19000000000.png": "2b8adbe1b5cc05bb9dd6df250a496a218b405323436df04e61dfb6ee34e24778",
+    "rgb/19250000000.png": "69ef15b3afa9cbaf9934149a26747ff46dd25ea468c88a69c5e75c83f1713032",
+    "rgb/19500000000.png": "4228a20645b77909bd28b78a5f34c63a2f9aa72fa8ccb00896dd8e56f6da8e63",
+    "rgb/19750000000.png": "b08924f8bf70fa4dc630b4a9d9de834d49f04e3aac9c3933d2926441f02bf28b",
+    "rgb/2000000000.png": "13161858d8f5109b313410e18b5e5a5d627026bd44cfebf55e3094b8558d1348",
+    "rgb/20000000000.png": "0579679b4e04eedaef5e0a9309d9bc453b058b40d2cbeed4ef92d8b8476be169",
+    "rgb/20250000000.png": "77db8f75d0303296fad4f70ab601404c630c7ee3385569accccdd349e815e00d",
+    "rgb/20500000000.png": "1dbaebd6715caa59d3968f5119bfa2e032787aa72fb0d2a7a058c05d379e4957",
+    "rgb/20750000000.png": "a4609019a9f487fc44c983b551a2b1da3c7151f18db3d3e0f03b872ecfc66ffc",
+    "rgb/21000000000.png": "7eadc9ee3d98915d87b680dd895b31c6d6b2c2cb415c72f289ea1ce97aae14ad",
+    "rgb/21250000000.png": "ccd652c16b2ec9652cb4295934721445493129e2583f2a1126a1617dcce30fd2",
+    "rgb/21500000000.png": "4cf26bae836b65de5e0005062467b34041e127d0dac24a9f74b9381c5aff9d09",
+    "rgb/21750000000.png": "e7ec037452faf24a1d0191717c3875054d2e6ba12b31fac55ca22021e58ae183",
+    "rgb/22000000000.png": "3fe53830cd9512bee230f55b18dc041565c789eb0a01b469c3c7af01831556b2",
+    "rgb/22250000000.png": "cf43327fe3b68ad6fb62f37358d510f205aad64e0124719ec8a7905eee41c1db",
+    "rgb/2250000000.png": "2c8bfb4c990798f602c27a8555ab593fd2dcbd64a752a6dc213e076b9d961302",
+    "rgb/22500000000.png": "4117ecccdf7590fa79d09d3e01ae2a355fc2db7f394d414eec0348707a60b8d2",
+    "rgb/22750000000.png": "f9c93529104dd41107b35bd8a8ea124eeaee17fc4efff90beb301681b0cbaaba",
+    "rgb/23000000000.png": "3e1792305aee8d4d1f5545b6fe5415b1e1406556e90a6d9a23d3426e4cc46edf",
+    "rgb/23250000000.png": "e0557f3d4f1257ae673361dd89a5b94e8aa8379e5bc509c2119c2139773a150e",
+    "rgb/23500000000.png": "96039f3af99d7ae670bb20843cce83112ad844d92af9e60ed164a340c67e3ec4",
+    "rgb/23750000000.png": "14e0381b3f5f54f06fbd1e7eff9272b1c8d56349b796f6de368f8b545e95eb01",
+    "rgb/24000000000.png": "7661c1fb08bc55bd2ddf5adaefc17140c35839ac77ba56de0b0a6260285131b0",
+    "rgb/24250000000.png": "09014b4413a664058d079b222d8af0d23469fdff8ed9ffbd860ce805f76057cb",
+    "rgb/24500000000.png": "2947e696d5047415f974a9b03a408ae7e6c0d204193da047addae36aa8869abf",
+    "rgb/24750000000.png": "46d52eddb5b96a1b103fc91bee923cbef2324db84e567a40276464b2c8fba7e2",
+    "rgb/2500000000.png": "2f1b34d0cd16d6493433866229af3922b1f2f6c9f5628753ae5763557a40ab1f",
+    "rgb/25000000000.png": "8f2949b29dac72308929befd454d91674683679a671c298da7fd4d8017bf2fcf",
+    "rgb/25250000000.png": "fdff085636e1829c2a07e0c4c7ee3fa466870af55de2adeb56d03171138123c3",
+    "rgb/25500000000.png": "b7e584af940a02661b394d328921ec87b589d332dc74e0674920696e4888f1be",
+    "rgb/25750000000.png": "2e7dcaa42e17aa57b05c49de9f027be564b3e27181d3c7277556d8061e78d600",
+    "rgb/26000000000.png": "626ecedd2a35d2d7d972595adec9ef3c36cb596a09b1e4382af04f6de232950d",
+    "rgb/26250000000.png": "e113fff46680aacf35ca840e9e9c0f55f01d45f8ce8015b308fa89c2f4086b1b",
+    "rgb/26500000000.png": "299a143ac6f7730ddb1ccbd3175d745c7c38975f9faac29df18c4119a326523c",
+    "rgb/26750000000.png": "ba02ef7e7635bd4be160707edb0c63c9aa3fca6d2a25d6d65fa067df7cb643a3",
+    "rgb/27000000000.png": "5b48ee401606539a8678ed272f6335e69b90f7c61d5eb552e952482bc7a506ad",
+    "rgb/27250000000.png": "9a88ed881922ab22a5fbbd23dd7538bef82c3640ed32b914fe72823e9f79de1d",
+    "rgb/2750000000.png": "54e58552d2a20b47f29efa1d096dbf73c4ebd02f794497e796a361c76d774d93",
+    "rgb/27500000000.png": "b280f75e839461362a56ec605162687d9ce04255b58e8e67b9df81ea98103e1e",
+    "rgb/27750000000.png": "cdcc994c2ba839affbb517bb26f58cc09574cde19c21259f7f7d4987b5bdd8d7",
+    "rgb/28000000000.png": "0c87b868b089dc02f9606523a5c8cc87722bea9da215fa3e214d9a7d80250de7",
+    "rgb/28250000000.png": "7581ee2b39360be4946dc3f788101e1442b06d00a8a42821789ae35cb5247d7c",
+    "rgb/28500000000.png": "ecf998a06002ae5d0411ff4931128a9d48f421793e1e911ac9fd22a7ab90a504",
+    "rgb/28750000000.png": "631b028d72429d25d94d618f24f3d5bc995b21e6f9b7af43525d8edec811f6ed",
+    "rgb/29000000000.png": "d0feeebf5ffbf6ff94506e2edd037837811a2e12b8008af3ef3a741c2639ae04",
+    "rgb/29250000000.png": "52f0232a6ffdd5d9dc823403e60b900bf2930902b2e99e00bfbf24c5df1428b2",
+    "rgb/29500000000.png": "6c86ef9df77299bd9511f457fdcd4bfee16e2b22ac3a7684318216bdb490da7d",
+    "rgb/29750000000.png": "d3258431bed2e0649c0e28ded0dc8b1d16239fa920a0cc84ccb6b09ab1de7d6d",
+    "rgb/3000000000.png": "fa229c7d50fc3c5148afca3bed89c46f7686f9047ac9b05dd47586f33843ab03",
+    "rgb/30000000000.png": "ba965a4f85aa7c61ad9dc0e1e0fd4d0480c7d806a51ba66fa4ca1e6ff41c66fe",
+    "rgb/30250000000.png": "d8a13aba8942a7fb99d226822b5796eed061ef2109a30b83e5ca957aa7a17320",
+    "rgb/30500000000.png": "b0615573ef384ee382cfeeed2083ea4aee39ec22dca6a88895db183c2e6f07b9",
+    "rgb/30750000000.png": "3fba2e5fe58859075c594dec062291d2cf582a87a4036d617a9711e874488078",
+    "rgb/31000000000.png": "ec07c1fe4c0273afff5101a4dbe3673e5b9a02d91b19f30b27b6c79585e0f468",
+    "rgb/31250000000.png": "a3b16d15cf68fc491f48e4e972661d22d142255cb1b7c38257c5030ed18eef37",
+    "rgb/31500000000.png": "79bbd664f40181a5ddf5b5566cf5676b8f7a848bdb56b9e09f72789ba352b043",
+    "rgb/31750000000.png": "bc768a5dadb09fa5c24b8adf365cd38f99dc5529d8ac8e686d7c303ae500a5cb",
+    "rgb/32000000000.png": "4d9ab63264a4f4a08887054687baebf08f2969a726ea6fce689104bcf8948469",
+    "rgb/32250000000.png": "a4c0e30ccb66abebd2279a66e7e33bd69c4cb4ddaa1e8917ff578d284319e5b1",
+    "rgb/3250000000.png": "5e605fef5aa089e085a0b61ca0b74ba435eafe057b7d8a78000d23696eb96737",
+    "rgb/32500000000.png": "447112464e811b9116010ada38ecfd781cb1a152b5212c21068d884e682a77af",
+    "rgb/32750000000.png": "64920ed7704347de6a39f9c5a6c932122c8a4dcef921585f30c86da120076ede",
+    "rgb/33000000000.png": "f6d9162fe238b427748635e7504b9e38f2e7983305fcc8a4be3285eaa1ede6fa",
+    "rgb/33250000000.png": "3d83069cfd149be4dacb1ebc82fe6a535b5a8d3447d5391e9b0835955a374a55",
+    "rgb/33500000000.png": "bfafd914e9e24c690bf309592b524a69f12c07d96db73daf7aee00368dc0b1f2",
+    "rgb/33750000000.png": "5258b25189db31bd08e0d0c439b2d793869dc3d8e5bfca274139e24454c7c9d8",
+    "rgb/34000000000.png": "6d6768f659e773b1557998b36c058023a0bc89510ec01fd16edee2e543804731",
+    "rgb/34250000000.png": "7a2f271c8dc18c3581a00c92012ee78d9752024d22986348a5211be58fc1e295",
+    "rgb/34500000000.png": "4d75ad8c2eb6201318fd801dda051f3d1c23684e06a3c7db63b0f3f99385e2a3",
+    "rgb/34750000000.png": "2896d6e6a04477fbb89a88a3a57c08e6bb3165e76949991f9026c25e3f4e42d8",
+    "rgb/3500000000.png": "ae4979c8fb0479724c6c234369ed91e7eb0390e9dbe2a83f2b45fc34c73920f3",
+    "rgb/35000000000.png": "f395a7e9373f2748d05fac65ff8aa4d97728fb13c54d133a09b11fab4693e4dc",
+    "rgb/35250000000.png": "aca1c834b1929fd74d0daa8804c4c7a7046f95704f9c21a1ee6f8c491ed294ce",
+    "rgb/35500000000.png": "c9016066efc465fa5ec2099281165758fe0d3a96b82dda4e5342a98e04b96446",
+    "rgb/35750000000.png": "62ae6b8acb778404cb19f0f9907b973a3f60694a89382c4e217f5288c756432c",
+    "rgb/36000000000.png": "ddd9040e3e877b3c73edbc46772ed7d0da0798be32e4499b335fd4378347fc8d",
+    "rgb/36250000000.png": "3548b172f7da73388cab4a3b15f19ffdf8e770fa1c6537acb2bf6afb1e104553",
+    "rgb/36500000000.png": "7944474ad04ec59cc9e15f982c86749d3391d6a8fd0d78da8457fccbcb6f2e4e",
+    "rgb/36750000000.png": "63ca0d7ddc15f2e5f2c0c793708316e561e2e5e47a630e86bfd5588b811499a1",
+    "rgb/37000000000.png": "d8c87c9efcd57f5adb5d57cee0387366547b586c7aa678cc0993a54c85f333fb",
+    "rgb/37250000000.png": "2e8b85eeafba6e79e5f98d823a43fdd1e4b983373aa741967f048395a46d16b7",
+    "rgb/3750000000.png": "6861190b5a939c5a29f3b175af04137337788dbe89a36559f0de7ea5b9e5848e",
+    "rgb/37500000000.png": "ef39f266feaa25b4cfed5cb5ebbf3a8c98f3e4ec3788e0a871c2675d33b0cc6d",
+    "rgb/37750000000.png": "cac4f6bcd8a27417a3c5b2a977b9be3f4337ba3c2936b6fd1de913dab441fc86",
+    "rgb/38000000000.png": "b491dc0d532d6d9c7d438d209f041f9567a56bb4a984595e41a1f605baa2edf5",
+    "rgb/38250000000.png": "b376c02ccb55ee8fe563cfe541362e4a712fb9c0d78bdaf672ff5858a032b3b3",
+    "rgb/38500000000.png": "93716c62ca4a18ba179200de55889d165937caffabc1cb56a5f9500a359967b7",
+    "rgb/38750000000.png": "6a854d632653204f7db82e938b7bc76bf6ea036017c4b334c4f88195f780ab74",
+    "rgb/39000000000.png": "595641f28d958ab9bee6eb0d885f646d95b879154d29f73dfaed306de5018f44",
+    "rgb/39250000000.png": "ae0b7c1e0c03240ae35ac876c7c6544386c0d6d1c4e74c736c8e4bd20c1989f6",
+    "rgb/39500000000.png": "ae0a7fa01a166e0dedb701e30979fc939234968f60b8509b39225cd9baae875d",
+    "rgb/39750000000.png": "326dbe17a6b5cda432dcb5b5ba547d573b9918d393a31cd81b3ba4cf6f1ff52c",
+    "rgb/4000000000.png": "2349c99c39053ae46e1e323756a3f553a492659d16d49f7c558e6eaf332a41d9",
+    "rgb/40000000000.png": "e81b7ea8b3ab66f03368a35742dd003a1248bc780ba6e45a03860e2a52169147",
+    "rgb/40250000000.png": "7f820a215e69dc69e2126ccfc7226019105d182eacf44370137ee0da48d1a291",
+    "rgb/40500000000.png": "e449d78f7a0f2ad79c9731948817989d89b1c29d3e86dc1849b0f9ab9eed6b47",
+    "rgb/40750000000.png": "eb62ece6a0e8a9c6f73473587a863b47f8446f37f801651b08d6be8a21950f9f",
+    "rgb/41000000000.png": "f7f8a8f13ff1a95e1bc87993392caa74031a43c5aa7b5d235cda6a5958631558",
+    "rgb/41250000000.png": "af81be909fbafef3ebae1518c0ab42d55c4df5fd670c64b7fe45de6e79a5b080",
+    "rgb/41500000000.png": "b87621060e7388fc8a145ea71897e629e35fcfad21a82c376805fbc181cbc227",
+    "rgb/41750000000.png": "d3441d7e77f1246aef98237ad26318da768c5bbc1def5bbf084de4f55fd05e08",
+    "rgb/42000000000.png": "20edc5f4bb1d80b8f3a1ed56aea60eac2241c3d14d07ac88f539ae7e51b52a7d",
+    "rgb/42250000000.png": "3143027b44fbb13daf5d6357339f8a40a8cbcc2b9965bd92024e536e097f68bd",
+    "rgb/4250000000.png": "4fb8c54a00818544497b2a7c3be5b5a7842dd261a30f86b5ce8c87fafb0bfcfa",
+    "rgb/42500000000.png": "56e61f21ac4daf2bb73083845388fb9ecb3bbfa76296c5dfc7f4beae11c9a150",
+    "rgb/4500000000.png": "07c12409177957bdc902f5c1de2b2dba0fa124023e9de1802ffb34208c15da26",
+    "rgb/4750000000.png": "a7aa20b609aa08bf78f72013de45437d60d70ccc02f668236b8dbaf8d1118a9a",
+    "rgb/5000000000.png": "47d4313a25db2e427fecf4563c59ec3537b2841c5403d3d8fb2675b74b00f81e",
+    "rgb/5250000000.png": "3952e7639f67fffd1979c982c87b2c8162b74e231ad4aaab7ac6a48907e870d7",
+    "rgb/5500000000.png": "2c99af7ac38c1ca53adfa0c793d03696880ae6f72bb7898a0ccebe4e77a9726e",
+    "rgb/5750000000.png": "1444140f39f6edb6491e79a13f209af9eb13d8d1ced4f320e94e6cbed42885fb",
+    "rgb/6000000000.png": "8ec689b767969f4e5c405b821e1baf7791c3fa0e820251110780bec7895ef4d6",
+    "rgb/6250000000.png": "6f9791d04c5525e8f8396f49d1366870fc41965513f1a1e0c03c84a853c7e586",
+    "rgb/6500000000.png": "b888d4900b8079c379c104c90f25fd3d104e0a0618f338399a84306f35993708",
+    "rgb/6750000000.png": "b24f5074645cea6e39b8b8dd3640e06562a4b4fdd5aa0a6a737671dd801cb643",
+    "rgb/7000000000.png": "a9d380e1b2bf16ad24f3381d6c84e8331ea1eff0f6911d7de218f4f6c9ff8b06",
+    "rgb/7250000000.png": "22754386db780568533c91bccab02d24fdd15e4de48a985f50056272adc896b2",
+    "rgb/7500000000.png": "44cb1bc231e511615a76de2bb4a5b9997d64bb2fab451a51d0cec41b728ed137",
+    "rgb/7750000000.png": "631c3db7415f249c34686c8677a2cae52e67e763cfd5b1b503014a05ab531c9d",
+    "rgb/8000000000.png": "f320fd54654c639eea7d1dc2294e01527f4015b2d0db4eada316c5ee3d122e25",
+    "rgb/8250000000.png": "277aa07f0c6ec8056de1b197927ce1c4bb7194dbf25d1ac4c7120bf94778ade6",
+    "rgb/8500000000.png": "68de25a803458b907b870ca0593bee0102c0ca195bfccc9e2321103c382d43f4",
+    "rgb/8750000000.png": "b12409a3958ebaa3843da3845ea438df3a701f83b7719eeb2406353eb754b2ed",
+    "rgb/9000000000.png": "cce7d07a6cdceb9a0d5c7a5d4d3899d4f61f2604dd8afd9794345f17a32801df",
+    "rgb/9250000000.png": "a57c452458c9b0953455b168de02ed27beb2a00d2624e68d630dde4dd6ab510e",
+    "rgb/9500000000.png": "16fd884be87e80426991e4b4c861cd553071b614360f0ae686697b2ae7d033c9",
+    "rgb/9750000000.png": "c39de7165d3e96291e6e8e9cb0d4526667589025e8f95c19982c95b3276b7506"
+  },
+  "marker_8_decoded_frames": 30,
+  "inference_ready": true,
+  "tracking_performed": false,
+  "localization_performed": false,
+  "exact_pose_truth_exported": false,
+  "instance_ids_masks_truth_exported": false,
+  "cuda_used": false,
+  "limitations": [
+    "No relative noisy sensors exported yet; metric localization is not ready.",
+    "One common physical marker8, no independent C07 acquisition.",
+    "No inference, tracking or localization measured by this validator.",
+    "Zero detected marker frames would be recorded as a negative result, not replaced by expected ID.",
+    "Calyx appearance class is not internal fruit maturity; area is not an occlusion estimate."
+  ]
+}

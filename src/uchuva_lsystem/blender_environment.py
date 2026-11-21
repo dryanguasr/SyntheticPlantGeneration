@@ -268,6 +268,7 @@ def create_outdoor_environment(
     packed_asset_blend: str | Path | None = None,
     mode: str = "open_field_hybrid",
     background_style: str = "layered_understory_v2",
+    vegetation_centres: list[tuple[float,float]] | None = None,
 ) -> dict[str, Any]:
     """Create soil, debris, distant vegetation, HDRI world, and distant sun."""
     if background_style not in {"legacy_green_carpet", "layered_understory_v2"}:
@@ -317,17 +318,14 @@ def create_outdoor_environment(
     )
     ground_vegetation: list[dict[str, Any]] = []
     for item in _ground_vegetation_plan(mode):
-        blade_count = _scatter_grasses(
-            rng,
-            terrain_size,
-            background_materials[item["material"]],
-            collection,
-            count=item["count"],
-            name=item["name"],
-            height_range=item["height_range"],
-            width_range=item["width_range"],
-            background_fraction=0.42 if mode != "isolated_neutral" else 0.0,
-        )
+        blade_count=0
+        for centre_index,centre in enumerate(vegetation_centres or [(0.,0.)]):
+            blade_count += _scatter_grasses(
+                rng,terrain_size,background_materials[item["material"]],collection,
+                count=item["count"],name=item["name"] if vegetation_centres is None else item["name"]+f"_patch{centre_index}",
+                height_range=item["height_range"],width_range=item["width_range"],
+                background_fraction=0.42 if mode != "isolated_neutral" else 0.0,
+                centre=centre,terrain_seed=seed if vegetation_centres is not None else None)
         ground_vegetation.append(
             {
                 "profile": item["name"],
@@ -358,6 +356,7 @@ def create_outdoor_environment(
         "background_style": background_style,
         "terrain_object": terrain.name,
         "terrain_size_requested": round(terrain_size, 3),
+        "vegetation_centres": vegetation_centres,
         "terrain_size": round(effective_terrain_size, 3),
         "terrain_subdivisions": effective_subdivisions,
         "terrain_edge_guard": "camera_outside_patch_prevented",
@@ -734,6 +733,254 @@ def _create_terrain_mesh(
     return terrain
 
 
+def _ground_basal_contact_properties(properties: dict[str, Any]) -> bool:
+    """Only the initial main-axis segment has a declared soil insertion."""
+    return (
+        properties.get("uchuva_semantic_class") == "stem"
+        and properties.get("uchuva_organ_kind") == "axis_segment"
+        and properties.get("uchuva_axis_order") == 0
+        and properties.get("uchuva_internode_index") == 0
+        and not properties.get("uchuva_axis_parent_node_id")
+        and not properties.get("uchuva_node_start_id")
+    )
+
+
+def _ground_point_in_basal_zone(
+    point: tuple[float, float, float],
+    anchor: tuple[float, float, float] | None,
+    radius: float,
+) -> bool:
+    return anchor is not None and sum((a-b)**2 for a,b in zip(point,anchor)) <= radius**2
+
+
+def _ground_triangle_contact_points(
+    first: list[tuple[float, float, float]],
+    second: list[tuple[float, float, float]],
+) -> list[tuple[float, float, float]]:
+    """Segment/triangle intersections for localizing a basal surface crossing.
+
+    Coplanar cases return no points and are conservatively not exempted. This
+    helper does not decide whether triangles overlap; the evaluated BVH does.
+    """
+    def sub(a, b): return tuple(x-y for x,y in zip(a,b))
+    def dot(a, b): return sum(x*y for x,y in zip(a,b))
+    def cross(a, b): return (a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0])
+    points = []
+    for edges, triangle in ((first, second), (second, first)):
+        v0,v1,v2 = triangle
+        edge1,edge2 = sub(v1,v0),sub(v2,v0)
+        for index in range(3):
+            start,end = edges[index],edges[(index+1)%3]
+            direction = sub(end,start)
+            h = cross(direction,edge2)
+            determinant = dot(edge1,h)
+            if abs(determinant) <= 1e-12:
+                continue
+            inverse = 1.0/determinant
+            s = sub(start,v0)
+            u = inverse*dot(s,h)
+            q = cross(s,edge1)
+            v = inverse*dot(direction,q)
+            t = inverse*dot(edge2,q)
+            if -1e-9 <= u <= 1+1e-9 and -1e-9 <= v and u+v <= 1+1e-9 and -1e-9 <= t <= 1+1e-9:
+                points.append(tuple(a+t*b for a,b in zip(start,direction)))
+    return points
+
+
+def audit_plant_ground_clearance(
+    *,
+    seed: int,
+    terrain_object: object | None = None,
+    required_clearance_m: float = 0.001,
+) -> dict[str, Any]:
+    """Audit organs, including hidden fruit interiors, without changing RGB.
+
+    Annotation-ignore fruits remain physical organs. Viewport-hidden interiors
+    temporarily enter the CPU dependency graph so their evaluated world pose is
+    current. All viewport flags are restored even on failure; hide_render is
+    never changed. Being inside its calyx is no exemption from the terrain.
+    """
+    bpy, _ = _blender_modules()
+    fruits = [obj for obj in bpy.context.scene.objects
+              if obj.get("uchuva_organ_kind") == "fruit" or obj.get("uchuva_hidden_inside_closed_calyx")]
+    visibility = [(obj, bool(obj.hide_viewport), bool(obj.hide_get())) for obj in fruits]
+    try:
+        for obj, hidden_global, hidden_local in visibility:
+            if hidden_global:
+                obj.hide_viewport = False
+            if hidden_local:
+                obj.hide_set(False)
+        bpy.context.view_layer.update()
+        result = _audit_plant_ground_clearance_evaluated(
+            seed=seed, terrain_object=terrain_object, required_clearance_m=required_clearance_m)
+    finally:
+        for obj, hidden_global, hidden_local in visibility:
+            obj.hide_set(hidden_local)
+            obj.hide_viewport = hidden_global
+        bpy.context.view_layer.update()
+    result["hidden_geometry_evaluation"] = "fruit interiors temporarily included in viewport depsgraph; viewport flags restored; hide_render unchanged"
+    return result
+
+
+def _audit_plant_ground_clearance_evaluated(
+    *,
+    seed: int,
+    terrain_object: object | None = None,
+    required_clearance_m: float = 0.001,
+) -> dict[str, Any]:
+    """Audit evaluated physical organs against terrain with explicit units.
+
+    The explicit one-millimetre default equals the historical 0.008 Blender
+    units at the appearance campaign's scale of 0.125 m/BU. The historical
+    calyx-only function below is retained unchanged. Surface BVH crossings and
+    vertex vertical clearance are distinct tests; vegetation is outside this
+    terrain-only contract. Basal contact is permitted only within two rendered
+    stem radii of the declared initial main-axis attachment.
+    """
+    bpy, Vector = _blender_modules()
+    from mathutils.bvhtree import BVHTree
+
+    scale = float(bpy.context.scene.unit_settings.scale_length)
+    if not math.isfinite(scale) or scale <= 0:
+        raise ValueError("Scene metres per Blender unit must be positive and finite")
+    if not math.isfinite(required_clearance_m) or required_clearance_m < 0:
+        raise ValueError("Ground clearance in metres must be finite and nonnegative")
+    required_bu = required_clearance_m/scale
+    report: dict[str, Any] = {
+        "version": "plant-evaluated-terrain/2",
+        "seed": seed,
+        "metres_per_blender_unit": scale,
+        "required_clearance_m": required_clearance_m,
+        "required_clearance_blender_units": required_bu,
+        "audited_semantic_classes": ["leaf", "calyx", "flower", "stem", "fruit"],
+        "excluded": ["hidden nonfruit organs", "leaf midrib decoration already covered by the blade", "supports", "background weeds and distractors"],
+        "coverage_note": "Evaluated triangle intersections and vertex vertical clearance against terrain; no weed contacts or exhaustive triangle-interior positive-clearance distance.",
+        "basal_contact_policy": "Only initial main-axis segment; contact points or deficient vertices within two rendered stem radii of its origin, plus numerical epsilon. Unknown/coplanar contact localization is not exempted.",
+        "objects": [], "physical_collisions": [], "clearance_violations": [],
+        "coverage_failures": [], "intentional_contacts": [],
+    }
+    if terrain_object is None:
+        terrain_object = bpy.data.objects.get("uchuva_terrain_agricultural")
+    if terrain_object is None:
+        report["coverage_failures"].append({"type": "missing_terrain"})
+    else:
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+
+        def evaluated_triangles(obj):
+            evaluated = obj.evaluated_get(depsgraph)
+            mesh = evaluated.to_mesh()
+            try:
+                if mesh is None:
+                    return [], []
+                mesh.calc_loop_triangles()
+                vertices = [tuple(evaluated.matrix_world@v.co) for v in mesh.vertices]
+                triangles = [tuple(t.vertices) for t in mesh.loop_triangles]
+                return vertices,triangles
+            finally:
+                evaluated.to_mesh_clear()
+
+        terrain_vertices,terrain_triangles = evaluated_triangles(terrain_object)
+        if not terrain_triangles:
+            report["coverage_failures"].append({"type": "terrain_without_triangles"})
+        else:
+            terrain_bvh = BVHTree.FromPolygons(terrain_vertices,terrain_triangles,all_triangles=True)
+            ray_top = max(v[2] for v in terrain_vertices)+1
+            for obj in bpy.context.scene.objects:
+                annotation_semantic = str(obj.get("uchuva_semantic_class", ""))
+                fruit = obj.get("uchuva_organ_kind") == "fruit" or bool(obj.get("uchuva_hidden_inside_closed_calyx"))
+                semantic = "fruit" if fruit else annotation_semantic
+                if ((obj.hide_render and not fruit) or obj.type not in {"MESH", "CURVE", "SURFACE"}
+                    or semantic not in report["audited_semantic_classes"]
+                    or not obj.get("uchuva_plant_id")
+                    or obj.get("uchuva_plant_role") == "support"
+                    or (semantic == "leaf" and str(obj.get("uchuva_organ_id", "")).endswith("_midrib"))):
+                    continue
+                vertices,triangles = evaluated_triangles(obj)
+                if not vertices or not triangles:
+                    report["coverage_failures"].append({"type":"organ_without_triangles", "object":obj.name})
+                    continue
+                anchor = None
+                radius = 0.0
+                properties = {k:obj.get(k) for k in (
+                    "uchuva_semantic_class", "uchuva_organ_kind", "uchuva_axis_order",
+                    "uchuva_internode_index", "uchuva_axis_parent_node_id", "uchuva_node_start_id")}
+                if _ground_basal_contact_properties(properties) and obj.type == "CURVE" and obj.data.splines:
+                    spline = obj.data.splines[0]
+                    points = spline.bezier_points if spline.type == "BEZIER" else spline.points
+                    if points:
+                        anchor = tuple(obj.matrix_world@Vector(tuple(points[0].co)[:3]))
+                        matrix_scale = max(obj.matrix_world.to_scale())
+                        radius = 2*float(obj.data.bevel_depth)*matrix_scale+1e-7
+                clearances = []
+                forbidden_clearances = []
+                allowed_vertices = 0
+                missed = 0
+                for point in vertices:
+                    x,y,z = point
+                    hit = terrain_bvh.ray_cast(Vector((x,y,ray_top)),Vector((0,0,-1)))
+                    if hit[0] is None:
+                        missed += 1
+                        continue
+                    clearance = z-float(hit[0].z)
+                    clearances.append(clearance)
+                    if clearance < required_bu:
+                        if _ground_point_in_basal_zone(point,anchor,radius):
+                            allowed_vertices += 1
+                        else:
+                            forbidden_clearances.append(clearance)
+                organ_bvh = BVHTree.FromPolygons(vertices,triangles,all_triangles=True)
+                overlaps = organ_bvh.overlap(terrain_bvh)
+                forbidden_intersections = []
+                allowed_intersections = 0
+                for organ_index,terrain_index in overlaps:
+                    points = []
+                    if anchor is not None:
+                        points = _ground_triangle_contact_points(
+                            [vertices[j] for j in triangles[organ_index]],
+                            [terrain_vertices[j] for j in terrain_triangles[terrain_index]])
+                    if points and all(_ground_point_in_basal_zone(p,anchor,radius) for p in points):
+                        allowed_intersections += 1
+                    else:
+                        forbidden_intersections.append([organ_index,terrain_index])
+                minimum = min(clearances) if clearances else None
+                item = {"object":obj.name, "plant_id":str(obj.get("uchuva_plant_id")),
+                        "semantic":semantic, "organ_kind":str(obj.get("uchuva_organ_kind", "")),
+                        "annotation_semantic_class":annotation_semantic,
+                        "reproductive_instance_id":str(obj.get("uchuva_reproductive_instance_id", "")),
+                        "hidden_in_rgb":bool(obj.hide_render),
+                        "rendered_visibility_scale":obj.get("uchuva_rendered_visibility_scale"),
+                        "tested_vertices":len(vertices), "tested_triangles":len(triangles), "ray_misses":missed,
+                        "minimum_vertical_clearance_blender_units":minimum,
+                        "minimum_vertical_clearance_m":None if minimum is None else minimum*scale,
+                        "forbidden_triangle_intersections":len(forbidden_intersections),
+                        "forbidden_clearance_vertices":len(forbidden_clearances),
+                        "intentional_basal_triangle_contacts":allowed_intersections,
+                        "intentional_basal_clearance_vertices":allowed_vertices}
+                report["objects"].append(item)
+                if missed:
+                    report["coverage_failures"].append({"type":"vertices_outside_evaluated_terrain", "object":obj.name, "ray_misses":missed})
+                if forbidden_intersections or any(c<0 for c in forbidden_clearances):
+                    report["physical_collisions"].append({**item,"type":"plant_terrain_intersection_or_below_surface",
+                        "triangle_pairs":forbidden_intersections[:32]})
+                elif forbidden_clearances:
+                    report["clearance_violations"].append({**item,"type":"positive_terrain_clearance_below_requirement"})
+                if allowed_intersections or allowed_vertices:
+                    report["intentional_contacts"].append({**item,"type":"declared_local_basal_insertion",
+                        "anchor_blender_units":anchor,"permitted_radius_blender_units":radius,
+                        "permitted_radius_m":radius*scale})
+    if not report["objects"] and not report["coverage_failures"]:
+        report["coverage_failures"].append({"type":"no_visible_plant_organs"})
+    for collection,count in (("physical_collisions","physical_collision_count"),
+                             ("clearance_violations","clearance_violation_count"),
+                             ("coverage_failures","coverage_failure_count"),
+                             ("intentional_contacts","intentional_contact_count")):
+        report[count] = len(report[collection])
+    report["tested_object_count"] = len(report["objects"])
+    report["tested_vertex_count"] = sum(r["tested_vertices"] for r in report["objects"])
+    report["status"] = "invalid" if any(report[k] for k in ("physical_collisions","clearance_violations","coverage_failures")) else "valid"
+    return report
+
+
 def _terrain_height_at(x: float, y: float, seed: int) -> float:
     """Return the deterministic analytic height used by the terrain mesh."""
     mound = 0.045 * math.cos((y + 0.2) * math.tau / 0.82)
@@ -1062,6 +1309,8 @@ def _scatter_grasses(
     height_range: tuple[float, float] = (0.18, 0.72),
     width_range: tuple[float, float] = (0.006, 0.018),
     background_fraction: float = 0.0,
+    centre: tuple[float,float] = (0.,0.),
+    terrain_seed: int | None = None,
 ) -> int:
     """Create lightweight, species-shaped vegetation in spatial clumps."""
     bpy, _ = _blender_modules()
@@ -1091,8 +1340,8 @@ def _scatter_grasses(
     for blade_index in range(count):
         center_x, center_y = clump_centers[blade_index % clump_count]
         clump_radius = 0.11 if "lolium" in name else 0.18 if "kikuyu" in name else 0.24
-        x = center_x + rng.gauss(0.0, clump_radius)
-        y = center_y + rng.gauss(0.0, clump_radius)
+        x = center_x + rng.gauss(0.0, clump_radius) + centre[0]
+        y = center_y + rng.gauss(0.0, clump_radius) + centre[1]
         height = rng.uniform(*height_range)
         width = rng.uniform(*width_range)
         bend_angle = rng.uniform(0.0, math.tau)
@@ -1199,6 +1448,8 @@ def _scatter_grasses(
             faces.append((start, start + 1, start + 3, start + 2))
             faces.append((start + 2, start + 3, start + 5, start + 4))
     mesh = bpy.data.meshes.new(f"uchuva_background_{name}_mesh")
+    if terrain_seed is not None:
+        vertices=[(x,y,z+_terrain_height_at(x,y,terrain_seed)) for x,y,z in vertices]
     mesh.from_pydata(vertices, [], faces)
     mesh.update()
     grasses = bpy.data.objects.new(f"uchuva_background_{name}", mesh)

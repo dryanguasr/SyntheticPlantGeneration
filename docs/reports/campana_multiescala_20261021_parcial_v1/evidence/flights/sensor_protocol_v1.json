@@ -1,0 +1,45 @@
+{
+  "version": "full-routes-relative-sensors/1",
+  "scope": "validation_only_after_completed_captures_and_public_validation",
+  "fps": 4,
+  "required_interval_ns": 250000000,
+  "meters_per_blender_unit": 0.125,
+  "noise": {
+    "status": "engineering_heuristic_not_physically_calibrated",
+    "distribution": "independent_zero_mean_gaussian_per_increment",
+    "translation_density_m_per_sqrt_s": 0.005,
+    "rotation_density_rad_per_sqrt_s": 0.002,
+    "scaling": "sigma = density * sqrt(actual_dt_seconds)",
+    "translation_frame": "previous_optical_camera",
+    "rotation_application": "Exp(noise_rotation_previous_camera) @ R_previous.T @ R_current",
+    "covariance_order": ["tx_m", "ty_m", "tz_m", "rx_rad", "ry_rad", "rz_rad"],
+    "bias": "not_simulated",
+    "correlated_drift": "not_simulated"
+  },
+  "sensor_seed_by_scene": {
+    "legacy": 20261021061,
+    "vertical": 20261021062,
+    "orbit": 20261021063
+  },
+  "marker": {
+    "dictionary": "DICT_4X4_50",
+    "coded_side_m": 0.2,
+    "board_side_m": 0.26666666666666666,
+    "identity_source": "actual_RGB_decoder_output_only",
+    "triangulation_requires_explicit_marker_id": true,
+    "default_marker_side_forbidden": true,
+    "no_pose_when_unobserved": true
+  },
+  "public_sensor_files": ["relative_motion.jsonl", "sensor_model.json"],
+  "public_sensor_forbidden": ["world_pose", "camera_world", "matrix_world", "true_identity", "mask", "exact_trajectory", "plant_id", "source_path", "random_seed", "sampled_noise"],
+  "private_receipts": "outside sensors_public; do not provide exporter, private inputs or private audit to estimator",
+  "historical_review": "../historical_reprojection_recovery_review_v1.json",
+  "historical_review_sha256": "a606e503a254d5dcc616168e2470a76cbc0253a3a809705fe741f9bb69347fe0",
+  "limitations": [
+    "Synthetic noisy odometry is not a calibrated hardware sensor or evidence of metric localization accuracy.",
+    "Only noisy relative increments leave this private simulator; exact starting pose and sampled perturbations remain private.",
+    "Zero-mean independent increments omit bias, correlated drift, sensor dropout and timing errors.",
+    "Single front marker is unchanged; C07 and the back face have no independent marker acquisition guarantee.",
+    "Sensor export does not initialize fusion, run tracking or triangulation, or relax historical parallax/reprojection gates."
+  ]
+}

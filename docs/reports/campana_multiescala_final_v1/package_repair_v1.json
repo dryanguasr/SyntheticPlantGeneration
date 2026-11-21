@@ -1,0 +1,17 @@
+{
+  "version": "publication-package-repair/1",
+  "failure": "Final package copied nested files with root-level index.html exclusion; gallery index absent. One broken HTML link; data/model/video bytes unaffected.",
+  "preserved_failed_manifest_sha256": "f8a997180b3309e39559111bb56492298d3f1f5581f36abe7589e8eab1086bb1",
+  "restored_path": "dataset_sample/index.html",
+  "source": "docs/reports/campana_multiescala_20261021_parcial_v1/dataset_sample/index.html",
+  "restored_sha256": "1217e6cf1e443a5f2c85b37194d2094cb28338b365f489650e59cc9c18e36074",
+  "prior_failed_gate": {
+    "files": 373,
+    "html_links": 191,
+    "errors": [
+      "index.html -> dataset_sample/index.html"
+    ]
+  },
+  "frozen_campaign_artifacts_changed": false,
+  "original_partial_package_changed": false
+}

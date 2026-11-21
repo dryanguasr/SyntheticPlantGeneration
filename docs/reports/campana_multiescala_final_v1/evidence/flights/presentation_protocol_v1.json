@@ -1,0 +1,97 @@
+{
+  "version": "full-route-presentation/1",
+  "renderer": "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_flights_20261021\\full_routes_v1\\render_full_routes_v1.py",
+  "renderer_sha256": "cde96342f76ffa37832634d14fa8c41d2e08fc17447b1b8e4ec28f71d4e5b3a3",
+  "route_protocol_sha256": "86dabc5a22a59aa53207547e565bd9408a05e3dac8c47df037d11aff71b78026",
+  "preflight_sha256": "92fc8999060ade1b4645da6bb0e387b208a9226f69e7fc5cab705f6c499aab25",
+  "presentation_renderer_sha256": "bb70ad42505036ea363ed5ae992bed8dc8ae1d83e79c149bca38b50dbfb49849",
+  "composer_sha256": "26c4b8a3ec0cdc70373630df460e9d7aa2e0ca981b0eee3a47ace81c62282c9e",
+  "observers": {
+    "legacy": {
+      "camera_world_bu": [
+        -69.8368274621805,
+        -78.84102792864553,
+        74.16725997255647
+      ],
+      "target_world_bu": [
+        -3.652000427246092,
+        2.6172207297352816,
+        7.98243293762207
+      ],
+      "lens_mm": 35.0,
+      "projected_min_pixels": [
+        90.25927193940282,
+        49.746753778010955
+      ],
+      "projected_max_pixels": [
+        415.085426428578,
+        239.7161763950827
+      ],
+      "checked_corners": 1432,
+      "margin_fraction": 0.1,
+      "method": "Stationary pinhole projection of scene bounds and expanded proxy corners for every planned pose"
+    },
+    "vertical": {
+      "camera_world_bu": [
+        -63.48223777503031,
+        -65.2616815212807,
+        67.81267028540628
+      ],
+      "target_world_bu": [
+        -3.652000427246092,
+        8.375533675992187,
+        7.98243293762207
+      ],
+      "lens_mm": 35.0,
+      "projected_min_pixels": [
+        91.12666570721257,
+        56.096687661794846
+      ],
+      "projected_max_pixels": [
+        384.43957491807646,
+        239.55919619214262
+      ],
+      "checked_corners": 1344,
+      "margin_fraction": 0.1,
+      "method": "Stationary pinhole projection of scene bounds and expanded proxy corners for every planned pose"
+    },
+    "orbit": {
+      "camera_world_bu": [
+        -63.48223777503031,
+        -65.2616815212807,
+        67.81267028540628
+      ],
+      "target_world_bu": [
+        -3.6520004272460955,
+        8.375533675992187,
+        7.98243293762207
+      ],
+      "lens_mm": 35.0,
+      "projected_min_pixels": [
+        91.12666570721257,
+        56.096687661794846
+      ],
+      "projected_max_pixels": [
+        361.4949842276527,
+        239.55919619214262
+      ],
+      "checked_corners": 2264,
+      "margin_fraction": 0.1,
+      "method": "Stationary pinhole projection of scene bounds and expanded proxy corners for every planned pose"
+    }
+  },
+  "observer_resolution": [
+    480,
+    270
+  ],
+  "inset_resolution": [
+    320,
+    180
+  ],
+  "fps": 4,
+  "proxy_only_for_presentation": true,
+  "no_changes_to_inference_rgb": true,
+  "geometry_builder_preserved": true,
+  "predeclared_before_render": true,
+  "proxy_dimensions": "engineering presentation approximation, not flight dynamics"
+}

@@ -13,6 +13,7 @@ from .interfaces import (
     build_gazebo_export_plan,
     write_gazebo_export_plan,
 )
+from .admitted_plants import build_admitted_plant_bundle
 
 __all__ = [
     "GAZEBO_EXPORT_SCHEMA_VERSION",
@@ -22,4 +23,5 @@ __all__ = [
     "GazeboVisualItem",
     "build_gazebo_export_plan",
     "write_gazebo_export_plan",
+    "build_admitted_plant_bundle",
 ]

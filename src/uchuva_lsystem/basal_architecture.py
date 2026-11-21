@@ -35,6 +35,8 @@ def basal_scaffolds(plant, count=3, base_height_m=.15, units_per_metre=8.):
         segment.length_cm*=factor
         segment.provenance['basal_length_factor']=factor
         segment.bend_angle_deg=0
+    root.growth_budget_length_cm=max(0.,root.growth_budget_length_cm+(factor-1)*old_base)
+    root.remaining_budget_length_cm=min(root.remaining_budget_length_cm,root.growth_budget_length_cm)
     def point(azimuth,polar):
         a,p=map(math.radians,(azimuth,polar))
         return math.sin(p)*math.cos(a),math.sin(p)*math.sin(a),math.cos(p)
@@ -60,6 +62,7 @@ def basal_scaffolds(plant, count=3, base_height_m=.15, units_per_metre=8.):
         scaffold_count=count,includes_root_continuation=True,base_path_length_m=base_height_m,
         parameter_status='engineering_heuristic',count_source='user_observation_2_to_5_not_validated_distribution',
         organ_count_preserved=True,attachment_ids_preserved=True,developmental_simulation=False,
+        original_nodal_order=[n.id for n in plant.axes[0].nodes],
         anchor_fit='pending_scene_support_validation',selected_axes=[a.id for a in selected])
     result.parameter_preset=VERSION
     return result

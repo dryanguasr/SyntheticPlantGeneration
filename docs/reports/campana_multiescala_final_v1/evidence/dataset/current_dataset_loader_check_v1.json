@@ -1,0 +1,261 @@
+{
+  "version": "current-dataset-loader-check/1",
+  "passed": true,
+  "created_utc": "2026-10-21T07:08:42.264697+00:00",
+  "elapsed_seconds": 6.22546730004251,
+  "no_cuda": true,
+  "no_training": true,
+  "readiness_file_written": false,
+  "manifest_counts": {
+    "train": 1152,
+    "val": 576
+  },
+  "negative_counts": {},
+  "negatives_note": "No empty patches exist; empty loader case verified in original integration report, not repeated.",
+  "checkpoint_names": {
+    "0": "pintona",
+    "1": "madura",
+    "2": "sobremadura"
+  },
+  "optimizer": {
+    "batch": 1,
+    "nbs": 1,
+    "warmup_epochs": 0,
+    "optimizer": "AdamW",
+    "lr0": 0.0002,
+    "proof": "post-hook plus parameter-difference assertions configured; actual training steps still pending"
+  },
+  "memory": {
+    "admission_gib": 6.5,
+    "train_stop_gib": 3,
+    "validation_stop_gib": 3,
+    "validation_batch": 1,
+    "min_free_cpu_check_gib": 16.923511505126953
+  },
+  "native_call_counts": {
+    "RandomHSV_apply_image": 6,
+    "RandomFlip_apply_semantic": 6
+  },
+  "checks": {
+    "all_manifest_classes_boxes_ids_valid": true,
+    "sampled_rgb_mask_hashes_exact": true,
+    "sampled_ID_pixel_counts_boxes_exact": true,
+    "train_native_only": true,
+    "train_masks_nonempty": true,
+    "eligible_val_masks_nonempty": true,
+    "val_repeat_deterministic": true,
+    "preflight_real_code_with_in_memory_candidate_passed": true,
+    "stale_hash_gate_rejected": true,
+    "canonical_files_unchanged": true
+  },
+  "sampled_cases": [
+    {
+      "image": "images\\train\\train_a_view_045_tile_00.png",
+      "source_image": "images/train/train_a_view_045.png",
+      "split": "train",
+      "distance": "near",
+      "selection": "min_instance_count",
+      "instances": 12,
+      "native_calls": [
+        "RandomHSV",
+        "RandomFlip"
+      ],
+      "flipped": true,
+      "empty_supervision_masks": 0,
+      "eligible_empty_masks": 0,
+      "val_deterministic": null,
+      "rgb_sha256": "78f8dd6d45109691f157ff20180246965acf354c7885cc1d392baef69077d1fa",
+      "raster_sha256": "b5c9d99f0a6c50a95b5d16a404e340935081e6c33ba687d45dc142ff70dec846"
+    },
+    {
+      "image": "images\\train\\train_b_view_084_tile_00.png",
+      "source_image": "images/train/train_b_view_084.png",
+      "split": "train",
+      "distance": "near",
+      "selection": "max_instance_count",
+      "instances": 159,
+      "native_calls": [
+        "RandomHSV",
+        "RandomFlip"
+      ],
+      "flipped": true,
+      "empty_supervision_masks": 0,
+      "eligible_empty_masks": 0,
+      "val_deterministic": null,
+      "rgb_sha256": "309d779b876905e0e40cb5e0960e3960a70599dc8494e5a959f6816f0d64def1",
+      "raster_sha256": "67eb2d2ced3db38a8451b08067963c64d646cb963d5d6adaebeaeba0e9e349d3"
+    },
+    {
+      "image": "images\\train\\train_a_view_046_tile_00.png",
+      "source_image": "images/train/train_a_view_046.png",
+      "split": "train",
+      "distance": "middle",
+      "selection": "min_instance_count",
+      "instances": 13,
+      "native_calls": [
+        "RandomHSV",
+        "RandomFlip"
+      ],
+      "flipped": false,
+      "empty_supervision_masks": 0,
+      "eligible_empty_masks": 0,
+      "val_deterministic": null,
+      "rgb_sha256": "20ac6c08def371c591365376c97be879531777fc5f013b66b281700ad58e1bca",
+      "raster_sha256": "ba2891427585b841d3fad55e57ba0ce3a7ac3c78736b0157c8c43ce46276e6cb"
+    },
+    {
+      "image": "images\\train\\train_b_view_034_tile_01.png",
+      "source_image": "images/train/train_b_view_034.png",
+      "split": "train",
+      "distance": "middle",
+      "selection": "max_instance_count",
+      "instances": 197,
+      "native_calls": [
+        "RandomHSV",
+        "RandomFlip"
+      ],
+      "flipped": false,
+      "empty_supervision_masks": 0,
+      "eligible_empty_masks": 0,
+      "val_deterministic": null,
+      "rgb_sha256": "fd49a9301cb4f1792fb695b7f1542e69ed4a619d33e9369bed5d0b1b274ab9b4",
+      "raster_sha256": "a21259d8d420fde9c56012d553635dd9ff2c7bfc0ffab0eae8bba02ea0f92818"
+    },
+    {
+      "image": "images\\train\\train_a_view_092_tile_00.png",
+      "source_image": "images/train/train_a_view_092.png",
+      "split": "train",
+      "distance": "far",
+      "selection": "min_instance_count",
+      "instances": 24,
+      "native_calls": [
+        "RandomHSV",
+        "RandomFlip"
+      ],
+      "flipped": true,
+      "empty_supervision_masks": 0,
+      "eligible_empty_masks": 0,
+      "val_deterministic": null,
+      "rgb_sha256": "8c12d337bbd5beb4dba15898b2ac976ad7fc04cfaa736aa71d3e88bfd6dc0485",
+      "raster_sha256": "4209112adc095eecb05185582040bfa91b2db6c7a13addba5f68dcd41f8a7aed"
+    },
+    {
+      "image": "images\\train\\train_b_view_065_tile_01.png",
+      "source_image": "images/train/train_b_view_065.png",
+      "split": "train",
+      "distance": "far",
+      "selection": "max_instance_count",
+      "instances": 246,
+      "native_calls": [
+        "RandomHSV",
+        "RandomFlip"
+      ],
+      "flipped": true,
+      "empty_supervision_masks": 0,
+      "eligible_empty_masks": 0,
+      "val_deterministic": null,
+      "rgb_sha256": "0dc3a5b3dbbbe9d152864ecf27d5f8399c8ca0da1639cd82fd51c2d76b4a9477",
+      "raster_sha256": "7653ce45740f044c496eb78d0c3e2cf83076caec8bec3cfbf81242780f46ad37"
+    },
+    {
+      "image": "images\\val\\validation_view_072_tile_00.png",
+      "source_image": "images/val/validation_view_072.png",
+      "split": "val",
+      "distance": "near",
+      "selection": "min_instance_count",
+      "instances": 29,
+      "native_calls": [],
+      "flipped": false,
+      "empty_supervision_masks": 0,
+      "eligible_empty_masks": 0,
+      "val_deterministic": true,
+      "rgb_sha256": "fc2059750212a1709c95d6c2eab36d530df5caadd6237aef21adf898917ea256",
+      "raster_sha256": "9ec281b12efb9915280205f4440b3d4d9cb246ee54bb7f3e9f01dbb833fa10a5"
+    },
+    {
+      "image": "images\\val\\validation_view_063_tile_05.png",
+      "source_image": "images/val/validation_view_063.png",
+      "split": "val",
+      "distance": "near",
+      "selection": "max_instance_count",
+      "instances": 226,
+      "native_calls": [],
+      "flipped": false,
+      "empty_supervision_masks": 2,
+      "eligible_empty_masks": 0,
+      "val_deterministic": true,
+      "rgb_sha256": "397afffa4a1472c19e5741de66b38e6bac3d3e7cddb6f67da19c8c716851a990",
+      "raster_sha256": "2095b104316b45e8034ab69293df9e89a6ab6df086d82945536bf3a3055d3eb7"
+    },
+    {
+      "image": "images\\val\\validation_view_091_tile_00.png",
+      "source_image": "images/val/validation_view_091.png",
+      "split": "val",
+      "distance": "middle",
+      "selection": "min_instance_count",
+      "instances": 30,
+      "native_calls": [],
+      "flipped": false,
+      "empty_supervision_masks": 1,
+      "eligible_empty_masks": 0,
+      "val_deterministic": true,
+      "rgb_sha256": "ecc1f3276828bc3e6083a41c6caf44f22053f45eef1e50950ff294cd4f591774",
+      "raster_sha256": "cfb0489f66f9cbeef86addb21c3aee7faeb410964f0b74a36c8509b7672e59d6"
+    },
+    {
+      "image": "images\\val\\validation_view_064_tile_02.png",
+      "source_image": "images/val/validation_view_064.png",
+      "split": "val",
+      "distance": "middle",
+      "selection": "max_instance_count",
+      "instances": 253,
+      "native_calls": [],
+      "flipped": false,
+      "empty_supervision_masks": 2,
+      "eligible_empty_masks": 0,
+      "val_deterministic": true,
+      "rgb_sha256": "5a065ffd246748348cee24506f2236e05f0e8e69e27c55c49faa81e26a3f3d56",
+      "raster_sha256": "1dad2f75863e5649ad8097af06ed3c6724364020c4ece2ca3940736fca49e0b4"
+    },
+    {
+      "image": "images\\val\\validation_view_092_tile_00.png",
+      "source_image": "images/val/validation_view_092.png",
+      "split": "val",
+      "distance": "far",
+      "selection": "min_instance_count",
+      "instances": 33,
+      "native_calls": [],
+      "flipped": false,
+      "empty_supervision_masks": 2,
+      "eligible_empty_masks": 0,
+      "val_deterministic": true,
+      "rgb_sha256": "27bf6ee89459781cb45826e69ad3e596d893c812f8154fce891ca33c843d8581",
+      "raster_sha256": "8b92c4863a36e8b47a14293be606aeea8d0461cc3ea17d368e92a9a1dc534e86"
+    },
+    {
+      "image": "images\\val\\validation_view_089_tile_01.png",
+      "source_image": "images/val/validation_view_089.png",
+      "split": "val",
+      "distance": "far",
+      "selection": "max_instance_count",
+      "instances": 342,
+      "native_calls": [],
+      "flipped": false,
+      "empty_supervision_masks": 6,
+      "eligible_empty_masks": 0,
+      "val_deterministic": true,
+      "rgb_sha256": "4b593009b396a639c34ac522ff4b393d7ed326edeaff9018cf7a8087c0709d5d",
+      "raster_sha256": "d5490b89e358c9f2622eca46086c41a07b272549d2b95cfffd700c119923ebf8"
+    }
+  ],
+  "source_hashes": {
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_raster_trainer.py": "163a78a3e2c966894c74a9f2b4688c92e40f7dc13b8a802926d8c4238e6c218f",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\train_multiscale.py": "f497ab4b569b4061d2cb3de59ffabbbc3b3f842a6a179c31b48267f5fb852c0b",
+    "C:\\dev\\SyntheticPlantGeneration\\scripts\\multiscale_native_augmentation.py": "331cf22a0b7d026785bf8e70d5d69d0996543db9fda594861e673580a73472eb",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\protocol.json": "85c8e31ceb103be9d5aa4ff07a8ac9c1f8b2854f847522a6739dd2bbc5868149",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\dataset\\raster_manifest.json": "2f38aec78c7c92b02b8dda812521a558d987a7d9938207b064c32d4bacc19426",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\patches\\dataset\\raster_manifest.json": "cade87fc69ec750cd69e147dc3163997aa65d56b7d08615f69c0c6609c1d7e76",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\multiscale_dataset_20261020\\native_augmentation_integration_check.json": "4c585f90f20a047b996f44f80436c2cdb3ef1ddba741d390cb3ab466f38feb0b",
+    "C:\\dev\\SyntheticPlantGeneration\\outputs\\frozen_field_pilot_20261019\\training_runs\\training\\weights\\last.pt": "79c3dad74e7cf9caab3c82a3e37ea72235352568d7dfacbd5c9e8284cb190073"
+  }
+}

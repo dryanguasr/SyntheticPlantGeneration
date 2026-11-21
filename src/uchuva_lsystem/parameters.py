@@ -10,7 +10,7 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any
 
-from .provenance import normalise_parameter_provenance
+from .provenance import normalise_parameter_provenance, override_parameter
 
 
 INITIAL_PARAMETER_PRESET: dict[str, Any] = {
@@ -585,11 +585,259 @@ def get_initial_parameters() -> dict[str, Any]:
 
 def get_morphology_parameters(name: str) -> dict[str, Any]:
     """Return one morphology preset with additive canonical provenance."""
+    if name == "trained_trellis_nodal_repulsion_v8":
+        parameters = get_morphology_parameters("trained_trellis_pendulous_audit_v7")
+        parameters['preset_name'] = name
+        parameters['growth']['nodal_repulsion'] = {
+            'value':'bottom_up_lower_first_v1', 'status':'engineering_heuristic',
+            'sweeps':6, 'step_deg':6., 'max_active_seconds':600., 'proxy_margin_bu':.003,
+            'branch_rotation_limit_deg':35., 'leaf_rotation_limit_deg':120., 'pedicel_rotation_limit_deg':75.,
+            'mesh_main_axis_rotation_limit_deg':35.,
+            'priority':['lower','raise','lateral'],
+            'note':'Nodal pose changes only; immutable topology, dimensions, class and pendulous capacho axis. Proxy convergence does not certify meshes. Numerical priors are unmeasured.'}
+        return normalise_parameter_provenance(parameters)
+    if name == "trained_trellis_pendulous_audit_v7":
+        parameters = _audit_lower_crown_parameters()
+        parameters["preset_name"] = name
+        parameters["reproduction"]["organ_orientation"] = {
+            "value": "gravity_pendulous_v1", "status": "engineering_heuristic",
+            "inclination_from_down_deg_range": [0., 25.], "mode_deg": 8.,
+            "note": "Local review requests predominantly downward capachos. Separate gravity-referenced organ axis from axillary pedicel; numerical cone is unmeasured, not a botanical norm.",
+        }
+        return normalise_parameter_provenance(parameters)
+    if name == "trained_trellis_lower_crown_audit_v6":
+        return _audit_lower_crown_parameters()
+    if name == "trained_trellis_broad_crown_audit_v5":
+        return _audit_broad_crown_parameters()
+    if name == "trained_trellis_bush_pose_audit_v4":
+        return _audit_bush_pose_parameters()
+    if name == "trained_trellis_bush_audit_v3":
+        return _audit_bush_parameters()
+    if name == "trained_trellis_audit_v2":
+        return _audit_trellis_parameters()
     if name not in MORPHOLOGY_PRESET_OVERRIDES:
         raise ValueError(f"Unknown morphology preset: {name}")
     parameters = deepcopy(INITIAL_PARAMETER_PRESET)
     _deep_update(parameters, deepcopy(MORPHOLOGY_PRESET_OVERRIDES[name]))
     return normalise_parameter_provenance(parameters)
+
+
+def _audit_trellis_parameters() -> dict[str, Any]:
+    """Versioned, image-independent plant policy; ranges are not field facts."""
+    parameters = get_morphology_parameters("trained_trellis")
+    parameters["preset_name"] = "trained_trellis_audit_v2"
+    parameters["morphology_contract_version"] = "audit-morphology/2"
+    # Adult development hypothesis reused from the existing sparse-crown
+    # preset. This is fixed before camera planning, not a visible-fruit quota.
+    adult_method = "adult_stage_budget_reused_from_sparse_overhead_dense_crown_v2"
+    override_parameter(parameters["axis"]["main_node_count"], value=16,
+                       status="engineering_heuristic", method=adult_method)
+    override_parameter(parameters["growth"]["max_internodes_by_order"]["0"], value=16,
+                       status="engineering_heuristic", method=adult_method)
+    override_parameter(parameters["growth"]["length_budget_cm_by_order"]["0"], min=78.0, max=92.0,
+                       status="engineering_heuristic", method=adult_method)
+    parameters["reproduction"]["load_policy"] = {
+        "value": "architecture_driven", "status": "implementation_constraint",
+        "note": "Nodal sites and development determine load, independently of camera targets.",
+    }
+    parameters["reproduction"]["target_reproductive_units_range"]["active"] = False
+    parameters["reproduction"]["target_reproductive_units_range"]["note"] = (
+        "Inactive historical compatibility value; not a plant minimum/maximum."
+    )
+    radii = parameters["internode"]["radius_cm_by_order"]
+    # Extrapolate each bound from the previous reduction. This is an explicit
+    # engineering prior, not a newly asserted anatomical measurement.
+    radii["3"] = {
+        key: radii["2"][key] * radii["2"][key] / radii["1"][key]
+        for key in ("min", "max")
+    }
+    radii["3"].update(
+        status="engineering_heuristic",
+        note="Order-3 bound = order-2 bound * (order-2 bound / order-1 bound).",
+    )
+    parameters["internode"]["radius_policy"] = {
+        "value": "complete_order_table_with_parent_insertion_continuity",
+        "status": "implementation_constraint",
+    }
+    # Preset overrides had inherited evidence from the base parameter record.
+    # Record the effective trained range as a local hypothesis instead.
+    petiole = parameters["leaf"]["petiole_length_cm_range"]
+    override_parameter(
+        petiole, min=petiole["min"], max=petiole["max"],
+        status="manual_initial_guess",
+        method="trained_trellis_override_reclassified_by_audit_20261026",
+    )
+    return normalise_parameter_provenance(parameters)
+
+
+def _audit_bush_parameters() -> dict[str, Any]:
+    """Adult lateral development hypothesis after round-01 human rejection.
+
+    The earlier preset extended only the main axis; its short 3--5-node
+    laterals retained a juvenile-looking apical crown. This version adds nodal
+    development on the same botanical grammar. None of these engineering
+    ranges is an inferred field measurement, a visible-fruit target, or a
+    camera-conditioned density. Dimensions of individual organs are inherited.
+    """
+    parameters = _audit_trellis_parameters()
+    parameters["preset_name"] = "trained_trellis_bush_audit_v3"
+    parameters["architecture_profile_version"] = "adult-bush-development/3"
+    method = "adult_nodal_development_hypothesis_after_round01_human_rejection"
+    override_parameter(parameters["axis"]["main_node_count"], value=20,
+                       status="engineering_heuristic", method=method)
+    override_parameter(parameters["axis"]["branch_node_count_range"], min=6, max=8,
+                       status="engineering_heuristic", method=method)
+    for order, bounds, cap in (
+        ("0", (100.0, 116.0), 20),
+        ("1", (28.0, 44.0), 8),
+        ("2", (18.0, 30.0), 7),
+        ("3", (10.0, 19.0), 5),
+    ):
+        override_parameter(parameters["growth"]["length_budget_cm_by_order"][order],
+                           min=bounds[0], max=bounds[1], status="engineering_heuristic", method=method)
+        override_parameter(parameters["growth"]["max_internodes_by_order"][order],
+                           value=cap, status="engineering_heuristic", method=method)
+    parameters["architecture_review"] = {
+        "status": "engineering_heuristic",
+        "basis": "human rejection of round-01 architecture; qualitative real-training context only",
+        "development_stage": "adult_branching_hypothesis_pending_visual_and_mesh_validation",
+        "branching_policy": "existing nodal axillary decisions and order probabilities unchanged",
+        "first_bifurcation_policy": "existing literature-bounded 8--12-node cohort sample unchanged",
+        "organ_dimensions": "unchanged from trained_trellis_audit_v2; additional nodes are not larger organs",
+        "reproductive_load": "emergent from nodal decisions, never a global minimum or maximum",
+        "camera_dependency": "none",
+        "uncertainty": "Training photographs do not establish whole-plant node, leaf or fruit counts.",
+    }
+    return normalise_parameter_provenance(parameters)
+
+
+def _audit_bush_pose_parameters() -> dict[str, Any]:
+    """Opt-in pose diagnostic, preserving v3 organ sizes and nodal decisions.
+
+    A low-elevation view exposed a predominantly horizontal blade population.
+    The wider insertion range is a camera-independent hypothesis for leaf
+    posture, not a distribution measured from photographs or a visibility
+    quota. The orthogonal frame enforces the stated angle to the local axis.
+    """
+    parameters = _audit_bush_parameters()
+    parameters["preset_name"] = "trained_trellis_bush_pose_audit_v4"
+    parameters["leaf_pose_profile_version"] = "orthogonal-leaf-posture/4"
+    parameters["leaf"]["insertion_angle_deg_range"] = {
+        "min": 30.0, "max": 80.0, "status": "engineering_heuristic",
+        "note": "Unmeasured posture hypothesis after round-02 edge-on leaf diagnosis; no camera input.",
+    }
+    parameters["leaf"]["insertion_frame"] = {
+        "value": "orthogonal_local_v1", "status": "implementation_constraint",
+        "note": "Leaf angle is relative to the local stem tangent, using the shared existing frame.",
+    }
+    parameters["leaf_pose_review"] = {
+        "status": "engineering_heuristic",
+        "observation": "Round-02 plant 00 has 145 leaves; 83.2% of lateral leaf AABBs have Z extent below one quarter of their maximum XY extent.",
+        "limitations": "AABB ratios describe evaluated orientation, not visible leaf area, physical collision or biological correctness.",
+        "scope": "Leaf insertion angle and frame only; no larger organs, additional organs or camera-conditioned rotations.",
+        "human_validation": "pending_structural_preview",
+    }
+    return normalise_parameter_provenance(parameters)
+
+
+def _audit_broad_crown_parameters() -> dict[str, Any]:
+    """Adult crown hypothesis; lateral development is not an image quota.
+
+    The v4 axes remained short and the length of every lateral blade was
+    reduced both by order and by axis vigor. V5 separates mature blade size
+    from the axis resource proxy and develops longer nodal lateral modules.
+    Its dimensions require local biological and evaluated-mesh validation.
+    """
+    parameters = _audit_bush_pose_parameters()
+    parameters["preset_name"] = "trained_trellis_broad_crown_audit_v5"
+    parameters["architecture_profile_version"] = "adult-broad-crown/5"
+    method = "adult_lateral_crown_hypothesis_after_v4_human_rejection"
+    override_parameter(parameters["axis"]["branch_node_count_range"], min=10, max=14,
+                       status="engineering_heuristic", method=method)
+    for order, bounds, cap in (
+        ("1", (52.0, 78.0), 14),
+        ("2", (32.0, 48.0), 10),
+        ("3", (18.0, 30.0), 7),
+    ):
+        override_parameter(parameters["growth"]["length_budget_cm_by_order"][order],
+                           min=bounds[0], max=bounds[1], status="engineering_heuristic", method=method)
+        override_parameter(parameters["growth"]["max_internodes_by_order"][order],
+                           value=cap, status="engineering_heuristic", method=method)
+    for order, value in (("0",1.0),("1",.98),("2",.95),("3",.90)):
+        override_parameter(parameters["growth"]["leaf_length_scale_by_order"][order], value=value,
+                           status="engineering_heuristic", method="adult_blade_development_not_axis_resource_proxy")
+    parameters["growth"]["leaf_vigor_scaling"] = {
+        "value": "adult_independent", "status": "engineering_heuristic",
+        "note": "Remove the additional axis-vigor shrinkage of adult blades; retain the base 4.6--9.2 cm range and declared order factors.",
+    }
+    parameters["branching"]["frame"] = {
+        "value": "local_cone_v1", "status": "implementation_constraint",
+        "note": "Existing branch_direction_3d shared by Blender and collision proxies.",
+    }
+    angle_table = {}
+    for order, low, high in (("1",52.,78.),("2",30.,65.),("3",20.,55.)):
+        angle_table[order] = deepcopy(parameters["branching"]["branch_angle_deg_range"])
+        override_parameter(angle_table[order], min=low, max=high, status="engineering_heuristic",
+                           method="adult_lateral_opening_by_child_order_local_cone")
+    parameters["branching"]["branch_angle_deg_by_order"] = angle_table
+    override_parameter(parameters["leaf"]["insertion_frame"], value="local_cone_v2",
+                       status="implementation_constraint", method="full_local_cone_without_horizontal_axis_azimuth_collapse")
+    parameters["leaf_pose_profile_version"] = "full-local-cone-leaf-posture/5"
+    parameters["broad_crown_review"] = {
+        "status": "engineering_heuristic",
+        "basis": "human rejection of thin v4 crown and qualitative real-training shrub structure",
+        "main_axis": "unchanged from v4; wider crown comes from longer lateral development",
+        "adult_blades": "same base range; no duplicate leaves, global scaling or camera-conditioned dimensions",
+        "reproductive_load": "emergent nodal outcome, not a selected minimum, maximum or target",
+        "validation": "pending human structural preview and evaluated-mesh audit",
+        "uncertainty": "Photographs cannot identify whole-plant organ counts or supply calibrated physical dimensions.",
+    }
+    return normalise_parameter_provenance(parameters)
+
+
+def _audit_lower_crown_parameters() -> dict[str, Any]:
+    """Separate adult vegetative laterals from the reproductive landmark.
+
+    Node three is an explicit engineering hypothesis, not a measured onset.
+    It enables existing axillary buds; it neither guarantees a branch nor
+    changes branching probabilities, organ dimensions or reproductive load.
+    """
+    parameters = _audit_broad_crown_parameters()
+    parameters["preset_name"] = "trained_trellis_lower_crown_audit_v6"
+    parameters["architecture_profile_version"] = "independent-vegetative-lower-crown/6"
+    parameters["branching"]["activation_policy"] = {
+        "value": "vegetative_onset_independent_v1",
+        "status": "engineering_heuristic",
+        "note": "Do not use the cohort first-bifurcation landmark as a prohibition on every adult vegetative axillary branch.",
+    }
+    parameters["branching"]["vegetative_first_main_node"] = {
+        "value": 3, "status": "engineering_heuristic",
+        "note": "One-based first eligible main-axis node; stochastic branching still applies, so this is not a required branch or crown-density target.",
+    }
+    parameters["lower_crown_review"] = {
+        "status": "engineering_heuristic",
+        "basis": "human review of v5 requested lower adult foliage; v5 delayed all primary laterals to nodes 8--12",
+        "reproductive_landmark": "Retain the existing cohort sample for main-axis reproductive eligibility; interpreting it independently of vegetative lateral onset is a modelling hypothesis, not a new bibliographic claim.",
+        "unchanged": "v5 probabilities, nodal and length budgets, organ dimensions, leaf posture and architecture-driven reproductive load",
+        "uncertainty": "Node-three vegetative eligibility requires local architectural measurement; no guarantee of a branch at that node or fixed reproductive count.",
+        "validation": "pending fixed-camera visual review and evaluated-mesh contact audit",
+    }
+    return normalise_parameter_provenance(parameters)
+
+
+def leaf_length_factor(params: dict[str, Any], order: int, axis_vigor: float) -> float:
+    """Shared generation/validation factor; old presets retain exact behavior."""
+    growth = params.get("growth", {})
+    if growth.get("mode", {}).get("value") != "incremental_budgeted":
+        return 1.0
+    factor = float(growth.get("leaf_length_scale_by_order", {})
+                   .get(str(order), {"value":.74}).get("value",1.0))
+    policy = growth.get("leaf_vigor_scaling", {}).get("value", "legacy_axis_vigor")
+    if policy == "legacy_axis_vigor":
+        return factor * max(.72, min(1.04, axis_vigor))
+    if policy == "adult_independent":
+        return factor
+    raise ValueError(f"Unknown leaf vigor scaling policy: {policy}")
 
 
 def get_phenology_profile(name: str) -> dict[str, Any]:
