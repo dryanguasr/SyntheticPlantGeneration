@@ -17,6 +17,11 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Guías operativas
 
+- [Generador actual y contrato Gazebo](guides/generador_actual_y_contrato_gazebo.md).
+- [Piloto de uchuvas desmontables](guides/piloto_cosecha_desmontable.md) y
+  [ciclos auditados en Gazebo Harmonic](reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md).
+- [Auditoría ciega de segmentación](guides/auditoria_ciega_segmentacion.md) y
+  [manual para estudiantes](guides/manual_estudiantes_revision_cruzada.pdf).
 - [Video del DJI Neo en Android y PC](guides/video_dron_pc_rtmp.md): recepción
   RTMP, servidor local, red del teléfono emisor y exportación de videos y datos.
 
@@ -74,6 +79,8 @@ Consulte:
 
 ## Reportes con fecha de corte
 
+- [Implementación del piloto de cosecha desmontable](reports/piloto_cosecha_desmontable_2026-10-30.md):
+  auditoría del generador, código implementado, comprobaciones puras y aceptación nativa pendiente.
 - [RTMP Android y aplicación PC](reports/video_rtmp_android_pc_2026-09-11.md):
   pruebas de transmisión local, referencias multipunto y paquetes 0.3.0.
 

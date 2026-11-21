@@ -30,7 +30,7 @@ Parámetros y reglas morfológicas
 | --- | --- | --- |
 | Morfología procedural | [`src/uchuva_lsystem/`](src/uchuva_lsystem/) | Pipeline implementado; fidelidad botánica y transferencia por validar |
 | Aumentación de datos | [`src/uchuva_classical_augmentation/`](src/uchuva_classical_augmentation/) | Baselines y protocolo confirmatorio reproducible |
-| Interpretación robótica | [`src/uchuva_gazebo/`](src/uchuva_gazebo/) | Escenas de percepción; la física de cosecha sigue pendiente |
+| Interpretación robótica | [`src/uchuva_gazebo/`](src/uchuva_gazebo/) | Escenas de percepción y piloto de cosecha desmontable con ciclos auditados en un escenario rígido de Gazebo y posiciones conocidas |
 
 ## Hallazgo experimental que conviene conocer
 
@@ -46,6 +46,13 @@ PYTHONPATH=src python scripts/generate_morphology_tree.py --seed 1
 ```
 
 Los flujos de Blender, Gazebo y evaluación ML requieren dependencias y activos específicos. Ver [scripts](scripts/README.md), [generación de escenas](docs/guides/campo_gazebo.md) y [guía de revisión de resultados](docs/guides/revision_resultados_aumento_clasico_v2.md).
+
+## Guías y evidencias por flujo
+
+- **Generación espacial de uchuva.** [Generador y contrato de exportación a Gazebo](docs/guides/generador_actual_y_contrato_gazebo.md) y [resultados de la campaña de admisión espacial](docs/reports/plantas_admision_espacial_8h_2026-10-29.md).
+- **Cosecha robótica simulada.** [Guía del piloto de cosecha desmontable](docs/guides/piloto_cosecha_desmontable.md) y [validación en Gazebo Harmonic](docs/reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md).
+- **Revisión cruzada de máscaras.** [Aplicación y protocolo de revisión](docs/guides/auditoria_ciega_segmentacion.md) y [manual ilustrado para estudiantes](docs/guides/manual_estudiantes_revision_cruzada.pdf).
+- **Auditoría histórica.** [Revisión independiente del generador y de Gazebo sobre la versión `74b43d2`](docs/reports/auditoria_generacion_sintetica_2026-10-25.md).
 
 ## Alcance honesto
 

@@ -1882,15 +1882,18 @@
       "label": "Dataset original inmutable",
       "summary": "Dataset Original es una referencia inmutable y toda comparacion debe operar en modo de solo lectura.",
       "paths": [
-        "Dataset Original",
-        "README.md"
+        "README_TECHNICAL.md"
       ],
       "evidence": [
         {
-          "path": "README.md",
+          "path": "README_TECHNICAL.md",
           "locator": "`Dataset Original/` es de solo lectura"
         }
-      ]
+      ],
+      "local_input_paths": [
+        "Dataset Original"
+      ],
+      "local_input_availability": "optional_private_directory_not_versioned"
     },
     {
       "id": "constraint.closed_calyx_hidden_fruit",
@@ -2811,6 +2814,73 @@
         {
           "path": "tests/test_cross_review.py",
           "locator": "def test_distribution_adds_manual_and_excludes_sidecars("
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.harvest_pilot",
+      "type": "entrypoint",
+      "label": "Piloto de uchuva desmontable con carro 4WD y brazo de cinco GDL",
+      "summary": "Piloto rigido con robot modular, corte y retencion ideal por plugin Harmonic y auditor de evidencia. Conserva el perfil historico de seis frutos y permite arboles v8 admitidos mediante catalogos de poses, unidades explicitas, visuales detallados y colisiones prismaticas conservadoras agrupadas. Compilacion, contacto y cosecha nativos se documentan por configuracion y experimento, separados de las pruebas puras; sin percepcion autonoma ni fisica medida.",
+      "paths": [
+        "src/uchuva_gazebo/harvest_plants.py",
+        "src/uchuva_gazebo/harvest_visuals.py",
+        "src/uchuva_gazebo/harvest_collision_mesh.py",
+        "src/uchuva_gazebo/harvester_robot.py",
+        "src/uchuva_gazebo/harvest_pilot.py",
+        "src/uchuva_gazebo/harvest_validation.py",
+        "gazebo/harvest_system/HarvestSystem.cc",
+        "gazebo/harvest_system/CMakeLists.txt",
+        "configs/harvest_pilot_v1.json",
+        "configs/harvest_pilot_v8.json",
+        "configs/harvest_pilot_gui.config",
+        "scripts/prepare_harvest_pilot.py",
+        "scripts/export_admitted_harvest_sources.py",
+        "scripts/screen_admitted_harvest_targets.py",
+        "scripts/build_harvest_plugin.sh",
+        "scripts/run_harvest_pilot.py",
+        "scripts/audit_harvest_pilot.py",
+        "tests/test_harvest_plants.py",
+        "tests/test_harvest_visuals.py",
+        "tests/test_harvest_collision_mesh.py",
+        "tests/test_harvester_robot.py",
+        "tests/test_harvest_pilot.py",
+        "tests/test_harvest_validation.py",
+        "docs/guides/piloto_cosecha_desmontable.md",
+        "docs/reports/piloto_cosecha_desmontable_2026-10-30.md",
+        "docs/reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md",
+        "src/uchuva_gazebo/harvest_clearance.py",
+        "tests/test_harvest_clearance.py",
+        "tests/test_harvest_runtime_contract.py"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/harvest_plants.py",
+          "locator": "def build_harvest_plants"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_plants.py",
+          "locator": "def _load_catalog_plant"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_visuals.py",
+          "locator": "def detailed_leaf_mesh"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_collision_mesh.py",
+          "locator": "def build_collision_prisms"
+        },
+        {
+          "path": "gazebo/harvest_system/HarvestSystem.cc",
+          "locator": "class HarvestSystem"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_validation.py",
+          "locator": "def evaluate_harvest_run"
+        },
+        {
+          "path": "src/uchuva_gazebo/harvest_clearance.py",
+          "locator": "def plan_harvest_motion"
         }
       ]
     }
@@ -5717,6 +5787,28 @@
         {
           "path": "docs/reports/dataset_cultivo_admitido_2026-10-29.md",
           "locator": "## Resultado verificado"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.harvest_pilot",
+      "relation": "depends_on",
+      "target": "module.collisions",
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/harvest_plants.py",
+          "locator": "from uchuva_lsystem.collisions import CollisionProxy, build_scene_proxies"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.harvest_pilot",
+      "relation": "must_preserve",
+      "target": "constraint.morphological_attachment",
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/harvest_plants.py",
+          "locator": "pedicel_id"
         }
       ]
     }

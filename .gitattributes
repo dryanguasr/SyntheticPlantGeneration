@@ -2,6 +2,7 @@
 
 # Source and documentation use stable LF endings across platforms.
 *.py text eol=lf
+*.sh text eol=lf
 *.md text eol=lf whitespace=-trailing-space,-blank-at-eof
 *.json text eol=lf
 *.jsonl text eol=lf
