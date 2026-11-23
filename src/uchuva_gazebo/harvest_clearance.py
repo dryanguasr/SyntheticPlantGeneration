@@ -374,8 +374,17 @@ def plan_harvest_motion(bundle, robot_config=None, *, samples_per_segment=81,
     depend on a lucky harvest order. ``targets`` is keyed by reproductive ID.
     Base travel and deposit are separate runtime stages, outside this local
     joint-path screen. No plant, fruit or robot geometry is changed.
+    Resolved profiles use their explicit base height, common carry joints and
+    optional candidate base poses; legacy Cartesian carry applies to proxy.
     """
     c = robot_config or HarvesterConfig()
+    if hasattr(c, 'world_shapes'):
+        from .robot_harvest_planning import plan_resolved_harvest
+        result = plan_resolved_harvest(bundle, c, samples=samples_per_segment,
+            clearance_m=clearance_m, pickup_standoff_m=pickup_standoff_m)
+        if not result['audit']['passed']:
+            raise ValueError(f"No safe resolved approach/extraction: {result}")
+        return result
     if not math.isfinite(clearance_m) or clearance_m <= 0:
         raise ValueError("clearance_m must be positive and finite")
     if not math.isfinite(pickup_standoff_m) or pickup_standoff_m <= .12:
@@ -390,18 +399,11 @@ def plan_harvest_motion(bundle, robot_config=None, *, samples_per_segment=81,
     targets = {}
     for fruit in fruit_specs:
         c = robot_config or HarvesterConfig()
-        if hasattr(c, 'world_shapes') and c.task.get('target_direction_source') == 'pedicel_axis':
-            axis = _sub(fruit['pedicel_end_world_m'], fruit['pedicel_start_world_m'])
-            c = c.for_direction(axis)
         cut = fruit["cut_point_world_m"]
         base = [cut[0] - pickup_standoff_m, cut[1], 0.0, 0.0]
         local_points = {"carry": list(carry), "preapproach": [pickup_standoff_m - .10, 0.0, cut[2] + .10], "cut": [pickup_standoff_m, 0.0, cut[2]]}
         joints = {name: list(inverse_kinematics(point, config=c)) for name, point in local_points.items()}
         held_fruit = fruit
-        if hasattr(c, 'world_shapes'):
-            from .robot_kinematics import inverse_pose, transform_point
-            _, cut_pose = c.world_shapes(joints['cut'], base)
-            held_fruit = {**fruit, 'held_offset_in_tool_m': transform_point(inverse_pose(cut_pose), fruit['center_world_m'])}
         approach = []
         for a, b in (("carry", "preapproach"), ("preapproach", "cut")):
             result = audit_joint_segment(joints[a], joints[b], base, cylinders, fruit_specs, config=c, samples=samples_per_segment, clearance_m=clearance_m)
@@ -444,8 +446,6 @@ def plan_harvest_motion(bundle, robot_config=None, *, samples_per_segment=81,
                       "minimum_held_clearance_m": min(item["minimum_held_clearance_m"] for item in extraction),
                       "minimum_held_robot_clearance_m": min(item["minimum_held_robot_clearance_m"] for item in extraction)},
         }
-        if hasattr(c, 'world_shapes'):
-            targets[fruit['id']]['cut_axis_world'] = c.direction
     report = {"targets": targets, "audit": {
         "schema_version": VERSION, "passed": True, "target_count": len(targets),
         "rigid_cylinder_count": len(cylinders), "clearance_threshold_m": clearance_m,
@@ -457,14 +457,4 @@ def plan_harvest_motion(bundle, robot_config=None, *, samples_per_segment=81,
                         "Leaves and unselected fruit visual meshes are not colliders",
                         "Base travel, bin contact and robot self-contact require native validation",
                         "Proxy robot collision dimensions only; replace this adapter with the final robot"]}}
-    if hasattr(c, 'world_shapes'):
-        report['audit'].update({
-            'robot_spec_sha256': c.robot.sha256,
-            'method': 'sampled_shared_fk_individual_conservative_obb_full_orientation_and_self_pair_sat',
-            'limitations': ['No continuous collision guarantee or dynamic tracking-error allowance',
-                'Each sphere/cylinder uses its own enclosing OBB; conservative rejection is possible',
-                'Declared collision exclusions only; never a union box across separate fingers',
-                'Leaves and unselected fruit visual meshes are not colliders',
-                'Base travel, bin contact, suspension response and dynamic contact require native validation'],
-        })
     return report

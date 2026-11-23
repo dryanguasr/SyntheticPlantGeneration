@@ -21,6 +21,8 @@ función, no por orden de creación. La única excepción deliberada es
   [exportación nativa de Inventor](guides/exportacion_cad_inventor_robot.md).
 - [Informe del cosechador CAD](reports/robot_cosechador_parametrico_2026-11-23.md):
   modelo extraído, pruebas nativas, fallos y aceptación pendiente.
+- [Mecanismos cerrados CAD](guides/mecanismos_cerrados_cad_gazebo.md) e
+  [interferencias y continuación de pruebas](reports/robot_cosechador_mecanismos_2026-11-23.md).
 - [Generador actual y contrato Gazebo](guides/generador_actual_y_contrato_gazebo.md).
 - [Piloto de uchuvas desmontables](guides/piloto_cosecha_desmontable.md) y
   [ciclos auditados en Gazebo Harmonic](reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md).

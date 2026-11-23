@@ -1,0 +1,366 @@
+{
+  "schema_version": "cad-v8-acceptance-lock/1.0",
+  "date": "2026-11-23",
+  "previous_head": "03c11c1",
+  "instruction": "Correct model/control; do not move plants/targets or expand acceptance tolerances. Preserve failed attempts.",
+  "plants": {
+    "seeds": [
+      2026102702,
+      2026102703,
+      2026102708
+    ],
+    "positions_m": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        2,
+        0
+      ],
+      [
+        0,
+        4,
+        0
+      ]
+    ],
+    "rotations_deg": [
+      0,
+      0,
+      0
+    ],
+    "preset": "trained_trellis_nodal_repulsion_v8",
+    "phenology_model": "literature_cohort_v1",
+    "morphology_files": [
+      "outputs/harvest_v8_sources/seed_2026102702/plant.json",
+      "outputs/harvest_v8_sources/seed_2026102703/plant.json",
+      "outputs/harvest_v8_sources/seed_2026102708/plant.json"
+    ],
+    "proxy_catalog_files": [
+      "outputs/harvest_v8_sources/seed_2026102702/proxy_catalog.json",
+      "outputs/harvest_v8_sources/seed_2026102703/proxy_catalog.json",
+      "outputs/harvest_v8_sources/seed_2026102708/proxy_catalog.json"
+    ],
+    "source_units_per_metre": 10,
+    "collision_representation": "batched_conservative_prisms",
+    "minimum_target_height_m": 0.45,
+    "maximum_target_height_m": 0.9,
+    "clearance_m": 0.005,
+    "max_dynamic_fruits_per_plant": 1,
+    "target_ids": [
+      "plant_000:axis_0_0_branch_6_branch_2_branch_0_node_3_reproductive_unit",
+      "plant_001:axis_0_0_branch_10_branch_5_branch_0_node_3_reproductive_unit",
+      "plant_002:axis_0_0_branch_5_branch_8_branch_1_node_1_reproductive_unit"
+    ]
+  },
+  "files_sha256": {
+    "outputs/harvest_v8_sources/seed_2026102702/plant.json": "f8b2803a840c2477cd7ac02b8beced1bd1ad0757fe07d583e7d0dd2a32d1c86c",
+    "outputs/harvest_v8_sources/seed_2026102703/plant.json": "1605618070906c1d0bf3eb6f07381cbf149863ea121a768450814ae78fb64df7",
+    "outputs/harvest_v8_sources/seed_2026102708/plant.json": "ed771296e7bb0ceeab11e58c850516997922061b01f401e5199d5079b99573eb",
+    "outputs/harvest_v8_sources/seed_2026102702/proxy_catalog.json": "88182dc8c64b4a44926cffdaa73cccd548ee53f2560ad2cbfd8bbbf3ff258ba7",
+    "outputs/harvest_v8_sources/seed_2026102703/proxy_catalog.json": "d0ccd9884b6e90d75c066e22ec21c52370840a540a3ec81cef31d120c7be5a36",
+    "outputs/harvest_v8_sources/seed_2026102708/proxy_catalog.json": "ffb70f2af47c2738d578766409ca5eb76874d7d62b1d5c84d785cd09a4966fd4"
+  },
+  "interaction": {
+    "command_topic": "/harvest/command",
+    "state_topic": "/harvest/state",
+    "event_topic": "/harvest/events",
+    "cut_tolerance": 0.02,
+    "capture_radius": 0.12,
+    "max_relative_speed": 0.12,
+    "stable_time": 0.2,
+    "startup_timeout": 5,
+    "attachment_tolerance": 0.01
+  },
+  "motion_clearance_m": 0.004,
+  "joint_margin_rad": 0.025,
+  "fk": {
+    "schema_version": "native-fk-probe/1.0",
+    "cases": [
+      {
+        "name": "zero",
+        "target": {
+          "arm_yaw_joint": 0.0,
+          "arm_shoulder_joint": 0.0,
+          "arm_elbow_joint": 0.0,
+          "wrist_pitch_joint": 0.0,
+          "wrist_roll_joint": 0.0,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "arm_yaw_joint_positive",
+        "target": {
+          "arm_yaw_joint": 0.1,
+          "arm_shoulder_joint": 0.0,
+          "arm_elbow_joint": 0.0,
+          "wrist_pitch_joint": 0.0,
+          "wrist_roll_joint": 0.0,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "arm_yaw_joint_negative",
+        "target": {
+          "arm_yaw_joint": -0.1,
+          "arm_shoulder_joint": 0.0,
+          "arm_elbow_joint": 0.0,
+          "wrist_pitch_joint": 0.0,
+          "wrist_roll_joint": 0.0,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "arm_shoulder_joint_positive",
+        "target": {
+          "arm_yaw_joint": 0.0,
+          "arm_shoulder_joint": 0.1,
+          "arm_elbow_joint": 0.0,
+          "wrist_pitch_joint": 0.0,
+          "wrist_roll_joint": 0.0,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "arm_shoulder_joint_negative",
+        "target": {
+          "arm_yaw_joint": 0.0,
+          "arm_shoulder_joint": -0.1,
+          "arm_elbow_joint": 0.0,
+          "wrist_pitch_joint": 0.0,
+          "wrist_roll_joint": 0.0,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "arm_elbow_joint_positive",
+        "target": {
+          "arm_yaw_joint": 0.0,
+          "arm_shoulder_joint": 0.0,
+          "arm_elbow_joint": 0.1,
+          "wrist_pitch_joint": 0.0,
+          "wrist_roll_joint": 0.0,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "arm_elbow_joint_negative",
+        "target": {
+          "arm_yaw_joint": 0.0,
+          "arm_shoulder_joint": 0.0,
+          "arm_elbow_joint": -0.1,
+          "wrist_pitch_joint": 0.0,
+          "wrist_roll_joint": 0.0,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "wrist_pitch_joint_positive",
+        "target": {
+          "arm_yaw_joint": 0.0,
+          "arm_shoulder_joint": 0.0,
+          "arm_elbow_joint": 0.0,
+          "wrist_pitch_joint": 0.1,
+          "wrist_roll_joint": 0.0,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "wrist_pitch_joint_negative",
+        "target": {
+          "arm_yaw_joint": 0.0,
+          "arm_shoulder_joint": 0.0,
+          "arm_elbow_joint": 0.0,
+          "wrist_pitch_joint": -0.1,
+          "wrist_roll_joint": 0.0,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "wrist_roll_joint_positive",
+        "target": {
+          "arm_yaw_joint": 0.0,
+          "arm_shoulder_joint": 0.0,
+          "arm_elbow_joint": 0.0,
+          "wrist_pitch_joint": 0.0,
+          "wrist_roll_joint": 0.1,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      },
+      {
+        "name": "wrist_roll_joint_negative",
+        "target": {
+          "arm_yaw_joint": 0.0,
+          "arm_shoulder_joint": 0.0,
+          "arm_elbow_joint": 0.0,
+          "wrist_pitch_joint": 0.0,
+          "wrist_roll_joint": -0.1,
+          "front_right_wheel_joint": 0.0,
+          "rear_right_wheel_joint": 0.0,
+          "rear_left_wheel_joint": 0.0,
+          "front_left_wheel_joint": 0.0
+        }
+      }
+    ],
+    "position_tolerance_m": 1e-05,
+    "orientation_tolerance_rad": 0.0001,
+    "target_tolerance_rad": 0.01,
+    "steady_velocity_tolerance_rad_s": 0.01,
+    "minimum_steady_samples": 20,
+    "minimum_steady_duration_s": 0.2,
+    "phase_sim_timeout_s": 12,
+    "phase_wall_timeout_s": 60,
+    "initial_wall_timeout_s": 20,
+    "max_step_size_s": 0.001,
+    "pose_publish_rate_hz": 100,
+    "matched_timestamp_tolerance_ns": 0,
+    "minimum_evaluated_samples_per_case": 20,
+    "continue_after_tracking_failure": true,
+    "base_start_xyz_yaw": [
+      0.3,
+      -0.2,
+      0.7,
+      0.35
+    ],
+    "pose_semantics": "PosePublisher Pose.header stamp; frame_id is model. JointStatePublisher Model.header stamp. Exact nanosecond join, no interpolation.",
+    "criterion": "All native links agree with FK(measured q) throughout each observed phase; additionally target reached and stable.",
+    "scope": "SDF/FK kinematic consistency only. Base fixed to world; zero gravity; all collisions and sensors removed. No hardware accuracy, self-collision, dynamics or harvest acceptance."
+  },
+  "mobility": {
+    "schema_version": "cad-mobility-protocol/1.0",
+    "scope": "Reduced diagnostic CAD only; suspension/gripper frozen and mounting provisional",
+    "native_harvest_eligible": false,
+    "pose_commands_used": false,
+    "dt_s": 0.001,
+    "duration_s": 15,
+    "start_xyzyaw": [
+      0,
+      0,
+      0.298218017078388,
+      0
+    ],
+    "ground_contact": {
+      "mu": 0.6,
+      "mu2": 0.6,
+      "status": "engineering_heuristic_diagnostic_environment"
+    },
+    "phases": [
+      {
+        "name": "settle",
+        "start_s": 0,
+        "end_s": 2,
+        "linear_m_s": 0,
+        "angular_rad_s": 0
+      },
+      {
+        "name": "static",
+        "start_s": 2,
+        "end_s": 4,
+        "linear_m_s": 0,
+        "angular_rad_s": 0
+      },
+      {
+        "name": "straight",
+        "start_s": 4,
+        "end_s": 8,
+        "linear_m_s": 0.05,
+        "angular_rad_s": 0
+      },
+      {
+        "name": "stop_after_straight",
+        "start_s": 8,
+        "end_s": 10,
+        "linear_m_s": 0,
+        "angular_rad_s": 0
+      },
+      {
+        "name": "turn",
+        "start_s": 10,
+        "end_s": 13,
+        "linear_m_s": 0,
+        "angular_rad_s": 0.2
+      },
+      {
+        "name": "stop_after_turn",
+        "start_s": 13,
+        "end_s": 15,
+        "linear_m_s": 0,
+        "angular_rad_s": 0
+      }
+    ],
+    "acceptance": {
+      "max_telemetry_gap_s": 0.05,
+      "joint_position_tolerance_rad": 0.01,
+      "joint_velocity_tolerance_rad_s": 0.03,
+      "effort_tolerance_nm": 1e-06,
+      "orientation_state_max_age_s": 0.025
+    },
+    "criteria": {
+      "minimum_observed_span_s": 14.8,
+      "maximum_tilt_rad": 0.25,
+      "maximum_static_xy_drift_m": 0.015,
+      "maximum_static_arm_error_rad": 0.035,
+      "minimum_straight_forward_m": 0.1,
+      "maximum_straight_lateral_m": 0.05,
+      "maximum_straight_yaw_rad": 0.15,
+      "minimum_turn_angle_rad": 0.25,
+      "maximum_stopped_linear_speed_m_s": 0.01,
+      "maximum_stopped_angular_speed_rad_s": 0.03,
+      "maximum_ground_penetration_m": 0.004,
+      "stop_tail_s": 0.5
+    },
+    "criteria_status": "engineering_heuristic_preregistered_before_native_run_not_measured_hardware_accuracy"
+  },
+  "suspension": {
+    "observe_from_s": 0.2,
+    "minimum_samples": 100,
+    "maximum_closure_residual_m": 0.001,
+    "decision": "Native closed loop must instantiate and observe all four moving joints and retain its lower-eye coincidence under gravity. Missing closure or rejected joints means FAIL, regardless of simulator exit code."
+  },
+  "gripper": {
+    "observe_from_s": 0.2,
+    "minimum_samples": 100,
+    "maximum_closure_residual_m": 0.0005,
+    "minimum_joint_excursion_rad": {
+      "drive_pivot": 0.02
+    },
+    "criteria_status": "Engineering fixture criteria declared before execution, not hardware accuracy",
+    "decision": "All four physical revolutes must be observed, drive excursion at least .02 rad, and closing pin residual at most .5 mm; native exit zero alone is insufficient."
+  },
+  "frozen_manifest": {
+    "path": "outputs/harvest_pilot_v8_c4_gui/manifest.json",
+    "sha256": "ad65106548f01cc5a389e2ca2f6c33a7c27811746cd895775ee3cacc819e4254"
+  }
+}

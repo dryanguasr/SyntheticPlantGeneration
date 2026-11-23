@@ -41,6 +41,34 @@ def _pose(x, y, z=0, yaw=0):
     return [x, y, z, 0, 0, math.sin(yaw / 2), math.cos(yaw / 2)]
 
 
+def _video_observer(world, settings):
+    """A collision-free experiment camera, never a claimed robot sensor."""
+    required = {'pose', 'width', 'height', 'fps', 'horizontal_fov_rad', 'topic'}
+    if set(settings) != required or len(settings['pose']) != 6 or any(
+            type(v) not in (int, float) or not math.isfinite(v) for v in settings['pose']):
+        raise ValueError('Invalid explicit native video observer configuration')
+    if any(type(settings[k]) is not int or settings[k] <= 0 for k in ('width', 'height', 'fps')):
+        raise ValueError('Native video resolution/rate must be positive integers')
+    if not 0 < settings['horizontal_fov_rad'] < math.pi or not settings['topic'].startswith('/'):
+        raise ValueError('Invalid video field of view or topic')
+    model = e(world, 'model', name='harvest_video_observer')
+    e(model, 'static', 'true')
+    e(model, 'pose', numbers(settings['pose']))
+    sensor = e(e(model, 'link', name='observer_link'), 'sensor', name='rgb', type='camera')
+    e(sensor, 'always_on', 'true')
+    e(sensor, 'update_rate', settings['fps'])
+    e(sensor, 'topic', settings['topic'])
+    camera = e(sensor, 'camera')
+    e(camera, 'horizontal_fov', settings['horizontal_fov_rad'])
+    image = e(camera, 'image')
+    for key in ('width', 'height'):
+        e(image, key, settings[key])
+    e(image, 'format', 'R8G8B8')
+    clip = e(camera, 'clip')
+    e(clip, 'near', .03)
+    e(clip, 'far', 50)
+
+
 def _bin(world, center):
     x, y = center
     # Small open tray. Each size and pose is a heuristic, not a measured design.
@@ -78,10 +106,19 @@ def plan_targets(plant_bundle, config, robot_config):
     Joint interpolation and Gazebo contacts still require native acceptance;
     an IK solution alone is never marked collision-free.
     """
-    carry = list(inverse_kinematics(config["carry_tcp_base_m"], config=robot_config))
+    resolved = hasattr(robot_config, 'world_shapes')
+    if resolved:
+        carry = list(robot_config.task.get('carry_joints_rad',
+            [robot_config.robot.data['arm_home_positions'][n] for n in robot_config.robot.joint_names]))
+        carry_point = robot_config.fk(carry)['position_m']
+    else:
+        carry = list(inverse_kinematics(config["carry_tcp_base_m"], config=robot_config))
+        carry_point = config['carry_tcp_base_m']
     deposit_base = config["deposit_base_xyyaw"]
     release = [*config["bin_center_xy_m"], config["deposit_tool_height_m"]]
     deposit_pose = _pose(deposit_base[0], deposit_base[1], yaw=deposit_base[2])
+    if resolved:
+        deposit_pose[2] = robot_config.task['planning_base_height_m']
     deposit_joints = list(inverse_kinematics(local_point(release, deposit_pose), config=robot_config))
     screened = plan_harvest_motion(plant_bundle, robot_config,
                                   carry_tcp_base_m=config['carry_tcp_base_m'],
@@ -98,7 +135,7 @@ def plan_targets(plant_bundle, config, robot_config):
                       "collision_and_dynamic_validation": "pending_gazebo"})
         if 'cut_axis_world' in target:
             plans[-1]['cut_axis_world'] = target['cut_axis_world']
-    return {"targets": plans, "carry_joints_rad": carry, "carry_tcp_base_m": config["carry_tcp_base_m"],
+    return {"targets": plans, "carry_joints_rad": carry, "carry_tcp_base_m": carry_point,
             "deposit_base_xyyaw": deposit_base, "deposit_tool_world_m": release,
             "deposit_nominal_joints_rad": deposit_joints, "aisle_x_m": config["aisle_x_m"],
             "deposit_via_y_m": config["bin_center_xy_m"][1] - .8,
@@ -143,9 +180,10 @@ def build_pilot(config):
         if c.get('robot'):
             raise ValueError('Use robot_overrides for a resolved profile; legacy robot fields cannot be mixed with it')
         resolved_robot = resolve_robot_profile(c['robot_profile'], c.get('robot_overrides'))
-        robot_config = ResolvedMotionConfig(resolved_robot, c.get('robot_task'))
+        robot_config = ResolvedMotionConfig(resolved_robot, c.get('robot_task'), asset_root=c.get('robot_asset_root'))
         contract = resolved_robot_contract(resolved_robot)
-        mesh_uris = [v['geometry']['uri'] for link in resolved_robot.links for v in link['visuals'] if v['geometry']['type'] == 'mesh']
+        mesh_uris = [v['geometry']['uri'] for link in resolved_robot.links
+                     for v in (*link['visuals'], *link['collisions']) if v['geometry']['type'] == 'mesh']
         if mesh_uris:
             from .robot_spec import verify_robot_assets
             if not c.get('robot_asset_root'):
@@ -167,14 +205,21 @@ def build_pilot(config):
     world = e(root, 'world', name=c['world_name'])
     e(world, 'gravity', '0 0 -9.81')
     physics = e(world, 'physics', name='default_physics', type='ignored')
-    e(physics, 'max_step_size', .001)
+    physics_spec = resolved_robot.to_dict().get('physics', {}) if resolved_robot else {}
+    e(physics, 'max_step_size', physics_spec.get('maximum_step_s', .001))
+    if physics_spec:
+        dart = e(physics, 'dart')
+        e(e(dart, 'solver'), 'solver_type', physics_spec['solver_type'])
+        e(dart, 'collision_detector', physics_spec.get('collision_detector', 'ode'))
     e(physics, 'real_time_factor', 1)
     for filename, name in (('physics', 'Physics'), ('user-commands', 'UserCommands'), ('scene-broadcaster', 'SceneBroadcaster')):
         e(world, 'plugin', filename=f'gz-sim-{filename}-system', name=f'gz::sim::systems::{name}')
     camera_enabled = (any(s['enabled'] and s['type'] in ('camera', 'depth_camera', 'lidar') for s in resolved_robot.data['sensors']) if resolved_robot else robot_config.camera)
-    if camera_enabled:
+    if camera_enabled or c.get('video_observer'):
         sensors = e(world, 'plugin', filename='gz-sim-sensors-system', name='gz::sim::systems::Sensors')
         e(sensors, 'render_engine', 'ogre2')
+    if c.get('video_observer'):
+        _video_observer(world, c['video_observer'])
     if resolved_robot and any(s['enabled'] and s['type'] == 'imu' for s in resolved_robot.data['sensors']):
         e(world, 'plugin', filename='gz-sim-imu-system', name='gz::sim::systems::Imu')
     scene = e(world, 'scene')
@@ -271,6 +316,8 @@ def build_pilot(config):
         plan['robot_spec_sha256'] = resolved_robot.sha256
         manifest['robot_assets_sha256'] = robot_asset_hashes
         manifest['limitations'][0] = 'Resolved robot topology; cutting/retention still uses an ideal logical attachment and is not a validated physical gripper.'
+    if c.get('video_observer'):
+        manifest['video_observer'] = c['video_observer']
     occupied = set(plants['meshes']) | set(soil_assets['meshes']) | set(plants.get('texture_assets', {})) | set(source_assets) | set(soil_assets['generated_binary_assets'])
     if occupied.intersection(robot_assets):
         raise ValueError('Robot asset URI collides with a plant/scene asset')
@@ -359,6 +406,12 @@ def load_verified_package(directory):
         # Hashes bind bytes; regenerating and comparing binds those bytes to
         # their declared robot semantics, including inertias and controllers.
         world = ET.parse(directory / manifest['world_file']).getroot().find('world')
+        physics_spec = robot.to_dict().get('physics')
+        if physics_spec:
+            if (float(world.findtext('physics/max_step_size', 'nan')) != physics_spec['maximum_step_s'] or
+                    world.findtext('physics/dart/solver/solver_type') != physics_spec['solver_type'] or
+                    world.findtext('physics/dart/collision_detector', 'ode') != physics_spec.get('collision_detector', 'ode')):
+                raise ValueError('SDF physics differs from the resolved robot integration requirements')
         actual = world.find(f"model[@name='{manifest['robot']['model_name']}']")
         settings = json.loads((directory / 'configuration.json').read_text(encoding='utf-8'))
         if settings.get('robot_task') != manifest['robot_task']:

@@ -30,6 +30,94 @@ def acceptance_config(task):
     return {name: values[name] for name in ACCEPTANCE_FIELDS}
 
 
+def evaluate_native_mechanisms(manifest, records, pose_records, samples):
+    """Join native observations; a correct FK tree is not a closure observation."""
+    from .robot_mechanism_validation import audit_mechanism_sample, audit_passive_gear_commands
+    robot = resolve_robot_profile(manifest['robot_config'])
+    limits = acceptance_config(manifest['robot_task'])
+    ready = [s for s in samples if s.get('ready') is True]
+    if not ready:
+        return [{'name': 'native_mechanisms_observed', 'passed': False, 'errors': ['No ready interval']}]
+    start, finish = ready[0]['sim_time'], ready[-1]['sim_time']
+    errors, maxima, observed_times = [], {}, []
+    poses, valid_records = [], []
+    for name, incoming, selected in (('link pose', pose_records, poses), ('joint state', records, valid_records)):
+        for row in incoming:
+            stamp = row.get('sim_time') if isinstance(row, dict) else None
+            if not _finite(stamp):
+                if len(errors) < 20:
+                    errors.append('Invalid native '+name+' timestamp')
+                continue
+            if name == 'joint state' or stamp >= start:
+                selected.append(row)
+    records = valid_records
+    joint_steps, previous = {}, None
+    for row in records:
+        before, after = row.get('commanded_before_step_time'), row.get('measured_after_step_time')
+        if (not _finite(before) or not _finite(after) or after != row['sim_time'] or
+                not 0 <= after-before <= limits['max_telemetry_gap_s']):
+            if len(errors) < 20:
+                errors.append('Invalid native joint physics-step timestamps')
+            continue
+        key = round(before*1_000_000_000)
+        if key in joint_steps:
+            if len(errors) < 20:
+                errors.append('Duplicate native joint physics-step timestamp')
+            continue
+        joint_steps[key] = row
+    expected = {link['name'] for link in robot.links}
+    for row in poses:
+        try:
+            stamp = row['sim_time']
+            if not _finite(stamp) or (previous is not None and stamp <= previous):
+                raise ValueError('Non-increasing native mechanism timestamps')
+            if (row.get('schema_version') != 'native-robot-link-poses/1.0' or
+                    row.get('robot_spec_sha256') != robot.sha256 or
+                    row.get('frame_id') != robot.data['model_name'] or set(row['links']) != expected):
+                raise ValueError('Native mechanism pose identity/frame/links mismatch')
+            # PosePublisher stamps UpdateInfo.simTime. The native observer's
+            # post-step value is labelled simTime+dt, with simTime preserved
+            # as commanded_before_step_time. Join the exact same iteration,
+            # rather than accepting a nearby sample from a previous step.
+            observed = joint_steps.get(round(stamp*1_000_000_000))
+            if observed is None:
+                raise ValueError('No native mechanism joint state from the exact physics step')
+            positions = {j['name']: j['position'] for j in observed['joints'] if j.get('position_available')}
+            report = audit_mechanism_sample(robot, positions, row['links'])
+            for closure in report['closures']:
+                metric = maxima.setdefault(closure['name'], {'maximum_position_error_m': 0, 'maximum_orientation_error_rad': 0})
+                metric['maximum_position_error_m'] = max(metric['maximum_position_error_m'], closure['position_error_m'])
+                metric['maximum_orientation_error_rad'] = max(metric['maximum_orientation_error_rad'], closure['orientation_error_rad'])
+            for gear in report['gears']:
+                metric = maxima.setdefault(gear['name'], {'maximum_coordinate_error_rad': 0})
+                metric['maximum_coordinate_error_rad'] = max(metric['maximum_coordinate_error_rad'], abs(gear['coordinate_error_rad']))
+            if not report['passed']:
+                raise ValueError('; '.join(report['failures']))
+            observed_times.append(stamp)
+            previous = stamp
+        except (KeyError, TypeError, ValueError) as error:
+            if len(errors) < 20:
+                errors.append(str(error))
+    for row in records:
+        if row.get('sim_time', -math.inf) < start:
+            continue
+        try:
+            report = audit_passive_gear_commands(robot, row)
+            if not report['passed']:
+                raise ValueError('; '.join(report['failures']))
+        except (KeyError, TypeError, ValueError) as error:
+            if len(errors) < 20:
+                errors.append(str(error))
+    gap = max((b-a for a,b in zip(observed_times, observed_times[1:])), default=math.inf)
+    coverage = (len(observed_times) >= 20 and observed_times[0]-start <= limits['max_telemetry_gap_s']
+                and finish-observed_times[-1] <= limits['max_telemetry_gap_s'] and gap <= limits['max_telemetry_gap_s'])
+    return [{'name': 'native_mechanisms_observed', 'passed': not errors and coverage,
+             'errors': errors, 'sample_count': len(observed_times), 'complete_coverage': coverage,
+             'maximum_observation_gap_s': gap if math.isfinite(gap) else None, 'metrics': maxima,
+             'timestamp_join': 'PosePublisher stamp equals observer commanded_before_step_time; both contain post-Physics values of the same iteration',
+             'source': 'native link poses, joint coordinates and actuator commands; no FK substitution'}]
+
+
 def evaluate_robot_telemetry(manifest, records, samples, events):
     """Recompute limits, availability, coverage and cutting-axis alignment."""
     robot = resolve_robot_profile(manifest['robot_config'])

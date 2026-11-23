@@ -28,7 +28,7 @@ from uchuva_gazebo.harvester_robot import HarvesterConfig, inverse_kinematics
 from uchuva_gazebo.harvest_pilot import load_verified_package, sha256_file
 from uchuva_gazebo.harvest_validation import (angle_error, deposited_interval, distance,
     fruit_map, local_point, rotate_vector, world_point, yaw_of)
-from audit_harvest_pilot import (native_source_files, audit, json_safe,
+from audit_harvest_pilot import (native_source_files, native_library_files, audit, json_safe,
     strict_json_loads, valid_digest)
 
 
@@ -53,7 +53,7 @@ def verified_plugin_build(manifest, directory):
             raise RuntimeError('Plugin and prepared scene come from different source revisions; prepare a fresh package')
     if 'robot_spec_sha256' in manifest:
         libraries = provenance.get('libraries_sha256', {})
-        for name in ('libUchuvaHarvestSystem.so', 'libUchuvaRobotTelemetrySystem.so'):
+        for name in native_library_files(manifest):
             path = directory / name
             if not path.is_file() or not valid_digest(libraries.get(name)) or sha256_file(path) != libraries[name]:
                 raise RuntimeError(f'Missing or changed resolved-robot plugin: {name}')
@@ -63,7 +63,7 @@ def verified_plugin_build(manifest, directory):
 
 
 class NativePilot:
-    def __init__(self, manifest, output, server, streams, wall_timeout):
+    def __init__(self, manifest, output, server, streams, wall_timeout, *, asset_root=None):
         from gz.transport13 import Node
         from gz.msgs10.double_pb2 import Double
         from gz.msgs10.model_pb2 import Model
@@ -76,7 +76,7 @@ class NativePilot:
             from uchuva_gazebo.robot_spec import resolve_robot_profile
             from uchuva_gazebo.robot_motion import ResolvedMotionConfig
             self.resolved_robot = resolve_robot_profile(manifest['robot_config'])
-            self.config = ResolvedMotionConfig(self.resolved_robot, manifest['robot_task'])
+            self.config = ResolvedMotionConfig(self.resolved_robot, manifest['robot_task'], asset_root=asset_root)
         else:
             self.config = HarvesterConfig(**manifest['robot_config'])
         self.node = Node()
@@ -89,6 +89,10 @@ class NativePilot:
         self.events = []
         self.samples = []
         self.joints = {}
+        self.all_joints = {}
+        self.robot_observation = None
+        self.native_link_poses = {}
+        self.native_link_pose_time = None
         self.joint_time = None
         self.callback_error = None
         self.recording = False
@@ -121,6 +125,16 @@ class NativePilot:
                 if not self.node.subscribe(StringMsg, topic, self._robot_callback):
                     raise RuntimeError(f'Could not subscribe to {topic}')
                 self._subscriptions.append(topic)
+                if 'link_poses' in topics:
+                    from gz.msgs10.pose_v_pb2 import Pose_V
+                    if not self.node.subscribe(Pose_V, topics['link_poses'], self._link_pose_callback):
+                        raise RuntimeError('Could not subscribe to native robot link poses')
+                    self._subscriptions.append(topics['link_poses'])
+                for joint_name, topic in topics.get('position_force_states', {}).items():
+                    callback = lambda message, name=joint_name: self._force_control_callback(name, message)
+                    if not self.node.subscribe(StringMsg, topic, callback):
+                        raise RuntimeError('Could not subscribe to native force controller '+joint_name)
+                    self._subscriptions.append(topic)
         except Exception:
             self.close()
             raise
@@ -155,6 +169,10 @@ class NativePilot:
                 state['phase'] = self.phase
                 state['active_target'] = self.active_target
                 state['arm_joints_rad'] = dict(self.joints)
+                if getattr(self, 'resolved_robot', None) is not None:
+                    state['robot_joint_positions'] = dict(self.all_joints)
+                    state['robot_link_poses'] = dict(self.native_link_poses)
+                    state['robot_link_pose_sim_time'] = self.native_link_pose_time
                 state['joint_state_sim_time'] = self.joint_time
                 self.state = state
                 self.last_state_wall = time.monotonic()
@@ -194,6 +212,8 @@ class NativePilot:
                 return
             try:
                 expected = set(self.manifest['robot']['arm_joint_names'])
+                if getattr(self, 'resolved_robot', None) is not None:
+                    expected = {j['name'] for j in self.resolved_robot.joints if j['type'] != 'fixed'}
                 pairs = [(j.name, j.axis1.position) for j in message.joint if j.name in expected]
                 joints = dict(pairs)
                 stamp = message.header.stamp.sec + 1e-9 * message.header.stamp.nsec
@@ -208,7 +228,9 @@ class NativePilot:
                     raise ValueError('Missing joint in an established joint-state stream')
                 if self.joint_time is not None and stamp < self.joint_time:
                     raise ValueError('Joint-state clock regressed')
-                self.joints, self.joint_time = joints, stamp
+                self.all_joints = joints
+                self.joints = {n: joints[n] for n in self.manifest['robot']['arm_joint_names']}
+                self.joint_time = stamp
             except (AttributeError, TypeError, ValueError) as error:
                 self.callback_error = f'Invalid joint-state message: {error}'
             self.condition.notify_all()
@@ -225,9 +247,63 @@ class NativePilot:
                 if type(row.get('sim_time')) not in (int, float) or not math.isfinite(row['sim_time']):
                     raise ValueError('Robot telemetry has invalid simulation time')
                 row['phase'] = self.phase
+                self.robot_observation = row
                 self._line('robot_telemetry', row)
             except (AttributeError, ValueError, TypeError, OSError) as error:
                 self.callback_error = f'Invalid robot telemetry: {error}'
+            self.condition.notify_all()
+
+    def _force_control_callback(self, joint_name, message):
+        with self.condition:
+            if self._closing:
+                return
+            try:
+                row = strict_json_loads(message.data)
+                if (row.get('robot_spec_sha256') != self.manifest['robot_spec_sha256'] or
+                        row.get('schema_version') != 'joint-position-force/1.0' or
+                        row.get('joint_name') != joint_name or row.get('sample_phase') != 'pre_physics' or
+                        type(row.get('sim_time')) not in (int, float) or not math.isfinite(row['sim_time'])):
+                    raise ValueError('Force-controller evidence has invalid identity or time')
+                row['phase'] = self.phase
+                self._line('force_control', row)
+            except (AttributeError, ValueError, TypeError, OSError) as error:
+                self.callback_error = f'Invalid native force-controller observation: {error}'
+            self.condition.notify_all()
+
+    def _link_pose_callback(self, message):
+        """Record actual link poses in one native model frame, independently of FK."""
+        with self.condition:
+            if self._closing:
+                return
+            try:
+                model = self.manifest['robot']['model_name']
+                expected = {link['name'] for link in self.resolved_robot.links}
+                stamps, poses = set(), {}
+                for p in message.pose:
+                    frame = {r.key: list(r.value) for r in p.header.data}
+                    if frame.get('frame_id') != [model] or not p.name.startswith(model+'::'):
+                        raise ValueError('Native link pose has an unexpected model frame')
+                    name = p.name[len(model)+2:]
+                    if name in poses:
+                        raise ValueError('Duplicate native robot link pose')
+                    values = [p.position.x, p.position.y, p.position.z,
+                              p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w]
+                    if not all(math.isfinite(v) for v in values) or abs(sum(v*v for v in values[3:])-1) > 1e-6:
+                        raise ValueError('Nonfinite or non-unit native robot pose')
+                    poses[name] = {'xyz_m': values[:3], 'quaternion_xyzw': values[3:]}
+                    stamps.add(p.header.stamp.sec*1_000_000_000+p.header.stamp.nsec)
+                if len(stamps) != 1 or set(poses) != expected:
+                    raise ValueError('Missing link or mixed native pose timestamps')
+                stamp_ns = stamps.pop()
+                stamp = stamp_ns*1e-9
+                if self.native_link_pose_time is not None and stamp <= self.native_link_pose_time:
+                    raise ValueError('Native link-pose clock did not increase')
+                self.native_link_poses, self.native_link_pose_time = poses, stamp
+                self._line('robot_poses', {'schema_version': 'native-robot-link-poses/1.0',
+                    'robot_spec_sha256': self.resolved_robot.sha256, 'sim_time_ns': stamp_ns,
+                    'sim_time': stamp, 'frame_id': model, 'links': poses, 'phase': self.phase})
+            except (AttributeError, ValueError, TypeError, OSError) as error:
+                self.callback_error = f'Invalid native link-pose message: {error}'
             self.condition.notify_all()
 
     def _motion_pose(self, state):
@@ -251,6 +327,9 @@ class NativePilot:
         if getattr(self, 'resolved_robot', None) and getattr(self, 'target_direction_world', None) is not None:
             direction = rotate_vector(state['robot_pose'][3:], self.target_direction_world, inverse=True)
             config = config.for_direction(direction)
+        if getattr(self, 'resolved_robot', None):
+            seed = {name: self.joints[name] for name in self.resolved_robot.joint_names}
+            return config.solve(local_point(target, state['robot_pose']), seed=seed)
         return inverse_kinematics(local_point(target, state['robot_pose']), config=config)
 
     def set_phase(self, phase, identifier=None):
@@ -439,6 +518,11 @@ class NativePilot:
         self.move_joints(self._solve_world_target(world_target, self.snapshot()), expected_tool=world_target)
 
     def carry(self):
+        if getattr(self, 'resolved_robot', None):
+            self.move_joints(self.manifest['mission']['carry_joints_rad'])
+            self.target_direction_world = None
+            self.config = self.config.for_direction(self.manifest['robot_task']['target_direction'])
+            return
         target = self.manifest['mission']['carry_tcp_base_m']
         self.move_joints(inverse_kinematics(target, config=self.config))
 
@@ -532,6 +616,9 @@ class NativePilot:
 
     def run(self, target_ids, mode):
         self.wait(lambda s: s.get('ready') is True, simulation_timeout=8, wall_timeout=120)
+        if getattr(self, 'resolved_robot', None) and self.resolved_robot.data['control'].get('gripper'):
+            from harvest_gripper_control import move_gripper
+            move_gripper(self)
         self.set_phase('stow')
         self.carry()
         self.set_phase('baseline')
@@ -618,6 +705,7 @@ def parser_for_run():
     parser.add_argument('--wall-timeout', type=float, default=3600)
     parser.add_argument('--gui', action='store_true', help='Also open a GUI on this isolated transport partition')
     parser.add_argument('--gui-config', type=Path, help='Optional Gazebo GUI configuration for visual inspection')
+    parser.add_argument('--record-video', action='store_true', help='Record the prepared native RGB observer using simulation time')
     return parser
 
 
@@ -628,6 +716,8 @@ def main(argv=None):
         parser.error('--gui-config requires --gui and an existing configuration file')
     package = args.package.resolve()
     manifest = load_verified_package(package)
+    if args.record_video and not manifest.get('video_observer'):
+        parser.error('--record-video requires a package prepared with --video-observer')
     if 'robot_spec_sha256' in manifest:
         from uchuva_gazebo.robot_spec import resolve_robot_profile
         from uchuva_gazebo.robot_sdf import require_native_harvest_adapter
@@ -652,7 +742,7 @@ def main(argv=None):
         metadata['robot_effective_sha256'] = sha256_file(output / 'robot_effective.json')
     write_json(output / 'run.json', metadata)
     failure = None
-    server = gui = pilot = None
+    server = gui = pilot = video = None
     start = time.monotonic()
     with ExitStack() as stack:
         lock = stack.enter_context((package / '.harvest_run.lock').open('a+'))
@@ -663,6 +753,10 @@ def main(argv=None):
         stream_names = ['telemetry', 'events', 'commands']
         if 'robot_spec_sha256' in manifest:
             stream_names.append('robot_telemetry')
+            if 'link_poses' in manifest['robot']['topics']:
+                stream_names.append('robot_poses')
+            if manifest['robot']['topics'].get('position_force_states'):
+                stream_names.append('force_control')
         streams = {name: stack.enter_context((output / (name + '.jsonl')).open('w', encoding='utf-8'))
                    for name in stream_names}
         log = stack.enter_context((output / 'server.log').open('w', encoding='utf-8'))
@@ -687,10 +781,17 @@ def main(argv=None):
             # Fail before starting a simulator if Python bindings are absent.
             from gz.transport13 import Node  # noqa: F401
             from gz.msgs10.stringmsg_pb2 import StringMsg  # noqa: F401
+            if args.record_video:
+                from harvest_native_video import NativeVideoRecorder
+                video = NativeVideoRecorder(output, manifest['video_observer'])
+                metadata['video_observer'] = manifest['video_observer']
+                metadata['video_implementation_sha256'] = {name: sha256_file(REPO/'scripts'/name)
+                    for name in ('harvest_native_video.py', 'run_neo_flight.py')}
             # gz sim otherwise chooses the newest installed major version.
             # https://gazebosim.org/docs/harmonic/gui/
             command = ['gz', 'sim', '--force-version', '8', '-s', '-r', '-v', '3']
-            if (manifest['robot_config'].get('sensors') if 'robot_spec_sha256' in manifest else manifest['robot_config']['camera']) and not args.gui:
+            if ((manifest['robot_config'].get('sensors') if 'robot_spec_sha256' in manifest else manifest['robot_config']['camera'])
+                    or manifest.get('video_observer')) and not args.gui:
                 command.append('--headless-rendering')
             command.append(str(package / manifest['world_file']))
             server = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, cwd=package)
@@ -707,7 +808,7 @@ def main(argv=None):
                 metadata['gui_command'] = gui_command
                 write_json(output / 'run.json', metadata)
                 gui = subprocess.Popen(gui_command, stdout=gui_log, stderr=subprocess.STDOUT, cwd=package)
-            pilot = NativePilot(manifest, output, server, streams, args.wall_timeout)
+            pilot = NativePilot(manifest, output, server, streams, args.wall_timeout, asset_root=package)
             pilot.run(target_ids, args.mode)
         except KeyboardInterrupt:
             failure = 'operator_interrupted'
@@ -720,6 +821,11 @@ def main(argv=None):
                 except Exception:
                     pass
                 pilot.close()
+            if video is not None:
+                try:
+                    metadata['native_video'] = video.close()
+                except Exception as error:
+                    failure = failure or f'Native video failed: {error}'
             for process in (gui, server):
                 if process is not None and process.poll() is None:
                     try:

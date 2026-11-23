@@ -70,7 +70,8 @@ def prepare(profile, output, *, overrides=None, asset_root=None):
         report['missing_evidence'] = raw.get('missing_evidence', [])
         robot = resolve_robot_profile(raw, overrides)
         report['checks'].append({'name': 'resolved_schema_physics_topology_provenance', 'status': 'PASS'})
-        meshes = [visual['geometry'] for link in robot.links for visual in link['visuals'] if visual['geometry']['type'] == 'mesh']
+        meshes = [shape['geometry'] for link in robot.links for shape in (*link['visuals'], *link['collisions'])
+                  if shape['geometry']['type'] == 'mesh']
         if meshes and asset_root is None:
             raise ValueError('Mesh assets require an explicit --asset-root; no implicit download or unverified export')
         verified = verify_robot_assets(robot, asset_root) if meshes else {}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "cad-drive-revision/1.0",
+  "revision_id": "cad_drive_revision_03",
+  "status": "estimado",
+  "scope": "Estimated finite wheel-output torque hypothesis for the articulated CAD load distribution; not verified hardware capacity",
+  "base_robot_spec_sha256": "b0cc851a43b92aae5377fd241acfea5005b03dd902f1c082a053801ccf376d33",
+  "source_facts": {
+    "cad_mass_kg": 18.24987866,
+    "wheelbase_m": 0.6211563866857641,
+    "track_m": 0.6165500000000085,
+    "tire_radius_m": 0.11,
+    "gravity_m_s2": 9.81,
+    "diagnostic_friction_mu": 0.6,
+    "friction_status": "estimated diagnostic input, unchanged",
+    "native_failed_run": "outputs/real_harvester_validation/cad_mobility_mesh_repaired_09",
+    "native_load_analysis": "outputs/real_harvester_validation/drive_loads_09_01.json",
+    "front_left_maximum_quasistatic_normal_estimate_n": 77.68970504175707,
+    "estimated_normals_sum_n": 178.98559536063135,
+    "cad_weight_n": 179.03130965460002,
+    "front_left_observed_motor_command_nm": -4.0,
+    "front_left_observed_turn_mean_velocity_rad_s": 0.3457965508509083,
+    "front_left_requested_turn_velocity_rad_s": -0.5605000000000077,
+    "joint_axes_unchanged": true,
+    "wheel_tire_ground_gaps_below_m": 2.1e-7
+  },
+  "derivation": {
+    "wheel_load_formula": "N_est = wheel_mass_kg*g - transmitted_joint_force_world_z in the stable 12..13s tail; ignores acceleration and other wheel-body contact, so is a simulation estimate, not a tire sensor measurement",
+    "traction_torque_formula": "mu * N_est_max * tire_radius_m",
+    "front_left_estimated_traction_torque_nm": 5.127520532755967,
+    "margin_factor": 1.2,
+    "margin_status": "engineering_heuristic, declared before new execution",
+    "candidate_formula": "ceil((1.2 * 5.127520532755967) / 0.5) * 0.5 = 6.5Nm",
+    "gain_selection": "Keep P12, I4, D0 and integral-output clamp +/-1Nm exactly. Change only the common finite output-effort bound from4 to6.5Nm, including joint limit, actuator estimate and controller command clamp. Keep mu=.6, geometry, inertia, suspension, masks, timestep and all physical acceptance thresholds.",
+    "hardware_caveat": "6.5Nm is an estimated simulation hypothesis. No measured motor torque-speed curve, thermal capacity or gearbox capacity supports a hardware claim. Full15s commissioning on the corrected CAD remains required before any harvest admission."
+  },
+  "candidate_parameters": {"wheel_effort_limit_nm": 6.5},
+  "contact_changes": [],
+  "acceptance_changes": [],
+  "joint_velocity_writers": false,
+  "primary_joint_wrench_reference": "https://gazebosim.org/api/sim/8/namespacegz_1_1sim_1_1components.html"
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": "cad-mechanism-revision/1.0",
+  "revision_id": "cad_mechanism_revision_04",
+  "status": "estimado",
+  "scope": "CAD-derived articulated topology and mass with explicit estimated finite joint dynamics; no hardware calibration. Saved CAD geometry and every physical occurrence retained.",
+  "suspension": {
+    "stiffness_n_m": 1500,
+    "damping_ns_m": 25,
+    "spring_reference_m": {
+      "front_right": 0.015061009840607924,
+      "front_left": 0.013201329685842334,
+      "rear_right": 0.011246910305436036,
+      "rear_left": 0.009385755715661035
+    },
+    "slider_travel_m": [
+      -0.03,
+      0.03
+    ],
+    "slider_velocity_m_s": 1,
+    "pivot_limits_rad": [
+      -0.4,
+      0.4
+    ],
+    "pivot_velocity_rad_s": 2,
+    "pivot_damping_nms_rad": 0.002,
+    "passive_effort_bound": 1000,
+    "provenance": "Estimated preload from scripts/cad_mechanisms.py static virtual work with all 18.24987866053727 kg CAD mass and COM. Minimum-norm four-wheel normal loads balance weight/pitch/roll. Spring references are F/k at CAD q0; no measured load distribution or hardware preload claim.",
+    "grouping": "Main Body/Adjust Nut/coil on upper; Second Body/Bolt/Nut/Cap on lower, based on native coincident axes and axial reference placements. The source saved shock assembly is rigid and cannot itself prove dynamic travel.",
+    "coil_geometry": "Unchanged rigid CAD reference on upper; spring force law belongs to prismatic joint. Mesh deformation is not represented."
+  },
+  "gripper": {
+    "joint_limits_rad": [
+      -0.4,
+      0.4
+    ],
+    "velocity_rad_s": 1,
+    "effort_nm": 0.02,
+    "p_gain": 0.2,
+    "d_gain": 0.01,
+    "passive_damping_nms_rad": 0.002,
+    "provenance": "Estimated finite-drive topology probe values, with real CAD leaf mass; holding/grasping force and range require subsequent native assessment."
+  },
+  "acceptance_changes": [],
+  "plant_changes": [],
+  "hardware_validated": false,
+  "gear_coupling": {
+    "parameters": {
+      "stiffness_nm_rad": 100,
+      "damping_nms_rad": 0.03,
+      "maximum_step_s": 0.0001,
+      "ratio": -1,
+      "offset": 0
+    },
+    "provenance": {
+      "source": "inventory_motion_01: native Gripper ensamble.iam Rotación:1 Ratio=1 and ForwardDirection=false",
+      "convention": "Both coordinates use common positive gripper CAD Y; external gears rotate oppositely. Gains and maximum dt are estimated, native fixture validated only.",
+      "status": "derivado_de_CAD"
+    }
+  },
+  "physics": {
+    "backend": "DART",
+    "solver_type": "pgs",
+    "maximum_step_s": 0.0001
+  },
+  "physics_provenance": "Explicit solver revision after preserved rotated split-and-weld fixture failures with Dantzig. PGS native rotated fixture passed at100us with unchanged closure/gear tolerances; full CAD remains separately unvalidated.",
+  "collision_representation": "cad_meshes",
+  "collision_conformance": {
+    "brep_evidence": "outputs/real_harvester_validation/gripper_native_interference_01/result.json confirms zero native solid interference for five audited q0 gripper pairs; no motion-envelope claim",
+    "native_support_evidence": "outputs/real_harvester_validation/dynamic_concave_mesh_04/summary.json: native Gazebo8/DART dynamic concave mesh probe, nine contact/cavity/control cases; this is adapter support, not full CAD acceptance",
+    "scope": "Per-part dynamic concave mesh adapter; ground tire cylinders retained; exact placement/mesh same as native visual",
+    "status": "engineering_adapter_not_hardware_validation",
+    "source": "Immutable robot_package_02 repaired OBJ, native CAD source hashes, chord tolerance 0.0002m",
+    "native_support_summary_sha256": "29bd4ea93dbd71f047fff3ab8ef26c4eab4136909a46deaed4d02967664352bc"
+  }
+}

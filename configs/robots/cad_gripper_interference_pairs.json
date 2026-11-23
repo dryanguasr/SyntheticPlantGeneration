@@ -1,0 +1,10 @@
+{
+  "scope": "Named saved-CAD occurrence pairs whose diagnostic oriented boxes overlap; inspect before changing collision representation.",
+  "pairs": [
+    ["Eslabon L:1", "Eslabon L:2"],
+    ["Eslabon 1:1", "Engranaje recto2:1"],
+    ["Eslabon 1:2", "Engranaje recto1:1"],
+    ["Gripper y engranaje:1", "Eslabon L:1"],
+    ["Gripper y engranaje:1", "Eslabon L:2"]
+  ]
+}

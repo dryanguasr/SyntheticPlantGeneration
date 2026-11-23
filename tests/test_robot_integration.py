@@ -47,6 +47,44 @@ def write_fixture(path, robot=None, asset_root=None):
 
 
 class RobotIntegrationTests(unittest.TestCase):
+    def test_ramped_position_has_exactly_one_force_writer(self):
+        data = resolve_robot_profile('proxy_v1').to_dict()
+        data['control']['arm']['shoulder_joint']['reference_mode'] = 'ramped_position'
+        robot = resolve_robot_profile(data)
+        contract = resolved_robot_contract(robot)
+        self.assertEqual(contract['schema_version'], 'resolved-harvester-contract/1.2')
+        model = resolved_robot_model(robot)
+        writers = [p for p in model.findall('plugin')
+                   if p.findtext('joint_name') == 'shoulder_joint']
+        self.assertEqual(len(writers), 1)
+        self.assertEqual(writers[0].get('name'), 'uchuva::JointPositionForceSystem')
+        self.assertEqual(writers[0].findtext('state_topic'),
+                         contract['topics']['position_force_states']['shoulder_joint'])
+        self.assertEqual(float(writers[0].findtext('command_velocity')),
+                         data['control']['arm']['shoulder_joint']['command_velocity'])
+
+    def test_collision_detector_is_bound_to_the_profile_and_world(self):
+        data = resolve_robot_profile('proxy_v1').to_dict()
+        data['physics'] = {'backend': 'DART', 'solver_type': 'pgs',
+                           'collision_detector': 'fcl', 'maximum_step_s': .0001}
+        with tempfile.TemporaryDirectory() as root:
+            package = Path(root)/'package'
+            manifest = write_fixture(package, data)
+            world_file = package/'harvest.sdf'
+            tree = ET.parse(world_file)
+            detector = tree.find('world/physics/dart/collision_detector')
+            self.assertEqual(detector.text, 'fcl')
+            load_verified_package(package)
+            detector.text = 'ode'
+            tree.write(world_file, encoding='unicode')
+            manifest['files_sha256']['harvest.sdf'] = hashlib.sha256(world_file.read_bytes()).hexdigest()
+            (package/'manifest.json').write_text(json.dumps(manifest), encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'SDF physics'):
+                load_verified_package(package)
+        data['physics']['collision_detector'] = 'unregistered'
+        with self.assertRaises(ValueError):
+            resolve_robot_profile(data)
+
     def test_sdf_joint_transform_matches_shared_fk_with_offsets_and_roll(self):
         robot = resolve_robot_profile('proxy_v1')
         changed = robot.to_dict()
@@ -68,7 +106,7 @@ class RobotIntegrationTests(unittest.TestCase):
         self.assertEqual(model.findtext('self_collide'), 'true')
         self.assertTrue(all(c.findtext('surface/contact/collide_bitmask') == '65535' for c in model.findall('.//collision')))
         data['collision_policy']['excluded_pairs'].pop()
-        with self.assertRaisesRegex(ValueError, 'exactly adjacent'):
+        with self.assertRaisesRegex(ValueError, 'explicit adjacency'):
             resolved_robot_model(resolve_robot_profile(data))
 
     def test_joint_damping_and_friction_reach_sdf_from_schema_fields(self):

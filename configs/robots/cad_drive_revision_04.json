@@ -1,0 +1,35 @@
+{
+  "schema_version": "cad-drive-revision/1.0",
+  "revision_id": "cad_drive_revision_04",
+  "status": "estimado",
+  "scope": "Unexecuted PI hypothesis for integration with corrected CAD; requires one common final profile and all native acceptance tests",
+  "base_robot_spec_sha256": "ab103b86fb2e4075c616a6b9f627ffa6d96c01c497346e9d006c28b4dde46560",
+  "source_facts": {
+    "failed_isolated_run": "outputs/real_harvester_validation/cad_turn_effort65_01",
+    "observed_turn_rad": 0.209822161475015,
+    "required_turn_rad_unchanged": 0.25,
+    "requested_wheel_velocity_rad_s": 0.5605000000000077,
+    "observed_loaded_front_left_velocity_rad_s": -0.278912338702204,
+    "observed_front_left_motor_torque_nm": -4.37832341230138,
+    "observation_time_s": 4.4501,
+    "maximum_inferred_coulomb_torque_nm": 5.127520532755967,
+    "physics_step_s": 0.0001,
+    "wheel_cad_com_inertia_yy_kg_m2": 0.005715395462192905,
+    "source_normal_load_analysis": "outputs/real_harvester_validation/drive_loads_09_02.json"
+  },
+  "derivation": {
+    "proportional_selection": "Observed resisting torque about4.4Nm divided by an estimated residual speed-error target0.15rad/s requiresP>=29.33Nms/rad; chooseP30. The error target is a controller-design hypothesis, not a relaxed physical acceptance tolerance.",
+    "steady_error_example": "At4.4Nm load, P12 with integral saturated at1Nm requires about(4.4-1)/12=.2833rad/s error, matching the observed shortfall. P30 gives.1133rad/s under that same integral contribution; allowing the integral to supply the actual load removes this artificial1Nm steady-state ceiling.",
+    "integral_bound_selection": "ceil(5.127520532755967/0.5)*0.5=5.5Nm covers the inferred maximum residual traction torque, below the unchanged total6.5Nm motor-command clamp. Keep I4 and D0.",
+    "discrete_analysis": "Use each native CAD wheel inertia about its actual Y joint axis, including the parallel-axis COM term. Check h*P/J and the2x2 Euler PI eigenvalues for both integral-update orderings at h=.0001s. This local unsaturated free-wheel check is necessary but does not validate coupled contact dynamics.",
+    "gain_selection": "Change only existing wheel_velocity_p_gain from12 to30 and wheel_integral_effort_limit_nm from1 to5.5. Keep I4, D0, total torque6.5Nm, geometry, mass, inertia, friction, masks and all physical acceptance thresholds. Do not claim native PASS before the corrected-CAD full protocol is run.",
+    "hardware_caveat": "All gains and6.5Nm capacity remain estimated simulation parameters. No motor torque-speed, current, gearbox or thermal hardware measurement validates them."
+  },
+  "candidate_parameters": {
+    "wheel_velocity_p_gain": 30.0,
+    "wheel_integral_effort_limit_nm": 5.5
+  },
+  "contact_changes": [],
+  "acceptance_changes": [],
+  "joint_velocity_writers": false
+}

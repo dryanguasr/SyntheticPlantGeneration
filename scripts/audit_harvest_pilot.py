@@ -21,8 +21,16 @@ def native_source_files(manifest):
     """Frozen historical packages retain their original two-source contract."""
     files = manifest.get('source', {}).get('files_sha256', {})
     if 'robot_spec_sha256' in manifest or 'gazebo/harvest_system/RobotTelemetrySystem.cc' in files:
-        return (*NATIVE_SOURCE_FILES, 'RobotTelemetrySystem.cc')
+        extra = tuple(name for name in ('ClosedLoopSystem.cc', 'GearCouplingSystem.cc', 'JointPositionForceSystem.cc', 'PositionForceController.hh')
+                      if 'gazebo/harvest_system/'+name in files)
+        return (*NATIVE_SOURCE_FILES, 'RobotTelemetrySystem.cc', *extra)
     return NATIVE_SOURCE_FILES
+
+
+def native_library_files(manifest):
+    sources = native_source_files(manifest)
+    return tuple('libUchuva'+name.removesuffix('.cc')+'.so'
+                 for name in sources if name.endswith('.cc'))
 
 
 def command_event_consistency(commands, events):
@@ -93,7 +101,7 @@ def plugin_record_matches(manifest, metadata):
     libraries = record.get('libraries_sha256', {})
     robot_provenance = ('robot_spec_sha256' not in manifest or (
         metadata.get('robot_spec_sha256') == manifest['robot_spec_sha256']
-        and all(valid_digest(libraries.get(name)) for name in ('libUchuvaHarvestSystem.so', 'libUchuvaRobotTelemetrySystem.so'))
+        and all(valid_digest(libraries.get(name)) for name in native_library_files(manifest))
         and libraries.get('libUchuvaHarvestSystem.so') == record.get('library_sha256')))
     return (robot_provenance and set(sources) == set(names)
             and all(valid_digest(sources[name]) and sources[name] == expected.get('gazebo/harvest_system/' + name)
@@ -125,6 +133,15 @@ def _audit(package, run):
     if 'robot_spec_sha256' in manifest:
         from uchuva_gazebo.robot_validation import evaluate_robot_telemetry
         report['checks'] += evaluate_robot_telemetry(manifest, read_jsonl(run / 'robot_telemetry.jsonl'), samples, events)
+        if manifest['robot']['topics'].get('position_force_states'):
+            from uchuva_gazebo.robot_control_validation import evaluate_position_force_control
+            report['checks'] += evaluate_position_force_control(manifest,
+                read_jsonl(run/'force_control.jsonl'), read_jsonl(run/'robot_telemetry.jsonl'), samples)
+            report['robot_control_validation_source_sha256'] = sha256_file(REPO / 'src/uchuva_gazebo/robot_control_validation.py')
+        if manifest['robot_config'].get('closures') or manifest['robot_config'].get('gear_couplings'):
+            from uchuva_gazebo.robot_validation import evaluate_native_mechanisms
+            report['checks'] += evaluate_native_mechanisms(manifest,
+                read_jsonl(run/'robot_telemetry.jsonl'), read_jsonl(run/'robot_poses.jsonl'), samples)
         report['checks'].append({'name': 'run_effective_robot_frozen', 'passed':
             metadata.get('robot_effective_sha256') == sha256_file(run / 'robot_effective.json')
             == manifest['files_sha256'][manifest['robot_effective_file']]})
@@ -142,6 +159,10 @@ def _audit(package, run):
         'run.json', 'outcome.json', 'telemetry.jsonl', 'events.jsonl', 'commands.jsonl', 'server.log')}
     if 'robot_spec_sha256' in manifest:
         report['evidence_files_sha256'].update({name: sha256_file(run / name) for name in ('robot_telemetry.jsonl', 'robot_effective.json')})
+        if 'link_poses' in manifest['robot']['topics']:
+            report['evidence_files_sha256']['robot_poses.jsonl'] = sha256_file(run/'robot_poses.jsonl')
+        if manifest['robot']['topics'].get('position_force_states'):
+            report['evidence_files_sha256']['force_control.jsonl'] = sha256_file(run/'force_control.jsonl')
     return report
 
 

@@ -172,3 +172,59 @@ de mallas. Cada una guarda su protocolo antes de arrancar: `probe_robot_kinemati
 `probe_cad_mobility.py`, `probe_robot_self_collision.py` y
 `probe_robot_interaction_frames.py`. Un fallo de seguimiento no permite aumentar
 tolerancias, y la concordancia FK por sí sola no acredita estabilidad dinámica.
+
+## Revisiones de control y mecanismos
+
+`configs/robots/cad_v8_acceptance_lock.json` conserva las plantas, los seis
+hashes de entrada, los tres objetivos y los protocolos anteriores. Verificar
+la integridad antes de preparar una misión nueva:
+
+```text
+python scripts/verify_cad_v8_acceptance.py --manifest outputs/harvest_pilot_v8_c4_gui/manifest.json
+```
+
+El ajuste `cad_control_revision_01.json` deriva el control del brazo de las
+inercias y cargas gravitacionales del CAD. Por ejemplo, el hombro requiere
+aproximadamente 7,12 N·m en la postura guardada, por encima del techo diagnóstico
+anterior de 3 N·m. Los nuevos techos siguen siendo hipótesis de esfuerzo
+disponible en simulación; no acreditan la capacidad continua del hardware.
+`cad_drive_revision_02.json` añade acción integral limitada al control por
+esfuerzo de las ruedas. Cada revisión conserva su resultado independiente.
+
+`scripts/cad_mechanisms.py` separa portarruedas, amortiguadores, engranajes,
+bielas y mordazas. Comprueba conservación de hojas CAD, masa, centro de masa,
+tensor global y geometría en la postura de referencia. Las precargas de los
+cuatro muelles se estiman por equilibrio y trabajo virtual, con procedencia
+explícita. La espiral visual permanece rígida: su deformación no está modelada.
+
+El campo opcional `closures` describe la partición de masa e inercia de un
+cuerpo entre el link físico y un auxiliar coincidente sin geometría duplicada.
+La articulación móvil pertenece al árbol SDF; `ClosedLoopSystem` solicita la
+reunión física mediante una restricción fija nativa. Así se conserva el cierre
+sin un segundo padre SDF ni teletransporte. La implementación se apoya en
+[AttachFixedJoint de gz-physics 7.8](https://github.com/gazebosim/gz-physics/blob/gz-physics7_7.8.0/dartsim/src/JointFeatures.cc).
+Cada cierre debe comprobarse con poses nativas; la FK del árbol por sí sola
+también podría pasar aunque faltara la restricción de cierre.
+
+`gear_couplings` modela la transmisión como acoplamiento elástico finito, con
+ratio, rigidez, amortiguamiento y paso máximo explícitos. Un único PID acciona
+el driver. El follower es pasivo. `GearCouplingSystem` aplica momentos internos
+a los cuerpos y sus reacciones a los padres; no escribe `JointForceCmd`.
+Por tanto el observador conserva la separación entre comando de actuador,
+reacción del acoplamiento y wrench transmitido. La flexibilidad elegida y las
+ganancias no son mediciones del engranaje real.
+
+El campo `physics` identifica backend, solucionador y paso máximo. El contrato
+1.1 publica esos requisitos y los mecanismos; el contrato histórico sin ellos
+conserva su versión 1.0. Los lazos deben probarse inclinados además de alineados:
+el [problema documentado de DART con lazos oblicuos](https://github.com/gazebosim/gz-physics/issues/719)
+motivó ensayos separados con PGS. Cambiar el solucionador o el paso exige
+repetir las pruebas del perfil exacto. Un timeout computacional es un resultado
+incompleto, nunca un PASS de la parte que no llegó a ejecutarse.
+
+La planificación CAD utiliza una altura de base explícita, transformaciones
+completas de posición y dirección y una postura de transporte articular común.
+La corrección durante ejecución parte del estado articular observado. No se
+supone que una solución de cinco GDL admita cualquier orientación; cada objetivo
+conserva sus residuales, obstáculos y rechazos. El corte y la retención siguen
+siendo ideales aunque se ensayen los contactos de las mordazas por separado.

@@ -154,20 +154,20 @@ function Get-Relations($Definition) {
             }
             $definition = $item
             if ($collectionName -eq 'Joints') { try { $definition = $item.Definition } catch {} }
-            foreach ($name in @('JointType','FlipAlignmentDirection','FlipOriginDirection','HasAngularPositionLimits','HasLinearPositionStartLimit','HasLinearPositionEndLimit')) {
+            foreach ($name in @('JointType','FlipAlignmentDirection','FlipOriginDirection','HasAngularPositionLimits','HasLinearPositionStartLimit','HasLinearPositionEndLimit','ForwardDirection')) {
                 $row[$name] = Try-Scalar $definition $name
             }
             $parameters = [ordered]@{}
-            foreach ($name in @('Offset','Angle','Gap','AngularPosition','AngularPositionStartLimit','AngularPositionEndLimit','LinearPosition','LinearPositionStartLimit','LinearPositionEndLimit')) {
+            foreach ($name in @('Offset','Angle','Gap','AngularPosition','AngularPositionStartLimit','AngularPositionEndLimit','LinearPosition','LinearPositionStartLimit','LinearPositionEndLimit','Ratio')) {
                 try {
                     $parameter = $definition.$name
                     if ($null -eq $parameter) { continue }
                     if ($parameter -is [ValueType]) { $parameters[$name]=@{database_value=$parameter} }
                     else { $parameters[$name]=@{database_value=$parameter.Value;display_units=$parameter.Units;expression=$parameter.Expression} }
                     $angular=$name -match 'Angle|Angular'
-                    $factor=if($angular){1.0}else{0.01}
+                    $factor=if($angular -or $name -eq 'Ratio'){1.0}else{0.01}
                     $parameters[$name].si_value=[double]$parameters[$name].database_value*$factor
-                    $parameters[$name].si_unit=if($angular){'rad'}else{'m'}
+                    $parameters[$name].si_unit=if($name -eq 'Ratio'){'dimensionless'}elseif($angular){'rad'}else{'m'}
                 } catch {}
             }
             $row.parameters = $parameters

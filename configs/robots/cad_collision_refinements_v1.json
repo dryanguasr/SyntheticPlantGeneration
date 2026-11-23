@@ -1,0 +1,15 @@
+{
+  "schema_version": "cad-collision-refinement-config/1.0",
+  "refinements": [
+    {
+      "collision_name": "part_98_bounds",
+      "visual_name": "part_98",
+      "source_document": "gripper/Gripper y engranaje.ipt",
+      "mesh_sha256": "c3c83bdb9526dc535f942f6755ffd0bae0448d56734b87d72659f4fcf6972cbd",
+      "cell_m": 0.001,
+      "chord_tolerance_m": 0.0002,
+      "tolerance_source": "Native Inventor export_full_01/cad_inventory.json chord_tolerance_m",
+      "reason": "The part-level box fills the open gripper housing and falsely blocks some fruit poses that are outside the source mesh."
+    }
+  ]
+}

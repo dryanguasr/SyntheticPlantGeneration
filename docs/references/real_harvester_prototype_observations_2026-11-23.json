@@ -1,0 +1,58 @@
+{
+  "schema_version": "prototype-observation-register/1.0",
+  "date": "2026-11-23",
+  "component": "gripper",
+  "source": "User statements and photograph in the project conversation",
+  "photo_sha256": "0e71766009eacffac850c7199ebc8a70e300cd9bde863183aec6b916fe55babb",
+  "private_local_photo": "outputs/real_harvester_cad/prototype_photo_2026-11-23/gripper_built.jpg",
+  "statements": [
+    "Ya esa pieza está construida y realmente tiene una carrera muy pequeña, pero funciona.",
+    "8 mm aprox entre partes rígidas y 6 mm aprox entre partes flexibles."
+  ],
+  "observations": [
+    {
+      "parameter": "maximum_rigid_surface_gap",
+      "original_value": 8,
+      "original_unit": "mm",
+      "value_si": 0.008,
+      "unit_si": "m",
+      "status": "user_reported_approximate",
+      "uncertainty": "unspecified; approximate value, no instrument or measurement protocol supplied",
+      "surface_correspondence": "Candidate opposing L1/L2 rigid links: native CAD gap 8.39080389810351 mm at the selected nominal short opening. This is a proposed correspondence to the approximate user observation, not a calibrated measurement of the built part."
+    },
+    {
+      "parameter": "maximum_flexible_surface_gap",
+      "original_value": 6,
+      "original_unit": "mm",
+      "value_si": 0.006,
+      "unit_si": "m",
+      "status": "user_reported_approximate",
+      "uncertainty": "unspecified; approximate value, no instrument or measurement protocol supplied",
+      "surface_correspondence": "Candidate opposing gomas: native CAD gap 6.006656575240452 mm at the selected nominal short opening. No deformation or compliance calibrated."
+    }
+  ],
+  "cad_comparison": {
+    "status": "nominal_cad_geometry_compared_with_approximate_user_statement",
+    "driver_increment_rad": 0.0848109276510016,
+    "driver_increment_is_servo_calibration": false,
+    "native_minimum_distances_mm": {
+      "Eslabon L:1 / Eslabon L:2": 8.39080389810351,
+      "gomas:1 / gomas:2": 6.006656575240452,
+      "Mordaza blanda:1 / Mordaza blanda:2": 10.01550890247616,
+      "Cuchilla:1 / Cuchilla:2": 6.729009213698744
+    },
+    "private_evidence": "outputs/real_harvester_validation/gripper_revised_operating_envelope_02/native_brep/result.json",
+    "evidence_sha256": "4039b5cc274769b679d4e7e9b80210f999651fce7ce882074a923d0b175838e3",
+    "method": "Inventor BRep minimum distances at the last declared driver posture; these four pairs have identical endpoint gaps before and after the localized L1 revision.",
+    "caution": "Rigid links, rigid pad carriers and blades are distinct surface pairs. The statement does not uniquely identify a measured pair or establish uncertainty."
+  },
+  "not_established": [
+    "servo command-to-joint calibration",
+    "zero posture",
+    "exact CAD-to-built geometry agreement",
+    "material stiffness and pad deformation",
+    "grasp or cutting force",
+    "continuous actuator capacity"
+  ],
+  "decision": "Compare the reported short working stroke with CAD geometry. Preserve originals. Any copy-only relief remains an explicit simulation/CAD design revision and is not promoted to a measured prototype model. Acceptance tolerances and V8 targets remain frozen."
+}

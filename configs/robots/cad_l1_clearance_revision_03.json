@@ -1,0 +1,69 @@
+{
+  "schema_version": "cad-l1-clearance-revision/1.0",
+  "revision_id": "cad_l1_clearance_revision_03",
+  "status": "experimental_geometry_not_as_built_validated",
+  "original_part": "gripper/Eslabon L.ipt",
+  "original_part_sha256": "3e227d82a3865eac1a1f7c4d1b6db9541867aeef930bbe7a5a0df3c2d039831c",
+  "private_part": "gripper/Eslabon L1 clearance rev03.ipt",
+  "gripper_assembly": "gripper/Gripper ensamble.iam",
+  "arm_assembly": "arm/Ensamble brazo v2.iam",
+  "occurrence_to_replace": "Eslabon L:1",
+  "occurrence_to_preserve": "Eslabon L:2",
+  "feature_name": "CAD_L1_clearance_rev03_q08481093_design0205mm",
+  "target_driver_rad": 0.0848109276510016,
+  "target_source": "Original ideal CAD gives 6.000 mm projected flexible-pad gap and native BRep gives 6.00666 mm at this coordinate. User reported approximate 6 mm flexible and 8 mm rigid openings; this is not motor/encoder/as-built calibration.",
+  "reported_rigid_definition_uncertainty": "At this coordinate native gaps are 10.01551 mm between pad carriers, 8.39080 mm between L links, and 6.72901 mm between blades. The user's approximate rigid opening does not specify which pair was measured.",
+  "CAD_clearance_reserve_m": 0.000205,
+  "reserve_status": "Design offset includes 5um additional material relief solely to certify the unchanged 0.200mm continuous CAD minimum with finite Lipschitz sampling; not hardware accuracy or acceptance relaxation.",
+  "expected_housing_plane_normal": [
+    0.9659258262890683,
+    0,
+    -0.25881904510252074
+  ],
+  "expected_housing_plane_offset_m": 0.025864799277197134,
+  "native_plane_match_tolerance_m": 1e-06,
+  "local_cut_normal_extent_m": 0.006,
+  "local_cut_tangent_halfwidth_m": 0.006,
+  "symmetric_extrusion_distance_m": 0.01,
+  "pin_hole_radius_m": 0.0015,
+  "pin_axis_local_xz_m": [
+    0,
+    0
+  ],
+  "minimum_geometric_ligament_m": 0.0019,
+  "maximum_removed_fraction_of_part_volume": 0.01,
+  "mesh_chord_tolerance_m": 5e-05,
+  "estimated_removed_volume_mm3": null,
+  "alternative_housing_pocket": "Same approximate radial clearance would leave about 0.918 mm of a 1.5 mm housing wall; the selected lug cut retains about 1.918 mm to the unchanged 1.5 mm-radius pin hole. These are geometric comparisons, not strength validations.",
+  "mechanical_validation": "No FEA, fatigue, stiffness, printed-material or hardware load validation. No claim that the experimental copy matches the built mechanism.",
+  "unchanged": [
+    "source CAD originals",
+    "L2 shared source geometry",
+    "hole centers and axes",
+    "saved assembly poses",
+    "control and gains",
+    "all acceptance thresholds",
+    "external 4 mm motion clearance"
+  ],
+  "additional_local_cuts": [
+    {
+      "name": "CAD_L1_front_edge_relief_rev02",
+      "normal_local": [
+        -0.4917420466878383,
+        0.0,
+        0.8707409256025904
+      ],
+      "offset_local_m": 0.003405,
+      "source_brep_result": "outputs\\real_harvester_validation\\gripper_functional_revision_geometry_04\\revised\\result.json",
+      "source_brep_sha256": "07e237f040bbfae10583907a39d1667aa02eb0d084abc9f08cbecd5de541304d",
+      "derivation": "XZ normal of native closest-point segment at functional coordinate. A second local half-plane, minimum distance 3.405mm from untouched pin axis, retains at least 1.905mm radial ligament. Primary plane and all minimum targets unchanged. Exact native sweep remains required.",
+      "normal_assembly": [
+        0.9784756569898103,
+        0.0,
+        -0.2063622753275392
+      ]
+    }
+  ],
+  "previous_revision_status": "Revision02 native target gap0.200mm but a finite global-Lipschitz certificate cannot establish that exact positive lower bound with zero slack; preserved. Radial ligament target remains1.900mm.",
+  "minimum_continuous_CAD_clearance_m": 0.0002
+}

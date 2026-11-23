@@ -27,6 +27,7 @@ sys.path.insert(0, str(REPO/'src'))
 from uchuva_gazebo.robot_spec import resolve_robot_profile, verify_robot_assets
 from uchuva_gazebo.robot_kinematics import forward_kinematics, compose_poses
 from uchuva_gazebo.robot_sdf import resolved_robot_model, resolved_robot_contract
+from uchuva_gazebo.robot_mechanism_validation import audit_mechanism_sample, audit_passive_gear_commands
 
 
 def digest(path):
@@ -44,8 +45,13 @@ def node(parent, tag, text=None, **attributes):
     return child
 
 
-def protocol(robot, continue_after_tracking_failure=False):
+def protocol(robot, continue_after_tracking_failure=False, max_step_size=.001):
+    if not math.isfinite(max_step_size) or not 0 < max_step_size <= .001:
+        raise ValueError('Explicit integrator step must be finite, positive and no larger than the original 1 ms')
     data = robot.to_dict()
+    physics = data.get('physics', {})
+    if max_step_size > physics.get('maximum_step_s', .001):
+        raise ValueError('Requested integrator step exceeds the explicit profile physics contract')
     movable = [j for j in data['joints'] if j['type'] != 'fixed']
     if not movable or not robot.joint_names:
         raise ValueError('The probe requires movable arm joints')
@@ -53,7 +59,8 @@ def protocol(robot, continue_after_tracking_failure=False):
         raise ValueError('Zero posture is outside a declared joint limit; no implicit reference remapping')
     if set(robot.joint_names) != set(data['control']['arm']):
         raise ValueError('Each arm joint requires its declared force PID controller')
-    zero = {j['name']: 0.0 for j in movable}
+    passive_mechanisms = any(j['group'] == 'passive' for j in movable)
+    zero = {j['name']: 0.0 for j in movable if not passive_mechanisms or j['group'] == 'arm'}
     cases = [{'name':'zero','target':zero}]
     for joint in movable:
         if joint['group'] != 'arm':
@@ -72,10 +79,19 @@ def protocol(robot, continue_after_tracking_failure=False):
         'target_tolerance_rad':.01,'steady_velocity_tolerance_rad_s':.01,
         'minimum_steady_samples':20,'minimum_steady_duration_s':.2,
         'phase_sim_timeout_s':12,'phase_wall_timeout_s':60,
-        'initial_wall_timeout_s':20,'max_step_size_s':.001,
+        'initial_wall_timeout_s':20,'max_step_size_s':max_step_size,
+        'integrator_revision':'original 1 ms' if max_step_size == .001 else 'explicit smaller step for force-coupled CAD mechanisms; acceptance tolerances unchanged',
+        'physics_solver_type':physics.get('solver_type'),
+        'physics_collision_detector':physics.get('collision_detector', 'ode'),
         'pose_publish_rate_hz':100,'matched_timestamp_tolerance_ns':0,
+        'mechanism_tolerances':{'suspension_position_m':.001,'gripper_position_m':.0005,
+                                'closure_orientation_rad':.001,'gear_coordinate_rad':.001},
+        'mechanism_scope':'Independent native body/auxiliary poses and observed gear coordinates; FK tree consistency alone cannot prove a closed mechanism.',
         'minimum_evaluated_samples_per_case':20,
         'continue_after_tracking_failure':bool(continue_after_tracking_failure),
+        'tracking_joint_names':list(zero),
+        'tracking_scope':('Only the five commanded arm joints have position targets. Passive mechanism coordinates are measured for every-link FK and all-moving-joint velocity stability, never commanded to zero.'
+                          if passive_mechanisms else 'Historical fixture: all movable coordinates have zero reference except the individual arm displacement.'),
         'base_start_xyz_yaw':[.3,-.2,.7,.35],
         'pose_semantics':'PosePublisher Pose.header stamp; frame_id is model. JointStatePublisher Model.header stamp. Exact nanosecond join, no interpolation.',
         'criterion':'All native links agree with FK(measured q) throughout each observed phase; additionally target reached and stable.',
@@ -93,7 +109,7 @@ def make_world(robot, criteria, with_observer):
                 removed['collisions' if kind == 'collision' else 'sensors'] += 1
     for plugin in list(model.findall('plugin')):
         name = plugin.attrib.get('name','')
-        if name.endswith('JointController') or ('RobotTelemetrySystem' in name and not with_observer):
+        if name.endswith(('JointController','PosePublisher')) or ('RobotTelemetrySystem' in name and not with_observer):
             model.remove(plugin)
             removed['plugins'].append(name)
         elif name.endswith('JointStatePublisher'):
@@ -112,6 +128,10 @@ def make_world(robot, criteria, with_observer):
     physics = node(world,'physics',name='1ms',type='ignored')
     node(physics,'max_step_size',criteria['max_step_size_s'])
     node(physics,'real_time_factor',1)
+    if criteria.get('physics_solver_type'):
+        dart=node(physics,'dart')
+        node(node(dart,'solver'),'solver_type',criteria['physics_solver_type'])
+        node(dart,'collision_detector',criteria['physics_collision_detector'])
     node(world,'plugin',filename='gz-sim-physics-system',name='gz::sim::systems::Physics')
     world.append(model)
     return sdf, removed
@@ -152,6 +172,7 @@ def native_probe(robot, output, criteria, plugins):
     from gz.msgs10.pose_v_pb2 import Pose_V
     from gz.msgs10.model_pb2 import Model
     from gz.msgs10.double_pb2 import Double
+    from gz.msgs10.stringmsg_pb2 import StringMsg
     from google.protobuf.json_format import MessageToDict
 
     data = robot.to_dict()
@@ -162,8 +183,10 @@ def native_probe(robot, output, criteria, plugins):
     transport = Node()
     condition = threading.Condition()
     pose_rows, joint_rows, errors = {}, {}, []
+    telemetry_audits = []
     raw_pose = (output/'native_pose_messages.jsonl').open('w')
     raw_joint = (output/'native_joint_messages.jsonl').open('w')
+    raw_telemetry = (output/'native_robot_telemetry.jsonl').open('w')
 
     def ns(header):
         return int(header.stamp.sec)*1_000_000_000+int(header.stamp.nsec)
@@ -220,10 +243,25 @@ def native_probe(robot, output, criteria, plugins):
         except Exception as error:
             with condition:errors.append(repr(error));condition.notify_all()
 
+    def on_telemetry(message):
+        try:
+            row = json.loads(message.data)
+            checked = audit_passive_gear_commands(robot,row)
+            with condition:
+                raw_telemetry.write(json.dumps(row,allow_nan=False)+'\n');raw_telemetry.flush()
+                telemetry_audits.append(checked)
+                if not checked['passed']:
+                    errors.extend(checked['failures'])
+                condition.notify_all()
+        except Exception as error:
+            with condition:errors.append(repr(error));condition.notify_all()
+
     pose_topic = '/probe/fk_link_poses'
     joint_topic = contract['topics']['joint_states']
     if not transport.subscribe(Pose_V,pose_topic,on_pose) or not transport.subscribe(Model,joint_topic,on_joint):
         raise RuntimeError('Native subscriptions failed')
+    if data.get('gear_couplings') and not transport.subscribe(StringMsg,contract['topics_robot_telemetry'],on_telemetry):
+        raise RuntimeError('Native gear motor observation subscription failed')
     publishers = {name:transport.advertise(topic,Double) for name,topic in contract['topics']['joint_commands'].items()}
     log = (output/'native.log').open('w')
     process = subprocess.Popen(['gz','sim','--force-version','8','-s','-r',str(output/'probe.sdf')],
@@ -258,12 +296,16 @@ def native_probe(robot, output, criteria, plugins):
                     samples = [(t,joint_rows[t],pose_rows[t]) for t in stamps]
                 for stamp,joints,poses in samples:
                     link_errors = compare_sample(robot,joints,poses)
-                    row = {'stamp_ns':stamp,'joint_positions':joints['positions'],'link_errors':link_errors}
+                    mechanism = audit_mechanism_sample(robot,joints['positions'],poses['links'])
+                    row = {'stamp_ns':stamp,'joint_positions':joints['positions'],'link_errors':link_errors,
+                           'observed_mechanism':mechanism}
                     evaluated.append(row)
                     position_error = max(x['position_error_m'] for x in link_errors.values())
                     rotation_error = max(x['orientation_error_rad'] for x in link_errors.values())
                     if position_error>criteria['position_tolerance_m'] or rotation_error>criteria['orientation_tolerance_rad']:
                         failure = 'native_fk_mismatch'
+                    if not mechanism['passed']:
+                        failure = 'native_mechanism_constraint_violation'
                     target_error = max(abs(joints['positions'][name]-value) for name,value in case['target'].items())
                     speed = max(abs(v) for v in joints['velocities'].values())
                     if target_error<=criteria['target_tolerance_rad'] and speed<=criteria['steady_velocity_tolerance_rad_s']:
@@ -278,10 +320,15 @@ def native_probe(robot, output, criteria, plugins):
                 if now-wall_start>criteria['phase_wall_timeout_s'] or (last_evaluated-begin)*1e-9>criteria['phase_sim_timeout_s']:
                     failure='tracking_not_settled_within_protocol' if enough else 'observation_timeout';break
                 with condition:condition.wait(.025)
+            kinematic_consistent = enough and all(
+                error['position_error_m'] <= criteria['position_tolerance_m'] and
+                error['orientation_error_rad'] <= criteria['orientation_tolerance_rad']
+                for sample in evaluated for error in sample['link_errors'].values())
             result = {'name':case['name'],'status':'FAIL' if failure else 'PASS','reason':failure,
                       'target':case['target'],'samples':len(evaluated),'steady_samples':len(accepted),
                       'wall_elapsed_s':time.monotonic()-wall_start,
-                      'kinematic_consistency_status':'PASS' if enough and failure != 'native_fk_mismatch' else 'FAIL',
+                      'kinematic_consistency_status':'PASS' if kinematic_consistent else 'FAIL',
+                      'mechanism_constraint_status':'PASS' if enough and all(row['observed_mechanism']['passed'] for row in evaluated) else 'FAIL',
                       'target_reached':target_error is not None and target_error<=criteria['target_tolerance_rad'],
                       'target_stable':stable,
                       'last_target_error_rad':target_error,'last_max_joint_speed_rad_s':speed,
@@ -301,17 +348,23 @@ def native_probe(robot, output, criteria, plugins):
             try:process.wait(timeout=5)
             except subprocess.TimeoutExpired:os.killpg(process.pid,signal.SIGKILL);process.wait(timeout=5)
         transport.unsubscribe(pose_topic);transport.unsubscribe(joint_topic)
-        raw_pose.close();raw_joint.close();log.close()
+        if data.get('gear_couplings'):transport.unsubscribe(contract['topics_robot_telemetry'])
+        raw_pose.close();raw_joint.close();raw_telemetry.close();log.close()
     result_by_name = {case['name']:case for case in results}
     for case in criteria['cases']:
         if case['name'] not in result_by_name:
             results.append({'name':case['name'],'status':'NO EJECUTADO','reason':'Earlier diagnostic failure'})
-    return {'status':'PASS' if all(x['status']=='PASS' for x in results) else 'FAIL','cases':results,
+    follower_commands_passed = not data.get('gear_couplings') or bool(telemetry_audits) and all(row['passed'] for row in telemetry_audits)
+    return {'status':'PASS' if all(x['status']=='PASS' for x in results) and follower_commands_passed else 'FAIL','cases':results,
             'kinematic_consistency_status':'PASS' if all(x.get('kinematic_consistency_status')=='PASS' for x in results) else 'FAIL',
             'tracking_status':'PASS' if all(x.get('target_reached') and x.get('target_stable') for x in results) else 'FAIL',
+            'mechanism_constraint_status':'PASS' if all(x.get('mechanism_constraint_status')=='PASS' for x in results) else 'FAIL',
+            'passive_follower_motor_commands_status':'PASS' if follower_commands_passed else 'FAIL',
+            'passive_follower_audited_samples':len(telemetry_audits),
             'callback_errors':errors,'partition':os.environ['GZ_PARTITION'],
             'raw_pose_sha256':digest(output/'native_pose_messages.jsonl'),
-            'raw_joint_sha256':digest(output/'native_joint_messages.jsonl')}
+            'raw_joint_sha256':digest(output/'native_joint_messages.jsonl'),
+            'raw_robot_telemetry_sha256':digest(output/'native_robot_telemetry.jsonl')}
 
 
 def main():
@@ -320,6 +373,8 @@ def main():
     parser.add_argument('--asset-root',type=Path)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--plugin-dir',type=Path)
+    parser.add_argument('--max-step-size',type=float,default=.001,
+                        help='Explicit integrator revision; original acceptance tolerances remain unchanged')
     parser.add_argument('--continue-after-tracking-failure',action='store_true',
                         help='Continue all postures after a tracking timeout; preserve FAIL and unchanged tolerances')
     args = parser.parse_args()
@@ -330,12 +385,44 @@ def main():
         robot = resolve_robot_profile(args.profile)
         asset_root = (args.asset_root or REPO).resolve()
         assets = verify_robot_assets(robot,asset_root)
-        criteria = protocol(robot,args.continue_after_tracking_failure)
+        criteria = protocol(robot,args.continue_after_tracking_failure,args.max_step_size)
         dump(output/'protocol.json',criteria)
         dump(output/'robot_resolved.json',robot.to_dict())
         plugins = args.plugin_dir.resolve() if args.plugin_dir else None
-        if plugins and not (plugins/'libUchuvaRobotTelemetrySystem.so').is_file():
-            raise ValueError('Requested telemetry plugin directory lacks the observer library')
+        required = ['libUchuvaRobotTelemetrySystem.so'] if plugins else []
+        for key, name in (('closures', 'ClosedLoopSystem'), ('gear_couplings', 'GearCouplingSystem')):
+            if robot.to_dict().get(key):
+                if not plugins:
+                    raise ValueError('Mechanism diagnostic requires explicit frozen plugin directory')
+                required.append('libUchuva'+name+'.so')
+        if any(settings.get('reference_mode') == 'ramped_position'
+               for group in ('arm', 'gripper')
+               for settings in robot.to_dict()['control'].get(group, {}).values()):
+            if not plugins:
+                raise ValueError('Ramped force controller requires an explicit frozen plugin directory')
+            required.append('libUchuvaJointPositionForceSystem.so')
+        library_hashes = {}
+        if plugins:
+            build = json.loads((plugins/'build_provenance.json').read_text())
+            if ('libUchuvaJointPositionForceSystem.so' in required and
+                    build.get('source_sha256', {}).get('PositionForceController.hh') !=
+                    digest(REPO/'gazebo/harvest_system/PositionForceController.hh')):
+                raise ValueError('Ramped force-controller helper differs from its native build')
+            frozen = output/'plugins'
+            frozen.mkdir()
+            for name in required:
+                library = plugins/name
+                actual = digest(library)
+                source_name = name.removeprefix('libUchuva').removesuffix('.so')+'.cc'
+                if (build.get('libraries_sha256',{}).get(name) != actual or
+                    build.get('source_sha256',{}).get(source_name) != digest(REPO/'gazebo/harvest_system'/source_name)):
+                    raise ValueError('Requested plugin differs from build/source provenance: '+name)
+                shutil.copyfile(library,frozen/name)
+                if digest(frozen/name) != actual:
+                    raise ValueError('Native plugin changed during snapshot')
+                library_hashes[name] = actual
+            shutil.copyfile(plugins/'build_provenance.json',frozen/'build_provenance.json')
+            plugins = frozen
         sdf, removed = make_world(robot,criteria,plugins is not None)
         # Asset hashes were checked against the immutable profile; only fixture
         # URI resolution changes, never geometry scale or source mesh bytes.
@@ -346,9 +433,12 @@ def main():
         provenance = {'profile_sha256':robot.sha256,'assets_sha256':assets,'diagnostic_derivation':removed,
                       'script_sha256':digest(__file__),'protocol_sha256':digest(output/'protocol.json'),
                       'sdf_sha256':digest(output/'probe.sdf'),
-                      'source_sha256':{name:digest(REPO/'src/uchuva_gazebo'/name) for name in ('robot_spec.py','robot_kinematics.py','robot_sdf.py')},
+                      'source_sha256':{name:digest(REPO/'src/uchuva_gazebo'/name) for name in ('robot_spec.py','robot_kinematics.py','robot_sdf.py','robot_mechanism_validation.py')},
                       'primary_pose_api_source':'https://github.com/gazebosim/gz-sim/blob/gz-sim8/src/systems/pose_publisher/PosePublisher.cc'}
-        if plugins:provenance['observer_sha256']=digest(plugins/'libUchuvaRobotTelemetrySystem.so')
+        if plugins:
+            provenance['observer_sha256']=digest(plugins/'libUchuvaRobotTelemetrySystem.so')
+            provenance['native_libraries_sha256']=library_hashes
+            provenance['native_build_provenance_sha256']=digest(plugins/'build_provenance.json')
         dump(output/'provenance.json',provenance)
         if not shutil.which('gz'):
             raise RuntimeError('Gazebo CLI unavailable; execute with WSL system Python and native bindings')

@@ -130,15 +130,17 @@ def forward_kinematics(robot: ResolvedRobot, joint_positions=None, base_pose=Non
 
 
 def collision_shapes(robot, frame_poses):
-    """Exact declared collision primitives, with complete observed/FK poses."""
+    """Declared collision primitives/mesh identities with full observed/FK poses."""
     robot.require_capability("collision_primitives")
     result = []
     for link in robot.links:
         if link["name"] not in frame_poses:
             raise ValueError("Missing collision link pose")
         for shape in link["collisions"]:
-            if shape["geometry"]["type"] not in ("box", "sphere", "cylinder"):
+            if shape["geometry"]["type"] not in ("box", "sphere", "cylinder", "mesh"):
                 raise ValueError("Unsupported collision geometry")
+            if shape['geometry']['type'] == 'mesh':
+                robot.require_capability('collision_meshes')
             result.append({"name": shape["name"], "link": link["name"],
                            "geometry": _thaw(shape["geometry"]),
                            "pose": compose_poses(frame_poses[link["name"]], shape["pose"]),

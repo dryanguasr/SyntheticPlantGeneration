@@ -3,6 +3,7 @@ import importlib.util
 import math
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 from uchuva_gazebo.robot_spec import resolve_robot_profile
 from uchuva_gazebo.robot_kinematics import forward_kinematics, pose_from_rpy
@@ -56,6 +57,27 @@ class RobotNativeProbeTests(unittest.TestCase):
         self.assertAlmostEqual(probe.quaternion_distance([0,0,0,1],[0,0,math.sin(.1),math.cos(.1)]),.2)
         with self.assertRaises(ValueError):
             probe.quaternion_distance([0,0,0,1],[0,0,0,0])
+
+    def test_probe_replaces_canonical_pose_publisher_without_duplicates(self):
+        model=probe.resolved_robot_model(self.robot)
+        probe.node(model,'plugin',filename='gz-sim-pose-publisher-system',
+                   name='gz::sim::systems::PosePublisher')
+        with patch.object(probe,'resolved_robot_model',return_value=model):
+            world,removed=probe.make_world(self.robot,probe.protocol(self.robot),False)
+        publishers=[p for p in world.findall('world/model/plugin')
+                    if p.attrib['name'].endswith('PosePublisher')]
+        self.assertEqual(len(publishers),1)
+        self.assertEqual(publishers[0].findtext('topic'),'/probe/fk_link_poses')
+        self.assertIn('gz::sim::systems::PosePublisher',removed['plugins'])
+
+    def test_integrator_revision_preserves_every_acceptance_threshold(self):
+        baseline = probe.protocol(self.robot)
+        revised = probe.protocol(self.robot, max_step_size=.0001)
+        changes = {key for key in baseline if baseline[key] != revised[key]}
+        self.assertEqual(changes, {'max_step_size_s', 'integrator_revision'})
+        for step in (0, -.001, .002, float('nan')):
+            with self.assertRaises(ValueError):
+                probe.protocol(self.robot, max_step_size=step)
 
 
 if __name__ == '__main__':

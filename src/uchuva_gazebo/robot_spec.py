@@ -187,6 +187,64 @@ def _expression(value, parameters, depth=0):
     return _number(result, "derived value")
 
 
+def _validate_closures(document, links, joints):
+    """A native non-tree weld reunites a mass-partitioned physical body.
+
+    Only the auxiliary enters the extra moving tree joint. No physical mass,
+    visual or collision is duplicated, and the CAD reference must close before
+    dynamics begins. Runtime residuals still need native observation.
+    """
+    closures = document.get('closures', [])
+    if not closures:
+        return
+    from .robot_kinematics import compose_poses, pose_identity, axis_quaternion
+    poses = {document['root_link']: pose_identity()}
+    pending = list(joints.values())
+    while pending:
+        ready = [j for j in pending if j['parent'] in poses]
+        if not ready:
+            raise ValueError('Disconnected closure tree')
+        for joint in ready:
+            motion = pose_identity()
+            if joint['type'] == 'revolute':
+                motion['quaternion_xyzw'] = axis_quaternion(joint['axis'], joint['zero_offset'])
+            elif joint['type'] == 'prismatic':
+                motion['xyz_m'] = [v*joint['zero_offset'] for v in joint['axis']]
+            poses[joint['child']] = compose_poses(compose_poses(compose_poses(
+                poses[joint['parent']], joint['origin']), motion), joint['child_pose'])
+            pending.remove(joint)
+    names, auxiliaries, bodies = set(), set(), set()
+    for row in closures:
+        name, body, auxiliary = row['name'], row['body'], row['auxiliary']
+        if name in names or auxiliary in auxiliaries or body in bodies:
+            raise ValueError('Duplicate closure name/auxiliary/body; explicit unique partition required')
+        names.add(name); auxiliaries.add(auxiliary); bodies.add(body)
+        if body not in links or auxiliary not in links or body == auxiliary:
+            raise ValueError('Closure refers to missing/identical links')
+        joint = joints.get(row['moving_joint'])
+        if joint is None or joint['child'] != auxiliary or joint['type'] == 'fixed':
+            raise ValueError('Closure must preserve its named moving joint on the auxiliary')
+        if links[auxiliary]['collisions'] or links[auxiliary]['visuals']:
+            raise ValueError('Closure auxiliary must not duplicate geometry')
+        fraction = row['mass_fraction']
+        if not 0 < fraction < 1:
+            raise ValueError('Closure mass fraction must lie strictly between zero and one')
+        original = row['original_inertial']
+        _inertia(original, name)
+        for link_name, factor in ((body, 1-fraction), (auxiliary, fraction)):
+            inertia = links[link_name]['inertial']
+            if math.dist(inertia['com_m'], original['com_m']) > 1e-10:
+                raise ValueError('Closure COM frames differ')
+            expected = [original['mass_kg']*factor, *(v*factor for v in original['tensor_kg_m2'])]
+            actual = [inertia['mass_kg'], *inertia['tensor_kg_m2']]
+            if any(not math.isclose(a, b, rel_tol=1e-10, abs_tol=1e-13) for a,b in zip(actual, expected)):
+                raise ValueError('Closure split does not conserve the original mass/tensor')
+        a, b = poses[body], poses[auxiliary]
+        if (math.dist(a['xyz_m'], b['xyz_m']) > 1e-8 or
+            1-abs(sum(x*y for x,y in zip(a['quaternion_xyzw'],b['quaternion_xyzw']))) > 1e-10):
+            raise ValueError('Closure does not coincide at the CAD reference pose')
+
+
 def validate_robot_spec(document, *, require_complete=True):
     """Validate shape, references, physics, topology and provenance; no mutation."""
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -282,8 +340,9 @@ def validate_robot_spec(document, *, require_complete=True):
                     if g["type"] == "cylinder":
                         _number(g.get("length_m"), "length", positive=True)
                 elif g["type"] == "mesh":
-                    if category == "collisions":
-                        raise ValueError("Mesh collision requires a verified geometry adapter; primitive core fails closed")
+                    if category == "collisions" and ('collision_meshes' not in document['capabilities'] or
+                            document.get('physics', {}).get('backend') != 'DART'):
+                        raise ValueError("Mesh collision requires the explicit DART mesh adapter capability")
                     uri = g.get("uri", "")
                     if not uri or Path(uri).is_absolute() or ":" in uri or "\\" in uri or ".." in Path(uri).parts:
                         raise ValueError("Mesh URI must stay relative to its asset root")
@@ -304,6 +363,31 @@ def validate_robot_spec(document, *, require_complete=True):
         if not joints[name]["limits"]["lower"] <= value <= joints[name]["limits"]["upper"]:
             raise ValueError("Home position exceeds joint limits")
     exclusions = set()
+    _validate_closures(document, links, joints)
+    if 'physics' in document:
+        _number(document['physics']['maximum_step_s'], 'maximum physics step', positive=True)
+    coupling_names, coupling_joints = set(), set()
+    for row in document.get('gear_couplings', []):
+        driver, follower = row['driver'], row['follower']
+        if (row['name'] in coupling_names or driver == follower or
+                {driver, follower} & coupling_joints or
+                not {driver, follower} <= joints.keys()):
+            raise ValueError('Gear couplings require unique known driver/follower joints')
+        coupling_names.add(row['name'])
+        coupling_joints.update((driver, follower))
+        if any(joints[n]['type'] != 'revolute' for n in (driver, follower)):
+            raise ValueError('Gear coupling currently supports revolute joints only')
+        if joints[follower]['group'] != 'passive' or follower in document['control'].get('gripper', {}):
+            raise ValueError('Gear follower must be passive with no actuator controller')
+        if driver not in document['control'].get('gripper', {}):
+            raise ValueError('Gear driver requires one explicit gripper controller')
+        if abs(row['ratio']) < 1e-12:
+            raise ValueError('Gear ratio cannot be zero')
+        for key in ('stiffness_nm_rad', 'maximum_step_s'):
+            _number(row[key], key, positive=True)
+        _number(row['damping_nms_rad'], 'coupling damping', nonnegative=True)
+        if document.get('physics', {}).get('maximum_step_s', row['maximum_step_s']) > row['maximum_step_s']:
+            raise ValueError('Physics step exceeds the declared gear-coupling integration bound')
     if document["collision_policy"]["mode"] == "legacy_disjoint_link_masks" and "legacy_proxy" not in document["capabilities"]:
         raise ValueError("Legacy all-link contact suppression is restricted to the proxy adapter")
     for exclusion in document["collision_policy"]["excluded_pairs"]:
@@ -341,6 +425,8 @@ def validate_robot_spec(document, *, require_complete=True):
             raise ValueError("Controller velocity exceeds joint capacity")
         if settings["i_min"] > settings["i_max"]:
             raise ValueError("Inverted integral limits")
+        if settings.get("reference_mode") == "ramped_position" and not limit["lower"] <= 0 <= limit["upper"]:
+            raise ValueError("Ramped controller initial zero is outside joint limits")
     if set(document["control"]["arm"]) != arm:
         raise ValueError("Every arm joint requires controller settings")
     drive = document["control"]["drive"]
@@ -368,6 +454,8 @@ def validate_robot_spec(document, *, require_complete=True):
                 max(abs(settings["cmd_min"]), abs(settings["cmd_max"])) > limit["effort"] or
                 settings["command_velocity"] > limit["velocity"]):
             raise ValueError("Gripper controller exceeds the joint limits")
+        if settings.get("reference_mode") == "ramped_position" and not limit["lower"] <= 0 <= limit["upper"]:
+            raise ValueError("Ramped controller initial zero is outside joint limits")
     sensor_names = set()
     for sensor in document["sensors"]:
         if sensor["name"] in sensor_names:
@@ -509,7 +597,7 @@ def load_robot_json(path):
 
 
 def verify_robot_assets(robot, asset_root):
-    """Verify every referenced visual mesh inside an explicit local asset root.
+    """Verify every visual/collision mesh inside an explicit local asset root.
 
     No downloads, scaling, CAD conversion or executable side effects occur.
     Returns the portable URI->content-hash mapping used for package admission.
@@ -519,8 +607,8 @@ def verify_robot_assets(robot, asset_root):
         raise ValueError("Robot asset root must be a directory")
     verified = {}
     for link in robot.links:
-        for visual in link["visuals"]:
-            geometry = visual["geometry"]
+        for shape in (*link["visuals"], *link["collisions"]):
+            geometry = shape["geometry"]
             if geometry["type"] != "mesh":
                 continue
             path = (root/geometry["uri"]).resolve(strict=True)

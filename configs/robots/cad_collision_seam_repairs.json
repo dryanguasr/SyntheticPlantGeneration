@@ -1,0 +1,15 @@
+{
+  "schema_version": "cad-collision-seam-repairs/1",
+  "repairs": {
+    "4bbd76fe115852a6fca83268fb35173e1a8255c61214ec72c5944c3f7589705e": {
+      "native_uri": "meshes/doc_00047.obj",
+      "native_sha256": "e3850aa94536fcd5e0c8af6be8b3e2486873cc888ca0cf35540e93e9e2da687c",
+      "source_document": "arm/Tapa eslabon MA.ipt",
+      "change_class": "restore_native_source_and_numeric_seam",
+      "reason": "Restore the nonzero native triangle removed by the earlier 1e-15 square-metre cross-norm cutoff; close the remaining native tessellation seam below 5nm. Visual source is unchanged. No physical acceptance tolerance changes.",
+      "maximum_position_change_m": 5e-9,
+      "replace_position_m": [0.01709999730234708, -0.01214224045465541, 0.008463088302728185],
+      "with_position_m": [0.017099998774325248, -0.012142244109618932, 0.008463085709723615]
+    }
+  }
+}

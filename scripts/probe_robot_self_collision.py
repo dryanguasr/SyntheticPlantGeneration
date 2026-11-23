@@ -13,11 +13,18 @@ import json
 import os
 from pathlib import Path
 import signal
+import shutil
 import subprocess
 import sys
 import threading
 import time
 import uuid
+import xml.etree.ElementTree as ET
+
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO/'src'))
+CASES = ('adjacent', 'nonadjacent', 'disabled_control',
+         'masked_excluded', 'masked_required', 'masked_external')
 
 
 def digest(path):
@@ -46,8 +53,50 @@ def world(adjacent, enabled, identity):
 </model></world></sdf>'''
 
 
+def masked_world(case, identity):
+    """Use the production compiler; required pairs keep a shared mask bit."""
+    from uchuva_gazebo.robot_collision_filters import collision_masks
+    data = {'links': [{'name':name,'collisions':[] if name=='middle' else [{}]}
+                      for name in ('base','middle','ball','witness')],
+            'joints': [{'parent':a,'child':b} for a,b in
+                       (('base','middle'),('middle','ball'),('base','witness'))],
+            'collision_policy': {'excluded_pairs': [{'links':[a,b]} for a,b in
+                       (('base','middle'),('middle','ball'),('base','witness'),('base','ball'))]}}
+    masks = collision_masks(data)
+    sdf = ET.fromstring(world(False, True, identity))
+    model = sdf.find('world/model')
+    # Same joint graph and compiled masks in all three controls. Only which
+    # stationary slab lies under the falling ball differs.
+    base = model.find("link[@name='base']")
+    slab = base.find('collision')
+    slab.find('pose').text = ('0' if case=='masked_excluded' else '2')+' 0 .4 0 0 0'
+    witness = ET.SubElement(model,'link',name='witness')
+    inertial = ET.SubElement(witness,'inertial')
+    ET.SubElement(inertial,'mass').text='.1'
+    tensor = ET.SubElement(inertial,'inertia')
+    for name in ('ixx','iyy','izz'):ET.SubElement(tensor,name).text='.001'
+    witness_slab = ET.fromstring(ET.tostring(slab))
+    witness_slab.find('pose').text = ('0' if case=='masked_required' else '2')+' 0 .4 0 0 0'
+    witness.append(witness_slab)
+    joint = ET.SubElement(model,'joint',name='witness_anchor',type='fixed')
+    ET.SubElement(joint,'parent').text='base';ET.SubElement(joint,'child').text='witness'
+    for link in model.findall('link'):
+        for collision in link.findall('collision'):
+            collision.find('surface/contact/collide_bitmask').text=str(masks[link.get('name')])
+    if case=='masked_external':
+        external=ET.SubElement(sdf.find('world'),'model',name='external')
+        ET.SubElement(external,'static').text='true'
+        link=ET.SubElement(external,'link',name='slab')
+        collider=ET.fromstring(ET.tostring(slab))
+        collider.find('pose').text='0 0 .4 0 0 0'
+        collider.find('surface/contact/collide_bitmask').text='65535'
+        link.append(collider)
+    ET.indent(sdf,space='  ')
+    return ET.tostring(sdf,encoding='unicode'), {'compiler_input':data,'compiled_masks':masks}
+
+
 def run_case(output, case, plugins):
-    adjacent, enabled = {'adjacent': (True, True), 'nonadjacent': (False, True), 'disabled_control': (False, False)}[case]
+    adjacent, enabled = {'adjacent': (True, True), 'nonadjacent': (False, True), 'disabled_control': (False, False)}.get(case,(False,True))
     directory = output/case
     directory.mkdir()
     fixture = {'case': case, 'adjacent': adjacent, 'self_collide': enabled,
@@ -56,7 +105,12 @@ def run_case(output, case, plugins):
     identity = hashlib.sha256(json.dumps(fixture, sort_keys=True).encode()).hexdigest()
     dump(directory/'fixture.json', fixture)
     sdf = directory/'probe.sdf'
-    sdf.write_text(world(adjacent, enabled, identity))
+    if case.startswith('masked_'):
+        text, mask_report = masked_world(case,identity)
+        dump(directory/'collision_masks.json',mask_report)
+        sdf.write_text(text)
+    else:
+        sdf.write_text(world(adjacent, enabled, identity))
     check = subprocess.run(['gz', 'sdf', '-k', str(sdf)], capture_output=True, text=True)
     (directory/'sdf_check.log').write_text(check.stdout+check.stderr)
     if check.returncode:
@@ -97,7 +151,7 @@ def run_case(output, case, plugins):
     late = [row['joints'][0] for row in records if row['sim_time'] >= criteria['steady_start_s']]
     complete = [j for j in late if j['position_available'] and j['velocity_available'] and j['wrench_available']]
     heights = [1+j['position'] for j in complete]
-    expected = criteria['blocked_center_z_m'] if case == 'nonadjacent' else criteria['passed_center_z_m']
+    expected = criteria['blocked_center_z_m'] if case in ('nonadjacent','masked_required','masked_external') else criteria['passed_center_z_m']
     checks = {'native_exit': code == 0 and not errors,
               'observed_physics': len(complete) >= criteria['minimum_steady_samples'],
               'contact_outcome': bool(heights) and max(abs(z-expected) for z in heights) <= criteria['height_tolerance_m']}
@@ -115,23 +169,34 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--plugin-dir', required=True, type=Path)
-    parser.add_argument('--case', choices=['adjacent', 'nonadjacent', 'disabled_control'])
+    parser.add_argument('--case', choices=CASES)
     args = parser.parse_args()
     output, plugins = args.output.resolve(), args.plugin_dir.resolve()
     if args.case:
         return run_case(output, args.case, plugins)
     output.mkdir(parents=True, exist_ok=False)
+    frozen_plugins=output/'plugins';frozen_plugins.mkdir()
+    for name in ('libUchuvaRobotTelemetrySystem.so','build_provenance.json'):
+        shutil.copyfile(plugins/name,frozen_plugins/name)
+    build=json.loads((frozen_plugins/'build_provenance.json').read_text())
+    if build['libraries_sha256']['libUchuvaRobotTelemetrySystem.so']!=digest(frozen_plugins/'libUchuvaRobotTelemetrySystem.so'):
+        raise ValueError('Observer binary differs from build provenance')
+    plugins=frozen_plugins
+    (output/'probe_source.py').write_bytes(Path(__file__).read_bytes())
+    compiler=REPO/'src/uchuva_gazebo/robot_collision_filters.py'
+    (output/'collision_compiler_source.py').write_bytes(compiler.read_bytes())
     dump(output/'protocol.json', {'steady_start_s': 1.2, 'minimum_steady_samples': 50,
         'blocked_center_z_m': .6, 'passed_center_z_m': .2, 'height_tolerance_m': .005,
-        'scope': 'DART native adjacency semantics only; not CAD geometry or whole-robot validation'})
+        'scope': 'DART native adjacency and exact declared extra pair masks; not CAD geometry or whole-robot validation'})
     dump(output/'provenance.json', {'script_sha256': digest(__file__),
         'observer_sha256': digest(plugins/'libUchuvaRobotTelemetrySystem.so'),
+        'collision_compiler_sha256': digest(compiler),
         'gazebo_versions': subprocess.check_output(['gz', 'sim', '--versions'], text=True).strip(),
         'primary_sources': [
             'https://raw.githubusercontent.com/gazebosim/gz-physics/gz-physics7_7.8.0/dartsim/src/SDFFeatures.cc',
             'https://raw.githubusercontent.com/dartsim/dart/v6.13.2/dart/dynamics/Skeleton.cpp']})
     codes = {}
-    for case in ('adjacent', 'nonadjacent', 'disabled_control'):
+    for case in CASES:
         codes[case] = subprocess.run([sys.executable, __file__, '--output', str(output), '--plugin-dir', str(plugins), '--case', case]).returncode
     result = {'status': 'PASS' if all(code == 0 for code in codes.values()) else 'FAIL',
               'cases': {case: json.loads((output/case/'result.json').read_text()) if (output/case/'result.json').exists() else {'status': 'NO OBSERVADO'} for case in codes},

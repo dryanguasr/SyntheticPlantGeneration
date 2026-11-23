@@ -27,3 +27,34 @@ target_link_libraries(UchuvaRobotTelemetrySystem PRIVATE
   gz-plugin2::gz-plugin2 gz-sim8::gz-sim8
   gz-transport13::gz-transport13 gz-msgs10::gz-msgs10)
 install(TARGETS UchuvaRobotTelemetrySystem LIBRARY DESTINATION lib)
+
+add_library(UchuvaClosedLoopSystem SHARED ClosedLoopSystem.cc)
+target_compile_features(UchuvaClosedLoopSystem PRIVATE cxx_std_17)
+target_compile_options(UchuvaClosedLoopSystem PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(UchuvaClosedLoopSystem PRIVATE
+  gz-plugin2::gz-plugin2 gz-sim8::gz-sim8)
+install(TARGETS UchuvaClosedLoopSystem LIBRARY DESTINATION lib)
+
+add_library(UchuvaGearCouplingSystem SHARED GearCouplingSystem.cc)
+target_compile_features(UchuvaGearCouplingSystem PRIVATE cxx_std_17)
+target_compile_options(UchuvaGearCouplingSystem PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(UchuvaGearCouplingSystem PRIVATE
+  gz-plugin2::gz-plugin2 gz-sim8::gz-sim8
+  gz-transport13::gz-transport13 gz-msgs10::gz-msgs10)
+install(TARGETS UchuvaGearCouplingSystem LIBRARY DESTINATION lib)
+
+add_library(UchuvaJointPositionForceSystem SHARED JointPositionForceSystem.cc)
+target_compile_features(UchuvaJointPositionForceSystem PRIVATE cxx_std_17)
+target_compile_options(UchuvaJointPositionForceSystem PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(UchuvaJointPositionForceSystem PRIVATE
+  gz-plugin2::gz-plugin2 gz-sim8::gz-sim8
+  gz-transport13::gz-transport13 gz-msgs10::gz-msgs10)
+install(TARGETS UchuvaJointPositionForceSystem LIBRARY DESTINATION lib)
+
+include(CTest)
+if(BUILD_TESTING)
+  add_executable(PositionForceControllerTest tests/PositionForceControllerTest.cc)
+  target_compile_features(PositionForceControllerTest PRIVATE cxx_std_17)
+  target_link_libraries(PositionForceControllerTest PRIVATE gz-sim8::gz-sim8)
+  add_test(NAME PositionForceControllerContracts COMMAND PositionForceControllerTest)
+endif()

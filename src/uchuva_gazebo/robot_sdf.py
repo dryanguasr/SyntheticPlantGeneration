@@ -66,7 +66,7 @@ def resolved_robot_contract(robot):
         if parent != tool_parent:
             raise ValueError(f'{name} must be rigidly attached to TCP physical link {tool_parent}')
         tool_frames[role] = pose_rpy(compose_poses(inverse_pose(zero_poses[tool_parent]), zero_poses[name]))
-    return {
+    contract = {
         'schema_version': 'resolved-harvester-contract/1.0',
         'robot_spec_sha256': robot.sha256, 'profile_id': robot.profile_id,
         'model_name': data['model_name'], 'base_link': data['root_link'],
@@ -90,6 +90,25 @@ def resolved_robot_contract(robot):
         'native_validation': 'pending_gazebo',
         'native_harvest_eligible': 'native_harvest' in data['capabilities'],
     }
+    if data.get('closures') or data.get('gear_couplings') or data.get('physics'):
+        contract['schema_version'] = 'resolved-harvester-contract/1.1'
+        contract['closures'] = data.get('closures', [])
+        contract['gear_couplings'] = data.get('gear_couplings', [])
+        contract['physics'] = data.get('physics')
+        contract['all_joint_names'] = [j['name'] for j in data['joints'] if j['type'] != 'fixed']
+        contract['topics']['gripper_commands'] = {n: namespace+'/gripper/'+n+'/cmd_pos'
+                                                   for n in data['control'].get('gripper', {})}
+        if data.get('closures') or data.get('gear_couplings'):
+            contract['topics']['link_poses'] = namespace+'/link_poses'
+        contract['collision_backend']['native_pair_semantics'] = 'adjacency_plus_verified_16_bit_pair_masks'
+    ramped = {name: data['namespace']+'/'+group+'/'+name+'/force_control_state/v1'
+              for group in ('arm', 'gripper')
+              for name, settings in data['control'].get(group, {}).items()
+              if settings.get('reference_mode') == 'ramped_position'}
+    if ramped:
+        contract['schema_version'] = 'resolved-harvester-contract/1.2'
+        contract['topics']['position_force_states'] = ramped
+    return contract
 
 
 def resolved_robot_model(robot, start=(0, 0, 0, 0)):
@@ -115,9 +134,11 @@ Unsupported mechanisms fail rather than silently become fixed/ideal joints.
     # separate adjacent-body flag. The three native gravity/contact controls in
     # probe_robot_self_collision.py verify adjacency suppression and continued
     # nonadjacent contact. Declare that exact policy rather than hide it.
-    native_adjacency = data['collision_policy']['mode'] == 'explicit_pairs' and exclusions == adjacent_pairs
+    native_adjacency = data['collision_policy']['mode'] == 'explicit_pairs' and adjacent_pairs <= exclusions
     if not legacy_filter and not native_adjacency:
-        raise ValueError('DART requires explicit exclusions of exactly adjacent joint pairs; other policies need a validated native pair-filter adapter')
+        raise ValueError('DART requires explicit adjacency exclusions and verified pair masks')
+    from .robot_collision_filters import collision_masks
+    masks = collision_masks(data) if not legacy_filter else {}
     for link_index, row in enumerate(data['links']):
         link = e(model, 'link', name=row['name'])
         e(link, 'pose', numbers(pose_rpy(poses[row['name']])))
@@ -137,7 +158,7 @@ Unsupported mechanisms fail rather than silently become fixed/ideal joints.
                     material(node, shape.get('color_rgba', [.4, .45, .4, 1]))
                 else:
                     surface = e(node, 'surface')
-                    e(e(surface, 'contact'), 'collide_bitmask', (1 << link_index) if legacy_filter else 65535)
+                    e(e(surface, 'contact'), 'collide_bitmask', (1 << link_index) if legacy_filter else masks[row['name']])
                     if shape.get('surface'):
                         friction = e(e(surface, 'friction'), 'ode')
                         for name, value in shape['surface'].items():
@@ -156,9 +177,9 @@ Unsupported mechanisms fail rather than silently become fixed/ideal joints.
             for name, value in row['limits'].items():
                 if name in ('lower', 'upper', 'effort', 'velocity'):
                     e(limit, name, value)
-            if any(name in row for name in ('damping', 'friction')):
+            if any(name in row for name in ('damping', 'friction', 'spring_reference', 'spring_stiffness')):
                 dynamics = e(axis, 'dynamics')
-                for name in ('damping', 'friction'):
+                for name in ('damping', 'friction', 'spring_reference', 'spring_stiffness'):
                     if name in row:
                         e(dynamics, name, row[name])
     for row in data['frames']:
@@ -166,6 +187,19 @@ Unsupported mechanisms fail rather than silently become fixed/ideal joints.
         e(frame, 'pose', numbers(pose_rpy(row['pose'])), relative_to=row['parent'])
     _sensors(model, data, poses)
     _controllers(model, robot)
+    if data.get('closures'):
+        plugin = e(model, 'plugin', filename='libUchuvaClosedLoopSystem.so', name='uchuva::ClosedLoopSystem')
+        for row in data['closures']:
+            closure = e(plugin, 'closure', name=row['name'])
+            e(closure, 'body', row['body'])
+            e(closure, 'auxiliary', row['auxiliary'])
+    for row in data.get('gear_couplings', []):
+        plugin = e(model, 'plugin', filename='libUchuvaGearCouplingSystem.so', name='uchuva::GearCouplingSystem')
+        for key, value in row.items():
+            if key != 'name':
+                e(plugin, key, value)
+        e(plugin, 'robot_spec_sha256', robot.sha256)
+        e(plugin, 'topic', data['namespace']+'/gear_couplings/'+row['name'])
     return model
 
 
@@ -174,12 +208,23 @@ def _controllers(model, robot):
     contract = resolved_robot_contract(robot)
     positions = [(name, gains, contract['topics']['joint_commands'][name]) for name, gains in data['control']['arm'].items()]
     positions += [(name, gains, data['namespace']+'/gripper/'+name+'/cmd_pos') for name, gains in data['control'].get('gripper', {}).items()]
+    joints = {j['name']: j for j in data['joints']}
     for name, gains, topic in positions:
-        plugin = e(model, 'plugin', filename='gz-sim-joint-position-controller-system',
-                   name='gz::sim::systems::JointPositionController')
+        ramped = gains.get('reference_mode') == 'ramped_position'
+        plugin = e(model, 'plugin',
+                   filename='libUchuvaJointPositionForceSystem.so' if ramped else 'gz-sim-joint-position-controller-system',
+                   name='uchuva::JointPositionForceSystem' if ramped else 'gz::sim::systems::JointPositionController')
         e(plugin, 'joint_name', name)
         e(plugin, 'topic', topic)
-        e(plugin, 'use_velocity_commands', 'false')
+        if ramped:
+            e(plugin, 'command_velocity', gains['command_velocity'])
+            e(plugin, 'lower_limit', joints[name]['limits']['lower'])
+            e(plugin, 'upper_limit', joints[name]['limits']['upper'])
+            e(plugin, 'initial_position', 0)
+            e(plugin, 'state_topic', contract['topics']['position_force_states'][name])
+            e(plugin, 'robot_spec_sha256', robot.sha256)
+        else:
+            e(plugin, 'use_velocity_commands', 'false')
         for key in ('p_gain', 'i_gain', 'd_gain', 'i_min', 'i_max', 'cmd_min', 'cmd_max'):
             e(plugin, key, gains[key])
     publisher = e(model, 'plugin', filename='gz-sim-joint-state-publisher-system',
@@ -188,6 +233,15 @@ def _controllers(model, robot):
     for row in data['joints']:
         if row['type'] != 'fixed':
             e(publisher, 'joint_name', row['name'])
+    if 'link_poses' in contract['topics']:
+        poses = e(model, 'plugin', filename='gz-sim-pose-publisher-system',
+                  name='gz::sim::systems::PosePublisher')
+        for key, value in {'publish_link_pose': 'true', 'publish_model_pose': 'false',
+                'publish_nested_model_pose': 'false', 'publish_sensor_pose': 'false',
+                'publish_collision_pose': 'false', 'publish_visual_pose': 'false', 'use_pose_vector_msg': 'true',
+                'static_publisher': 'false', 'update_frequency': 100,
+                'topic': contract['topics']['link_poses']}.items():
+            e(poses, key, value)
     for name, gains in data['control']['drive'].get('joints', {}).items():
         plugin = e(model, 'plugin', filename='gz-sim-joint-controller-system', name='gz::sim::systems::JointController')
         e(plugin, 'joint_name', name)

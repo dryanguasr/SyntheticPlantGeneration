@@ -634,6 +634,13 @@
           "friction": {
             "type": "number",
             "minimum": 0
+          },
+          "spring_reference": {
+            "type": "number"
+          },
+          "spring_stiffness": {
+            "type": "number",
+            "minimum": 0
           }
         },
         "required": [
@@ -915,6 +922,12 @@
               "command_velocity": {
                 "type": "number",
                 "exclusiveMinimum": 0
+              },
+              "reference_mode": {
+                "enum": [
+                  "direct_position",
+                  "ramped_position"
+                ]
               }
             },
             "required": [
@@ -1073,6 +1086,12 @@
               "command_velocity": {
                 "type": "number",
                 "exclusiveMinimum": 0
+              },
+              "reference_mode": {
+                "enum": [
+                  "direct_position",
+                  "ramped_position"
+                ]
               }
             },
             "required": [
@@ -1103,6 +1122,151 @@
       "items": {
         "type": "object"
       }
+    },
+    "closures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "moving_joint": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "body": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "auxiliary": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "mass_fraction": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+          },
+          "original_inertial": {
+            "type": "object",
+            "properties": {
+              "mass_kg": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "com_m": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "tensor_kg_m2": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 6,
+                "maxItems": 6
+              }
+            },
+            "required": [
+              "mass_kg",
+              "com_m",
+              "tensor_kg_m2"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "name",
+          "moving_joint",
+          "body",
+          "auxiliary",
+          "mass_fraction",
+          "original_inertial"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "gear_couplings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "driver": {
+            "type": "string"
+          },
+          "follower": {
+            "type": "string"
+          },
+          "ratio": {
+            "type": "number"
+          },
+          "offset": {
+            "type": "number"
+          },
+          "stiffness_nm_rad": {
+            "type": "number"
+          },
+          "damping_nms_rad": {
+            "type": "number"
+          },
+          "maximum_step_s": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "driver",
+          "follower",
+          "ratio",
+          "offset",
+          "stiffness_nm_rad",
+          "damping_nms_rad",
+          "maximum_step_s"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "physics": {
+      "type": "object",
+      "properties": {
+        "backend": {
+          "enum": [
+            "DART"
+          ]
+        },
+        "solver_type": {
+          "enum": [
+            "pgs",
+            "dantzig"
+          ]
+        },
+        "collision_detector": {
+          "enum": [
+            "ode",
+            "fcl",
+            "bullet",
+            "dart"
+          ]
+        },
+        "maximum_step_s": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "backend",
+        "solver_type",
+        "maximum_step_s"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
