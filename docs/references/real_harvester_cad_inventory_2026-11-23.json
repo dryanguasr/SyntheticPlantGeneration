@@ -1,0 +1,616 @@
+{
+  "schema_version": "real-harvester-cad-evidence-matrix/1.0",
+  "evidence_date": "2026-11-23",
+  "scope": "Native design CAD, generated standard equivalents and diagnostic robot derivative; no hardware acceptance or harvest validation",
+  "private_cad_or_photo_bytes_committed": false,
+  "source_assemblies": [
+    {
+      "component": "arm",
+      "drive_file_id": "1Qy3_kLWIZ0hSJLddBlE25TP6avxGXZ4U",
+      "url": "https://drive.google.com/file/d/1Qy3_kLWIZ0hSJLddBlE25TP6avxGXZ4U/view",
+      "relative_copy_path": "arm/Ensamble brazo v2.iam",
+      "revision": "0ByjJLQjuyJjqcDBYVGJSVzNEanJNZG8rN0I5SzhGQzBZOXBFPQ",
+      "modified_utc": "2026-11-17T04:00:54.547Z",
+      "evidence_kind": "designed_CAD_not_confirmed_hardware",
+      "sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+      "size_bytes": 6054912,
+      "native_document_id": "doc_00000",
+      "mass_cad_kg": 4.770793838379375,
+      "native_joint_objects": 0,
+      "native_assembly_constraints": 112
+    },
+    {
+      "component": "base",
+      "drive_file_id": "1WVctcq_IOK2vthGAUvoUUGfEuSq8fgDo",
+      "url": "https://drive.google.com/file/d/1WVctcq_IOK2vthGAUvoUUGfEuSq8fgDo/view",
+      "relative_copy_path": "base/Locomoción armada V3.iam",
+      "revision": "0ByjJLQjuyJjqV1VXSCtHTWNweTVMdUU1aGU0WWNMK0F0aXpFPQ",
+      "modified_utc": "2026-11-17T07:34:30.260Z",
+      "evidence_kind": "designed_CAD_not_confirmed_hardware",
+      "sha256": "b824439ce0c17cca6f8b78ec9ee6d8e8f819d1c102b31440ce9043c2633ea021",
+      "size_bytes": 2291200,
+      "native_document_id": "doc_00074",
+      "mass_cad_kg": 13.47906227086999,
+      "native_joint_objects": 0,
+      "native_assembly_constraints": 119
+    },
+    {
+      "component": "gripper",
+      "drive_file_id": "1kGQGqC2UG15xVco9oCVBQpgwIZ7ejh-a",
+      "url": "https://drive.google.com/file/d/1kGQGqC2UG15xVco9oCVBQpgwIZ7ejh-a/view",
+      "relative_copy_path": "gripper/Gripper ensamble.iam",
+      "revision": "0ByjJLQjuyJjqbWlFSzJWdFlnV1pkcEdvMWlrVzIveHZ3NmVFPQ",
+      "modified_utc": "2026-11-17T02:01:04.271Z",
+      "evidence_kind": "designed_CAD_not_confirmed_hardware",
+      "sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+      "size_bytes": 1032192,
+      "native_document_id": "doc_00062",
+      "mass_cad_kg": 0.09154789794909658,
+      "native_joint_objects": 0,
+      "native_assembly_constraints": 40
+    }
+  ],
+  "source_integrity": {
+    "downloaded_originals": 162,
+    "all_current_original_sha256_match_download_reports": true,
+    "download_reports": [
+      {
+        "path": "outputs/real_harvester_cad/download_gripper.json",
+        "sha256": "ca71f811d0cfa199dd09d384e9e108bd13d8d911ee42bfaa55559114ef920894"
+      },
+      {
+        "path": "outputs/real_harvester_cad/download_part01.json",
+        "sha256": "9e08524ca330e55f957af81987fdb0e94bcd4e0e7d6c8b7c5df916446187ff44"
+      },
+      {
+        "path": "outputs/real_harvester_cad/download_part02.json",
+        "sha256": "f1619a1a1850360a8ef7c1796e6356aa0151d92e94fbb54689ac0e0fabfd1873"
+      },
+      {
+        "path": "outputs/real_harvester_cad/download_part03.json",
+        "sha256": "afa6c88219ed3786b93330cf067ef69b6f22c6b2b06c21c480bb6c4d96227950"
+      },
+      {
+        "path": "outputs/real_harvester_cad/download_part04.json",
+        "sha256": "9b1c4356d06e1886e2690c87530e90f5f622987bcdf0cd8f8abe7d0daff8b95f"
+      }
+    ],
+    "source_to_staging_identical": 162,
+    "comparison_report": {
+      "path": "outputs/real_harvester_cad/source_staging_integrity.json",
+      "sha256": "b10052956253cdf93034bf0961ac215b1f2a8c1195efa5684fa0ce7af45433f1"
+    },
+    "staging_files_hashed_after_native_export": 173,
+    "staging_unchanged": true
+  },
+  "native_extraction": {
+    "inventor_version": "2027",
+    "inventory": {
+      "path": "outputs/real_harvester_cad/export_full_01/cad_inventory.json",
+      "sha256": "27ab4f7da49bdff22f293fc5ef378d36a2131baac5efdd91817fa2379e16baa2"
+    },
+    "status_preserved": "partial_export",
+    "documents": 135,
+    "occurrences": 306,
+    "resolved_occurrences": 306,
+    "obj_meshes": 102,
+    "step_exports": 135,
+    "original_issues_retained": 63,
+    "issue_admission": {
+      "excluded_FEA_sidecars": 59,
+      "empty_geometry_documents": 2,
+      "empty_geometry_mass_or_facet_issues": 4
+    },
+    "geometryless_documents": [
+      {
+        "source_path": "base/Estructura Chasis hexagonal.ipt",
+        "sha256": "914e7dac92a9667145b10b97ecad6c6c6e352ab2e7f2084fcf9d578d7c379f9f",
+        "native_geometry_counts": {
+          "surface_bodies": 0,
+          "solid_bodies": 0,
+          "mesh_feature_sets": 0,
+          "planar_sketches": 3,
+          "spatial_sketches": 1,
+          "bom_structure": 51970
+        }
+      },
+      {
+        "source_path": "base/Chasis Hexagonal armado/Frame/Skeleton 1790354402203.ipt",
+        "sha256": "68814aab53092cf1763ec19c7139e5f63b136c2661cb1490b711cb9f559b48a8",
+        "native_geometry_counts": {
+          "surface_bodies": 0,
+          "solid_bodies": 0,
+          "mesh_feature_sets": 0,
+          "planar_sketches": 0,
+          "spatial_sketches": 1,
+          "bom_structure": 51971
+        }
+      }
+    ],
+    "metadata_followup": {
+      "path": "outputs/real_harvester_cad/inventory_appearance_01/cad_inventory.json",
+      "sha256": "aa01eb86fdfcd5874bdd2ee92323e1976e766fdfc4cb74ac41643783674e3b33"
+    },
+    "metadata_followup_issues": 0,
+    "units": {
+      "database_mass": "kg",
+      "database_length": "cm",
+      "output_inertia": "kg m^2",
+      "database_angle": "rad",
+      "output_length": "m"
+    }
+  },
+  "standard_equivalents": {
+    "generation_report": {
+      "path": "outputs/real_harvester_cad/generated_standards_01/content_center.json",
+      "sha256": "5e484d1857aee13a3a2948389c75b28bc54af2027654580339768e33dce68600"
+    },
+    "selection_manifest": {
+      "path": "outputs/real_harvester_cad/content_center_selection.json",
+      "sha256": "101658d9370d3fd3cfef53280d66ae90b6233984c7577f35bc064f8d29d2b133"
+    },
+    "members": [
+      {
+        "requested_basename": "BS 290 SKF - SKF 6000-2RS1.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "d759284411573d310c1112af8769b0555225127f28f7c23dee96eb30c05ca059",
+        "generated_internal_name": "{FB040B6B-C3EC-00CD-3FC5-5DF1DC5422F8}",
+        "family": "BS 290 SKF- con dos juntas RS1",
+        "library": "AI2027_Inventor OTHER",
+        "family_content_identifier": "v3#99aee385-ebf8-4af9-997c-6841225a6be2#",
+        "family_revision_id": "cc636546-a652-4c67-bb15-4281e8c30b1a",
+        "row_content_identifier": "v3#99aee385-ebf8-4af9-997c-6841225a6be2#100",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "Diam",
+            "value": "10",
+            "unit": "mm"
+          },
+          {
+            "column": "DD",
+            "value": "26",
+            "unit": "mm"
+          },
+          {
+            "column": "B",
+            "value": "8",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.018586301616112404,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "BS 290 SKF - SKF 6007-RS1.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "44d68601803aba82017acd4438b12edbfb3bc67aa541c7ad5b3105d0a17d9b68",
+        "generated_internal_name": "{E1F92C7D-9F4B-075E-B923-FA0449ECFA63}",
+        "family": "BS 290 SKF- con junta RS1",
+        "library": "AI2027_Inventor OTHER",
+        "family_content_identifier": "v3#0737a49b-3a53-492e-b252-ee7a081b25f9#",
+        "family_revision_id": "80183507-c5be-48b5-9506-3250ffc1ba4a",
+        "row_content_identifier": "v3#0737a49b-3a53-492e-b252-ee7a081b25f9#440",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "Diam",
+            "value": "35",
+            "unit": "mm"
+          },
+          {
+            "column": "DD",
+            "value": "62",
+            "unit": "mm"
+          },
+          {
+            "column": "B",
+            "value": "14",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.14576181840238095,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "BS 290 SKF - SKF 608-2RS1.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "c04d92d39c0960e496945877969d0eb8ebbf60c5204e0b5c2a461fed076e00bf",
+        "generated_internal_name": "{1C7891E3-A8E0-CFB3-40EA-037235C6CD7B}",
+        "family": "BS 290 SKF- con dos juntas RS1",
+        "library": "AI2027_Inventor OTHER",
+        "family_content_identifier": "v3#99aee385-ebf8-4af9-997c-6841225a6be2#",
+        "family_revision_id": "cc636546-a652-4c67-bb15-4281e8c30b1a",
+        "row_content_identifier": "v3#99aee385-ebf8-4af9-997c-6841225a6be2#40",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "Diam",
+            "value": "8",
+            "unit": "mm"
+          },
+          {
+            "column": "DD",
+            "value": "22",
+            "unit": "mm"
+          },
+          {
+            "column": "B",
+            "value": "7",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.011939113975502985,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "BS 290 SKF - SKF 608-RS1.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "c30ffd9968cdd08f0125a573c6fb5f05ad4cb702930fb1f56b207cef76c40507",
+        "generated_internal_name": "{8DC654E8-B29C-EFC9-7993-F8FF9F9661B7}",
+        "family": "BS 290 SKF- con junta RS1",
+        "library": "AI2027_Inventor OTHER",
+        "family_content_identifier": "v3#0737a49b-3a53-492e-b252-ee7a081b25f9#",
+        "family_revision_id": "80183507-c5be-48b5-9506-3250ffc1ba4a",
+        "row_content_identifier": "v3#0737a49b-3a53-492e-b252-ee7a081b25f9#40",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "Diam",
+            "value": "8",
+            "unit": "mm"
+          },
+          {
+            "column": "DD",
+            "value": "22",
+            "unit": "mm"
+          },
+          {
+            "column": "B",
+            "value": "7",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.011939113975502985,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "BS 290 SKF - SKF 61902-2RS1.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "4f658999a5c7c5a4035fa0c3ce9f9d6cc810042f9dde2f629745c6b6de89be4d",
+        "generated_internal_name": "{A8A2F326-8984-7F6E-79E9-A02D27964E72}",
+        "family": "BS 290 SKF- con dos juntas RS1",
+        "library": "AI2027_Inventor OTHER",
+        "family_content_identifier": "v3#99aee385-ebf8-4af9-997c-6841225a6be2#",
+        "family_revision_id": "cc636546-a652-4c67-bb15-4281e8c30b1a",
+        "row_content_identifier": "v3#99aee385-ebf8-4af9-997c-6841225a6be2#250",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "Diam",
+            "value": "15",
+            "unit": "mm"
+          },
+          {
+            "column": "DD",
+            "value": "28",
+            "unit": "mm"
+          },
+          {
+            "column": "B",
+            "value": "7",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.015789179492065028,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "BS 290 SKF - SKF 61902-RS1.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "ebed401ad53e1b4ad77bf17a428c717e27f1ffd5efe1dc3354e867c62bcdbd0f",
+        "generated_internal_name": "{618D72EE-39EF-43D6-1574-B9E00F8C3F5A}",
+        "family": "BS 290 SKF- con junta RS1",
+        "library": "AI2027_Inventor OTHER",
+        "family_content_identifier": "v3#0737a49b-3a53-492e-b252-ee7a081b25f9#",
+        "family_revision_id": "80183507-c5be-48b5-9506-3250ffc1ba4a",
+        "row_content_identifier": "v3#0737a49b-3a53-492e-b252-ee7a081b25f9#180",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "Diam",
+            "value": "15",
+            "unit": "mm"
+          },
+          {
+            "column": "DD",
+            "value": "28",
+            "unit": "mm"
+          },
+          {
+            "column": "B",
+            "value": "7",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.015789179492065028,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "BS 290 SKF - SKF 623-2Z.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "1dec2a5c87a08eea17fade957f48aef8006a18730a67f55392720243706d6fc2",
+        "generated_internal_name": "{8615CE56-4AEF-DD95-8D2F-F18E6636519E}",
+        "family": "BS 290 SKF- con dos escudos Z",
+        "library": "AI2027_Inventor OTHER",
+        "family_content_identifier": "v3#a2e53783-1a11-40f2-8065-9c5a2ff0756c#",
+        "family_revision_id": "a53c1225-d328-42d4-b729-59c7f047c6fc",
+        "row_content_identifier": "v3#a2e53783-1a11-40f2-8065-9c5a2ff0756c#10",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "Diam",
+            "value": "3",
+            "unit": "mm"
+          },
+          {
+            "column": "DD",
+            "value": "10",
+            "unit": "mm"
+          },
+          {
+            "column": "B",
+            "value": "4",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.0014653010828100939,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "DIN 6885 - A 2 x 2 x 12.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "958de5129f200ff6003654e54eeec85709189ee51cd05c9fc7e74fa6d55688a6",
+        "generated_internal_name": "{C0152ADB-5041-32BF-B100-7416317C1B34}",
+        "family": "DIN 6885-1 A",
+        "library": "AI2027_Inventor DIN",
+        "family_content_identifier": "v3#5c63a7fa-82a0-4527-be38-91ddff01c6fd#",
+        "family_revision_id": "4d987f3c-7c1d-4cea-b56d-f2fcba4ffb2e",
+        "row_content_identifier": "v3#5c63a7fa-82a0-4527-be38-91ddff01c6fd#40",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "PB",
+            "value": "2",
+            "unit": "mm"
+          },
+          {
+            "column": "PH",
+            "value": "2",
+            "unit": "mm"
+          },
+          {
+            "column": "NLG",
+            "value": "12",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.0003633230046613596,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "DIN 6885 - A 3 x 3 x 20.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "31da5d1ebc70c12d4bad5c72d62d6d6fa8ca2c5f78c2c55bd0935f3873b4147f",
+        "generated_internal_name": "{3261C71E-C6D0-0D58-6410-B2AD3A20381E}",
+        "family": "DIN 6885-1 A",
+        "library": "AI2027_Inventor DIN",
+        "family_content_identifier": "v3#5c63a7fa-82a0-4527-be38-91ddff01c6fd#",
+        "family_revision_id": "4d987f3c-7c1d-4cea-b56d-f2fcba4ffb2e",
+        "row_content_identifier": "v3#5c63a7fa-82a0-4527-be38-91ddff01c6fd#160",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "PB",
+            "value": "3",
+            "unit": "mm"
+          },
+          {
+            "column": "PH",
+            "value": "3",
+            "unit": "mm"
+          },
+          {
+            "column": "NLG",
+            "value": "20",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.0013675151407320889,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "DIN 6885 - A 5 x 5 x 32.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "6b0af0019753e92c5924805b5810ed570a3b670a571e3afeb9387ba0eb856709",
+        "generated_internal_name": "{1B886D1C-4E2C-A772-EC6A-E012B7E1AE81}",
+        "family": "DIN 6885-1 A",
+        "library": "AI2027_Inventor DIN",
+        "family_content_identifier": "v3#5c63a7fa-82a0-4527-be38-91ddff01c6fd#",
+        "family_revision_id": "4d987f3c-7c1d-4cea-b56d-f2fcba4ffb2e",
+        "row_content_identifier": "v3#5c63a7fa-82a0-4527-be38-91ddff01c6fd#450",
+        "selection_basis": "exact stock filename/designation",
+        "dimensions": [
+          {
+            "column": "PB",
+            "value": "5",
+            "unit": "mm"
+          },
+          {
+            "column": "PH",
+            "value": "5",
+            "unit": "mm"
+          },
+          {
+            "column": "NLG",
+            "value": "32",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.006069421947833743,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      },
+      {
+        "requested_basename": "ISO 10642 - M4 x  16.ipt",
+        "provenance": "GeneratedContentCenter",
+        "original_document_identity_preserved": false,
+        "sha256": "d94661abc9faa6cae1dc7c5582ce98d6050e845a5154e95e76c08df4fd293afd",
+        "generated_internal_name": "{B1E24DDE-720D-FB05-82C1-57ADF3AF21D3}",
+        "family": "ISO 10642:1997",
+        "library": "AI2027_Inventor ISO",
+        "family_content_identifier": "v3#9989a0df-314b-4e9e-8a4e-864c81c31ac4#",
+        "family_revision_id": "6d7544fc-9fbb-40e5-9ed7-c312e6fe3e58",
+        "row_content_identifier": "v3#9989a0df-314b-4e9e-8a4e-864c81c31ac4#110",
+        "selection_basis": "ISO 10642:1997 M4 x 16; original filename lacks edition, equivalent edition selected explicitly",
+        "dimensions": [
+          {
+            "column": "NND",
+            "value": "4",
+            "unit": "mm"
+          },
+          {
+            "column": "NLG",
+            "value": "16",
+            "unit": "mm"
+          },
+          {
+            "column": "PTC",
+            "value": "0,7",
+            "unit": "mm"
+          },
+          {
+            "column": "dk",
+            "value": "8",
+            "unit": "mm"
+          },
+          {
+            "column": "ParK",
+            "value": "2,3",
+            "unit": "mm"
+          }
+        ],
+        "mass_cad_kg": 0.0018480885033079722,
+        "mass_validation": "CAD library geometry/density; not hardware measurement"
+      }
+    ],
+    "identity_policy": "New generated library files with explicit provenance, not claimed as recovered original file identities"
+  },
+  "mesh_audit": {
+    "original": {
+      "path": "outputs/real_harvester_validation/cad_mesh_01/summary.json",
+      "sha256": "28d48a99533296131ee7c4500786914ffd3e8f552a3bd71c79495fd672a36c8d",
+      "status": "FAIL",
+      "failed_meshes": 22
+    },
+    "repair_report": {
+      "path": "outputs/real_harvester_cad/export_winding_repaired_01/mesh_repair_report.json",
+      "sha256": "6c7efac9455175a124e2df403eb69feb4e029d64106f21d6ad7a96e9386da432"
+    },
+    "repair_counts": {
+      "meshes": 102,
+      "reversed_faces": 258,
+      "removed_degenerate_triangles": 1
+    },
+    "derived_inventory": {
+      "path": "outputs/real_harvester_cad/export_winding_repaired_01/cad_inventory.json",
+      "sha256": "0f53099727acfbd7fa1e1672dd2bc9b3d47119d633d63a568aea98e5192321be"
+    },
+    "coordinates_normals_transforms_mass_preservation": {
+      "path": "outputs/real_harvester_cad/export_winding_repaired_01/coordinates_preservation.json",
+      "sha256": "e0c103d0b9222613a506c79897c32e0a8f6a4544ea5a1d5dc6bd29c8db5018d6"
+    },
+    "reaudit": {
+      "path": "outputs/real_harvester_validation/cad_mesh_repaired_01/summary.json",
+      "sha256": "4a1466281736f02a7b1ba13b2efdd16b36ef32a8c2fc9b7b4826afe4601c2f58",
+      "status": "PASS",
+      "passed_meshes": 102,
+      "same_tolerances_as_original": true
+    }
+  },
+  "diagnostic_package_02": {
+    "import_report": {
+      "path": "outputs/real_harvester_cad/robot_package_02/cad_import_report.json",
+      "sha256": "8479a9b6a178bf98682090fbeb5c4676e9e52fb2b28a2f5fe4e36fbcef3735c6"
+    },
+    "profile": {
+      "path": "outputs/real_harvester_cad/robot_package_02/cad_diagnostic_frozen.json",
+      "sha256": "d96ec85e4abcdcc6a917ef6c65682205b311e31e9f21460e1a698972ad7a97c3"
+    },
+    "sdf": {
+      "path": "outputs/real_harvester_cad/robot_package_02/model.sdf",
+      "sha256": "82e6ece3bc838ac024ec56ea659535b490773726893d8ec5b02bc5574e0caae7"
+    },
+    "status": "DIAGNOSTIC_ONLY",
+    "rigid_links": 11,
+    "physical_leaf_occurrences": 239,
+    "unique_meshes": 90,
+    "appearance_status_counts": {
+      "derivado_de_CAD": 238,
+      "inspection_palette_not_CAD_appearance": 1
+    },
+    "total_mass_cad_kg": 18.24987866053727,
+    "native_harvest_eligible": false,
+    "manual_source_snapshot": {
+      "path": "outputs/real_harvester_cad/manual_sources_package_02/manifest.json",
+      "sha256": "0cd84b79a9c1074d9f7f0b3ffb82eb3de3c01806e4055d8698778306b6e44698"
+    },
+    "incomplete_nominal_profile": {
+      "path": "configs/robots/cad_nominal_pending.json",
+      "sha256": "e8179680c88965386fea5bd94fada7d191c34d7d8ea7d7adcb7e023d3398ac9f"
+    }
+  },
+  "prototype_photo": {
+    "path": "outputs/real_harvester_cad/prototype_partial_2026-11-23.jpeg",
+    "sha256": "ce728cf18ad97c7325f8ef22a5ba372f626ae10975166ac95a9ed1bfccf3a470",
+    "source_asset": "assets/WhatsApp Image 2026-11-23 at 12.23.22 PM.jpeg in original checkout",
+    "copy_matches_original_sha256": true,
+    "evidence_kind": "user-provided partial prototype photograph; visual observation only",
+    "visible_observations": [
+      "Light metallic chassis frame",
+      "Black wheels and cylindrical upper support",
+      "Exposed wiring, electronics and light-colored enclosure",
+      "Coil suspension components visible"
+    ],
+    "not_established": [
+      "Exact alloy, mechanical properties or calibrated material colors",
+      "Metric dimensions or mass",
+      "Complete articulated arm and final gripper installation",
+      "Encoder zeros, actuator ratings or operational readiness"
+    ],
+    "cad_color_comparison": "Broad metallic-frame/dark-wheel categories are visually compatible; no claim of full prototype equality or calibrated photo-to-CAD color match"
+  },
+  "validation_evidence": {
+    "pure_helper_stdout": {
+      "path": "outputs/real_harvester_cad/helper_tests_final.log",
+      "sha256": "eb0942f56fe5f446e465c673a5e9d8b7bae4392bd60b90c415684d1b12639f83"
+    },
+    "pure_helper_execution_metadata": {
+      "path": "outputs/real_harvester_cad/helper_tests_final_metadata.json",
+      "sha256": "0650b6e25402eeb4c2e2d7b3aa9eb01fbe15bba09ad524dce85a8579cc884c4e"
+    },
+    "native_inertia_invariants": {
+      "path": "outputs/real_harvester_cad/native_inertia_consistency.json",
+      "sha256": "8ca7609a1a878917002c9a9499a7c24564c3c3fe7159f75769589c9c42fd6148"
+    }
+  }
+}

@@ -17,6 +17,10 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Guías operativas
 
+- [Robot cosechador paramétrico](guides/robot_cosechador_parametrico.md) y
+  [exportación nativa de Inventor](guides/exportacion_cad_inventor_robot.md).
+- [Informe del cosechador CAD](reports/robot_cosechador_parametrico_2026-11-23.md):
+  modelo extraído, pruebas nativas, fallos y aceptación pendiente.
 - [Generador actual y contrato Gazebo](guides/generador_actual_y_contrato_gazebo.md).
 - [Piloto de uchuvas desmontables](guides/piloto_cosecha_desmontable.md) y
   [ciclos auditados en Gazebo Harmonic](reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md).

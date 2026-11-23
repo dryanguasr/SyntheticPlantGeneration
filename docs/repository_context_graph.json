@@ -31,6 +31,60 @@
   },
   "nodes": [
     {
+      "id": "module.parametric_harvester",
+      "type": "module",
+      "label": "Robot paramétrico con procedencia CAD y observación física",
+      "summary": "Descripción JSON canónica resuelta e inmutable para SDF, FK/IK, control, colisiones y auditoría. Conserva el proxy histórico y rechaza perfiles incompletos o mallas obsoletas. La extracción Inventor alimenta un perfil CAD diagnóstico explícitamente reducido; el nominal conserva pendientes. La admisión de cosecha exige una capacidad separada y los fallos físicos no se convierten en PASS por compartir FK. Sin calibración del prototipo.",
+      "paths": [
+        "src/uchuva_gazebo/robot.py",
+        "src/uchuva_gazebo/robot_spec.py",
+        "src/uchuva_gazebo/robot_kinematics.py",
+        "src/uchuva_gazebo/robot_sdf.py",
+        "src/uchuva_gazebo/robot_motion.py",
+        "src/uchuva_gazebo/robot_validation.py",
+        "configs/robots/robot_spec.schema.json",
+        "configs/robots/proxy_v1.json",
+        "configs/robots/cad_arm_mapping.json",
+        "configs/robots/cad_base_mapping.json",
+        "configs/robots/cad_diagnostic_assumptions.json",
+        "scripts/prepare_robot_model.py",
+        "scripts/prepare_cad_robot.py",
+        "scripts/generate_inventor_standards.ps1",
+        "scripts/audit_cad_meshes.py",
+        "scripts/probe_robot_parameters.py",
+        "scripts/probe_robot_kinematics.py",
+        "scripts/probe_robot_interaction_frames.py",
+        "scripts/probe_cad_mobility.py",
+        "scripts/probe_cad_suspension_loop.py",
+        "scripts/probe_cad_gripper_loop.py",
+        "scripts/capture_cad_v8_inspection.py",
+        "scripts/repair_inventor_mesh_winding.py",
+        "scripts/export_inventor_robot.ps1",
+        "scripts/inventor_reference_resolver.cs",
+        "scripts/prepare_cad_inspection.py",
+        "scripts/probe_robot_actuation.py",
+        "scripts/probe_robot_self_collision.py",
+        "gazebo/harvest_system/RobotTelemetrySystem.cc",
+        "tests/test_robot_spec.py",
+        "tests/test_robot_kinematics.py",
+        "tests/test_robot_integration.py",
+        "tests/test_cad_inspection.py",
+        "tests/test_cad_robot_builder.py",
+        "tests/test_robot_public_api.py",
+        "docs/guides/robot_cosechador_parametrico.md",
+        "docs/guides/exportacion_cad_inventor_robot.md",
+        "docs/references/real_harvester_sources_2026-11-23.json",
+        "docs/references/real_harvester_cad_inventory_2026-11-23.json",
+        "docs/reports/robot_cosechador_parametrico_2026-11-23.md"
+      ],
+      "evidence": [
+        {"path": "src/uchuva_gazebo/robot_spec.py", "locator": "class ResolvedRobot"},
+        {"path": "src/uchuva_gazebo/robot_kinematics.py", "locator": "def forward_kinematics"},
+        {"path": "gazebo/harvest_system/RobotTelemetrySystem.cc", "locator": "class RobotTelemetrySystem"},
+        {"path": "scripts/export_inventor_robot.ps1", "locator": "SkipAllUnresolvedFiles"}
+      ]
+    },
+    {
       "id": "entrypoint.marker_localization_pilot",
       "type": "entrypoint",
       "label": "Piloto RGB de localizacion 3D respecto a ArUco",
@@ -2886,6 +2940,14 @@
     }
   ],
   "edges": [
+    {
+      "source": "entrypoint.harvest_pilot",
+      "relation": "depends_on",
+      "target": "module.parametric_harvester",
+      "evidence": [
+        {"path": "src/uchuva_gazebo/harvest_pilot.py", "locator": "robot_spec_sha256"}
+      ]
+    },
     {
       "source": "entrypoint.bouquet_row_flight",
       "relation": "depends_on",

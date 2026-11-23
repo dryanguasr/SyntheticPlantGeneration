@@ -1,0 +1,2683 @@
+{
+  "schema_version": "cad-base-mapping/0.1",
+  "profile_status": "provisional_diagnostic",
+  "native_harvest_eligible": false,
+  "source": {
+    "inventory": "outputs/real_harvester_cad/inventory_full_01/cad_inventory.json",
+    "inventory_sha256": "2c63c24bb68c0ea7dbb952cd1f6d685fa014bdc0b29b751102d4478c9370d916",
+    "inventory_status": "partial_export",
+    "root_document_id": "doc_00064",
+    "root_source_path": "base/Locomoción armada V3.iam",
+    "root_sha256": "b824439ce0c17cca6f8b78ec9ee6d8e8f819d1c102b31440ce9043c2633ea021",
+    "derivation_script": "outputs/real_harvester_cad/derive_base_mapping.py",
+    "derivation_script_sha256": "82e009e7557833260bc755d7b0fd29a2f725f4e1573c6d98b2c60fc9bd681cd6"
+  },
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "angle": "rad"
+  },
+  "frame": {
+    "name": "base_chassis",
+    "origin": "CAD root/chassis assembly origin, not center of mass or ground",
+    "base_T_cad_root_row_major": [
+      0,
+      0,
+      -1,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "axis_convention": "base x=-CAD z, base y=-CAD x, base z=CAD y; determinant +1",
+    "status": "explicit_engineering_frame_convention",
+    "arm_mount": {
+      "status": "pendiente",
+      "pose": null,
+      "reason": "Independent CAD roots do not define base-to-arm mounting"
+    }
+  },
+  "wheels": [
+    {
+      "name": "front_right",
+      "group": "wheel_front_right",
+      "parent_carrier_group": "carrier_front_right",
+      "assembly_occurrence_id": "doc_00064/0012",
+      "tire_occurrence_id": "doc_00064/0012/0003",
+      "center_cad_root_m": [
+        0.3082750000000001,
+        -0.18621801707138186,
+        -0.3105781933829735
+      ],
+      "center_base_m": [
+        0.3105781933829735,
+        -0.3082750000000001,
+        -0.18621801707138186
+      ],
+      "axis_cad_root_from_tire": [
+        -0.9999999999999967,
+        -1.1885066854349762e-13,
+        8.253710696197114e-17
+      ],
+      "axis_base_from_tire": [
+        -8.253710696197114e-17,
+        0.9999999999999967,
+        -1.1885066854349762e-13
+      ],
+      "joint_positive_axis_base": [
+        0,
+        1,
+        0
+      ],
+      "motor_command_sign": null,
+      "axis_sign_convention": "Positive base +Y rotation gives forward +X rolling; electrical polarity is pending",
+      "radius_m": 0.11,
+      "width_m": 0.05248028606471971,
+      "rolling_geometry_source": {
+        "document_id": "doc_00116",
+        "source_path": "base/Rueda 8in/llanta 1.ipt",
+        "sha256": "f155f4f3887e7f05502177d230af37109df23be8088ef5a488170f93c0652f65",
+        "local_bounds_m": {
+          "min": [
+            -0.11,
+            -0.11,
+            -0.026240143032359935
+          ],
+          "max": [
+            0.11,
+            0.11,
+            0.026240143032359775
+          ]
+        },
+        "method": "R=(max_x-min_x)/2=(max_y-min_y)/2; width=max_z-min_z; transform center and local Z once",
+        "status": "derivado_de_CAD",
+        "uncertainty": "Ideal CAD tire dimensions; loaded rolling radius and pressure not measured",
+        "assembly_bbox_is_not_radius": true,
+        "filename_inches_not_used_as_dimension": true
+      },
+      "axis_evidence": {
+        "relation_name": "Coincidencia:77",
+        "source_pointer": "/documents/64/relations/23",
+        "occurrences": [
+          "rueda truper:3",
+          "Rodamiento:5"
+        ],
+        "axis_line_point_cad_root_m": [
+          0.27952499999999997,
+          -0.18621801707138527,
+          -0.3105781933829735
+        ],
+        "axis_cad_root": [
+          1,
+          1.1832923373722178e-13,
+          -2.9260384531196467e-17
+        ],
+        "axis_line_point_base_m": [
+          0.3105781933829735,
+          -0.27952499999999997,
+          -0.18621801707138527
+        ],
+        "axis_base": [
+          2.9260384531196467e-17,
+          -1.0,
+          1.1832923373722178e-13
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "rotation_assignment_status": "wheel assembly only; hub/shaft/coupler external to assembly not assumed welded without rotational constraint review"
+    },
+    {
+      "name": "rear_right",
+      "group": "wheel_rear_right",
+      "parent_carrier_group": "carrier_rear_right",
+      "assembly_occurrence_id": "doc_00064/0022",
+      "tire_occurrence_id": "doc_00064/0022/0003",
+      "center_cad_root_m": [
+        0.3082750000000401,
+        -0.18621801708546065,
+        0.3105781933027937
+      ],
+      "center_base_m": [
+        -0.3105781933027937,
+        -0.3082750000000401,
+        -0.18621801708546065
+      ],
+      "axis_cad_root_from_tire": [
+        -0.9999999999999957,
+        1.0004900350174984e-12,
+        -5.310632095008868e-14
+      ],
+      "axis_base_from_tire": [
+        5.310632095008868e-14,
+        0.9999999999999957,
+        1.0004900350174984e-12
+      ],
+      "joint_positive_axis_base": [
+        0,
+        1,
+        0
+      ],
+      "motor_command_sign": null,
+      "axis_sign_convention": "Positive base +Y rotation gives forward +X rolling; electrical polarity is pending",
+      "radius_m": 0.11,
+      "width_m": 0.05248028606471971,
+      "rolling_geometry_source": {
+        "document_id": "doc_00116",
+        "source_path": "base/Rueda 8in/llanta 1.ipt",
+        "sha256": "f155f4f3887e7f05502177d230af37109df23be8088ef5a488170f93c0652f65",
+        "local_bounds_m": {
+          "min": [
+            -0.11,
+            -0.11,
+            -0.026240143032359935
+          ],
+          "max": [
+            0.11,
+            0.11,
+            0.026240143032359775
+          ]
+        },
+        "method": "R=(max_x-min_x)/2=(max_y-min_y)/2; width=max_z-min_z; transform center and local Z once",
+        "status": "derivado_de_CAD",
+        "uncertainty": "Ideal CAD tire dimensions; loaded rolling radius and pressure not measured",
+        "assembly_bbox_is_not_radius": true,
+        "filename_inches_not_used_as_dimension": true
+      },
+      "axis_evidence": {
+        "relation_name": "Coincidencia:121",
+        "source_pointer": "/documents/64/relations/47",
+        "occurrences": [
+          "rueda truper:4",
+          "Rodamiento:7"
+        ],
+        "axis_line_point_cad_root_m": [
+          0.27952500000004,
+          -0.1862180170854319,
+          0.3105781933027921
+        ],
+        "axis_cad_root": [
+          1,
+          -1.0006784029163907e-12,
+          5.318023244783432e-14
+        ],
+        "axis_line_point_base_m": [
+          -0.3105781933027921,
+          -0.27952500000004,
+          -0.1862180170854319
+        ],
+        "axis_base": [
+          -5.318023244783432e-14,
+          -1.0,
+          -1.0006784029163907e-12
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "rotation_assignment_status": "wheel assembly only; hub/shaft/coupler external to assembly not assumed welded without rotational constraint review"
+    },
+    {
+      "name": "rear_left",
+      "group": "wheel_rear_left",
+      "parent_carrier_group": "carrier_rear_left",
+      "assembly_occurrence_id": "doc_00064/0032",
+      "tire_occurrence_id": "doc_00064/0032/0003",
+      "center_cad_root_m": [
+        -0.30827499999998875,
+        -0.18621801708534758,
+        0.31057819330278735
+      ],
+      "center_base_m": [
+        -0.31057819330278735,
+        0.30827499999998875,
+        -0.18621801708534758
+      ],
+      "axis_cad_root_from_tire": [
+        0.9999999999999971,
+        -2.827006425595881e-13,
+        -3.0850304056947903e-15
+      ],
+      "axis_base_from_tire": [
+        3.0850304056947903e-15,
+        -0.9999999999999971,
+        -2.827006425595881e-13
+      ],
+      "joint_positive_axis_base": [
+        0,
+        1,
+        0
+      ],
+      "motor_command_sign": null,
+      "axis_sign_convention": "Positive base +Y rotation gives forward +X rolling; electrical polarity is pending",
+      "radius_m": 0.11,
+      "width_m": 0.05248028606471971,
+      "rolling_geometry_source": {
+        "document_id": "doc_00116",
+        "source_path": "base/Rueda 8in/llanta 1.ipt",
+        "sha256": "f155f4f3887e7f05502177d230af37109df23be8088ef5a488170f93c0652f65",
+        "local_bounds_m": {
+          "min": [
+            -0.11,
+            -0.11,
+            -0.026240143032359935
+          ],
+          "max": [
+            0.11,
+            0.11,
+            0.026240143032359775
+          ]
+        },
+        "method": "R=(max_x-min_x)/2=(max_y-min_y)/2; width=max_z-min_z; transform center and local Z once",
+        "status": "derivado_de_CAD",
+        "uncertainty": "Ideal CAD tire dimensions; loaded rolling radius and pressure not measured",
+        "assembly_bbox_is_not_radius": true,
+        "filename_inches_not_used_as_dimension": true
+      },
+      "axis_evidence": {
+        "relation_name": "Coincidencia:140",
+        "source_pointer": "/documents/64/relations/68",
+        "occurrences": [
+          "rueda truper:5",
+          "Rodamiento:9"
+        ],
+        "axis_line_point_cad_root_m": [
+          -0.27952499999998864,
+          -0.18621801708535568,
+          0.31057819330278724
+        ],
+        "axis_cad_root": [
+          -1,
+          2.821792077533117e-13,
+          3.0317536832641965e-15
+        ],
+        "axis_line_point_base_m": [
+          -0.31057819330278724,
+          0.27952499999998864,
+          -0.18621801708535568
+        ],
+        "axis_base": [
+          -3.0317536832641965e-15,
+          1.0,
+          2.821792077533117e-13
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "rotation_assignment_status": "wheel assembly only; hub/shaft/coupler external to assembly not assumed welded without rotational constraint review"
+    },
+    {
+      "name": "front_left",
+      "group": "wheel_front_left",
+      "parent_carrier_group": "carrier_front_left",
+      "assembly_occurrence_id": "doc_00064/0042",
+      "tire_occurrence_id": "doc_00064/0042/0003",
+      "center_cad_root_m": [
+        -0.3082749999999881,
+        -0.18621801707136196,
+        -0.3105781933829739
+      ],
+      "center_base_m": [
+        0.3105781933829739,
+        0.3082749999999881,
+        -0.18621801707136196
+      ],
+      "axis_cad_root_from_tire": [
+        0.9999999999999982,
+        -3.302952008664253e-13,
+        -1.0145278133333558e-14
+      ],
+      "axis_base_from_tire": [
+        1.0145278133333558e-14,
+        -0.9999999999999982,
+        -3.302952008664253e-13
+      ],
+      "joint_positive_axis_base": [
+        0,
+        1,
+        0
+      ],
+      "motor_command_sign": null,
+      "axis_sign_convention": "Positive base +Y rotation gives forward +X rolling; electrical polarity is pending",
+      "radius_m": 0.11,
+      "width_m": 0.05248028606471971,
+      "rolling_geometry_source": {
+        "document_id": "doc_00116",
+        "source_path": "base/Rueda 8in/llanta 1.ipt",
+        "sha256": "f155f4f3887e7f05502177d230af37109df23be8088ef5a488170f93c0652f65",
+        "local_bounds_m": {
+          "min": [
+            -0.11,
+            -0.11,
+            -0.026240143032359935
+          ],
+          "max": [
+            0.11,
+            0.11,
+            0.026240143032359775
+          ]
+        },
+        "method": "R=(max_x-min_x)/2=(max_y-min_y)/2; width=max_z-min_z; transform center and local Z once",
+        "status": "derivado_de_CAD",
+        "uncertainty": "Ideal CAD tire dimensions; loaded rolling radius and pressure not measured",
+        "assembly_bbox_is_not_radius": true,
+        "filename_inches_not_used_as_dimension": true
+      },
+      "axis_evidence": {
+        "relation_name": "Coincidencia:159",
+        "source_pointer": "/documents/64/relations/89",
+        "occurrences": [
+          "rueda truper:6",
+          "Rodamiento:11"
+        ],
+        "axis_line_point_cad_root_m": [
+          -0.279524999999988,
+          -0.18621801707137145,
+          -0.31057819338297415
+        ],
+        "axis_cad_root": [
+          -1,
+          3.297789702305786e-13,
+          1.009633822457951e-14
+        ],
+        "axis_line_point_base_m": [
+          0.31057819338297415,
+          0.279524999999988,
+          -0.18621801707137145
+        ],
+        "axis_base": [
+          -1.009633822457951e-14,
+          1.0,
+          3.297789702305786e-13
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "rotation_assignment_status": "wheel assembly only; hub/shaft/coupler external to assembly not assumed welded without rotational constraint review"
+    }
+  ],
+  "groups": [
+    {
+      "name": "base_chassis",
+      "source_occurrence_roots": [
+        "doc_00064/0001"
+      ],
+      "motion": "fixed_chassis_CAD_assembly",
+      "leaf_occurrence_ids": [
+        "doc_00064/0001/0001/0001",
+        "doc_00064/0001/0001/0002/0001",
+        "doc_00064/0001/0001/0002/0002",
+        "doc_00064/0001/0001/0002/0003",
+        "doc_00064/0001/0001/0002/0004",
+        "doc_00064/0001/0001/0002/0005",
+        "doc_00064/0001/0001/0002/0006",
+        "doc_00064/0001/0001/0002/0007",
+        "doc_00064/0001/0001/0002/0008",
+        "doc_00064/0001/0001/0002/0009",
+        "doc_00064/0001/0001/0002/0010",
+        "doc_00064/0001/0001/0002/0011",
+        "doc_00064/0001/0001/0002/0012",
+        "doc_00064/0001/0001/0002/0013",
+        "doc_00064/0001/0001/0002/0014",
+        "doc_00064/0001/0001/0002/0015",
+        "doc_00064/0001/0001/0002/0016",
+        "doc_00064/0001/0001/0002/0017",
+        "doc_00064/0001/0001/0002/0018",
+        "doc_00064/0001/0001/0002/0019",
+        "doc_00064/0001/0001/0002/0020",
+        "doc_00064/0001/0001/0002/0021",
+        "doc_00064/0001/0001/0002/0022",
+        "doc_00064/0001/0001/0002/0023",
+        "doc_00064/0001/0001/0002/0024",
+        "doc_00064/0001/0001/0002/0025",
+        "doc_00064/0001/0001/0002/0026",
+        "doc_00064/0001/0001/0002/0027",
+        "doc_00064/0001/0001/0002/0028",
+        "doc_00064/0001/0001/0002/0029",
+        "doc_00064/0001/0002",
+        "doc_00064/0001/0003",
+        "doc_00064/0001/0004",
+        "doc_00064/0001/0005",
+        "doc_00064/0001/0006",
+        "doc_00064/0001/0007",
+        "doc_00064/0001/0008",
+        "doc_00064/0001/0009"
+      ],
+      "source_documents_sha256": {
+        "doc_00067": "914e7dac92a9667145b10b97ecad6c6c6e352ab2e7f2084fcf9d578d7c379f9f",
+        "doc_00069": "68814aab53092cf1763ec19c7139e5f63b136c2661cb1490b711cb9f559b48a8",
+        "doc_00070": "c03e24bd4fa10a0668b40b611d8416b483df06a5dc8d87fe4733b547534009f4",
+        "doc_00071": "7572fb938c1e746e50b063d8e46fc1123ae1d3f4abc0568b22a0194047cdf09d",
+        "doc_00072": "45dde328caf02f0d347f045e9ea6124c0f0cf65da938910f0d57c841d2767275",
+        "doc_00073": "59270c1adf0701a9740a0baf021d9467e07b2f8e6abae900e45ddfdea551bb8d",
+        "doc_00074": "75830b177da87c50ee3198d7219d105fc26ddd7f6797b8b1f1f58b824afeac88",
+        "doc_00075": "1fd15baa08483e3794194c546876d4e6d42e631d504cb34f3d8cecc309c1b92c",
+        "doc_00076": "7d0e7d53eb7e013d7049605bbffe4ed5f5d0650ba89eb63b66c19e72b03a6526",
+        "doc_00077": "3ee815c50adbc83568fef40e0d96680d97973fa004ce0097bc7fe5f58aa4a097",
+        "doc_00078": "94fed39b8259e085e7193dd40b40f44f47df1577d2c20d27af09f7b94d472203",
+        "doc_00079": "d61c6d7735315d20b6af68f54570f100ee5d5a1d4fe5cfd443ce84e2ebca1947",
+        "doc_00080": "037bf075b1ddf37bb252ae1f84756ec24757b7352568ad15f6127938eae0d859",
+        "doc_00081": "1d8da59a42bd5edf7c1a2c6ab24847f50a271d3a3a9e3a0f48515e3ff83926b3",
+        "doc_00082": "a06253ceef488c6d6027c215c110a80e4ca057e9b2ac579e631154253f3b0d5f",
+        "doc_00083": "5485e2fe858b412609d847d48f3005376bd4cbb77ab0d013c4f567cdf0345640",
+        "doc_00084": "e52da7a6538de275c6845f94a9975fe4257a8bb53857cad0c6fede2ec3c1f332",
+        "doc_00085": "4f7f07d123526f10aa80153d980a79106ffb016c71c178df5b90e31a8bee8d35",
+        "doc_00086": "8ee5a9f037c32845f86c71dea3d6cf5be7ff935127fb922a2e4a3d1521f28604",
+        "doc_00087": "4229103d7669f8feebf384df9938001fe20d0de01d76299ebfd0f033c0fe5e37",
+        "doc_00088": "5e7d448ebc6b6c9991154ff31c9a1547776db84242b1177d638d7cfed15ff06b",
+        "doc_00089": "c3f16a490f0bee1dd35cb47a41753af1065da187232febe1f71b59d76cbc19d4",
+        "doc_00090": "63e6eda65dc1efd1a2d17844c5d15506791f8cbedc69e774776baf16e32c80d0",
+        "doc_00091": "fdb4ab6442f68ac5d33714fa6ea6cc05b6739d66bc42c1c980c0e683ab672375",
+        "doc_00092": "085a1540afd673be52a9f901665bbc3418e9c4e0d38f33cd6e5eb0ca6e6c9612",
+        "doc_00093": "e0322e62b2ed24daaee3097775a709b1411e82c86d891850757bd14d17fa3033",
+        "doc_00094": "da33c55d48e5738e394396364907ae30e7ac9fe52bba73cf35b381c74999803a",
+        "doc_00095": "4f1020af3f74be30776671e138fb038a21b7aa08866a137f8c90e70c98a957e4",
+        "doc_00096": "d9cb431a41545cb8d4f1e0f0f069af79988e0ef91fd0c53b34ec2bb0dabf37b9",
+        "doc_00097": "23237990035613860c0be734d6fb84aca96221dc56f31871dc7d0fd78ff97d6d",
+        "doc_00098": "42f42b4c8d4b54b8389d165f11279a4a1168863ef296050c7e3638b2d2d6c5a3"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 4.129512849831874,
+        "complete": false,
+        "known_leaf_com_base_m": [
+          -0.0011118814119120922,
+          0.0015130519314540112,
+          -0.003988200658643289
+        ],
+        "known_leaf_count": 36,
+        "unavailable": [
+          {
+            "occurrence_id": "doc_00064/0001/0001/0001",
+            "name": "Estructura Chasis hexagonal:1",
+            "status": "resolved",
+            "document_id": "doc_00067",
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          },
+          {
+            "occurrence_id": "doc_00064/0001/0001/0002/0001",
+            "name": "Reference Skeleton",
+            "status": "resolved",
+            "document_id": "doc_00069",
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          }
+        ],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0001",
+          "name": "Chasis Hexagonal armado con soportes:1",
+          "base_T_occurrence_row_major": [
+            0,
+            0,
+            -1,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "name": "wheel_front_right",
+      "source_occurrence_roots": [
+        "doc_00064/0012"
+      ],
+      "motion": "revolute_candidate_geometry_derived_limits_and_drive_pending",
+      "leaf_occurrence_ids": [
+        "doc_00064/0012/0001",
+        "doc_00064/0012/0002",
+        "doc_00064/0012/0003"
+      ],
+      "source_documents_sha256": {
+        "doc_00114": "0e83093f869fd731e637b6dde7b8e0d416ae9410d084482de41fddcc6e0d7d33",
+        "doc_00115": "3a8f4e85cd2f74d4847e896cd90cf47c3b92092ea3cc94cdb959c90c49d02642",
+        "doc_00116": "f155f4f3887e7f05502177d230af37109df23be8088ef5a488170f93c0652f65"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.7656100194789214,
+        "complete": true,
+        "known_leaf_com_base_m": [
+          0.31057799235652683,
+          -0.3104821453849435,
+          -0.1862182796259538
+        ],
+        "known_leaf_count": 3,
+        "unavailable": [],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0012",
+          "name": "rueda truper:3",
+          "base_T_occurrence_row_major": [
+            0.9949729192444089,
+            0.1001443456729392,
+            -8.253710696197114e-17,
+            0.3105781933829735,
+            1.1879116976809844e-14,
+            -1.177314528614146e-13,
+            0.9999999999999967,
+            -0.30827499999999997,
+            0.10014434567294148,
+            -0.9949729192444097,
+            -1.1885066854349762e-13,
+            -0.18621801707138186,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carrier_front_right",
+      "source_occurrence_roots": [
+        "doc_00064/0009",
+        "doc_00064/0010",
+        "doc_00064/0011",
+        "doc_00064/0013",
+        "doc_00064/0014",
+        "doc_00064/0015",
+        "doc_00064/0016",
+        "doc_00064/0017",
+        "doc_00064/0018",
+        "doc_00064/0019"
+      ],
+      "motion": "frozen_CAD_pose",
+      "leaf_occurrence_ids": [
+        "doc_00064/0009/0001",
+        "doc_00064/0009/0002",
+        "doc_00064/0009/0003",
+        "doc_00064/0010/0001",
+        "doc_00064/0011/0001",
+        "doc_00064/0013",
+        "doc_00064/0014",
+        "doc_00064/0015",
+        "doc_00064/0016/0001",
+        "doc_00064/0017",
+        "doc_00064/0018",
+        "doc_00064/0019"
+      ],
+      "source_documents_sha256": {
+        "doc_00098": "42f42b4c8d4b54b8389d165f11279a4a1168863ef296050c7e3638b2d2d6c5a3",
+        "doc_00108": "cb7f82a197be8826a4ff4b6fe4cde5ebbed1f3070982d982323828181481a836",
+        "doc_00109": "161cc05963714d393e83ccf1750edcb24df70e6d51fb2cb2c162b79d64ebed5a",
+        "doc_00111": "a1e5179b6ea2c5892e1ca04daa913b0702427348f9b832e86654d731ab6e58db",
+        "doc_00117": "f2bc034b64bcc5d61735c633558ec43203471e25ecf20ef3a0213d63dde1d974",
+        "doc_00118": "35cd5cf3040c37a796a7a9f82226d8338d6e482b7f41eb5f07f9e605a8fae7e0",
+        "doc_00119": "4e2551f9e360945a29622777af074291f82ed07fd4c0131cd8eeb2cb5d19a650",
+        "doc_00121": "41cdf7cecc1be347f0345ec20d2406121e812a25976e5265ea9b3c876e19e0aa",
+        "doc_00122": "8e8f74a0044c1cb4effd7bff33549930d02044afee5363c8d494135432f59cfe",
+        "doc_00123": "603234aea49e2bced36a4caddfeaf9a219d2635d5440ac6325b8a913b3aa6fb8"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.9641437190662457,
+        "complete": false,
+        "known_leaf_com_base_m": [
+          0.3042420609765101,
+          -0.19505291500813282,
+          -0.1837373956483527
+        ],
+        "known_leaf_count": 10,
+        "unavailable": [
+          {
+            "occurrence_id": "doc_00064/0011/0001",
+            "name": "BS 290 SKF- con junta RS1 SKF 6007-RS1:1",
+            "status": "external_or_unavailable",
+            "document_id": null,
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          },
+          {
+            "occurrence_id": "doc_00064/0016/0001",
+            "name": "BS 290 SKF- con junta RS1 SKF 608-RS1:1",
+            "status": "external_or_unavailable",
+            "document_id": null,
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          }
+        ],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0009",
+          "name": "Biela + buje amortiguador:4",
+          "base_T_occurrence_row_major": [
+            6.093748823082963e-31,
+            0.2558159761376224,
+            0.9667254968980286,
+            0.1580250000366363,
+            0.9999999999999958,
+            -4.50572811738579e-16,
+            1.890744563373814e-16,
+            -0.22500000000000017,
+            1.4422526220150123e-15,
+            0.9667254968980289,
+            -0.25581597613762314,
+            -0.11077499999999996,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0010",
+          "name": "Subensambles motoreductor:4",
+          "base_T_occurrence_row_major": [
+            -8.253710696197624e-17,
+            0.2347380460075413,
+            0.9720586657998439,
+            0.30823081292289806,
+            0.9999999999999964,
+            6.002989697462824e-17,
+            5.500965435092793e-17,
+            -0.18497500000000014,
+            -9.162157879224763e-17,
+            0.972058665799844,
+            -0.2347380460075401,
+            -0.19593860372938887,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0011",
+          "name": "Rodamiento:5",
+          "base_T_occurrence_row_major": [
+            -1.000000000000001,
+            1.3877787807814467e-15,
+            -8.253710696197648e-17,
+            0.3105781933829735,
+            -4.093584359191425e-17,
+            1.043635681838479e-13,
+            0.9999999999999993,
+            -0.2972749999999999,
+            1.9428902930940999e-16,
+            1.0000000000000013,
+            -1.0416927915453753e-13,
+            -0.186218017071383,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0013",
+          "name": "Eje:3",
+          "base_T_occurrence_row_major": [
+            8.253710696197598e-17,
+            0.45635830371063935,
+            -0.8897960994713071,
+            0.3105781933829735,
+            -0.9999999999999969,
+            1.1670229572963962e-14,
+            5.89266357537976e-15,
+            -0.23627500000000015,
+            1.3073290707555736e-14,
+            0.889796099471309,
+            0.4563583037106375,
+            -0.18621801707139043,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0014",
+          "name": "Corona 1:3",
+          "base_T_occurrence_row_major": [
+            -6.851578737688813e-17,
+            -1.4710455076283336e-15,
+            -1.000000000000005,
+            0.3105781933829735,
+            -0.9999999999999967,
+            1.0396621432998051e-13,
+            -2.9260384531571435e-17,
+            -0.31327499999999997,
+            1.0418825893490503e-13,
+            1.0000000000000022,
+            -3.58046925441614e-15,
+            -0.18621801707138239,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0015",
+          "name": "Corona 2:3",
+          "base_T_occurrence_row_major": [
+            1.992299665875181e-16,
+            1.2490009027033013e-14,
+            0.9999999999999981,
+            0.3105781933829735,
+            0.999999999999995,
+            1.035396767106267e-13,
+            2.926038453024207e-17,
+            -0.27027500000000015,
+            -1.0775852420420121e-13,
+            1.0,
+            -9.242606680004436e-15,
+            -0.18621801707138638,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0016",
+          "name": "Rodamiento:6",
+          "base_T_occurrence_row_major": [
+            -1.0000000000000013,
+            6.383782391594634e-16,
+            -8.253710696195017e-17,
+            0.31057819338297354,
+            -8.253710696201052e-17,
+            3.804298998483249e-14,
+            0.9999999999999987,
+            -0.2562750000000001,
+            -7.494005416219799e-16,
+            1.000000000000002,
+            -3.804298998483245e-14,
+            -0.18621801707139019,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0017",
+          "name": "Soporte para rueda:7",
+          "base_T_occurrence_row_major": [
+            -8.253710696197695e-17,
+            0.8533341384326988,
+            0.521364410163666,
+            0.3105781933829735,
+            0.9999999999999976,
+            -1.58677340117026e-15,
+            7.11691401876902e-15,
+            -0.29327499999999995,
+            7.32013284924714e-15,
+            0.5213644101636667,
+            -0.8533341384326988,
+            -0.1862180170713834,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0018",
+          "name": "cubre motor:3",
+          "base_T_occurrence_row_major": [
+            8.25371069619756e-17,
+            0.234738046007547,
+            -0.9720586657998556,
+            0.308230812922898,
+            -0.9999999999999999,
+            -1.0987467366212758e-15,
+            -3.3483737699736506e-16,
+            -0.20447500000000016,
+            -1.1004635024538083e-15,
+            0.9720586657998528,
+            0.23473804600754655,
+            -0.19593860372938895,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0019",
+          "name": "Acople rijido 8 a 8 mm:1",
+          "base_T_occurrence_row_major": [
+            8.253710696197656e-17,
+            -0.7200143054797794,
+            -0.6939592206350966,
+            0.3105781933829735,
+            -1.0,
+            -3.996932326658488e-17,
+            -7.746654389935498e-17,
+            -0.23227500000000006,
+            2.803993938021936e-17,
+            0.6939592206350966,
+            -0.7200143054797794,
+            -0.18621801707139043,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shock_front_right",
+      "source_occurrence_roots": [
+        "doc_00064/0004"
+      ],
+      "motion": "frozen_CAD_pose",
+      "leaf_occurrence_ids": [
+        "doc_00064/0004/0001",
+        "doc_00064/0004/0002",
+        "doc_00064/0004/0003",
+        "doc_00064/0004/0004",
+        "doc_00064/0004/0005",
+        "doc_00064/0004/0006",
+        "doc_00064/0004/0007"
+      ],
+      "source_documents_sha256": {
+        "doc_00100": "9abee26a03cb20124e46885e9d650838c13d0876ea46837b0ac6c4c342a930a8",
+        "doc_00101": "8e0844c207fe3ad38e7ae69177374bfc45a5f0aefd5799ad4c8d0b7e68349cdb",
+        "doc_00102": "00ab1f24f313093690be9da500276767ac50536b1c4869df9bc73e58efc3edc3",
+        "doc_00103": "2a6a98f07baf09d34260edfe84e1f298d4f1a93f0a08f78497a67ad6bc57fd3e",
+        "doc_00104": "3b13786c315b66609226744beca597559a820112f8f675e49169e579607a0561",
+        "doc_00105": "2d867d3ff2e66b6f0ed69a8ecdc1b63915ef633be1219471a47af21d77fae5c1",
+        "doc_00106": "1018db6f66cc2a021de68f85bcfb51f092e259d39995b430b8632e119610347e"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.449938322158454,
+        "complete": true,
+        "known_leaf_com_base_m": [
+          0.3581823678345748,
+          -0.22500717705291293,
+          -0.07766977968409094
+        ],
+        "known_leaf_count": 7,
+        "unavailable": [],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0004",
+          "name": "125 mm Bike Rear Shock Absorber:3",
+          "base_T_occurrence_row_major": [
+            0.2525953438090652,
+            0.9675720088375707,
+            -3.271025955591194e-16,
+            0.3583992798145424,
+            -4.582356990497636e-16,
+            -2.1843789369844702e-16,
+            -1.0000000000000002,
+            -0.22499999999999998,
+            -0.9675720088375709,
+            0.25259534380906506,
+            3.8819964099098506e-16,
+            -0.07885034641040409,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "wheel_rear_right",
+      "source_occurrence_roots": [
+        "doc_00064/0022"
+      ],
+      "motion": "revolute_candidate_geometry_derived_limits_and_drive_pending",
+      "leaf_occurrence_ids": [
+        "doc_00064/0022/0001",
+        "doc_00064/0022/0002",
+        "doc_00064/0022/0003"
+      ],
+      "source_documents_sha256": {
+        "doc_00114": "0e83093f869fd731e637b6dde7b8e0d416ae9410d084482de41fddcc6e0d7d33",
+        "doc_00115": "3a8f4e85cd2f74d4847e896cd90cf47c3b92092ea3cc94cdb959c90c49d02642",
+        "doc_00116": "f155f4f3887e7f05502177d230af37109df23be8088ef5a488170f93c0652f65"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.7656100194789214,
+        "complete": true,
+        "known_leaf_com_base_m": [
+          -0.31057839432924045,
+          -0.31048214538498353,
+          -0.18621827964003507
+        ],
+        "known_leaf_count": 3,
+        "unavailable": [],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0022",
+          "name": "rueda truper:4",
+          "base_T_occurrence_row_major": [
+            0.9949729192444082,
+            0.10014434567293898,
+            5.310632095008868e-14,
+            -0.3105781933027937,
+            -1.53125175013824e-13,
+            9.903222121933309e-13,
+            0.9999999999999957,
+            -0.30827500000004,
+            0.10014434567294153,
+            -0.994972919244409,
+            1.0004900350174984e-12,
+            -0.18621801708546065,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carrier_rear_right",
+      "source_occurrence_roots": [
+        "doc_00064/0007",
+        "doc_00064/0020",
+        "doc_00064/0021",
+        "doc_00064/0023",
+        "doc_00064/0024",
+        "doc_00064/0025",
+        "doc_00064/0026",
+        "doc_00064/0027",
+        "doc_00064/0028",
+        "doc_00064/0029"
+      ],
+      "motion": "frozen_CAD_pose",
+      "leaf_occurrence_ids": [
+        "doc_00064/0007/0001",
+        "doc_00064/0007/0002",
+        "doc_00064/0007/0003",
+        "doc_00064/0020/0001",
+        "doc_00064/0021/0001",
+        "doc_00064/0023",
+        "doc_00064/0024",
+        "doc_00064/0025",
+        "doc_00064/0026/0001",
+        "doc_00064/0027",
+        "doc_00064/0028",
+        "doc_00064/0029"
+      ],
+      "source_documents_sha256": {
+        "doc_00098": "42f42b4c8d4b54b8389d165f11279a4a1168863ef296050c7e3638b2d2d6c5a3",
+        "doc_00108": "cb7f82a197be8826a4ff4b6fe4cde5ebbed1f3070982d982323828181481a836",
+        "doc_00109": "161cc05963714d393e83ccf1750edcb24df70e6d51fb2cb2c162b79d64ebed5a",
+        "doc_00111": "a1e5179b6ea2c5892e1ca04daa913b0702427348f9b832e86654d731ab6e58db",
+        "doc_00117": "f2bc034b64bcc5d61735c633558ec43203471e25ecf20ef3a0213d63dde1d974",
+        "doc_00118": "35cd5cf3040c37a796a7a9f82226d8338d6e482b7f41eb5f07f9e605a8fae7e0",
+        "doc_00119": "4e2551f9e360945a29622777af074291f82ed07fd4c0131cd8eeb2cb5d19a650",
+        "doc_00121": "41cdf7cecc1be347f0345ec20d2406121e812a25976e5265ea9b3c876e19e0aa",
+        "doc_00122": "8e8f74a0044c1cb4effd7bff33549930d02044afee5363c8d494135432f59cfe",
+        "doc_00123": "603234aea49e2bced36a4caddfeaf9a219d2635d5440ac6325b8a913b3aa6fb8"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.9641437190662457,
+        "complete": false,
+        "known_leaf_com_base_m": [
+          -0.3042181599783754,
+          -0.19501921423030294,
+          -0.1837316239732204
+        ],
+        "known_leaf_count": 10,
+        "unavailable": [
+          {
+            "occurrence_id": "doc_00064/0021/0001",
+            "name": "BS 290 SKF- con junta RS1 SKF 6007-RS1:1",
+            "status": "external_or_unavailable",
+            "document_id": null,
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          },
+          {
+            "occurrence_id": "doc_00064/0026/0001",
+            "name": "BS 290 SKF- con junta RS1 SKF 608-RS1:1",
+            "status": "external_or_unavailable",
+            "document_id": null,
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          }
+        ],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0007",
+          "name": "Biela + buje amortiguador:2",
+          "base_T_occurrence_row_major": [
+            -1.2406628218765309e-30,
+            -0.25581597622622754,
+            -0.9667254968745871,
+            -0.15802499996336342,
+            -0.9999999999999998,
+            1.9151519169027053e-15,
+            -5.06789630384156e-16,
+            -0.22500000000000003,
+            1.9810710724961352e-15,
+            0.9667254968745869,
+            -0.2558159762262278,
+            -0.11077499999999998,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0020",
+          "name": "Subensambles motoreductor:5",
+          "base_T_occurrence_row_major": [
+            5.4979696122201636e-14,
+            -0.23473804609677903,
+            0.9720586657782939,
+            -0.30823081284181914,
+            0.9999999999999964,
+            4.9638264373401744e-14,
+            -4.4565164710439396e-14,
+            -0.18497500000001146,
+            -3.783809092747489e-14,
+            0.9720586657782947,
+            0.2347380460967801,
+            -0.19593860374316147,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0021",
+          "name": "Rodamiento:7",
+          "base_T_occurrence_row_major": [
+            -1.0000000000000018,
+            1.4988010832447628e-15,
+            5.310632095008889e-14,
+            -0.3105781933027932,
+            5.314792221345877e-14,
+            -3.973198300945882e-13,
+            0.9999999999999993,
+            -0.2972750000000401,
+            4.996003610813807e-16,
+            1.000000000000002,
+            3.97514119123897e-13,
+            -0.18621801708545635,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0023",
+          "name": "Eje:4",
+          "base_T_occurrence_row_major": [
+            -5.3106320950088764e-14,
+            -3.335665077486269e-13,
+            -1.0000000000000022,
+            -0.3105781933027898,
+            -0.9999999999999969,
+            -1.7244599587313e-12,
+            5.3106320950665176e-14,
+            -0.23627500000004026,
+            -1.7244599587313089e-12,
+            1.000000000000003,
+            -3.3434366386586776e-13,
+            -0.18621801708538854,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0024",
+          "name": "Corona 1:4",
+          "base_T_occurrence_row_major": [
+            -5.3278008619742285e-14,
+            -1.4988010832425877e-15,
+            -1.0000000000000056,
+            -0.3105781933027939,
+            -0.9999999999999967,
+            -1.8115857401296218e-12,
+            5.318023244784098e-14,
+            -0.31327500000004,
+            -1.8113636955246881e-12,
+            1.0000000000000027,
+            -3.4972025275709384e-15,
+            -0.1862180170855281,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0025",
+          "name": "Corona 2:4",
+          "base_T_occurrence_row_major": [
+            5.340872279895254e-14,
+            1.237898672457248e-14,
+            0.9999999999999983,
+            -0.3105781933027916,
+            0.999999999999995,
+            -2.0644466280853484e-12,
+            -5.3180232447814825e-14,
+            -0.27027500000004034,
+            2.060227780591763e-12,
+            1.0,
+            -9.409140133696335e-15,
+            -0.18621801708542265,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0026",
+          "name": "Rodamiento:8",
+          "base_T_occurrence_row_major": [
+            -1.0000000000000022,
+            4.996003610840761e-16,
+            5.3106320950089294e-14,
+            -0.3105781933027909,
+            5.310632095009013e-14,
+            -3.2015516688239597e-12,
+            0.9999999999999987,
+            -0.2562750000000402,
+            -4.718447854689087e-16,
+            1.0000000000000024,
+            3.201551668823949e-12,
+            -0.18621801708542318,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0027",
+          "name": "Soporte para rueda:8",
+          "base_T_occurrence_row_major": [
+            5.497969612220214e-14,
+            0.5213644100833255,
+            0.853334138481788,
+            -0.31057819330279285,
+            0.9999999999999976,
+            -1.6781252840429085e-16,
+            -6.21801335968872e-14,
+            -0.29327500000004003,
+            -3.086410294181795e-14,
+            0.8533341384817884,
+            -0.5213644100833252,
+            -0.18621801708545468,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0028",
+          "name": "cubre motor:4",
+          "base_T_occurrence_row_major": [
+            -5.4979696122202115e-14,
+            -0.23473804609663493,
+            -0.9720586657783322,
+            -0.3082308128418202,
+            -0.9999999999999971,
+            2.361099266951379e-13,
+            -4.650327527362494e-16,
+            -0.20447500000001143,
+            2.296697867772625e-13,
+            0.9720586657783319,
+            -0.234738046096636,
+            -0.1959386037431608,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0029",
+          "name": "Acople rijido 8 a 8 mm:2",
+          "base_T_occurrence_row_major": [
+            -5.3106320950086846e-14,
+            -0.9573599733528846,
+            -0.2888977006169562,
+            -0.31057819330278963,
+            -1.0,
+            -8.077639812661322e-13,
+            2.860622368283213e-12,
+            -0.23227500000004017,
+            -2.9720065111012715e-12,
+            0.2888977006169564,
+            -0.9573599733528843,
+            -0.18621801708537672,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shock_rear_right",
+      "source_occurrence_roots": [
+        "doc_00064/0003"
+      ],
+      "motion": "frozen_CAD_pose",
+      "leaf_occurrence_ids": [
+        "doc_00064/0003/0001",
+        "doc_00064/0003/0002",
+        "doc_00064/0003/0003",
+        "doc_00064/0003/0004",
+        "doc_00064/0003/0005",
+        "doc_00064/0003/0006",
+        "doc_00064/0003/0007"
+      ],
+      "source_documents_sha256": {
+        "doc_00100": "9abee26a03cb20124e46885e9d650838c13d0876ea46837b0ac6c4c342a930a8",
+        "doc_00101": "8e0844c207fe3ad38e7ae69177374bfc45a5f0aefd5799ad4c8d0b7e68349cdb",
+        "doc_00102": "00ab1f24f313093690be9da500276767ac50536b1c4869df9bc73e58efc3edc3",
+        "doc_00103": "2a6a98f07baf09d34260edfe84e1f298d4f1a93f0a08f78497a67ad6bc57fd3e",
+        "doc_00104": "3b13786c315b66609226744beca597559a820112f8f675e49169e579607a0561",
+        "doc_00105": "2d867d3ff2e66b6f0ed69a8ecdc1b63915ef633be1219471a47af21d77fae5c1",
+        "doc_00106": "1018db6f66cc2a021de68f85bcfb51f092e259d39995b430b8632e119610347e"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.449938322158454,
+        "complete": true,
+        "known_leaf_com_base_m": [
+          -0.3581823677965946,
+          -0.2249928229470874,
+          -0.07766977969406387
+        ],
+        "known_leaf_count": 7,
+        "unavailable": [],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0003",
+          "name": "125 mm Bike Rear Shock Absorber:2",
+          "base_T_occurrence_row_major": [
+            -0.2525953431999222,
+            -0.9675720089965991,
+            -3.2710259555911987e-16,
+            -0.3583992797758191,
+            -4.583218769206195e-16,
+            -2.1841539626749035e-16,
+            1.0000000000000002,
+            -0.22500000000000037,
+            -0.9675720089965991,
+            0.2525953431999222,
+            -3.882887072388447e-16,
+            -0.07885034642051357,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "wheel_rear_left",
+      "source_occurrence_roots": [
+        "doc_00064/0032"
+      ],
+      "motion": "revolute_candidate_geometry_derived_limits_and_drive_pending",
+      "leaf_occurrence_ids": [
+        "doc_00064/0032/0001",
+        "doc_00064/0032/0002",
+        "doc_00064/0032/0003"
+      ],
+      "source_documents_sha256": {
+        "doc_00114": "0e83093f869fd731e637b6dde7b8e0d416ae9410d084482de41fddcc6e0d7d33",
+        "doc_00115": "3a8f4e85cd2f74d4847e896cd90cf47c3b92092ea3cc94cdb959c90c49d02642",
+        "doc_00116": "f155f4f3887e7f05502177d230af37109df23be8088ef5a488170f93c0652f65"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.7656100194789214,
+        "complete": true,
+        "known_leaf_com_base_m": [
+          -0.3105779922763407,
+          0.3104821453849322,
+          -0.1862182796399192
+        ],
+        "known_leaf_count": 3,
+        "unavailable": [],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0032",
+          "name": "rueda truper:5",
+          "base_T_occurrence_row_major": [
+            -0.9949729192444109,
+            -0.10014434567294006,
+            3.0850304056947903e-15,
+            -0.31057819330278735,
+            -3.1275164935631784e-14,
+            2.8045705709953556e-13,
+            -0.9999999999999971,
+            0.30827499999998864,
+            0.10014434567294145,
+            -0.9949729192444106,
+            -2.827006425595881e-13,
+            -0.18621801708534758,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carrier_rear_left",
+      "source_occurrence_roots": [
+        "doc_00064/0006",
+        "doc_00064/0030",
+        "doc_00064/0031",
+        "doc_00064/0033",
+        "doc_00064/0034",
+        "doc_00064/0035",
+        "doc_00064/0036",
+        "doc_00064/0037",
+        "doc_00064/0038",
+        "doc_00064/0039"
+      ],
+      "motion": "frozen_CAD_pose",
+      "leaf_occurrence_ids": [
+        "doc_00064/0006/0001",
+        "doc_00064/0006/0002",
+        "doc_00064/0006/0003",
+        "doc_00064/0030/0001",
+        "doc_00064/0031/0001",
+        "doc_00064/0033",
+        "doc_00064/0034",
+        "doc_00064/0035",
+        "doc_00064/0036/0001",
+        "doc_00064/0037",
+        "doc_00064/0038",
+        "doc_00064/0039"
+      ],
+      "source_documents_sha256": {
+        "doc_00098": "42f42b4c8d4b54b8389d165f11279a4a1168863ef296050c7e3638b2d2d6c5a3",
+        "doc_00108": "cb7f82a197be8826a4ff4b6fe4cde5ebbed1f3070982d982323828181481a836",
+        "doc_00109": "161cc05963714d393e83ccf1750edcb24df70e6d51fb2cb2c162b79d64ebed5a",
+        "doc_00111": "a1e5179b6ea2c5892e1ca04daa913b0702427348f9b832e86654d731ab6e58db",
+        "doc_00117": "f2bc034b64bcc5d61735c633558ec43203471e25ecf20ef3a0213d63dde1d974",
+        "doc_00118": "35cd5cf3040c37a796a7a9f82226d8338d6e482b7f41eb5f07f9e605a8fae7e0",
+        "doc_00119": "4e2551f9e360945a29622777af074291f82ed07fd4c0131cd8eeb2cb5d19a650",
+        "doc_00121": "41cdf7cecc1be347f0345ec20d2406121e812a25976e5265ea9b3c876e19e0aa",
+        "doc_00122": "8e8f74a0044c1cb4effd7bff33549930d02044afee5363c8d494135432f59cfe",
+        "doc_00123": "603234aea49e2bced36a4caddfeaf9a219d2635d5440ac6325b8a913b3aa6fb8"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.9641437190662457,
+        "complete": false,
+        "known_leaf_com_base_m": [
+          -0.3042420609027857,
+          0.1950529150081307,
+          -0.18373739565114192
+        ],
+        "known_leaf_count": 10,
+        "unavailable": [
+          {
+            "occurrence_id": "doc_00064/0031/0001",
+            "name": "BS 290 SKF- con junta RS1 SKF 6007-RS1:1",
+            "status": "external_or_unavailable",
+            "document_id": null,
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          },
+          {
+            "occurrence_id": "doc_00064/0036/0001",
+            "name": "BS 290 SKF- con junta RS1 SKF 608-RS1:1",
+            "status": "external_or_unavailable",
+            "document_id": null,
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          }
+        ],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0006",
+          "name": "Biela + buje amortiguador:1",
+          "base_T_occurrence_row_major": [
+            -6.6025861366203625e-31,
+            -0.2558159762262257,
+            -0.9667254968745861,
+            -0.15802499996336344,
+            -1.0,
+            1.9736352703630116e-15,
+            -5.222655604250851e-16,
+            0.22500000000000012,
+            2.041567411580365e-15,
+            0.9667254968745852,
+            -0.2558159762262257,
+            -0.11077499999999996,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0030",
+          "name": "Subensambles motoreductor:6",
+          "base_T_occurrence_row_major": [
+            7.695084828426288e-16,
+            -0.23473804609663795,
+            -0.9720586657783352,
+            -0.30823081284182086,
+            -0.9999999999999967,
+            1.0099289021792508e-15,
+            -1.0168017899367574e-15,
+            0.18497500000000008,
+            1.4795216823893241e-15,
+            0.9720586657783322,
+            -0.23473804609663657,
+            -0.1959386037431558,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0031",
+          "name": "Rodamiento:9",
+          "base_T_occurrence_row_major": [
+            1.0000000000000038,
+            -1.2490009027030848e-15,
+            3.0850304056952293e-15,
+            -0.3105781933027873,
+            3.0434291423252413e-15,
+            -8.309370978175417e-14,
+            -0.9999999999999998,
+            0.2972749999999886,
+            3.885780586187824e-16,
+            1.0000000000000033,
+            -8.28994207524438e-14,
+            -0.18621801708534846,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0033",
+          "name": "Eje:5",
+          "base_T_occurrence_row_major": [
+            -3.085030405694795e-15,
+            1.0991207943789738e-14,
+            1.0000000000000064,
+            -0.3105781933027871,
+            0.9999999999999971,
+            -5.776147984510862e-13,
+            3.0850304057014195e-15,
+            0.2362749999999889,
+            5.776147984510846e-13,
+            1.000000000000005,
+            -1.1185496973097793e-14,
+            -0.186218017085368,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0034",
+          "name": "Corona 1:5",
+          "base_T_occurrence_row_major": [
+            -2.933977511355906e-15,
+            1.2212453270885108e-15,
+            1.0000000000000098,
+            -0.31057819330278735,
+            0.9999999999999971,
+            -6.663757623478077e-13,
+            3.0317536832667146e-15,
+            0.3132749999999887,
+            6.665978069527311e-13,
+            1.0000000000000027,
+            -3.719247132493658e-15,
+            -0.1862180170853166,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0035",
+          "name": "Corona 2:5",
+          "base_T_occurrence_row_major": [
+            2.8032633321453367e-15,
+            -1.2406742300185231e-14,
+            -0.9999999999999998,
+            -0.3105781933027873,
+            -0.9999999999999952,
+            -6.648661504832191e-13,
+            -3.0317536832579487e-15,
+            0.2702749999999887,
+            -6.690849979767914e-13,
+            1.0000000000000016,
+            -9.40914013369886e-15,
+            -0.18621801708535837,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0036",
+          "name": "Rodamiento:10",
+          "base_T_occurrence_row_major": [
+            1.000000000000004,
+            -2.7755575614208653e-17,
+            3.0850304056946006e-15,
+            -0.3105781933027872,
+            3.0850304056960056e-15,
+            -1.1862004612713466e-12,
+            -0.9999999999999991,
+            0.2562749999999888,
+            -8.881784196987773e-16,
+            1.0000000000000024,
+            -1.1862004612713454e-12,
+            -0.1862180170853564,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0037",
+          "name": "Soporte para rueda:9",
+          "base_T_occurrence_row_major": [
+            7.695084828426369e-16,
+            -0.8533341384806646,
+            -0.521364410085166,
+            -0.3105781933027873,
+            -0.999999999999998,
+            2.4017461059052166e-15,
+            -9.768447918462135e-15,
+            0.29327499999998874,
+            1.0007675008641306e-14,
+            0.5213644100851669,
+            -0.8533341384806631,
+            -0.18621801708534882,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0038",
+          "name": "cubre motor:5",
+          "base_T_occurrence_row_major": [
+            -7.695084828426535e-16,
+            -0.23473804609663823,
+            0.9720586657783402,
+            -0.30823081284182074,
+            0.9999999999999971,
+            -1.541255095564407e-15,
+            4.0072791708690153e-16,
+            0.204475,
+            1.144994807776277e-15,
+            0.9720586657783371,
+            0.2347380460966368,
+            -0.19593860374315575,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0039",
+          "name": "Acople rijido 8 a 8 mm:3",
+          "base_T_occurrence_row_major": [
+            -3.085030405693974e-15,
+            0.9573599733528462,
+            0.2888977006170977,
+            -0.31057819330278713,
+            1.0000000000000002,
+            -3.294846352507699e-13,
+            1.102537096519532e-12,
+            0.23227499999998888,
+            1.1507122388570731e-12,
+            0.28889770061709685,
+            -0.9573599733528427,
+            -0.18621801708537256,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shock_rear_left",
+      "source_occurrence_roots": [
+        "doc_00064/0002"
+      ],
+      "motion": "frozen_CAD_pose",
+      "leaf_occurrence_ids": [
+        "doc_00064/0002/0001",
+        "doc_00064/0002/0002",
+        "doc_00064/0002/0003",
+        "doc_00064/0002/0004",
+        "doc_00064/0002/0005",
+        "doc_00064/0002/0006",
+        "doc_00064/0002/0007"
+      ],
+      "source_documents_sha256": {
+        "doc_00100": "9abee26a03cb20124e46885e9d650838c13d0876ea46837b0ac6c4c342a930a8",
+        "doc_00101": "8e0844c207fe3ad38e7ae69177374bfc45a5f0aefd5799ad4c8d0b7e68349cdb",
+        "doc_00102": "00ab1f24f313093690be9da500276767ac50536b1c4869df9bc73e58efc3edc3",
+        "doc_00103": "2a6a98f07baf09d34260edfe84e1f298d4f1a93f0a08f78497a67ad6bc57fd3e",
+        "doc_00104": "3b13786c315b66609226744beca597559a820112f8f675e49169e579607a0561",
+        "doc_00105": "2d867d3ff2e66b6f0ed69a8ecdc1b63915ef633be1219471a47af21d77fae5c1",
+        "doc_00106": "1018db6f66cc2a021de68f85bcfb51f092e259d39995b430b8632e119610347e"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.449938322158454,
+        "complete": true,
+        "known_leaf_com_base_m": [
+          -0.3581823677965945,
+          0.22500717705291254,
+          -0.07766977969406372
+        ],
+        "known_leaf_count": 7,
+        "unavailable": [],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0002",
+          "name": "125 mm Bike Rear Shock Absorber:1",
+          "base_T_occurrence_row_major": [
+            -0.25259534319992116,
+            -0.9675720089965961,
+            -3.2710259555911996e-16,
+            -0.3583992797758189,
+            -4.583597552858812e-16,
+            -2.1840550770252204e-16,
+            1.0000000000000002,
+            0.2249999999999996,
+            -0.9675720089965961,
+            0.25259534319992116,
+            -3.8832785509027915e-16,
+            -0.0788503464205134,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "wheel_front_left",
+      "source_occurrence_roots": [
+        "doc_00064/0042"
+      ],
+      "motion": "revolute_candidate_geometry_derived_limits_and_drive_pending",
+      "leaf_occurrence_ids": [
+        "doc_00064/0042/0001",
+        "doc_00064/0042/0002",
+        "doc_00064/0042/0003"
+      ],
+      "source_documents_sha256": {
+        "doc_00114": "0e83093f869fd731e637b6dde7b8e0d416ae9410d084482de41fddcc6e0d7d33",
+        "doc_00115": "3a8f4e85cd2f74d4847e896cd90cf47c3b92092ea3cc94cdb959c90c49d02642",
+        "doc_00116": "f155f4f3887e7f05502177d230af37109df23be8088ef5a488170f93c0652f65"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.7656100194789214,
+        "complete": true,
+        "known_leaf_com_base_m": [
+          0.31057839440942053,
+          0.3104821453849315,
+          -0.18621827962593349
+        ],
+        "known_leaf_count": 3,
+        "unavailable": [],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0042",
+          "name": "rueda truper:6",
+          "base_T_occurrence_row_major": [
+            -0.9949729192444056,
+            -0.1001443456729387,
+            1.0145278133333558e-14,
+            0.3105781933829739,
+            -4.307108230742609e-14,
+            3.2711005353054023e-13,
+            -0.9999999999999982,
+            0.308274999999988,
+            0.10014434567294025,
+            -0.9949729192444078,
+            -3.302952008664253e-13,
+            -0.18621801707136196,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carrier_front_left",
+      "source_occurrence_roots": [
+        "doc_00064/0008",
+        "doc_00064/0040",
+        "doc_00064/0041",
+        "doc_00064/0043",
+        "doc_00064/0044",
+        "doc_00064/0045",
+        "doc_00064/0046",
+        "doc_00064/0047",
+        "doc_00064/0048",
+        "doc_00064/0049"
+      ],
+      "motion": "frozen_CAD_pose",
+      "leaf_occurrence_ids": [
+        "doc_00064/0008/0001",
+        "doc_00064/0008/0002",
+        "doc_00064/0008/0003",
+        "doc_00064/0040/0001",
+        "doc_00064/0041/0001",
+        "doc_00064/0043",
+        "doc_00064/0044",
+        "doc_00064/0045",
+        "doc_00064/0046/0001",
+        "doc_00064/0047",
+        "doc_00064/0048",
+        "doc_00064/0049"
+      ],
+      "source_documents_sha256": {
+        "doc_00098": "42f42b4c8d4b54b8389d165f11279a4a1168863ef296050c7e3638b2d2d6c5a3",
+        "doc_00108": "cb7f82a197be8826a4ff4b6fe4cde5ebbed1f3070982d982323828181481a836",
+        "doc_00109": "161cc05963714d393e83ccf1750edcb24df70e6d51fb2cb2c162b79d64ebed5a",
+        "doc_00111": "a1e5179b6ea2c5892e1ca04daa913b0702427348f9b832e86654d731ab6e58db",
+        "doc_00117": "f2bc034b64bcc5d61735c633558ec43203471e25ecf20ef3a0213d63dde1d974",
+        "doc_00118": "35cd5cf3040c37a796a7a9f82226d8338d6e482b7f41eb5f07f9e605a8fae7e0",
+        "doc_00119": "4e2551f9e360945a29622777af074291f82ed07fd4c0131cd8eeb2cb5d19a650",
+        "doc_00121": "41cdf7cecc1be347f0345ec20d2406121e812a25976e5265ea9b3c876e19e0aa",
+        "doc_00122": "8e8f74a0044c1cb4effd7bff33549930d02044afee5363c8d494135432f59cfe",
+        "doc_00123": "603234aea49e2bced36a4caddfeaf9a219d2635d5440ac6325b8a913b3aa6fb8"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.9641437190662457,
+        "complete": false,
+        "known_leaf_com_base_m": [
+          0.30421816010226227,
+          0.195019214230286,
+          -0.18373162393397593
+        ],
+        "known_leaf_count": 10,
+        "unavailable": [
+          {
+            "occurrence_id": "doc_00064/0041/0001",
+            "name": "BS 290 SKF- con junta RS1 SKF 6007-RS1:1",
+            "status": "external_or_unavailable",
+            "document_id": null,
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          },
+          {
+            "occurrence_id": "doc_00064/0046/0001",
+            "name": "BS 290 SKF- con junta RS1 SKF 608-RS1:1",
+            "status": "external_or_unavailable",
+            "document_id": null,
+            "reason": "CAD mass unavailable; unresolved reference or construction geometry, never treated as zero physical mass"
+          }
+        ],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0008",
+          "name": "Biela + buje amortiguador:3",
+          "base_T_occurrence_row_major": [
+            1.4368338269619705e-31,
+            0.2558159761376239,
+            0.9667254968980316,
+            0.1580250000366363,
+            0.9999999999999998,
+            -1.2954738038426052e-15,
+            3.4280971874032826e-16,
+            0.2250000000000001,
+            1.3400637595671639e-15,
+            0.9667254968980312,
+            -0.25581597613762397,
+            -0.11077499999999998,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0040",
+          "name": "Subensambles motoreductor:7",
+          "base_T_occurrence_row_major": [
+            8.271902961084564e-15,
+            0.23473804600753484,
+            -0.9720586657998431,
+            0.3082308129228998,
+            -1.0000000000000002,
+            -2.644687486616636e-15,
+            -9.156303451705961e-15,
+            0.18497500000000014,
+            -4.768049747828592e-15,
+            0.9720586657998475,
+            0.23473804600753556,
+            -0.19593860372938948,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0041",
+          "name": "Rodamiento:11",
+          "base_T_occurrence_row_major": [
+            1.0,
+            -1.471045507628141e-15,
+            1.0145278133333574e-14,
+            0.3105781933829741,
+            1.0103676869963496e-14,
+            -1.0640529122913836e-13,
+            -1.0000000000000007,
+            0.2972749999999881,
+            1.6653345369378048e-16,
+            1.0000000000000007,
+            -1.0621100219982791e-13,
+            -0.18621801707136307,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0043",
+          "name": "Eje:6",
+          "base_T_occurrence_row_major": [
+            -1.0145278133333585e-14,
+            0.45635830371065156,
+            -0.8897960994712977,
+            0.31057819338297465,
+            1.0000000000000007,
+            5.785915715237382e-13,
+            2.853460361754579e-13,
+            0.2362749999999878,
+            6.450485565683774e-13,
+            -0.8897960994713019,
+            -0.45635830371065245,
+            -0.18621801707138574,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0044",
+          "name": "Corona 1:6",
+          "base_T_occurrence_row_major": [
+            -9.998562052670566e-15,
+            1.4988010832447052e-15,
+            1.000000000000003,
+            0.3105781933829739,
+            1.0,
+            -7.625440806291986e-13,
+            1.0096338224581555e-14,
+            0.3132749999999879,
+            7.6276612523412e-13,
+            1.000000000000002,
+            -2.63677968348418e-15,
+            -0.18621801707132693,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0045",
+          "name": "Corona 2:6",
+          "base_T_occurrence_row_major": [
+            9.867847873460588e-15,
+            -1.2490009027032206e-14,
+            -0.9999999999999981,
+            0.3105781933829744,
+            -0.9999999999999957,
+            -7.611374688479006e-13,
+            -1.0096338224572223e-14,
+            0.2702749999999881,
+            -7.653563163414728e-13,
+            0.9999999999999989,
+            -9.547918011776962e-15,
+            -0.18621801707137445,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0046",
+          "name": "Rodamiento:12",
+          "base_T_occurrence_row_major": [
+            0.9999999999999999,
+            -4.440892098487945e-16,
+            1.01452781333335e-14,
+            0.31057819338297454,
+            1.0145278133335112e-14,
+            -1.3247767345113371e-12,
+            -1.0000000000000007,
+            0.2562749999999878,
+            -6.106226635426327e-16,
+            1.000000000000002,
+            -1.3247767345113335e-12,
+            -0.18621801707137275,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0047",
+          "name": "Soporte para rueda:10",
+          "base_T_occurrence_row_major": [
+            8.271902961084523e-15,
+            -0.5213644101645577,
+            -0.853334138432152,
+            0.3105781933829742,
+            -0.9999999999999989,
+            -8.466641975672085e-15,
+            -6.6673426199682234e-15,
+            0.293274999999988,
+            -2.337553913000123e-15,
+            0.8533341384321538,
+            -0.5213644101645595,
+            -0.18621801707136368,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0048",
+          "name": "cubre motor:6",
+          "base_T_occurrence_row_major": [
+            -8.271902961084539e-15,
+            0.2347380460075448,
+            0.972058665799846,
+            0.3082308129228996,
+            1.000000000000001,
+            -1.2542143383356545e-15,
+            8.820524386782122e-15,
+            0.20447500000000013,
+            3.3376081528896446e-15,
+            0.9720586657998503,
+            -0.23473804600754486,
+            -0.19593860372938943,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "occurrence_id": "doc_00064/0049",
+          "name": "Acople rijido 8 a 8 mm:4",
+          "base_T_occurrence_row_major": [
+            -1.0145278133333828e-14,
+            -0.7200143054797781,
+            -0.6939592206350944,
+            0.31057819338297477,
+            1.0000000000000038,
+            8.845835979275069e-13,
+            -9.324151964458945e-13,
+            0.2322749999999877,
+            1.2852172242921461e-12,
+            -0.6939592206350969,
+            0.7200143054797801,
+            -0.18621801707139077,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shock_front_left",
+      "source_occurrence_roots": [
+        "doc_00064/0005"
+      ],
+      "motion": "frozen_CAD_pose",
+      "leaf_occurrence_ids": [
+        "doc_00064/0005/0001",
+        "doc_00064/0005/0002",
+        "doc_00064/0005/0003",
+        "doc_00064/0005/0004",
+        "doc_00064/0005/0005",
+        "doc_00064/0005/0006",
+        "doc_00064/0005/0007"
+      ],
+      "source_documents_sha256": {
+        "doc_00100": "9abee26a03cb20124e46885e9d650838c13d0876ea46837b0ac6c4c342a930a8",
+        "doc_00101": "8e0844c207fe3ad38e7ae69177374bfc45a5f0aefd5799ad4c8d0b7e68349cdb",
+        "doc_00102": "00ab1f24f313093690be9da500276767ac50536b1c4869df9bc73e58efc3edc3",
+        "doc_00103": "2a6a98f07baf09d34260edfe84e1f298d4f1a93f0a08f78497a67ad6bc57fd3e",
+        "doc_00104": "3b13786c315b66609226744beca597559a820112f8f675e49169e579607a0561",
+        "doc_00105": "2d867d3ff2e66b6f0ed69a8ecdc1b63915ef633be1219471a47af21d77fae5c1",
+        "doc_00106": "1018db6f66cc2a021de68f85bcfb51f092e259d39995b430b8632e119610347e"
+      },
+      "cad_mass_summary": {
+        "known_leaf_mass_kg": 0.449938322158454,
+        "complete": true,
+        "known_leaf_com_base_m": [
+          0.3581823678345749,
+          0.2249928229470871,
+          -0.07766977968409111
+        ],
+        "known_leaf_count": 7,
+        "unavailable": [],
+        "interpretation": "CAD materials/solids only; not weighed hardware and not validated inertia tensor"
+      },
+      "root_placements": [
+        {
+          "occurrence_id": "doc_00064/0005",
+          "name": "125 mm Bike Rear Shock Absorber:4",
+          "base_T_occurrence_row_major": [
+            0.25259534380907095,
+            0.9675720088375732,
+            -3.271025955591193e-16,
+            0.3583992798145426,
+            -4.582265041235238e-16,
+            -2.184402941353498e-16,
+            -0.9999999999999998,
+            0.2250000000000001,
+            -0.9675720088375732,
+            0.25259534380907095,
+            3.881901378985436e-16,
+            -0.07885034641040425,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    }
+  ],
+  "suspension": [
+    {
+      "name": "front_right",
+      "carrier_group": "carrier_front_right",
+      "shock_group": "shock_front_right",
+      "biela_occurrence_id": "doc_00064/0009",
+      "shock_occurrence_id": "doc_00064/0004",
+      "chassis_biela_hinge_axis_evidence": {
+        "relation_name": "Coincidencia:11",
+        "source_pointer": "/documents/64/relations/13",
+        "occurrences": [
+          "Biela + buje amortiguador:4",
+          "Chasis Hexagonal armado con soportes:1"
+        ],
+        "axis_line_point_cad_root_m": [
+          0.22500000000000017,
+          -0.11077499999999997,
+          -0.15802500003663647
+        ],
+        "axis_cad_root": [
+          -1,
+          5.29963852638884e-16,
+          2.414108687587066e-16
+        ],
+        "axis_line_point_base_m": [
+          0.15802500003663647,
+          -0.22500000000000017,
+          -0.11077499999999997
+        ],
+        "axis_base": [
+          -2.414108687587066e-16,
+          1.0,
+          5.29963852638884e-16
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "chassis_shock_eye_axis_evidence": {
+        "relation_name": "Coincidencia:3",
+        "source_pointer": "/documents/64/relations/5",
+        "occurrences": [
+          "125 mm Bike Rear Shock Absorber:3",
+          "Chasis Hexagonal armado con soportes:1"
+        ],
+        "axis_line_point_cad_root_m": [
+          0.2250000000000001,
+          -0.017341793808599463,
+          -0.34234179380859997
+        ],
+        "axis_cad_root": [
+          1,
+          -1.6836185965601592e-15,
+          4.746522394071345e-16
+        ],
+        "axis_line_point_base_m": [
+          0.34234179380859997,
+          -0.2250000000000001,
+          -0.017341793808599463
+        ],
+        "axis_base": [
+          -4.746522394071345e-16,
+          -1.0,
+          -1.6836185965601592e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "biela_shock_eye_axis_evidence": {
+        "relation_name": "Coincidencia:20",
+        "source_pointer": "/documents/64/relations/22",
+        "occurrences": [
+          "125 mm Bike Rear Shock Absorber:3",
+          "Biela + buje amortiguador:4"
+        ],
+        "axis_line_point_cad_root_m": [
+          0.22499999999999987,
+          -0.13763867915888772,
+          -0.3737466224277347
+        ],
+        "axis_cad_root": [
+          -1,
+          1.72194661874086e-15,
+          2.237743573663115e-16
+        ],
+        "axis_line_point_base_m": [
+          0.3737466224277347,
+          -0.22499999999999987,
+          -0.13763867915888772
+        ],
+        "axis_base": [
+          -2.237743573663115e-16,
+          1.0,
+          1.72194661874086e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "shock_eye_distance_m_in_transverse_plane": 0.12432861249759695,
+      "shock_extension_axis_base_from_document_x": [
+        0.2525953438090652,
+        -4.582356990497636e-16,
+        -0.9675720088375709
+      ],
+      "mapping_mode": "frozen_CAD_pose",
+      "dynamic_validation": "NO EJECUTADO",
+      "loop_topology_evidence": [
+        "chassis→biela",
+        "chassis→shock upper eye",
+        "biela→shock lower eye",
+        "shock internal telescoping candidate"
+      ],
+      "missing_for_dynamic_loop": [
+        "verified internal slider topology and travel limits",
+        "spring stiffness and preload",
+        "damping and friction",
+        "joint-limit stops",
+        "native closed-loop stability/contact protocol"
+      ],
+      "no_dof_claim": "The CAD subassembly is flexible=false in this saved pose. Constraint axes do not establish a dynamic suspension or its force law."
+    },
+    {
+      "name": "rear_right",
+      "carrier_group": "carrier_rear_right",
+      "shock_group": "shock_rear_right",
+      "biela_occurrence_id": "doc_00064/0007",
+      "shock_occurrence_id": "doc_00064/0003",
+      "chassis_biela_hinge_axis_evidence": {
+        "relation_name": "Coincidencia:10",
+        "source_pointer": "/documents/64/relations/12",
+        "occurrences": [
+          "Biela + buje amortiguador:2",
+          "Chasis Hexagonal armado con soportes:1"
+        ],
+        "axis_line_point_cad_root_m": [
+          0.22500000000000003,
+          -0.11077500000000001,
+          0.15802499996336358
+        ],
+        "axis_cad_root": [
+          1,
+          1.981071072496143e-15,
+          3.184529084626636e-30
+        ],
+        "axis_line_point_base_m": [
+          -0.15802499996336358,
+          -0.22500000000000003,
+          -0.11077500000000001
+        ],
+        "axis_base": [
+          -3.184529084626636e-30,
+          -1.0,
+          1.981071072496143e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "chassis_shock_eye_axis_evidence": {
+        "relation_name": "Coincidencia:2",
+        "source_pointer": "/documents/64/relations/4",
+        "occurrences": [
+          "125 mm Bike Rear Shock Absorber:2",
+          "Chasis Hexagonal armado con soportes:1"
+        ],
+        "axis_line_point_cad_root_m": [
+          0.22500000000000023,
+          -0.01734179380859981,
+          0.34234179380859997
+        ],
+        "axis_cad_root": [
+          -1,
+          -2.460106944697084e-15,
+          1.7955295040677262e-16
+        ],
+        "axis_line_point_base_m": [
+          -0.34234179380859997,
+          -0.22500000000000023,
+          -0.01734179380859981
+        ],
+        "axis_base": [
+          -1.7955295040677262e-16,
+          1.0,
+          -2.460106944697084e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "biela_shock_eye_axis_evidence": {
+        "relation_name": "Coincidencia:17",
+        "source_pointer": "/documents/64/relations/19",
+        "occurrences": [
+          "125 mm Bike Rear Shock Absorber:2",
+          "Biela + buje amortiguador:2"
+        ],
+        "axis_line_point_cad_root_m": [
+          0.22500000000000053,
+          -0.13763867917865955,
+          0.37374662235200073
+        ],
+        "axis_cad_root": [
+          1,
+          2.498434967317486e-15,
+          -8.779795471560857e-16
+        ],
+        "axis_line_point_base_m": [
+          -0.37374662235200073,
+          -0.22500000000000053,
+          -0.13763867917865955
+        ],
+        "axis_base": [
+          8.779795471560857e-16,
+          -1.0,
+          2.498434967317486e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "shock_eye_distance_m_in_transverse_plane": 0.12432861249759723,
+      "shock_extension_axis_base_from_document_x": [
+        -0.2525953431999222,
+        -4.583218769206195e-16,
+        -0.9675720089965991
+      ],
+      "mapping_mode": "frozen_CAD_pose",
+      "dynamic_validation": "NO EJECUTADO",
+      "loop_topology_evidence": [
+        "chassis→biela",
+        "chassis→shock upper eye",
+        "biela→shock lower eye",
+        "shock internal telescoping candidate"
+      ],
+      "missing_for_dynamic_loop": [
+        "verified internal slider topology and travel limits",
+        "spring stiffness and preload",
+        "damping and friction",
+        "joint-limit stops",
+        "native closed-loop stability/contact protocol"
+      ],
+      "no_dof_claim": "The CAD subassembly is flexible=false in this saved pose. Constraint axes do not establish a dynamic suspension or its force law."
+    },
+    {
+      "name": "rear_left",
+      "carrier_group": "carrier_rear_left",
+      "shock_group": "shock_rear_left",
+      "biela_occurrence_id": "doc_00064/0006",
+      "shock_occurrence_id": "doc_00064/0002",
+      "chassis_biela_hinge_axis_evidence": {
+        "relation_name": "Coincidencia:9",
+        "source_pointer": "/documents/64/relations/11",
+        "occurrences": [
+          "Biela + buje amortiguador:1",
+          "Chasis Hexagonal armado con soportes:1"
+        ],
+        "axis_line_point_cad_root_m": [
+          -0.22500000000000012,
+          -0.11077499999999997,
+          0.15802499996336358
+        ],
+        "axis_cad_root": [
+          1,
+          2.041567411580387e-15,
+          6.37546719812513e-30
+        ],
+        "axis_line_point_base_m": [
+          -0.15802499996336358,
+          0.22500000000000012,
+          -0.11077499999999997
+        ],
+        "axis_base": [
+          -6.37546719812513e-30,
+          -1.0,
+          2.041567411580387e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "chassis_shock_eye_axis_evidence": {
+        "relation_name": "Coincidencia:1",
+        "source_pointer": "/documents/64/relations/3",
+        "occurrences": [
+          "125 mm Bike Rear Shock Absorber:1",
+          "Chasis Hexagonal armado con soportes:1"
+        ],
+        "axis_line_point_cad_root_m": [
+          -0.22499999999999973,
+          -0.017341793808599633,
+          0.3423417938085999
+        ],
+        "axis_cad_root": [
+          -1,
+          -2.460146092548527e-15,
+          1.7955295040677316e-16
+        ],
+        "axis_line_point_base_m": [
+          -0.3423417938085999,
+          0.22499999999999973,
+          -0.017341793808599633
+        ],
+        "axis_base": [
+          -1.7955295040677316e-16,
+          1.0,
+          -2.460146092548527e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "biela_shock_eye_axis_evidence": {
+        "relation_name": "Coincidencia:18",
+        "source_pointer": "/documents/64/relations/20",
+        "occurrences": [
+          "125 mm Bike Rear Shock Absorber:1",
+          "Biela + buje amortiguador:1"
+        ],
+        "axis_line_point_cad_root_m": [
+          -0.2249999999999994,
+          -0.1376386791786592,
+          0.3737466223520005
+        ],
+        "axis_cad_root": [
+          1,
+          2.4984741151689296e-15,
+          -8.779795471560884e-16
+        ],
+        "axis_line_point_base_m": [
+          -0.3737466223520005,
+          0.2249999999999994,
+          -0.1376386791786592
+        ],
+        "axis_base": [
+          8.779795471560884e-16,
+          -1.0,
+          2.4984741151689296e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "shock_eye_distance_m_in_transverse_plane": 0.12432861249759705,
+      "shock_extension_axis_base_from_document_x": [
+        -0.25259534319992116,
+        -4.583597552858812e-16,
+        -0.9675720089965961
+      ],
+      "mapping_mode": "frozen_CAD_pose",
+      "dynamic_validation": "NO EJECUTADO",
+      "loop_topology_evidence": [
+        "chassis→biela",
+        "chassis→shock upper eye",
+        "biela→shock lower eye",
+        "shock internal telescoping candidate"
+      ],
+      "missing_for_dynamic_loop": [
+        "verified internal slider topology and travel limits",
+        "spring stiffness and preload",
+        "damping and friction",
+        "joint-limit stops",
+        "native closed-loop stability/contact protocol"
+      ],
+      "no_dof_claim": "The CAD subassembly is flexible=false in this saved pose. Constraint axes do not establish a dynamic suspension or its force law."
+    },
+    {
+      "name": "front_left",
+      "carrier_group": "carrier_front_left",
+      "shock_group": "shock_front_left",
+      "biela_occurrence_id": "doc_00064/0008",
+      "shock_occurrence_id": "doc_00064/0005",
+      "chassis_biela_hinge_axis_evidence": {
+        "relation_name": "Coincidencia:12",
+        "source_pointer": "/documents/64/relations/14",
+        "occurrences": [
+          "Biela + buje amortiguador:3",
+          "Chasis Hexagonal armado con soportes:1"
+        ],
+        "axis_line_point_cad_root_m": [
+          -0.2250000000000001,
+          -0.11077500000000001,
+          -0.15802500003663644
+        ],
+        "axis_cad_root": [
+          -1,
+          1.340063759567159e-15,
+          1.2713168137629028e-30
+        ],
+        "axis_line_point_base_m": [
+          0.15802500003663644,
+          0.2250000000000001,
+          -0.11077500000000001
+        ],
+        "axis_base": [
+          -1.2713168137629028e-30,
+          1.0,
+          1.340063759567159e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "chassis_shock_eye_axis_evidence": {
+        "relation_name": "Coincidencia:4",
+        "source_pointer": "/documents/64/relations/6",
+        "occurrences": [
+          "125 mm Bike Rear Shock Absorber:4",
+          "Chasis Hexagonal armado con soportes:1"
+        ],
+        "axis_line_point_cad_root_m": [
+          -0.22499999999999998,
+          -0.017341793808599713,
+          -0.3423417938085999
+        ],
+        "axis_cad_root": [
+          1,
+          -1.6836280996525924e-15,
+          4.746522394071253e-16
+        ],
+        "axis_line_point_base_m": [
+          0.3423417938085999,
+          0.22499999999999998,
+          -0.017341793808599713
+        ],
+        "axis_base": [
+          -4.746522394071253e-16,
+          -1.0,
+          -1.6836280996525924e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "biela_shock_eye_axis_evidence": {
+        "relation_name": "Coincidencia:19",
+        "source_pointer": "/documents/64/relations/21",
+        "occurrences": [
+          "125 mm Bike Rear Shock Absorber:4",
+          "Biela + buje amortiguador:3"
+        ],
+        "axis_line_point_cad_root_m": [
+          -0.22500000000000017,
+          -0.13763867915888803,
+          -0.37374662242773526
+        ],
+        "axis_cad_root": [
+          -1,
+          1.7219561218332895e-15,
+          2.2377435736631804e-16
+        ],
+        "axis_line_point_base_m": [
+          0.37374662242773526,
+          0.22500000000000017,
+          -0.13763867915888803
+        ],
+        "axis_base": [
+          -2.2377435736631804e-16,
+          1.0,
+          1.7219561218332895e-15
+        ],
+        "status": "derivado_de_CAD",
+        "scope": "Geometric coincident-axis evidence; not an automatically inferred revolute joint or limits"
+      },
+      "shock_eye_distance_m_in_transverse_plane": 0.12432861249759716,
+      "shock_extension_axis_base_from_document_x": [
+        0.25259534380907095,
+        -4.582265041235238e-16,
+        -0.9675720088375732
+      ],
+      "mapping_mode": "frozen_CAD_pose",
+      "dynamic_validation": "NO EJECUTADO",
+      "loop_topology_evidence": [
+        "chassis→biela",
+        "chassis→shock upper eye",
+        "biela→shock lower eye",
+        "shock internal telescoping candidate"
+      ],
+      "missing_for_dynamic_loop": [
+        "verified internal slider topology and travel limits",
+        "spring stiffness and preload",
+        "damping and friction",
+        "joint-limit stops",
+        "native closed-loop stability/contact protocol"
+      ],
+      "no_dof_claim": "The CAD subassembly is flexible=false in this saved pose. Constraint axes do not establish a dynamic suspension or its force law."
+    }
+  ],
+  "dimensions": {
+    "wheel_separation_m": 0.6165500000000085,
+    "wheelbase_m": 0.6211563866857641,
+    "cad_pose_chassis_origin_height_for_tire_tangent_ground_m": 0.296218017078388,
+    "ground_placement_status": "derived from undeformed CAD tire radius; frozen-suspension placement only",
+    "chassis_with_supports_bounds_cad_root_m": {
+      "min": [
+        -0.239,
+        -0.125775,
+        -0.3628478904630099
+      ],
+      "max": [
+        0.23900000000000027,
+        0.09577500000000001,
+        0.3628478904630099
+      ]
+    }
+  },
+  "coverage": {
+    "base_occurrences": 153,
+    "base_leaf_occurrences": 126,
+    "assigned_leaf_occurrences": 126,
+    "duplicate_assignments": [],
+    "unassigned": [],
+    "unresolved_leaf_occurrences": [
+      "doc_00064/0011/0001",
+      "doc_00064/0016/0001",
+      "doc_00064/0021/0001",
+      "doc_00064/0026/0001",
+      "doc_00064/0031/0001",
+      "doc_00064/0036/0001",
+      "doc_00064/0041/0001",
+      "doc_00064/0046/0001"
+    ],
+    "cad_root_reported_mass_kg": 12.848258541358453,
+    "sum_known_leaf_mass_kg": 12.848281092646358
+  },
+  "limitations": [
+    "This is a reduced frozen-pose diagnostic mapping, not a validated dynamic suspension model.",
+    "Eight missing Content Center bearing occurrences remain explicit; absent masses are not zero.",
+    "External axle/crown/coupler rotational assignments are pending; only wheel-assembly members rotate together in the candidate mapping.",
+    "Raw CAD density and inertia sign convention are not measured hardware properties.",
+    "No arm mount, motor polarity, gearbox performance, friction or actuator values are inferred from filenames.",
+    "No model-wide bounding box may replace detailed CAD collision geometry."
+  ]
+}

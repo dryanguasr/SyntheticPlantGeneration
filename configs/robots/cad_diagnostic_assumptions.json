@@ -1,0 +1,29 @@
+{
+  "schema_version": "cad-diagnostic-assumptions/1.0",
+  "scope": "Reduced commissioning model, not hardware validation or a harvest-ready robot",
+  "arm_mount_xyz_m": [-0.06, 0.0, 0.15446684],
+  "mount_evidence": {
+    "status": "estimado",
+    "source": "User description 2026-11-23 and assets/WhatsApp Image 2026-11-23 at 12.23.22 PM.jpeg in main checkout",
+    "method": "Laterally centered, slightly rearward, supported by upper metal frame. Numeric rearward displacement is an initial estimate; height aligns assembly lower envelope with upper chassis envelope.",
+    "uncertainty_m": [0.06, 0.03, 0.03],
+    "not_measured": true
+  },
+  "arm_effort_limit_nm": 3.0,
+  "wheel_effort_limit_nm": 1.0,
+  "arm_velocity_limit_rad_s": 0.3,
+  "wheel_velocity_limit_rad_s": 3.0,
+  "actuation_evidence": {
+    "status": "estimado",
+    "method": "Conservative diagnostic command ceilings at joint output, deliberately independent of stall torque and unverified transmission ratios. Insufficient force remains a recorded failure.",
+    "continuous_hardware_capacity": "pendiente"
+  },
+  "arm_pid": [30.0, 0.0, 1.0],
+  "wheel_pid": [1.0, 0.0, 0.0],
+  "contact_mu": 0.6,
+  "collision_approximation": "Per-part oriented CAD bounds; individual wheel tire cylinders. Conservative approximation may close cavities within a part; not accepted for harvest or gripper contact validation.",
+  "suspension": "frozen_CAD_pose_diagnostic_only",
+  "gripper": "frozen_CAD_pose_diagnostic_only",
+  "missing_components": ["battery geometry and mass", "harvest basket and transfer mount", "verified sensor model and extrinsics"],
+  "native_harvest_eligible": false
+}

@@ -45,6 +45,10 @@ reemplazados están en `legacy/scripts/`.
 
 | Script | Propósito |
 |---|---|
+| `prepare_robot_model.py` | Resuelve perfiles y overrides con procedencia; genera SDF, contrato, configuración efectiva y reporte |
+| `export_inventor_robot.ps1` | Inspecciona copias IAM/IPT con Inventor y exporta geometría, matrices y propiedades disponibles |
+| `prepare_cad_inspection.py` | Crea una inspección estática de ocurrencias CAD; no inventa el montaje integrado |
+| `probe_robot_actuation.py` | Prueba nativa aislada de esfuerzo, velocidad, carga y saturación; no valida hardware |
 | `export_gazebo_plant.py` | Exporta un plan JSON puro por LOD desde una morfología; no produce SDF ni requiere Gazebo |
 | `prepare_harvest_pilot.py` | Genera tres plantas, seis unidades desmontables, robot 4WD/5 GDL, cesta y manifiesto sin Blender ni Gazebo |
 | `build_harvest_plugin.sh` | Compila el sistema de corte/retención para Gazebo Harmonic en un directorio de salida |
@@ -96,3 +100,8 @@ Instrucciones: [Video del dron y PC](../docs/guides/video_dron_pc_rtmp.md).
 Los nombres incluyen el artefacto producido; no se usan números de versión en
 scripts vigentes. La versión experimental se registra en la configuración y
 en los artefactos, no en el nombre del programa.
+- `prepare_cad_robot.py`: agrupa geometría/inercias CAD en un perfil diagnóstico explícito y un nominal pendiente.
+- `audit_cad_meshes.py`: verifica escala, límites CAD, índices y orientación de facetas exportadas.
+- `probe_robot_parameters.py`: comprueba propagación de montaje, carga hipotética y esfuerzo; rechaza longitud incompatible.
+- `probe_robot_kinematics.py`: compara FK con poses nativas y distingue seguimiento de consistencia numérica.
+- `probe_cad_mobility.py`: prueba gravedad, avance, giro y parada del perfil CAD reducido con criterios congelados.
