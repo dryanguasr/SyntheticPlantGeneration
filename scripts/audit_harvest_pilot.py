@@ -17,6 +17,14 @@ from uchuva_gazebo.harvest_validation import evaluate_harvest_run
 NATIVE_SOURCE_FILES = ('HarvestSystem.cc', 'CMakeLists.txt')
 
 
+def native_source_files(manifest):
+    """Frozen historical packages retain their original two-source contract."""
+    files = manifest.get('source', {}).get('files_sha256', {})
+    if 'robot_spec_sha256' in manifest or 'gazebo/harvest_system/RobotTelemetrySystem.cc' in files:
+        return (*NATIVE_SOURCE_FILES, 'RobotTelemetrySystem.cc')
+    return NATIVE_SOURCE_FILES
+
+
 def command_event_consistency(commands, events):
     """Match ordered acknowledgements to recorded commands, independently."""
     interactions = [c for c in commands if c.get('kind') == 'interaction']
@@ -81,9 +89,15 @@ def plugin_record_matches(manifest, metadata):
     record = metadata.get('plugin_build', {})
     sources = record.get('source_sha256', {})
     expected = manifest.get('source', {}).get('files_sha256', {})
-    return (set(sources) == set(NATIVE_SOURCE_FILES)
+    names = native_source_files(manifest)
+    libraries = record.get('libraries_sha256', {})
+    robot_provenance = ('robot_spec_sha256' not in manifest or (
+        metadata.get('robot_spec_sha256') == manifest['robot_spec_sha256']
+        and all(valid_digest(libraries.get(name)) for name in ('libUchuvaHarvestSystem.so', 'libUchuvaRobotTelemetrySystem.so'))
+        and libraries.get('libUchuvaHarvestSystem.so') == record.get('library_sha256')))
+    return (robot_provenance and set(sources) == set(names)
             and all(valid_digest(sources[name]) and sources[name] == expected.get('gazebo/harvest_system/' + name)
-                    for name in NATIVE_SOURCE_FILES)
+                    for name in names)
             and valid_digest(record.get('library_sha256'))
             and record.get('library_sha256') == metadata.get('plugin_sha256')
             and valid_digest(record.get('provenance_sha256')))
@@ -108,6 +122,13 @@ def _audit(package, run):
         {'name': 'command_evidence_available', 'passed': bool(commands)},
         command_event_consistency(commands, events),
     ]
+    if 'robot_spec_sha256' in manifest:
+        from uchuva_gazebo.robot_validation import evaluate_robot_telemetry
+        report['checks'] += evaluate_robot_telemetry(manifest, read_jsonl(run / 'robot_telemetry.jsonl'), samples, events)
+        report['checks'].append({'name': 'run_effective_robot_frozen', 'passed':
+            metadata.get('robot_effective_sha256') == sha256_file(run / 'robot_effective.json')
+            == manifest['files_sha256'][manifest['robot_effective_file']]})
+        report['robot_validation_source_sha256'] = sha256_file(REPO / 'src/uchuva_gazebo/robot_validation.py')
     for check in report['checks']:
         check.setdefault('status', 'PASS' if check['passed'] else 'FAIL')
     report['passed'] = all(check['passed'] for check in report['checks'])
@@ -119,6 +140,8 @@ def _audit(package, run):
         report['physical_validation'] = 'failed_or_unobserved'
     report['evidence_files_sha256'] = {name: sha256_file(run / name) for name in (
         'run.json', 'outcome.json', 'telemetry.jsonl', 'events.jsonl', 'commands.jsonl', 'server.log')}
+    if 'robot_spec_sha256' in manifest:
+        report['evidence_files_sha256'].update({name: sha256_file(run / name) for name in ('robot_telemetry.jsonl', 'robot_effective.json')})
     return report
 
 

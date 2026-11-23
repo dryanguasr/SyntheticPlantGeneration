@@ -1,0 +1,53 @@
+{
+  "schema_version": "robot-spec/1.0",
+  "profile_id": "cad_nominal_pending",
+  "status": "incomplete",
+  "model_name": "harvester",
+  "namespace": "/harvester",
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "angle": "rad"
+  },
+  "root_link": "base_link",
+  "capabilities": [],
+  "provenance": {
+    "status": "pendiente",
+    "source": "Native Inventor extraction of Ensamble brazo v2.iam, Locomoción armada V3.iam and Gripper ensamble.iam; configs/robots/cad_arm_mapping.json and cad_base_mapping.json",
+    "revision": "2026-11-23_native_CAD_mappings_available_nominal_validation_pending",
+    "method": "The native extraction resolves SI geometry, occurrence transforms and CAD mass properties; the arm mapping identifies five axes, 280/260 mm spans and wrist-to-gripper placement. Diagnostic aggregation is separate from this still-incomplete nominal profile. CAD pose zero is not hardware encoder zero.",
+    "uncertainty": "No hardware measurement is inferred from CAD materials, purchased part names, photos or diagnostic assumptions."
+  },
+  "missing_evidence": [
+    "Montaje chasis-brazo medido: la orientación y el centrado están declarados, pero su posición numérica usa estimaciones de la fotografía y las envolventes CAD.",
+    "Calibración de signos y ceros de encoder, topes mecánicos y rangos operativos. Los cinco ejes y el orden pitch-roll distal están derivados del CAD; los límites diagnósticos de ±15 grados no son límites del hardware.",
+    "Capacidad continua de los actuadores a la salida articular, relaciones y pérdidas de transmisión, velocidad, fricción y parámetros de control contrastados con hardware. Los techos diagnósticos de esfuerzo son estimados.",
+    "Representación dinámica validada de suspensión, amortiguadores y mecanismo cerrado de la pinza, incluidas relaciones de engranajes/correas y apertura. Congelar su postura CAD sólo sirve para diagnóstico.",
+    "Calibración funcional de TCP, plano de corte y centro de agarre: los centros geométricos de cuchillas/gomas y el montaje CAD de muñeca están disponibles, pero no son mediciones de contacto o corte.",
+    "Colisiones verificadas que respeten cavidades, holguras de articulaciones y espacio entre mordazas. Las cajas orientadas por pieza son aproximaciones diagnósticas conservadoras.",
+    "Contraste de masas, centros de masa e inercias CAD agregadas con materiales/componentes reales; baterías, carga útil, cesta de cosecha y sus soportes todavía no están incorporados.",
+    "Sensores reales, montaje y extrínsecos, propiedades de observación, ruido/latencia y validación nativa del conjunto. No existe todavía aceptación de cosecha del robot CAD."
+  ],
+  "parameters": {},
+  "parameter_metadata": {},
+  "derived_values": [],
+  "links": [],
+  "joints": [],
+  "frames": [],
+  "arm_home_positions": {},
+  "collision_policy": {
+    "mode": "explicit_pairs",
+    "excluded_pairs": []
+  },
+  "actuators": [],
+  "sensors": [],
+  "control": {
+    "arm": {},
+    "drive": {
+      "left_joints": [],
+      "right_joints": []
+    },
+    "gripper": {}
+  },
+  "override_history": []
+}

@@ -94,6 +94,20 @@ def callback_fixture():
 
 
 class HarvestRuntimeContractTests(unittest.TestCase):
+    def test_deposit_uses_controlled_cut_frame_instead_of_offset_tcp(self):
+        pilot = NativePilot.__new__(NativePilot)
+        pilot.resolved_robot = object()
+        pilot.config = SimpleNamespace(frame='cut_point')
+        state = {'tool_pose': [1, 2, 3, 0, 0, 0, 1],
+                 'cut_pose': [1.2, 2.1, 3, 0, 0, 0, 1],
+                 'fruits': [{'id': 'target', 'position': [1.23, 2.05, 2.98]}]}
+        corrected = pilot._deposit_correction([4, 5, 6], state, 'target')
+        self.assertAlmostEqual(corrected[0], 3.97)
+        self.assertAlmostEqual(corrected[1], 5.05)
+        self.assertEqual(corrected[2], 6)
+        pilot.resolved_robot = None
+        self.assertAlmostEqual(pilot._deposit_correction([4, 5, 6], state, 'target')[0], 3.77)
+
     def test_world_goal_tracks_observed_base_drift_with_bounded_joint_commands(self):
         pilot = callback_fixture()
         pilot.config = HarvesterConfig()

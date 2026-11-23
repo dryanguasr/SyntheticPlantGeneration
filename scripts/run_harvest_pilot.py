@@ -28,7 +28,7 @@ from uchuva_gazebo.harvester_robot import HarvesterConfig, inverse_kinematics
 from uchuva_gazebo.harvest_pilot import load_verified_package, sha256_file
 from uchuva_gazebo.harvest_validation import (angle_error, deposited_interval, distance,
     fruit_map, local_point, rotate_vector, world_point, yaw_of)
-from audit_harvest_pilot import (NATIVE_SOURCE_FILES, audit, json_safe,
+from audit_harvest_pilot import (native_source_files, audit, json_safe,
     strict_json_loads, valid_digest)
 
 
@@ -45,12 +45,20 @@ def verified_plugin_build(manifest, directory):
     if not library.is_file() or not valid_digest(provenance.get('library_sha256')) or provenance['library_sha256'] != sha256_file(library):
         raise RuntimeError('Missing or changed native plugin; run build_harvest_plugin.sh')
     sources = provenance.get('source_sha256', {})
-    if set(sources) != set(NATIVE_SOURCE_FILES):
+    if set(sources) != set(native_source_files(manifest)):
         raise RuntimeError('Incomplete native plugin source provenance; rebuild the plugin')
     for name, digest in sources.items():
         expected = manifest.get('source', {}).get('files_sha256', {}).get('gazebo/harvest_system/' + name)
         if not valid_digest(digest) or expected != digest:
             raise RuntimeError('Plugin and prepared scene come from different source revisions; prepare a fresh package')
+    if 'robot_spec_sha256' in manifest:
+        libraries = provenance.get('libraries_sha256', {})
+        for name in ('libUchuvaHarvestSystem.so', 'libUchuvaRobotTelemetrySystem.so'):
+            path = directory / name
+            if not path.is_file() or not valid_digest(libraries.get(name)) or sha256_file(path) != libraries[name]:
+                raise RuntimeError(f'Missing or changed resolved-robot plugin: {name}')
+        if libraries['libUchuvaHarvestSystem.so'] != provenance['library_sha256']:
+            raise RuntimeError('Conflicting harvest plugin provenance')
     return {**provenance, 'provenance_sha256': sha256_file(provenance_path), 'library_path': str(library)}
 
 
@@ -63,7 +71,14 @@ class NativePilot:
         from gz.msgs10.twist_pb2 import Twist
         self.Double, self.StringMsg, self.Twist = Double, StringMsg, Twist
         self.manifest, self.output, self.server, self.streams = manifest, output, server, streams
-        self.config = HarvesterConfig(**manifest['robot_config'])
+        self.resolved_robot = None
+        if 'robot_spec_sha256' in manifest:
+            from uchuva_gazebo.robot_spec import resolve_robot_profile
+            from uchuva_gazebo.robot_motion import ResolvedMotionConfig
+            self.resolved_robot = resolve_robot_profile(manifest['robot_config'])
+            self.config = ResolvedMotionConfig(self.resolved_robot, manifest['robot_task'])
+        else:
+            self.config = HarvesterConfig(**manifest['robot_config'])
         self.node = Node()
         self.condition = threading.Condition()
         self._closing = False
@@ -82,7 +97,13 @@ class NativePilot:
         self.wall_timeout = wall_timeout
         self.interaction = manifest['interaction']
         topics = manifest['robot']['topics']
-        self.base_publisher = self.node.advertise(topics['cmd_vel'], Twist)
+        self.base_publisher = self.node.advertise(topics['cmd_vel'], Twist) if self.resolved_robot is None else None
+        self.drive_publishers = {}
+        if self.resolved_robot is not None:
+            drive = manifest['robot']['drive']
+            self.drive_publishers = {name: self.node.advertise(
+                self.resolved_robot.to_dict()['namespace']+'/drive/'+name+'/cmd_vel', Double)
+                for name in drive['left_joints']+drive['right_joints']}
         self.arm_publishers = {name: self.node.advertise(topic, Double)
                                for name, topic in topics['joint_commands'].items()}
         self.command_publisher = self.node.advertise(self.interaction['command_topic'], StringMsg)
@@ -93,6 +114,11 @@ class NativePilot:
                 (Model, topics['joint_states'], self._joint_callback),
             ):
                 if not self.node.subscribe(msg_type, topic, callback):
+                    raise RuntimeError(f'Could not subscribe to {topic}')
+                self._subscriptions.append(topic)
+            if self.resolved_robot is not None:
+                topic = manifest['robot']['topics_robot_telemetry']
+                if not self.node.subscribe(StringMsg, topic, self._robot_callback):
                     raise RuntimeError(f'Could not subscribe to {topic}')
                 self._subscriptions.append(topic)
         except Exception:
@@ -187,6 +213,46 @@ class NativePilot:
                 self.callback_error = f'Invalid joint-state message: {error}'
             self.condition.notify_all()
 
+    def _robot_callback(self, message):
+        """Keep native effort commands and measured response as distinct evidence."""
+        with self.condition:
+            if self._closing:
+                return
+            try:
+                row = strict_json_loads(message.data)
+                if row.get('robot_spec_sha256') != self.manifest['robot_spec_sha256']:
+                    raise ValueError('Robot telemetry belongs to a different resolved description')
+                if type(row.get('sim_time')) not in (int, float) or not math.isfinite(row['sim_time']):
+                    raise ValueError('Robot telemetry has invalid simulation time')
+                row['phase'] = self.phase
+                self._line('robot_telemetry', row)
+            except (AttributeError, ValueError, TypeError, OSError) as error:
+                self.callback_error = f'Invalid robot telemetry: {error}'
+            self.condition.notify_all()
+
+    def _motion_pose(self, state):
+        if not getattr(self, 'resolved_robot', None):
+            return state['tool_pose']
+        key = {'tcp': 'tool_pose', 'cut_point': 'cut_pose', 'grasp_center': 'grasp_pose'}.get(self.config.frame)
+        if key is None or not isinstance(state.get(key), list) or len(state[key]) != 7:
+            raise ValueError('Missing observed motion frame for the resolved robot')
+        return state[key]
+
+    def _deposit_correction(self, goal, state, identifier):
+        # move_tool controls the configured task frame, which can differ from
+        # TCP. Preserve the measured fruit offset in that same observed frame.
+        origin = self._motion_pose(state)
+        fruit = fruit_map(state)[identifier]['position']
+        return [goal[0]-(fruit[0]-origin[0]),
+                goal[1]-(fruit[1]-origin[1]), goal[2]]
+
+    def _solve_world_target(self, target, state):
+        config = self.config
+        if getattr(self, 'resolved_robot', None) and getattr(self, 'target_direction_world', None) is not None:
+            direction = rotate_vector(state['robot_pose'][3:], self.target_direction_world, inverse=True)
+            config = config.for_direction(direction)
+        return inverse_kinematics(local_point(target, state['robot_pose']), config=config)
+
     def set_phase(self, phase, identifier=None):
         with self.condition:
             self.phase = phase
@@ -246,13 +312,38 @@ class NativePilot:
                          simulation_timeout=seconds + 2, action=lambda _: self.send_base(0, 0))
 
     def send_base(self, linear, angular):
-        msg = self.Twist()
-        msg.linear.x, msg.angular.z = float(linear), float(angular)
-        self.base_publisher.publish(msg)
+        if not all(math.isfinite(v) for v in (linear, angular)):
+            raise ValueError('Base commands must be finite')
+        if getattr(self, 'resolved_robot', None):
+            drive = self.manifest['robot']['drive']
+            linear = max(-drive['max_linear_velocity'], min(drive['max_linear_velocity'], float(linear)))
+            angular = max(-drive['max_angular_velocity'], min(drive['max_angular_velocity'], float(angular)))
+            stamp = self.snapshot()['sim_time']
+            previous = getattr(self, '_last_base_reference', (0.0, 0.0, 0.0))
+            dt = max(0.0, stamp-previous[0])
+            linear = previous[1]+max(-drive['max_linear_acceleration']*dt, min(drive['max_linear_acceleration']*dt, linear-previous[1]))
+            angular = previous[2]+max(-drive['max_angular_acceleration']*dt, min(drive['max_angular_acceleration']*dt, angular-previous[2]))
+            self._last_base_reference = (stamp, linear, angular)
+            wheel_references = {}
+            for side, sign in (('left_joints', -1), ('right_joints', 1)):
+                wheel_speed = (linear+sign*angular*drive['wheel_separation_m']/2)/drive['wheel_radius_m']
+                for name in drive[side]:
+                    msg = self.Double()
+                    bound = drive['joints'][name]['command_velocity']
+                    msg.data = max(-bound, min(bound, wheel_speed*drive['joint_signs'][name]))
+                    wheel_references[name] = msg.data
+                    self.drive_publishers[name].publish(msg)
+        else:
+            msg = self.Twist()
+            msg.linear.x, msg.angular.z = float(linear), float(angular)
+            self.base_publisher.publish(msg)
         with self.condition:
-            self._line('commands', {'kind': 'base_velocity', 'phase': self.phase,
+            record = {'kind': 'base_velocity', 'phase': self.phase,
                                    'sim_time': self.state['sim_time'] if self.state else None,
-                                   'linear_m_s': linear, 'angular_rad_s': angular})
+                                   'linear_m_s': linear, 'angular_rad_s': angular}
+            if getattr(self, 'resolved_robot', None):
+                record['wheel_velocity_references_rad_s'] = wheel_references
+            self._line('commands', record)
 
     def send_joints(self, values):
         for name, value in zip(self.manifest['robot']['arm_joint_names'], values):
@@ -297,7 +388,9 @@ class NativePilot:
         start_joints = [self.joints[name] for name in names]
         started = state['sim_time']
         # Cubic interpolation's peak derivative is 1.5; cap nominal joint speed.
-        duration = max(.8, 1.5 * max(abs(a - b) for a, b in zip(start_joints, target)) / .35)
+        rates = ([self.resolved_robot.data['control']['arm'][name]['command_velocity'] for name in names]
+                 if getattr(self, 'resolved_robot', None) else [.35]*len(names))
+        duration = max(.8, 1.5 * max(abs(a-b)/rate for a,b,rate in zip(start_joints,target,rates)))
         stable_since = None
         last_command = list(start_joints)
         last_command_time = started
@@ -308,14 +401,13 @@ class NativePilot:
                 # Arm reaction moves the unanchored wheeled base by millimetres.
                 # Track the world goal using its measured pose, rather than
                 # keeping an IK solution in an obsolete base frame.
-                target[:] = inverse_kinematics(local_point(expected_tool, current['robot_pose']),
-                                              config=self.config)
+                target[:] = self._solve_world_target(expected_tool, current)
             u = max(0.0, min(1.0, (current['sim_time'] - started) / duration))
             blend = u * u * (3 - 2 * u)
             desired = [a + blend * (b - a) for a, b in zip(start_joints, target)]
-            step = .35 * max(0.0, current['sim_time'] - last_command_time)
-            last_command = [old + max(-step, min(step, new - old))
-                            for old, new in zip(last_command, desired)]
+            dt = max(0.0, current['sim_time'] - last_command_time)
+            last_command = [old + max(-rate*dt, min(rate*dt, new-old))
+                            for old, new, rate in zip(last_command, desired, rates)]
             last_command_time = current['sim_time']
             self.send_joints(last_command)
             self.send_base(0, 0)
@@ -326,7 +418,14 @@ class NativePilot:
             valid = t >= started + duration and self.joint_time is not None and abs(t - self.joint_time) < .3
             valid = valid and all(abs(self.joints.get(name, math.inf) - q) <= .035 for name, q in zip(names, target))
             if expected_tool is not None:
-                valid = valid and distance(current['tool_pose'][:3], expected_tool) <= .006
+                motion_pose = self._motion_pose(current)
+                valid = valid and distance(motion_pose[:3], expected_tool) <= .006
+                if getattr(self, 'resolved_robot', None):
+                    expected_direction = (getattr(self, 'target_direction_world', None)
+                                          or rotate_vector(current['robot_pose'][3:], self.config.direction))
+                    actual_direction = rotate_vector(motion_pose[3:], self.config.tool_axis)
+                    error = math.acos(max(-1, min(1, sum(a*b for a,b in zip(expected_direction, actual_direction)))))
+                    valid = valid and error <= self.config.task['orientation_tolerance_rad']
             stable_since = (t if stable_since is None else stable_since) if valid else None
             return stable_since is not None and t - stable_since >= .4
 
@@ -337,8 +436,7 @@ class NativePilot:
         self.wait(converged, simulation_timeout=duration + 35, wall_timeout=240, action=advance)
 
     def move_tool(self, world_target):
-        target_in_base = local_point(world_target, self.snapshot()['robot_pose'])
-        self.move_joints(inverse_kinematics(target_in_base, config=self.config), expected_tool=world_target)
+        self.move_joints(self._solve_world_target(world_target, self.snapshot()), expected_tool=world_target)
 
     def carry(self):
         target = self.manifest['mission']['carry_tcp_base_m']
@@ -358,8 +456,8 @@ class NativePilot:
             speed = fruit.get('relative_speed')
             valid = (type(speed) in (int, float) and math.isfinite(speed)
                      and speed <= .5 * self.interaction['max_relative_speed']
-                     and distance(state['tool_pose'][:3], fruit['cut_position']) <= .006
-                     and distance(state['tool_pose'][:3], fruit['position']) <= self.interaction['capture_radius'])
+                     and distance(state.get('cut_pose', state['tool_pose'])[:3], fruit['cut_position']) <= .006
+                     and distance(state.get('grasp_pose', state['tool_pose'])[:3], fruit['position']) <= self.interaction['capture_radius'])
             stable_since = (state['sim_time'] if stable_since is None else stable_since) if valid else None
             return stable_since is not None and state['sim_time'] - stable_since >= self.interaction['stable_time']
 
@@ -451,6 +549,9 @@ class NativePilot:
         specs = {p['id']: p for p in self.manifest['fruits']}
         for identifier in target_ids:
             plan = plans[identifier]
+            if getattr(self, 'resolved_robot', None):
+                self.target_direction_world = plan['cut_axis_world']
+                self.config = self.config.for_direction(self.target_direction_world)
             self.set_phase('drive_pickup', identifier)
             self.pickup_route(plan)
             self.set_phase('preapproach', identifier)
@@ -488,8 +589,7 @@ class NativePilot:
             goal = self.manifest['mission']['deposit_tool_world_m']
             self.move_tool(goal)
             current = self.snapshot()
-            offset = [a - b for a, b in zip(fruit_map(current)[identifier]['position'], current['tool_pose'][:3])]
-            corrected = [goal[0] - offset[0], goal[1] - offset[1], goal[2]]
+            corrected = self._deposit_correction(goal, current, identifier)
             self.move_tool(corrected)
             self.set_phase('release', identifier)
             self.command('release', identifier)
@@ -528,6 +628,10 @@ def main(argv=None):
         parser.error('--gui-config requires --gui and an existing configuration file')
     package = args.package.resolve()
     manifest = load_verified_package(package)
+    if 'robot_spec_sha256' in manifest:
+        from uchuva_gazebo.robot_spec import resolve_robot_profile
+        from uchuva_gazebo.robot_sdf import require_native_harvest_adapter
+        require_native_harvest_adapter(resolve_robot_profile(manifest['robot_config']), manifest.get('robot_task'))
     if not 1 <= args.max_targets <= len(manifest['mission']['targets']) or not math.isfinite(args.wall_timeout) or args.wall_timeout <= 0:
         parser.error('Invalid target count or wall timeout')
     output = args.output or package / 'runs' / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + f'-{os.getpid()}')
@@ -542,6 +646,10 @@ def main(argv=None):
                 'partition': partition, 'python': sys.executable, 'runner_sha256': sha256_file(Path(__file__)),
                 'gui_requested': args.gui, 'target_source': 'simulation_truth', 'status': 'native_execution_attempt',
                 'native_executed': False, 'forced_gazebo_major': 8}
+    if 'robot_spec_sha256' in manifest:
+        metadata['robot_spec_sha256'] = manifest['robot_spec_sha256']
+        shutil.copyfile(package / manifest['robot_effective_file'], output / 'robot_effective.json')
+        metadata['robot_effective_sha256'] = sha256_file(output / 'robot_effective.json')
     write_json(output / 'run.json', metadata)
     failure = None
     server = gui = pilot = None
@@ -552,8 +660,11 @@ def main(argv=None):
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             failure = 'Another harvest run owns this package; use a separate prepared package'
+        stream_names = ['telemetry', 'events', 'commands']
+        if 'robot_spec_sha256' in manifest:
+            stream_names.append('robot_telemetry')
         streams = {name: stack.enter_context((output / (name + '.jsonl')).open('w', encoding='utf-8'))
-                   for name in ('telemetry', 'events', 'commands')}
+                   for name in stream_names}
         log = stack.enter_context((output / 'server.log').open('w', encoding='utf-8'))
         try:
             if failure:
@@ -579,7 +690,7 @@ def main(argv=None):
             # gz sim otherwise chooses the newest installed major version.
             # https://gazebosim.org/docs/harmonic/gui/
             command = ['gz', 'sim', '--force-version', '8', '-s', '-r', '-v', '3']
-            if manifest['robot_config']['camera'] and not args.gui:
+            if (manifest['robot_config'].get('sensors') if 'robot_spec_sha256' in manifest else manifest['robot_config']['camera']) and not args.gui:
                 command.append('--headless-rendering')
             command.append(str(package / manifest['world_file']))
             server = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, cwd=package)

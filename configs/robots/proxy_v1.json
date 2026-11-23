@@ -1,0 +1,4785 @@
+{
+  "schema_version": "robot-spec/1.0",
+  "profile_id": "proxy_v1",
+  "status": "complete",
+  "model_name": "harvester",
+  "namespace": "/harvester",
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "angle": "rad"
+  },
+  "root_link": "base_link",
+  "capabilities": [
+    "fk",
+    "ik_position_direction",
+    "collision_primitives",
+    "legacy_proxy"
+  ],
+  "provenance": {
+    "status": "estimado",
+    "source": "src/uchuva_gazebo/harvester_robot.py",
+    "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+    "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+    "uncertainty": null
+  },
+  "missing_evidence": [],
+  "parameters": {
+    "shoulder_height_m": 0.56,
+    "upper_arm_m": 0.34,
+    "forearm_m": 0.3,
+    "tool_length_m": 0.12,
+    "body_length_m": 0.5,
+    "body_width_m": 0.36,
+    "body_height_m": 0.14,
+    "body_center_z_m": 0.22,
+    "wheel_radius_m": 0.1,
+    "wheel_width_m": 0.05,
+    "wheelbase_m": 0.4,
+    "wheel_separation_m": 0.44,
+    "base_mass_kg": 12.0,
+    "wheel_mass_kg": 0.35,
+    "upper_arm_mass_kg": 1.0,
+    "forearm_mass_kg": 0.7,
+    "tool_mass_kg": 0.22
+  },
+  "parameter_metadata": {
+    "/parameters/shoulder_height_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/upper_arm_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/forearm_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/tool_length_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/body_length_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/body_width_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/body_height_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/body_center_z_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/wheel_radius_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/wheel_width_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/wheelbase_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/wheel_separation_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/base_mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/wheel_mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/upper_arm_mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/forearm_mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/parameters/tool_mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/0/limits/lower": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/0/limits/upper": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/0/limits/velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/0/limits/effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/0/origin": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/0/child_pose": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/0/zero_offset": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/1/limits/lower": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/1/limits/upper": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/1/limits/velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/1/limits/effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/1/origin": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/1/child_pose": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/1/zero_offset": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/2/limits/lower": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/2/limits/upper": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/2/limits/velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/2/limits/effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/2/origin": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/2/child_pose": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/2/zero_offset": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/3/limits/lower": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/3/limits/upper": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/3/limits/velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/3/limits/effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/3/origin": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/3/child_pose": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/3/zero_offset": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/4/limits/lower": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/4/limits/upper": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/4/limits/velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/4/limits/effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/4/origin": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/4/child_pose": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/4/zero_offset": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/5/limits/lower": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/5/limits/upper": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/5/limits/velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/5/limits/effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/5/origin": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/5/child_pose": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/5/zero_offset": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/6/limits/lower": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/6/limits/upper": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/6/limits/velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/6/limits/effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/6/origin": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/6/child_pose": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/6/zero_offset": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/7/limits/lower": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/7/limits/upper": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/7/limits/velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/7/limits/effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/7/origin": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/7/child_pose": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/7/zero_offset": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/8/limits/lower": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/8/limits/upper": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/8/limits/velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/8/limits/effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/8/origin": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/8/child_pose": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/joints/8/zero_offset": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/0/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/0/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/0/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/1/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/1/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/1/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/2/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/2/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/2/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/3/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/3/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/3/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/4/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/4/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/4/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/5/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/5/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/5/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/6/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/6/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/6/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/7/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/7/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/7/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/8/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/8/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/8/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/9/inertial/mass_kg": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/9/inertial/com_m": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/links/9/inertial/tensor_kg_m2": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/arm_yaw_joint/p_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/arm_yaw_joint/i_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/arm_yaw_joint/d_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/arm_yaw_joint/i_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/arm_yaw_joint/i_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/arm_yaw_joint/cmd_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/arm_yaw_joint/cmd_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/arm_yaw_joint/command_velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/shoulder_joint/p_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/shoulder_joint/i_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/shoulder_joint/d_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/shoulder_joint/i_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/shoulder_joint/i_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/shoulder_joint/cmd_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/shoulder_joint/cmd_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/shoulder_joint/command_velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/elbow_joint/p_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/elbow_joint/i_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/elbow_joint/d_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/elbow_joint/i_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/elbow_joint/i_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/elbow_joint/cmd_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/elbow_joint/cmd_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/elbow_joint/command_velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_pitch_joint/p_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_pitch_joint/i_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_pitch_joint/d_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_pitch_joint/i_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_pitch_joint/i_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_pitch_joint/cmd_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_pitch_joint/cmd_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_pitch_joint/command_velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_roll_joint/p_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_roll_joint/i_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_roll_joint/d_gain": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_roll_joint/i_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_roll_joint/i_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_roll_joint/cmd_min": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_roll_joint/cmd_max": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/control/arm/wrist_roll_joint/command_velocity": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/0/continuous_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/0/peak_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/0/transmission_ratio": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/0/efficiency": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/1/continuous_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/1/peak_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/1/transmission_ratio": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/1/efficiency": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/2/continuous_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/2/peak_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/2/transmission_ratio": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/2/efficiency": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/3/continuous_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/3/peak_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/3/transmission_ratio": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/3/efficiency": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/4/continuous_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/4/peak_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/4/transmission_ratio": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/4/efficiency": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/5/continuous_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/5/peak_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/5/transmission_ratio": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/5/efficiency": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/6/continuous_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/6/peak_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/6/transmission_ratio": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/6/efficiency": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/7/continuous_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/7/peak_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/7/transmission_ratio": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/7/efficiency": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/8/continuous_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/8/peak_effort": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/8/transmission_ratio": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    },
+    "/actuators/8/efficiency": {
+      "status": "estimado",
+      "source": "src/uchuva_gazebo/harvester_robot.py",
+      "revision": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+      "method": "Transcribed original proxy inputs; analytic box/cylinder inertia. Not measured hardware.",
+      "uncertainty": null,
+      "update_class": "model_regeneration"
+    }
+  },
+  "derived_values": [
+    {
+      "path": "/links/0/inertial/mass_kg",
+      "expression": {
+        "parameter": "base_mass_kg"
+      }
+    },
+    {
+      "path": "/links/0/inertial/com_m/2",
+      "expression": {
+        "parameter": "body_center_z_m"
+      }
+    },
+    {
+      "path": "/links/0/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "base_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "body_width_m"
+                  },
+                  {
+                    "parameter": "body_width_m"
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "body_height_m"
+                  },
+                  {
+                    "parameter": "body_height_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/0/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "base_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "body_length_m"
+                  },
+                  {
+                    "parameter": "body_length_m"
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "body_height_m"
+                  },
+                  {
+                    "parameter": "body_height_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/0/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "base_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "body_length_m"
+                  },
+                  {
+                    "parameter": "body_length_m"
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "body_width_m"
+                  },
+                  {
+                    "parameter": "body_width_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/0/collisions/0/pose/xyz_m/2",
+      "expression": {
+        "parameter": "body_center_z_m"
+      }
+    },
+    {
+      "path": "/links/0/collisions/0/geometry/size_m/0",
+      "expression": {
+        "parameter": "body_length_m"
+      }
+    },
+    {
+      "path": "/links/0/collisions/0/geometry/size_m/1",
+      "expression": {
+        "parameter": "body_width_m"
+      }
+    },
+    {
+      "path": "/links/0/collisions/0/geometry/size_m/2",
+      "expression": {
+        "parameter": "body_height_m"
+      }
+    },
+    {
+      "path": "/links/0/collisions/1/pose/xyz_m/2",
+      "expression": {
+        "op": "add",
+        "args": [
+          {
+            "op": "add",
+            "args": [
+              {
+                "parameter": "body_center_z_m"
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "body_height_m"
+                  },
+                  0.5
+                ]
+              }
+            ]
+          },
+          {
+            "op": "mul",
+            "args": [
+              {
+                "op": "add",
+                "args": [
+                  {
+                    "parameter": "shoulder_height_m"
+                  },
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "op": "add",
+                        "args": [
+                          {
+                            "parameter": "body_center_z_m"
+                          },
+                          {
+                            "op": "mul",
+                            "args": [
+                              {
+                                "parameter": "body_height_m"
+                              },
+                              0.5
+                            ]
+                          }
+                        ]
+                      },
+                      -1
+                    ]
+                  }
+                ]
+              },
+              0.5
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "/links/0/collisions/1/geometry/size_m/2",
+      "expression": {
+        "op": "add",
+        "args": [
+          {
+            "parameter": "shoulder_height_m"
+          },
+          {
+            "op": "mul",
+            "args": [
+              {
+                "op": "add",
+                "args": [
+                  {
+                    "parameter": "body_center_z_m"
+                  },
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "parameter": "body_height_m"
+                      },
+                      0.5
+                    ]
+                  }
+                ]
+              },
+              -1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "/links/1/inertial/mass_kg",
+      "expression": {
+        "parameter": "wheel_mass_kg"
+      }
+    },
+    {
+      "path": "/links/1/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  3,
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "parameter": "wheel_radius_m"
+                      },
+                      {
+                        "parameter": "wheel_radius_m"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "wheel_width_m"
+                  },
+                  {
+                    "parameter": "wheel_width_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/1/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.5,
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "mul",
+            "args": [
+              {
+                "parameter": "wheel_radius_m"
+              },
+              {
+                "parameter": "wheel_radius_m"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "/links/1/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  3,
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "parameter": "wheel_radius_m"
+                      },
+                      {
+                        "parameter": "wheel_radius_m"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "wheel_width_m"
+                  },
+                  {
+                    "parameter": "wheel_width_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/1/collisions/0/geometry/radius_m",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/links/1/collisions/0/geometry/length_m",
+      "expression": {
+        "parameter": "wheel_width_m"
+      }
+    },
+    {
+      "path": "/links/2/inertial/mass_kg",
+      "expression": {
+        "parameter": "wheel_mass_kg"
+      }
+    },
+    {
+      "path": "/links/2/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  3,
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "parameter": "wheel_radius_m"
+                      },
+                      {
+                        "parameter": "wheel_radius_m"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "wheel_width_m"
+                  },
+                  {
+                    "parameter": "wheel_width_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/2/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.5,
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "mul",
+            "args": [
+              {
+                "parameter": "wheel_radius_m"
+              },
+              {
+                "parameter": "wheel_radius_m"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "/links/2/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  3,
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "parameter": "wheel_radius_m"
+                      },
+                      {
+                        "parameter": "wheel_radius_m"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "wheel_width_m"
+                  },
+                  {
+                    "parameter": "wheel_width_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/2/collisions/0/geometry/radius_m",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/links/2/collisions/0/geometry/length_m",
+      "expression": {
+        "parameter": "wheel_width_m"
+      }
+    },
+    {
+      "path": "/links/3/inertial/mass_kg",
+      "expression": {
+        "parameter": "wheel_mass_kg"
+      }
+    },
+    {
+      "path": "/links/3/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  3,
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "parameter": "wheel_radius_m"
+                      },
+                      {
+                        "parameter": "wheel_radius_m"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "wheel_width_m"
+                  },
+                  {
+                    "parameter": "wheel_width_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/3/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.5,
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "mul",
+            "args": [
+              {
+                "parameter": "wheel_radius_m"
+              },
+              {
+                "parameter": "wheel_radius_m"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "/links/3/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  3,
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "parameter": "wheel_radius_m"
+                      },
+                      {
+                        "parameter": "wheel_radius_m"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "wheel_width_m"
+                  },
+                  {
+                    "parameter": "wheel_width_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/3/collisions/0/geometry/radius_m",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/links/3/collisions/0/geometry/length_m",
+      "expression": {
+        "parameter": "wheel_width_m"
+      }
+    },
+    {
+      "path": "/links/4/inertial/mass_kg",
+      "expression": {
+        "parameter": "wheel_mass_kg"
+      }
+    },
+    {
+      "path": "/links/4/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  3,
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "parameter": "wheel_radius_m"
+                      },
+                      {
+                        "parameter": "wheel_radius_m"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "wheel_width_m"
+                  },
+                  {
+                    "parameter": "wheel_width_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/4/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.5,
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "mul",
+            "args": [
+              {
+                "parameter": "wheel_radius_m"
+              },
+              {
+                "parameter": "wheel_radius_m"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "/links/4/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "wheel_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  3,
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "parameter": "wheel_radius_m"
+                      },
+                      {
+                        "parameter": "wheel_radius_m"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "wheel_width_m"
+                  },
+                  {
+                    "parameter": "wheel_width_m"
+                  }
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/4/collisions/0/geometry/radius_m",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/links/4/collisions/0/geometry/length_m",
+      "expression": {
+        "parameter": "wheel_width_m"
+      }
+    },
+    {
+      "path": "/links/5/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.25,
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  0.075,
+                  0.075
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.065,
+                  0.065
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/5/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.25,
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  0.075,
+                  0.075
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.065,
+                  0.065
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/5/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.25,
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  0.075,
+                  0.075
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.075,
+                  0.075
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/6/inertial/mass_kg",
+      "expression": {
+        "parameter": "upper_arm_mass_kg"
+      }
+    },
+    {
+      "path": "/links/6/inertial/com_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "upper_arm_m"
+          },
+          0.5
+        ]
+      }
+    },
+    {
+      "path": "/links/6/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "upper_arm_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  0.055,
+                  0.055
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.055,
+                  0.055
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/6/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "upper_arm_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "upper_arm_m"
+                  },
+                  {
+                    "parameter": "upper_arm_m"
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.055,
+                  0.055
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/6/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "upper_arm_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "upper_arm_m"
+                  },
+                  {
+                    "parameter": "upper_arm_m"
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.055,
+                  0.055
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/6/collisions/0/pose/xyz_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "upper_arm_m"
+          },
+          0.5
+        ]
+      }
+    },
+    {
+      "path": "/links/6/collisions/0/geometry/size_m/0",
+      "expression": {
+        "parameter": "upper_arm_m"
+      }
+    },
+    {
+      "path": "/links/7/inertial/mass_kg",
+      "expression": {
+        "parameter": "forearm_mass_kg"
+      }
+    },
+    {
+      "path": "/links/7/inertial/com_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "forearm_m"
+          },
+          0.5
+        ]
+      }
+    },
+    {
+      "path": "/links/7/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "forearm_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  0.045,
+                  0.045
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.045,
+                  0.045
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/7/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "forearm_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "forearm_m"
+                  },
+                  {
+                    "parameter": "forearm_m"
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.045,
+                  0.045
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/7/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "forearm_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "forearm_m"
+                  },
+                  {
+                    "parameter": "forearm_m"
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.045,
+                  0.045
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/7/collisions/0/pose/xyz_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "forearm_m"
+          },
+          0.5
+        ]
+      }
+    },
+    {
+      "path": "/links/7/collisions/0/geometry/size_m/0",
+      "expression": {
+        "parameter": "forearm_m"
+      }
+    },
+    {
+      "path": "/links/8/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.15,
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  0.05,
+                  0.05
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.05,
+                  0.05
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/8/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.15,
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  0.045,
+                  0.045
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.05,
+                  0.05
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/8/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.15,
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  0.045,
+                  0.045
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.05,
+                  0.05
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/9/inertial/mass_kg",
+      "expression": {
+        "parameter": "tool_mass_kg"
+      }
+    },
+    {
+      "path": "/links/9/inertial/com_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "tool_length_m"
+          },
+          -0.5
+        ]
+      }
+    },
+    {
+      "path": "/links/9/inertial/tensor_kg_m2/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "tool_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  0.085,
+                  0.085
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.06,
+                  0.06
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/9/inertial/tensor_kg_m2/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "tool_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "tool_length_m"
+                  },
+                  {
+                    "parameter": "tool_length_m"
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.06,
+                  0.06
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/9/inertial/tensor_kg_m2/2",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "tool_mass_kg"
+          },
+          {
+            "op": "add",
+            "args": [
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "parameter": "tool_length_m"
+                  },
+                  {
+                    "parameter": "tool_length_m"
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  0.085,
+                  0.085
+                ]
+              }
+            ]
+          },
+          0.08333333333333333
+        ]
+      }
+    },
+    {
+      "path": "/links/9/collisions/0/pose/xyz_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "tool_length_m"
+          },
+          -0.72
+        ]
+      }
+    },
+    {
+      "path": "/links/9/collisions/0/geometry/size_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          {
+            "parameter": "tool_length_m"
+          },
+          0.45
+        ]
+      }
+    },
+    {
+      "path": "/joints/0/origin/xyz_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          1,
+          0.5,
+          {
+            "parameter": "wheelbase_m"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/joints/0/origin/xyz_m/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          1,
+          0.5,
+          {
+            "parameter": "wheel_separation_m"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/joints/0/origin/xyz_m/2",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/joints/1/origin/xyz_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          -1,
+          0.5,
+          {
+            "parameter": "wheelbase_m"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/joints/1/origin/xyz_m/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          1,
+          0.5,
+          {
+            "parameter": "wheel_separation_m"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/joints/1/origin/xyz_m/2",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/joints/2/origin/xyz_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          1,
+          0.5,
+          {
+            "parameter": "wheelbase_m"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/joints/2/origin/xyz_m/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          -1,
+          0.5,
+          {
+            "parameter": "wheel_separation_m"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/joints/2/origin/xyz_m/2",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/joints/3/origin/xyz_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          -1,
+          0.5,
+          {
+            "parameter": "wheelbase_m"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/joints/3/origin/xyz_m/1",
+      "expression": {
+        "op": "mul",
+        "args": [
+          -1,
+          0.5,
+          {
+            "parameter": "wheel_separation_m"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/joints/3/origin/xyz_m/2",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/joints/4/origin/xyz_m/2",
+      "expression": {
+        "parameter": "shoulder_height_m"
+      }
+    },
+    {
+      "path": "/joints/6/origin/xyz_m/0",
+      "expression": {
+        "parameter": "upper_arm_m"
+      }
+    },
+    {
+      "path": "/joints/7/origin/xyz_m/0",
+      "expression": {
+        "parameter": "forearm_m"
+      }
+    },
+    {
+      "path": "/joints/8/child_pose/xyz_m/0",
+      "expression": {
+        "parameter": "tool_length_m"
+      }
+    },
+    {
+      "path": "/frames/0/pose/xyz_m/2",
+      "expression": {
+        "parameter": "shoulder_height_m"
+      }
+    },
+    {
+      "path": "/frames/5/pose/xyz_m/0",
+      "expression": {
+        "op": "mul",
+        "args": [
+          0.5,
+          {
+            "parameter": "body_length_m"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/frames/5/pose/xyz_m/2",
+      "expression": {
+        "op": "add",
+        "args": [
+          {
+            "parameter": "body_center_z_m"
+          },
+          0.1
+        ]
+      }
+    },
+    {
+      "path": "/control/drive/wheel_separation_m",
+      "expression": {
+        "parameter": "wheel_separation_m"
+      }
+    },
+    {
+      "path": "/control/drive/wheel_radius_m",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/shoulder_height_m",
+      "expression": {
+        "parameter": "shoulder_height_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/upper_arm_m",
+      "expression": {
+        "parameter": "upper_arm_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/forearm_m",
+      "expression": {
+        "parameter": "forearm_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/tool_length_m",
+      "expression": {
+        "parameter": "tool_length_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/body_length_m",
+      "expression": {
+        "parameter": "body_length_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/body_width_m",
+      "expression": {
+        "parameter": "body_width_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/body_height_m",
+      "expression": {
+        "parameter": "body_height_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/body_center_z_m",
+      "expression": {
+        "parameter": "body_center_z_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/wheel_radius_m",
+      "expression": {
+        "parameter": "wheel_radius_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/wheel_width_m",
+      "expression": {
+        "parameter": "wheel_width_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/wheelbase_m",
+      "expression": {
+        "parameter": "wheelbase_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/wheel_separation_m",
+      "expression": {
+        "parameter": "wheel_separation_m"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/base_mass_kg",
+      "expression": {
+        "parameter": "base_mass_kg"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/wheel_mass_kg",
+      "expression": {
+        "parameter": "wheel_mass_kg"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/upper_arm_mass_kg",
+      "expression": {
+        "parameter": "upper_arm_mass_kg"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/forearm_mass_kg",
+      "expression": {
+        "parameter": "forearm_mass_kg"
+      }
+    },
+    {
+      "path": "/legacy_proxy_config/tool_mass_kg",
+      "expression": {
+        "parameter": "tool_mass_kg"
+      }
+    }
+  ],
+  "links": [
+    {
+      "name": "base_link",
+      "inertial": {
+        "mass_kg": 12.0,
+        "com_m": [
+          0,
+          0,
+          0.22
+        ],
+        "tensor_kg_m2": [
+          0.1492,
+          0.26959999999999995,
+          0.3796,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "chassis_collision",
+          "pose": {
+            "xyz_m": [
+              0,
+              0,
+              0.22
+            ],
+            "quaternion_xyzw": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          "geometry": {
+            "type": "box",
+            "size_m": [
+              0.5,
+              0.36,
+              0.14
+            ]
+          }
+        },
+        {
+          "name": "pedestal_collision",
+          "pose": {
+            "xyz_m": [
+              0,
+              0,
+              0.42500000000000004
+            ],
+            "quaternion_xyzw": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          "geometry": {
+            "type": "box",
+            "size_m": [
+              0.09,
+              0.09,
+              0.27
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    },
+    {
+      "name": "front_left_wheel",
+      "inertial": {
+        "mass_kg": 0.35,
+        "com_m": [
+          0,
+          0,
+          0
+        ],
+        "tensor_kg_m2": [
+          0.0009479166666666668,
+          0.0017500000000000003,
+          0.0009479166666666668,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "front_left_wheel_collision",
+          "pose": {
+            "xyz_m": [
+              0,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.7071067811865476,
+              0,
+              0,
+              0.7071067811865476
+            ]
+          },
+          "geometry": {
+            "type": "cylinder",
+            "radius_m": 0.1,
+            "length_m": 0.05
+          },
+          "surface": {
+            "mu": 0.9,
+            "mu2": 0.5,
+            "slip1": 0.035,
+            "slip2": 0,
+            "fdir1": [
+              0,
+              0,
+              1
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    },
+    {
+      "name": "rear_left_wheel",
+      "inertial": {
+        "mass_kg": 0.35,
+        "com_m": [
+          0,
+          0,
+          0
+        ],
+        "tensor_kg_m2": [
+          0.0009479166666666668,
+          0.0017500000000000003,
+          0.0009479166666666668,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "rear_left_wheel_collision",
+          "pose": {
+            "xyz_m": [
+              0,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.7071067811865476,
+              0,
+              0,
+              0.7071067811865476
+            ]
+          },
+          "geometry": {
+            "type": "cylinder",
+            "radius_m": 0.1,
+            "length_m": 0.05
+          },
+          "surface": {
+            "mu": 0.9,
+            "mu2": 0.5,
+            "slip1": 0.035,
+            "slip2": 0,
+            "fdir1": [
+              0,
+              0,
+              1
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    },
+    {
+      "name": "front_right_wheel",
+      "inertial": {
+        "mass_kg": 0.35,
+        "com_m": [
+          0,
+          0,
+          0
+        ],
+        "tensor_kg_m2": [
+          0.0009479166666666668,
+          0.0017500000000000003,
+          0.0009479166666666668,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "front_right_wheel_collision",
+          "pose": {
+            "xyz_m": [
+              0,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.7071067811865476,
+              0,
+              0,
+              0.7071067811865476
+            ]
+          },
+          "geometry": {
+            "type": "cylinder",
+            "radius_m": 0.1,
+            "length_m": 0.05
+          },
+          "surface": {
+            "mu": 0.9,
+            "mu2": 0.5,
+            "slip1": 0.035,
+            "slip2": 0,
+            "fdir1": [
+              0,
+              0,
+              1
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    },
+    {
+      "name": "rear_right_wheel",
+      "inertial": {
+        "mass_kg": 0.35,
+        "com_m": [
+          0,
+          0,
+          0
+        ],
+        "tensor_kg_m2": [
+          0.0009479166666666668,
+          0.0017500000000000003,
+          0.0009479166666666668,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "rear_right_wheel_collision",
+          "pose": {
+            "xyz_m": [
+              0,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.7071067811865476,
+              0,
+              0,
+              0.7071067811865476
+            ]
+          },
+          "geometry": {
+            "type": "cylinder",
+            "radius_m": 0.1,
+            "length_m": 0.05
+          },
+          "surface": {
+            "mu": 0.9,
+            "mu2": 0.5,
+            "slip1": 0.035,
+            "slip2": 0,
+            "fdir1": [
+              0,
+              0,
+              1
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    },
+    {
+      "name": "arm_yaw_link",
+      "inertial": {
+        "mass_kg": 0.25,
+        "com_m": [
+          0,
+          0,
+          0
+        ],
+        "tensor_kg_m2": [
+          0.00020520833333333334,
+          0.00020520833333333334,
+          0.000234375,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "yaw_housing_collision",
+          "pose": {
+            "xyz_m": [
+              0,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          "geometry": {
+            "type": "box",
+            "size_m": [
+              0.075,
+              0.075,
+              0.065
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    },
+    {
+      "name": "upper_arm_link",
+      "inertial": {
+        "mass_kg": 1.0,
+        "com_m": [
+          0.17,
+          0,
+          0
+        ],
+        "tensor_kg_m2": [
+          0.0005041666666666667,
+          0.009885416666666667,
+          0.009885416666666667,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "upper_arm_collision",
+          "pose": {
+            "xyz_m": [
+              0.17,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          "geometry": {
+            "type": "box",
+            "size_m": [
+              0.34,
+              0.055,
+              0.055
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    },
+    {
+      "name": "forearm_link",
+      "inertial": {
+        "mass_kg": 0.7,
+        "com_m": [
+          0.15,
+          0,
+          0
+        ],
+        "tensor_kg_m2": [
+          0.00023624999999999997,
+          0.005368124999999999,
+          0.005368124999999999,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "forearm_collision",
+          "pose": {
+            "xyz_m": [
+              0.15,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          "geometry": {
+            "type": "box",
+            "size_m": [
+              0.3,
+              0.045,
+              0.045
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    },
+    {
+      "name": "wrist_link",
+      "inertial": {
+        "mass_kg": 0.15,
+        "com_m": [
+          0,
+          0,
+          0
+        ],
+        "tensor_kg_m2": [
+          6.25e-05,
+          5.65625e-05,
+          5.65625e-05,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "wrist_collision",
+          "pose": {
+            "xyz_m": [
+              0,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          "geometry": {
+            "type": "box",
+            "size_m": [
+              0.045,
+              0.05,
+              0.05
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    },
+    {
+      "name": "tool_link",
+      "inertial": {
+        "mass_kg": 0.22,
+        "com_m": [
+          -0.06,
+          0,
+          0.015
+        ],
+        "tensor_kg_m2": [
+          0.00019845833333333336,
+          0.00033,
+          0.00039645833333333335,
+          0,
+          0,
+          0
+        ]
+      },
+      "collisions": [
+        {
+          "name": "tool_housing_collision",
+          "pose": {
+            "xyz_m": [
+              -0.08639999999999999,
+              0,
+              0.03
+            ],
+            "quaternion_xyzw": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          "geometry": {
+            "type": "box",
+            "size_m": [
+              0.054,
+              0.075,
+              0.03
+            ]
+          }
+        }
+      ],
+      "visuals": []
+    }
+  ],
+  "joints": [
+    {
+      "name": "front_left_wheel_joint",
+      "parent": "base_link",
+      "child": "front_left_wheel",
+      "type": "revolute",
+      "group": "drive",
+      "origin": {
+        "xyz_m": [
+          0.2,
+          0.22,
+          0.1
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "child_pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "zero_offset": 0,
+      "limits": {
+        "lower": -1e+16,
+        "upper": 1e+16,
+        "velocity": 8,
+        "effort": 15
+      },
+      "damping": 0.3,
+      "friction": 0.02
+    },
+    {
+      "name": "rear_left_wheel_joint",
+      "parent": "base_link",
+      "child": "rear_left_wheel",
+      "type": "revolute",
+      "group": "drive",
+      "origin": {
+        "xyz_m": [
+          -0.2,
+          0.22,
+          0.1
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "child_pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "zero_offset": 0,
+      "limits": {
+        "lower": -1e+16,
+        "upper": 1e+16,
+        "velocity": 8,
+        "effort": 15
+      },
+      "damping": 0.3,
+      "friction": 0.02
+    },
+    {
+      "name": "front_right_wheel_joint",
+      "parent": "base_link",
+      "child": "front_right_wheel",
+      "type": "revolute",
+      "group": "drive",
+      "origin": {
+        "xyz_m": [
+          0.2,
+          -0.22,
+          0.1
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "child_pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "zero_offset": 0,
+      "limits": {
+        "lower": -1e+16,
+        "upper": 1e+16,
+        "velocity": 8,
+        "effort": 15
+      },
+      "damping": 0.3,
+      "friction": 0.02
+    },
+    {
+      "name": "rear_right_wheel_joint",
+      "parent": "base_link",
+      "child": "rear_right_wheel",
+      "type": "revolute",
+      "group": "drive",
+      "origin": {
+        "xyz_m": [
+          -0.2,
+          -0.22,
+          0.1
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "child_pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "zero_offset": 0,
+      "limits": {
+        "lower": -1e+16,
+        "upper": 1e+16,
+        "velocity": 8,
+        "effort": 15
+      },
+      "damping": 0.3,
+      "friction": 0.02
+    },
+    {
+      "name": "arm_yaw_joint",
+      "parent": "base_link",
+      "child": "arm_yaw_link",
+      "type": "revolute",
+      "group": "arm",
+      "origin": {
+        "xyz_m": [
+          0,
+          0,
+          0.56
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "child_pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "zero_offset": 0,
+      "limits": {
+        "lower": -3.141592653589793,
+        "upper": 3.141592653589793,
+        "velocity": 1,
+        "effort": 60
+      },
+      "damping": 0.3,
+      "friction": 0.02
+    },
+    {
+      "name": "shoulder_joint",
+      "parent": "arm_yaw_link",
+      "child": "upper_arm_link",
+      "type": "revolute",
+      "group": "arm",
+      "origin": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "child_pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "zero_offset": 0,
+      "limits": {
+        "lower": -1.3,
+        "upper": 1.65,
+        "velocity": 1,
+        "effort": 60
+      },
+      "damping": 0.3,
+      "friction": 0.02
+    },
+    {
+      "name": "elbow_joint",
+      "parent": "upper_arm_link",
+      "child": "forearm_link",
+      "type": "revolute",
+      "group": "arm",
+      "origin": {
+        "xyz_m": [
+          0.34,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "child_pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "zero_offset": 0,
+      "limits": {
+        "lower": -2.4,
+        "upper": 2.4,
+        "velocity": 1,
+        "effort": 60
+      },
+      "damping": 0.3,
+      "friction": 0.02
+    },
+    {
+      "name": "wrist_pitch_joint",
+      "parent": "forearm_link",
+      "child": "wrist_link",
+      "type": "revolute",
+      "group": "arm",
+      "origin": {
+        "xyz_m": [
+          0.3,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "child_pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "zero_offset": 0,
+      "limits": {
+        "lower": -2.4,
+        "upper": 2.4,
+        "velocity": 1,
+        "effort": 60
+      },
+      "damping": 0.3,
+      "friction": 0.02
+    },
+    {
+      "name": "wrist_roll_joint",
+      "parent": "wrist_link",
+      "child": "tool_link",
+      "type": "revolute",
+      "group": "arm",
+      "origin": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "child_pose": {
+        "xyz_m": [
+          0.12,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "zero_offset": 0,
+      "limits": {
+        "lower": -3.141592653589793,
+        "upper": 3.141592653589793,
+        "velocity": 1,
+        "effort": 60
+      },
+      "damping": 0.3,
+      "friction": 0.02
+    }
+  ],
+  "frames": [
+    {
+      "name": "arm_mount",
+      "parent": "base_link",
+      "pose": {
+        "xyz_m": [
+          0,
+          0,
+          0.56
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "wrist_flange",
+      "parent": "tool_link",
+      "pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "tcp",
+      "parent": "tool_link",
+      "pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "cut_point",
+      "parent": "tool_link",
+      "pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "grasp_center",
+      "parent": "tool_link",
+      "pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "camera_frame",
+      "parent": "base_link",
+      "pose": {
+        "xyz_m": [
+          0.25,
+          0,
+          0.32
+        ],
+        "quaternion_xyzw": [
+          0,
+          -0.04997916927067833,
+          0,
+          0.9987502603949663
+        ]
+      }
+    },
+    {
+      "name": "camera_optical",
+      "parent": "camera_frame",
+      "pose": {
+        "xyz_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          -0.5,
+          0.5,
+          -0.5,
+          0.5
+        ]
+      }
+    }
+  ],
+  "arm_home_positions": {
+    "arm_yaw_joint": 0,
+    "shoulder_joint": 0.6,
+    "elbow_joint": -1.2,
+    "wrist_pitch_joint": 0.6,
+    "wrist_roll_joint": 0
+  },
+  "collision_policy": {
+    "mode": "legacy_disjoint_link_masks",
+    "excluded_pairs": [
+      {
+        "links": [
+          "base_link",
+          "front_left_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "base_link",
+          "rear_left_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "base_link",
+          "front_right_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "base_link",
+          "rear_right_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "base_link",
+          "arm_yaw_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "base_link",
+          "upper_arm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "base_link",
+          "forearm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "base_link",
+          "wrist_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "base_link",
+          "tool_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_left_wheel",
+          "rear_left_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_left_wheel",
+          "front_right_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_left_wheel",
+          "rear_right_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_left_wheel",
+          "arm_yaw_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_left_wheel",
+          "upper_arm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_left_wheel",
+          "forearm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_left_wheel",
+          "wrist_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_left_wheel",
+          "tool_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_left_wheel",
+          "front_right_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_left_wheel",
+          "rear_right_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_left_wheel",
+          "arm_yaw_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_left_wheel",
+          "upper_arm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_left_wheel",
+          "forearm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_left_wheel",
+          "wrist_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_left_wheel",
+          "tool_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_right_wheel",
+          "rear_right_wheel"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_right_wheel",
+          "arm_yaw_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_right_wheel",
+          "upper_arm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_right_wheel",
+          "forearm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_right_wheel",
+          "wrist_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "front_right_wheel",
+          "tool_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_right_wheel",
+          "arm_yaw_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_right_wheel",
+          "upper_arm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_right_wheel",
+          "forearm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_right_wheel",
+          "wrist_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "rear_right_wheel",
+          "tool_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "arm_yaw_link",
+          "upper_arm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "arm_yaw_link",
+          "forearm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "arm_yaw_link",
+          "wrist_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "arm_yaw_link",
+          "tool_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "upper_arm_link",
+          "forearm_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "upper_arm_link",
+          "wrist_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "upper_arm_link",
+          "tool_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "forearm_link",
+          "wrist_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "forearm_link",
+          "tool_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      },
+      {
+        "links": [
+          "wrist_link",
+          "tool_link"
+        ],
+        "reason": "Historical proxy deliberately suppressed every internal link contact; not a CAD robot policy."
+      }
+    ]
+  },
+  "actuators": [
+    {
+      "name": "front_left_wheel_joint_actuator",
+      "joint": "front_left_wheel_joint",
+      "continuous_effort": 15,
+      "peak_effort": 15,
+      "transmission_ratio": 1,
+      "efficiency": 1,
+      "status": "estimado",
+      "effort_reference": "joint_output"
+    },
+    {
+      "name": "rear_left_wheel_joint_actuator",
+      "joint": "rear_left_wheel_joint",
+      "continuous_effort": 15,
+      "peak_effort": 15,
+      "transmission_ratio": 1,
+      "efficiency": 1,
+      "status": "estimado",
+      "effort_reference": "joint_output"
+    },
+    {
+      "name": "front_right_wheel_joint_actuator",
+      "joint": "front_right_wheel_joint",
+      "continuous_effort": 15,
+      "peak_effort": 15,
+      "transmission_ratio": 1,
+      "efficiency": 1,
+      "status": "estimado",
+      "effort_reference": "joint_output"
+    },
+    {
+      "name": "rear_right_wheel_joint_actuator",
+      "joint": "rear_right_wheel_joint",
+      "continuous_effort": 15,
+      "peak_effort": 15,
+      "transmission_ratio": 1,
+      "efficiency": 1,
+      "status": "estimado",
+      "effort_reference": "joint_output"
+    },
+    {
+      "name": "arm_yaw_joint_actuator",
+      "joint": "arm_yaw_joint",
+      "continuous_effort": 60,
+      "peak_effort": 60,
+      "transmission_ratio": 1,
+      "efficiency": 1,
+      "status": "estimado",
+      "effort_reference": "joint_output"
+    },
+    {
+      "name": "shoulder_joint_actuator",
+      "joint": "shoulder_joint",
+      "continuous_effort": 60,
+      "peak_effort": 60,
+      "transmission_ratio": 1,
+      "efficiency": 1,
+      "status": "estimado",
+      "effort_reference": "joint_output"
+    },
+    {
+      "name": "elbow_joint_actuator",
+      "joint": "elbow_joint",
+      "continuous_effort": 60,
+      "peak_effort": 60,
+      "transmission_ratio": 1,
+      "efficiency": 1,
+      "status": "estimado",
+      "effort_reference": "joint_output"
+    },
+    {
+      "name": "wrist_pitch_joint_actuator",
+      "joint": "wrist_pitch_joint",
+      "continuous_effort": 60,
+      "peak_effort": 60,
+      "transmission_ratio": 1,
+      "efficiency": 1,
+      "status": "estimado",
+      "effort_reference": "joint_output"
+    },
+    {
+      "name": "wrist_roll_joint_actuator",
+      "joint": "wrist_roll_joint",
+      "continuous_effort": 60,
+      "peak_effort": 60,
+      "transmission_ratio": 1,
+      "efficiency": 1,
+      "status": "estimado",
+      "effort_reference": "joint_output"
+    }
+  ],
+  "sensors": [],
+  "control": {
+    "arm": {
+      "arm_yaw_joint": {
+        "p_gain": 120,
+        "i_gain": 8,
+        "d_gain": 12,
+        "i_min": -15,
+        "i_max": 15,
+        "cmd_min": -60,
+        "cmd_max": 60,
+        "command_velocity": 0.35
+      },
+      "shoulder_joint": {
+        "p_gain": 120,
+        "i_gain": 8,
+        "d_gain": 12,
+        "i_min": -15,
+        "i_max": 15,
+        "cmd_min": -60,
+        "cmd_max": 60,
+        "command_velocity": 0.35
+      },
+      "elbow_joint": {
+        "p_gain": 120,
+        "i_gain": 8,
+        "d_gain": 12,
+        "i_min": -15,
+        "i_max": 15,
+        "cmd_min": -60,
+        "cmd_max": 60,
+        "command_velocity": 0.35
+      },
+      "wrist_pitch_joint": {
+        "p_gain": 45,
+        "i_gain": 2,
+        "d_gain": 0.2,
+        "i_min": -15,
+        "i_max": 15,
+        "cmd_min": -60,
+        "cmd_max": 60,
+        "command_velocity": 0.35
+      },
+      "wrist_roll_joint": {
+        "p_gain": 45,
+        "i_gain": 2,
+        "d_gain": 0.03,
+        "i_min": -15,
+        "i_max": 15,
+        "cmd_min": -60,
+        "cmd_max": 60,
+        "command_velocity": 0.35
+      }
+    },
+    "drive": {
+      "left_joints": [
+        "front_left_wheel_joint",
+        "rear_left_wheel_joint"
+      ],
+      "right_joints": [
+        "front_right_wheel_joint",
+        "rear_right_wheel_joint"
+      ],
+      "joint_signs": {
+        "front_left_wheel_joint": 1,
+        "rear_left_wheel_joint": 1,
+        "front_right_wheel_joint": 1,
+        "rear_right_wheel_joint": 1
+      },
+      "joints": {},
+      "wheel_separation_m": 0.44,
+      "wheel_radius_m": 0.1,
+      "max_linear_velocity": 0.2,
+      "max_angular_velocity": 0.5,
+      "max_linear_acceleration": 0.3,
+      "max_angular_acceleration": 0.6,
+      "odom_publish_frequency": 30,
+      "backend": "legacy_diff_drive"
+    },
+    "gripper": {}
+  },
+  "legacy_proxy_config": {
+    "shoulder_height_m": 0.56,
+    "upper_arm_m": 0.34,
+    "forearm_m": 0.3,
+    "tool_length_m": 0.12,
+    "body_length_m": 0.5,
+    "body_width_m": 0.36,
+    "body_height_m": 0.14,
+    "body_center_z_m": 0.22,
+    "wheel_radius_m": 0.1,
+    "wheel_width_m": 0.05,
+    "wheelbase_m": 0.4,
+    "wheel_separation_m": 0.44,
+    "base_mass_kg": 12.0,
+    "wheel_mass_kg": 0.35,
+    "upper_arm_mass_kg": 1.0,
+    "forearm_mass_kg": 0.7,
+    "tool_mass_kg": 0.22,
+    "model_name": "harvester",
+    "namespace": "/harvester",
+    "camera": false
+  },
+  "override_history": []
+}

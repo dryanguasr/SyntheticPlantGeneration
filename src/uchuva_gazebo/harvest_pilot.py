@@ -96,6 +96,8 @@ def plan_targets(plant_bundle, config, robot_config):
                       "withdrawal_sequence": [name for name in target['sequence'] if name.startswith('extraction_')],
                       "sampled_clearance": target['audit'],
                       "collision_and_dynamic_validation": "pending_gazebo"})
+        if 'cut_axis_world' in target:
+            plans[-1]['cut_axis_world'] = target['cut_axis_world']
     return {"targets": plans, "carry_joints_rad": carry, "carry_tcp_base_m": config["carry_tcp_base_m"],
             "deposit_base_xyyaw": deposit_base, "deposit_tool_world_m": release,
             "deposit_nominal_joints_rad": deposit_joints, "aisle_x_m": config["aisle_x_m"],
@@ -111,6 +113,12 @@ def _bridge_yaml(contract, interaction, world_name):
                (contract['topics']['cmd_vel'], contract['topics']['cmd_vel'], 'geometry_msgs/msg/Twist', 'gz.msgs.Twist', 'ROS_TO_GZ'),
                (contract['topics']['odometry'], contract['topics']['odometry'], 'nav_msgs/msg/Odometry', 'gz.msgs.Odometry', 'GZ_TO_ROS'),
                (contract['topics']['joint_states'], contract['topics']['joint_states'], 'sensor_msgs/msg/JointState', 'gz.msgs.Model', 'GZ_TO_ROS')]
+    if 'robot_spec_sha256' in contract:
+        entries = [entries[0], entries[-1]]
+        namespace = contract['topics']['cmd_vel'].removesuffix('/cmd_vel')
+        for name in contract['drive'].get('joints', {}):
+            topic = namespace+'/drive/'+name+'/cmd_vel'
+            entries.append((topic, topic, 'std_msgs/msg/Float64', 'gz.msgs.Double', 'ROS_TO_GZ'))
     for name in contract['arm_joint_names']:
         topic = contract['topics']['joint_commands'][name]
         entries.append((topic, topic, 'std_msgs/msg/Float64', 'gz.msgs.Double', 'ROS_TO_GZ'))
@@ -126,14 +134,34 @@ def build_pilot(config):
     c = deepcopy(config)
     if c.get('schema_version') != VERSION or not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', c.get('world_name', '')):
         raise ValueError('Invalid pilot schema or world name')
-    robot_config = HarvesterConfig(**c['robot'])
-    if c['pickup_standoff_m'] <= .35:
+    resolved_robot = None
+    robot_assets, robot_asset_hashes = {}, {}
+    if 'robot_profile' in c:
+        from .robot_spec import resolve_robot_profile
+        from .robot_motion import ResolvedMotionConfig
+        from .robot_sdf import resolved_robot_contract
+        if c.get('robot'):
+            raise ValueError('Use robot_overrides for a resolved profile; legacy robot fields cannot be mixed with it')
+        resolved_robot = resolve_robot_profile(c['robot_profile'], c.get('robot_overrides'))
+        robot_config = ResolvedMotionConfig(resolved_robot, c.get('robot_task'))
+        contract = resolved_robot_contract(resolved_robot)
+        mesh_uris = [v['geometry']['uri'] for link in resolved_robot.links for v in link['visuals'] if v['geometry']['type'] == 'mesh']
+        if mesh_uris:
+            from .robot_spec import verify_robot_assets
+            if not c.get('robot_asset_root'):
+                raise ValueError('Robot CAD meshes require an explicit robot_asset_root')
+            asset_root = Path(c['robot_asset_root']).resolve()
+            robot_asset_hashes = verify_robot_assets(resolved_robot, asset_root)
+            robot_assets = {uri: str(asset_root / uri) for uri in mesh_uris}
+    else:
+        robot_config = HarvesterConfig(**c['robot'])
+        contract = robot_contract(robot_config)
+    if resolved_robot is None and c['pickup_standoff_m'] <= .35:
         raise ValueError('Pickup standoff must clear the proxy chassis')
     if not all(math.isfinite(float(v)) for key in ('robot_start_xyzyaw', 'carry_tcp_base_m',
                                                   'bin_center_xy_m', 'deposit_base_xyyaw') for v in c[key]):
         raise ValueError('Non-finite scene parameters')
     plants = build_harvest_plants(c['plants'])
-    contract = robot_contract(robot_config)
     plan = plan_targets(plants, c, robot_config)
     root = ET.Element('sdf', version='1.9')
     world = e(root, 'world', name=c['world_name'])
@@ -143,9 +171,12 @@ def build_pilot(config):
     e(physics, 'real_time_factor', 1)
     for filename, name in (('physics', 'Physics'), ('user-commands', 'UserCommands'), ('scene-broadcaster', 'SceneBroadcaster')):
         e(world, 'plugin', filename=f'gz-sim-{filename}-system', name=f'gz::sim::systems::{name}')
-    if robot_config.camera:
+    camera_enabled = (any(s['enabled'] and s['type'] in ('camera', 'depth_camera', 'lidar') for s in resolved_robot.data['sensors']) if resolved_robot else robot_config.camera)
+    if camera_enabled:
         sensors = e(world, 'plugin', filename='gz-sim-sensors-system', name='gz::sim::systems::Sensors')
         e(sensors, 'render_engine', 'ogre2')
+    if resolved_robot and any(s['enabled'] and s['type'] == 'imu' for s in resolved_robot.data['sensors']):
+        e(world, 'plugin', filename='gz-sim-imu-system', name='gz::sim::systems::Imu')
     scene = e(world, 'scene')
     e(scene, 'ambient', '.38 .40 .42 1')
     e(scene, 'background', '.63 .72 .77 1')
@@ -167,7 +198,11 @@ def build_pilot(config):
     box(link, 'ground_collision', (0, 2, -.05), (16, 16, .1), collision=True)
     for model in plants['models']:
         world.append(model)
-    world.append(generic_harvester_model(robot_config, start=c['robot_start_xyzyaw']))
+    if resolved_robot is None:
+        world.append(generic_harvester_model(robot_config, start=c['robot_start_xyzyaw']))
+    else:
+        from .robot_sdf import resolved_robot_model
+        world.append(resolved_robot_model(resolved_robot, start=c['robot_start_xyzyaw']))
     bin_spec = _bin(world, c['bin_center_xy_m'])
     # Robot links use disjoint masks to suppress proxy self-collision. All
     # external bodies expose all 16 bits, including fruit-fruit contacts after
@@ -178,13 +213,23 @@ def build_pilot(config):
     interaction = e(world, 'plugin', filename='UchuvaHarvestSystem', name='uchuva::HarvestSystem')
     e(interaction, 'robot_model', contract['model_name'])
     e(interaction, 'tool_link', contract['tool_link'])
+    for name, pose in contract.get('tool_frame_poses', {}).items():
+        e(interaction, name, numbers(pose))
     for key, value in c['interaction'].items():
         e(interaction, key, value)
+    if resolved_robot:
+        task = c['robot_task']
+        e(interaction, 'tool_cut_axis', numbers(task['tool_axis']))
+        e(interaction, 'cut_axis_tolerance', task['orientation_tolerance_rad'])
+        e(interaction, 'cut_axis_bidirectional', 'true' if task.get('cut_axis_bidirectional', False) else 'false')
+        directions = {target['id']: target['cut_axis_world'] for target in plan['targets']}
     for fruit in plants['fruits']:
         entry = e(interaction, 'fruit', id=fruit['id'])
         for key in ('model', 'link', 'parent_model', 'parent_link'):
             e(entry, key, fruit[key])
         e(entry, 'cut_point', numbers(fruit['cut_point_local_m']))
+        if resolved_robot:
+            e(entry, 'cut_axis', numbers(directions[fruit['id']]))
     ET.indent(root, space='  ')
     reports = []
     morphologies = {}
@@ -205,7 +250,8 @@ def build_pilot(config):
         reports.append(report)
     manifest = {
         'schema_version': VERSION, 'world_name': c['world_name'], 'world_file': 'harvest.sdf',
-        'fruits': plants['fruits'], 'plants': reports, 'robot': contract, 'robot_config': asdict(robot_config),
+        'fruits': plants['fruits'], 'plants': reports, 'robot': contract,
+        'robot_config': resolved_robot.to_dict() if resolved_robot else asdict(robot_config),
         'bin': bin_spec, 'mission': plan, 'interaction': c['interaction'], 'plant_provenance': plants['provenance'],
         'validation': {'pure_export': 'checked_during_preparation', 'sdf_native': 'pending_gazebo',
                        'plugin_compilation': 'pending_gazebo', 'physical_harvest': 'pending_gazebo'},
@@ -217,10 +263,21 @@ def build_pilot(config):
             'Reset requires restarting Gazebo with a fresh world; in-process reset fails closed.',
         ],
     }
+    if resolved_robot is not None:
+        manifest['robot_spec_sha256'] = resolved_robot.sha256
+        manifest['robot_task'] = c['robot_task']
+        manifest['robot_effective_file'] = 'robot_effective.json'
+        manifest['robot_model_source'] = 'resolved_robot_graph'
+        plan['robot_spec_sha256'] = resolved_robot.sha256
+        manifest['robot_assets_sha256'] = robot_asset_hashes
+        manifest['limitations'][0] = 'Resolved robot topology; cutting/retention still uses an ideal logical attachment and is not a validated physical gripper.'
+    occupied = set(plants['meshes']) | set(soil_assets['meshes']) | set(plants.get('texture_assets', {})) | set(source_assets) | set(soil_assets['generated_binary_assets'])
+    if occupied.intersection(robot_assets):
+        raise ValueError('Robot asset URI collides with a plant/scene asset')
     return {'sdf': ET.tostring(root, encoding='unicode', xml_declaration=True), 'manifest': manifest,
             'meshes': {**plants['meshes'], **soil_assets['meshes']}, 'morphologies': morphologies, 'configuration': c,
-            'binary_assets': {**plants.get('texture_assets', {}), **source_assets},
-            'source_asset_hashes': source_asset_hashes,
+            'binary_assets': {**plants.get('texture_assets', {}), **source_assets, **robot_assets},
+            'source_asset_hashes': {**source_asset_hashes, **robot_asset_hashes},
             'generated_binary_assets': soil_assets['generated_binary_assets'],
             'bridge': _bridge_yaml(contract, c['interaction'], c['world_name'])}
 
@@ -237,6 +294,8 @@ def write_package(output, config, source_metadata=None):
     assets = {'harvest.sdf': bundle['sdf'], 'ros_gz_bridge.yaml': bundle['bridge'], **bundle['meshes']}
     json_assets = {'configuration.json': bundle['configuration'], 'robot_contract.json': bundle['manifest']['robot'],
                    'selection_report.json': bundle['manifest']['plants'], **bundle['morphologies']}
+    if 'robot_spec_sha256' in bundle['manifest']:
+        json_assets['robot_effective.json'] = bundle['manifest']['robot_config']
     assets.update({name: json.dumps(data, indent=2, ensure_ascii=False, allow_nan=False) + '\n'
                    for name, data in json_assets.items()})
     for name, content in assets.items():
@@ -280,4 +339,47 @@ def load_verified_package(directory):
             raise ValueError(f'Prepared asset missing, escaped or changed: {name}')
     if manifest['world_file'] not in manifest['files_sha256']:
         raise ValueError('World file is not covered by checksums')
+    if 'robot_spec_sha256' in manifest:
+        from .robot_spec import resolve_robot_profile, verify_robot_assets
+        from .robot_sdf import resolved_robot_contract, resolved_robot_model
+        effective_name = manifest.get('robot_effective_file')
+        if effective_name != 'robot_effective.json' or effective_name not in manifest['files_sha256']:
+            raise ValueError('Resolved robot effective configuration is not covered by package checksums')
+        effective = json.loads((directory / effective_name).read_text(encoding='utf-8'))
+        robot = resolve_robot_profile(effective)
+        if robot.sha256 != manifest['robot_spec_sha256'] or effective != robot.to_dict() or effective != manifest['robot_config']:
+            raise ValueError('Resolved robot configuration/hash differs from the manifest')
+        admitted_assets = verify_robot_assets(robot, directory)
+        if admitted_assets != manifest.get('robot_assets_sha256') or any(manifest['files_sha256'].get(uri) != digest for uri, digest in admitted_assets.items()):
+            raise ValueError('Robot assets do not match effective robot geometry/package checksums')
+        if manifest['robot'] != resolved_robot_contract(robot) or manifest['mission'].get('robot_spec_sha256') != robot.sha256:
+            raise ValueError('Robot contract or planned motion refers to a different robot')
+        if json.loads((directory / 'robot_contract.json').read_text(encoding='utf-8')) != manifest['robot']:
+            raise ValueError('Packaged robot contract differs from the manifest')
+        # Hashes bind bytes; regenerating and comparing binds those bytes to
+        # their declared robot semantics, including inertias and controllers.
+        world = ET.parse(directory / manifest['world_file']).getroot().find('world')
+        actual = world.find(f"model[@name='{manifest['robot']['model_name']}']")
+        settings = json.loads((directory / 'configuration.json').read_text(encoding='utf-8'))
+        if settings.get('robot_task') != manifest['robot_task']:
+            raise ValueError('Task constraints differ between effective mission and frozen configuration')
+        expected = resolved_robot_model(robot, start=settings['robot_start_xyzyaw'])
+        def canonical(node):
+            return (node.tag, tuple(sorted(node.attrib.items())), (node.text or '').strip(), tuple(canonical(child) for child in node))
+        if actual is None or canonical(actual) != canonical(expected):
+            raise ValueError('SDF robot differs from the effective resolved robot description')
+        interaction = world.find("plugin[@name='uchuva::HarvestSystem']")
+        if interaction is None or interaction.findtext('tool_link') != manifest['robot']['tool_link'] or interaction.findtext('robot_model') != robot.data['model_name']:
+            raise ValueError('Harvest plugin refers to a different physical robot/tool link')
+        for name, pose in manifest['robot']['tool_frame_poses'].items():
+            if interaction.findtext(name) != numbers(pose):
+                raise ValueError(f'Harvest plugin has a different interaction frame: {name}')
+        task = manifest['robot_task']
+        if (interaction.findtext('tool_cut_axis') != numbers(task['tool_axis']) or
+                float(interaction.findtext('cut_axis_tolerance')) != task['orientation_tolerance_rad'] or
+                interaction.findtext('cut_axis_bidirectional') != ('true' if task.get('cut_axis_bidirectional', False) else 'false')):
+            raise ValueError('Harvest plugin orientation guard differs from frozen task constraints')
+        target_axes = {t['id']: numbers(t['cut_axis_world']) for t in manifest['mission']['targets']}
+        if {f.get('id'): f.findtext('cut_axis') for f in interaction.findall('fruit')} != target_axes:
+            raise ValueError('Harvest plugin fruit axes differ from the frozen mission')
     return manifest

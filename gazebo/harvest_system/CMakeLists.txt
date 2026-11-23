@@ -19,3 +19,11 @@ target_link_libraries(UchuvaHarvestSystem PRIVATE
 )
 
 install(TARGETS UchuvaHarvestSystem LIBRARY DESTINATION lib)
+
+add_library(UchuvaRobotTelemetrySystem SHARED RobotTelemetrySystem.cc)
+target_compile_features(UchuvaRobotTelemetrySystem PRIVATE cxx_std_17)
+target_compile_options(UchuvaRobotTelemetrySystem PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(UchuvaRobotTelemetrySystem PRIVATE
+  gz-plugin2::gz-plugin2 gz-sim8::gz-sim8
+  gz-transport13::gz-transport13 gz-msgs10::gz-msgs10)
+install(TARGETS UchuvaRobotTelemetrySystem LIBRARY DESTINATION lib)

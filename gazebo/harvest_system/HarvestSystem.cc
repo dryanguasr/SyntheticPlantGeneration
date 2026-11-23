@@ -136,6 +136,7 @@ struct Fruit
   std::string parentModel;
   std::string parentLink;
   gz::math::Vector3d cutPoint;
+  gz::math::Vector3d cutAxis;
   Entity modelEntity{kNull};
   Entity linkEntity{kNull};
   Entity plantLinkEntity{kNull};
@@ -173,6 +174,15 @@ class HarvestSystem : public gz::sim::System,
     auto config = _sdf->Clone();
     this->robotName = config->Get<std::string>("robot_model", "harvester").first;
     this->toolName = config->Get<std::string>("tool_link", "tool_link").first;
+    this->tcpLocal = config->Get<gz::math::Pose3d>("tcp_pose", gz::math::Pose3d::Zero).first;
+    this->cutLocal = config->Get<gz::math::Pose3d>("cut_pose", gz::math::Pose3d::Zero).first;
+    this->graspLocal = config->Get<gz::math::Pose3d>("grasp_pose", gz::math::Pose3d::Zero).first;
+    this->stateSchema = config->HasElement("tcp_pose") ? 2 : 1;
+    this->orientationGuard = config->HasElement("cut_axis_tolerance");
+    this->cutAxisTolerance = config->Get<double>("cut_axis_tolerance", 0).first;
+    this->toolCutAxis = config->Get<gz::math::Vector3d>(
+        "tool_cut_axis", gz::math::Vector3d::UnitX).first;
+    this->cutAxisBidirectional = config->Get<bool>("cut_axis_bidirectional", false).first;
     const auto commandTopic = config->Get<std::string>(
         "command_topic", "/harvest/command").first;
     const auto stateTopic = config->Get<std::string>(
@@ -195,6 +205,13 @@ class HarvestSystem : public gz::sim::System,
       this->Fail("plugin_must_be_attached_to_world");
     if (!this->statePub || !this->eventPub || !subscribed)
       this->Fail("invalid_transport_topics");
+    if (!Finite(this->tcpLocal) || !Finite(this->cutLocal) || !Finite(this->graspLocal))
+      this->Fail("nonfinite_interaction_frame");
+    if (this->orientationGuard && (!std::isfinite(this->cutAxisTolerance) ||
+        this->cutAxisTolerance <= 0 || this->cutAxisTolerance > 3.141592653589793 ||
+        !std::isfinite(this->toolCutAxis.Length()) ||
+        std::abs(this->toolCutAxis.Length() - 1.0) > 1e-6))
+      this->Fail("invalid_cut_orientation_configuration");
     for (const auto value : {this->cutTolerance, this->captureRadius,
           this->maxRelativeSpeed, this->stableTime, this->startupTimeout,
           this->attachmentTolerance})
@@ -224,6 +241,21 @@ class HarvestSystem : public gz::sim::System,
       fruit.parentModel = entry->Get<std::string>("parent_model");
       fruit.parentLink = entry->Get<std::string>("parent_link");
       fruit.cutPoint = entry->Get<gz::math::Vector3d>("cut_point");
+      if (this->orientationGuard)
+      {
+        if (!entry->HasElement("cut_axis"))
+        {
+          this->Fail("missing_fruit_cut_axis");
+          return;
+        }
+        fruit.cutAxis = entry->Get<gz::math::Vector3d>("cut_axis");
+        if (!std::isfinite(fruit.cutAxis.Length()) ||
+            std::abs(fruit.cutAxis.Length() - 1.0) > 1e-6)
+        {
+          this->Fail("invalid_fruit_cut_axis");
+          return;
+        }
+      }
       if (fruit.id.empty() || fruit.id.find_first_of(" \t\r\n") != std::string::npos ||
           fruit.model.empty() || fruit.link.empty() || fruit.parentModel.empty() ||
           fruit.parentLink.empty() || !std::isfinite(fruit.cutPoint.X()) ||
@@ -332,7 +364,10 @@ class HarvestSystem : public gz::sim::System,
     this->simTime = Seconds(_info.simTime);
     if (this->initialized && this->error.empty() && this->EntitiesValid(_ecm))
     {
-      this->toolPose = gz::sim::worldPose(this->tool, _ecm);
+      const auto linkPose = gz::sim::worldPose(this->tool, _ecm);
+      this->toolPose = linkPose * this->tcpLocal;
+      this->cutPose = linkPose * this->cutLocal;
+      this->graspPose = linkPose * this->graspLocal;
       this->robotPose = gz::sim::worldPose(this->robot, _ecm);
       if (!Finite(this->toolPose) || !Finite(this->robotPose))
         this->Fail("nonfinite_robot_pose");
@@ -519,18 +554,34 @@ class HarvestSystem : public gz::sim::System,
   private: std::string Guard(const Fruit &_fruit,
       const gz::sim::EntityComponentManager &_ecm) const
   {
-    const auto toolPoseNow = gz::sim::worldPose(this->tool, _ecm);
+    const auto linkPoseNow = gz::sim::worldPose(this->tool, _ecm);
+    const auto cutPoseNow = linkPoseNow * this->cutLocal;
+    const auto graspPoseNow = linkPoseNow * this->graspLocal;
     const auto fruitPoseNow = gz::sim::worldPose(_fruit.linkEntity, _ecm);
-    if (!Finite(toolPoseNow) || !Finite(fruitPoseNow)) return "nonfinite_pose";
+    if (!Finite(cutPoseNow) || !Finite(graspPoseNow) || !Finite(fruitPoseNow))
+      return "nonfinite_pose";
     const auto cut = fruitPoseNow.Pos() +
         fruitPoseNow.Rot().RotateVector(_fruit.cutPoint);
-    if ((cut - toolPoseNow.Pos()).Length() > this->cutTolerance)
+    if ((cut - cutPoseNow.Pos()).Length() > this->cutTolerance)
       return "cut_point_out_of_range";
-    if ((fruitPoseNow.Pos() - toolPoseNow.Pos()).Length() > this->captureRadius)
+    if ((fruitPoseNow.Pos() - graspPoseNow.Pos()).Length() > this->captureRadius)
       return "fruit_outside_capture_radius";
+    if (this->orientationGuard && this->CutAxisError(_fruit, cutPoseNow, fruitPoseNow) >
+        this->cutAxisTolerance)
+      return "cut_orientation_out_of_range";
     if (!std::isfinite(_fruit.relativeSpeed)) return "relative_speed_unknown";
     if (_fruit.relativeSpeed > this->maxRelativeSpeed) return "relative_speed_too_high";
     return "";
+  }
+
+  private: double CutAxisError(const Fruit &_fruit,
+      const gz::math::Pose3d &_cut, const gz::math::Pose3d &_fruitPose) const
+  {
+    const auto target = _fruitPose.Rot().RotateVector(_fruit.cutAxis);
+    const auto actual = _cut.Rot().RotateVector(this->toolCutAxis);
+    double dot = target.Dot(actual);
+    if (this->cutAxisBidirectional) dot = std::abs(dot);
+    return std::acos(std::clamp(dot, -1.0, 1.0));
   }
 
   private: bool Busy(const std::string &_except = "") const
@@ -706,7 +757,7 @@ class HarvestSystem : public gz::sim::System,
   {
     const bool available = this->initialized && this->EntitiesValid(_ecm);
     std::ostringstream out;
-    out << "{\"schema_version\":1,\"sim_time\":" << Number(this->simTime)
+    out << "{\"schema_version\":" << this->stateSchema << ",\"sim_time\":" << Number(this->simTime)
         << ",\"ready\":" << (this->ready ? "true" : "false")
         << ",\"status\":" << Quote(!this->error.empty() ? "error" :
                                   this->ready ? "ready" : "initializing")
@@ -714,8 +765,11 @@ class HarvestSystem : public gz::sim::System,
         << ",\"waiting_for\":" << Quote(this->waitingFor)
         << ",\"mechanism\":\"idealized_cut_and_fixed_retention\""
         << ",\"constraint_evidence\":\"ecm_and_pose_residual_not_force_validation\""
+        << ",\"orientation_guard_enabled\":" << (this->orientationGuard ? "true" : "false")
         << ",\"last_event_seq\":" << this->eventSeq
         << ",\"tool_pose\":" << (available ? Pose(this->toolPose) : "null")
+        << ",\"cut_pose\":" << (available ? Pose(this->cutPose) : "null")
+        << ",\"grasp_pose\":" << (available ? Pose(this->graspPose) : "null")
         << ",\"robot_pose\":" << (available ? Pose(this->robotPose) : "null")
         << ",\"fruits\":[";
     bool first = true;
@@ -727,7 +781,10 @@ class HarvestSystem : public gz::sim::System,
       out << "{\"id\":" << Quote(fruit.id)
           << ",\"state\":" << Quote(Name(fruit.state))
           << ",\"position\":" << (observed ? Vector(fruit.observedPose.Pos()) : "null")
+          << ",\"pose\":" << (observed ? Pose(fruit.observedPose) : "null")
           << ",\"cut_position\":" << (observed ? Vector(fruit.observedCut) : "null")
+          << ",\"cut_axis_error_rad\":" << (observed && this->orientationGuard ?
+              Number(this->CutAxisError(fruit, this->cutPose, fruit.observedPose)) : "null")
           << ",\"relative_speed\":" << Number(fruit.relativeSpeed)
           << ",\"stable_seconds\":" << Number(std::isfinite(fruit.stableSince) ?
                                              this->simTime - fruit.stableSince : 0)
@@ -761,6 +818,12 @@ class HarvestSystem : public gz::sim::System,
   private: Entity robot{kNull};
   private: Entity tool{kNull};
   private: gz::math::Pose3d toolPose;
+  private: gz::math::Pose3d cutPose, graspPose;
+  private: gz::math::Pose3d tcpLocal, cutLocal, graspLocal;
+  private: int stateSchema{1};
+  private: bool orientationGuard{false}, cutAxisBidirectional{false};
+  private: double cutAxisTolerance{0};
+  private: gz::math::Vector3d toolCutAxis{gz::math::Vector3d::UnitX};
   private: gz::math::Pose3d robotPose;
   private: double cutTolerance{0.02};
   private: double captureRadius{0.12};

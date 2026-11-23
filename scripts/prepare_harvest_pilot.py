@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare the six-target harvest fixture using only Python's standard library."""
+"""Prepare a manifest-driven harvest fixture using Python's standard library."""
 from __future__ import annotations
 
 import argparse
@@ -20,15 +20,17 @@ def source_metadata():
         return result.stdout.strip() if result.returncode == 0 else 'unavailable'
     paths = [REPO / 'src/uchuva_gazebo' / filename for filename in (
         'harvest_pilot.py', 'harvest_plants.py', 'harvest_visuals.py', 'harvest_collision_mesh.py',
-        'harvest_clearance.py', 'harvester_robot.py', 'harvest_validation.py')]
+        'harvest_clearance.py', 'harvester_robot.py', 'harvest_validation.py',
+        'robot_spec.py', 'robot_kinematics.py', 'robot_sdf.py', 'robot_motion.py', 'robot_validation.py')]
     paths += [REPO / 'src/uchuva_lsystem' / filename for filename in (
         'grammar.py', 'parameters.py', 'morphology.py', 'collisions.py', 'scene.py', 'blender_geometry.py', 'texture_assets.py')]
     paths += [REPO / 'scripts' / filename for filename in (
         'prepare_harvest_pilot.py', 'export_admitted_harvest_sources.py', 'screen_admitted_harvest_targets.py')]
-    paths += [REPO / 'gazebo/harvest_system/HarvestSystem.cc', REPO / 'gazebo/harvest_system/CMakeLists.txt']
+    paths += [REPO / 'gazebo/harvest_system' / name for name in ('HarvestSystem.cc', 'RobotTelemetrySystem.cc', 'CMakeLists.txt')]
+    paths += [REPO / 'configs/robots/robot_spec.schema.json']
     return {'git_commit': git('rev-parse', 'HEAD'), 'git_branch': git('branch', '--show-current'),
             'working_tree_dirty': bool(git('status', '--porcelain')),
-            'files_sha256': {str(p.relative_to(REPO)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
+            'files_sha256': {p.relative_to(REPO).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
 
 
 def main(argv=None):
@@ -36,9 +38,14 @@ def main(argv=None):
     parser.add_argument('--config', type=Path, default=REPO / 'configs/harvest_pilot_v1.json')
     parser.add_argument('--output', type=Path, default=REPO / 'outputs/harvest_pilot')
     parser.add_argument('--camera', action='store_true', help='Add RGB sensor; native run will require a rendering engine')
+    parser.add_argument('--robot-profile', type=Path, help='Canonical robot profile; robot_task must be explicit in the experiment configuration')
     args = parser.parse_args(argv)
     config = read_config(args.config)
+    if args.robot_profile:
+        config['robot_profile'] = str(args.robot_profile.resolve())
     if args.camera:
+        if 'robot_profile' in config:
+            parser.error('--camera is a legacy proxy option; configure sensors in the robot profile')
         config['robot']['camera'] = True
     try:
         manifest = write_package(args.output, config, source_metadata())

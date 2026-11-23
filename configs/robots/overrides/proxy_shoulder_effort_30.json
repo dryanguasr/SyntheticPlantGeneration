@@ -1,0 +1,29 @@
+{
+  "/joints/5/limits/effort": {
+    "value": 30.0,
+    "provenance": {
+      "status": "estimado",
+      "source": "Controlled proxy parametrization demonstration, not physical hardware",
+      "revision": "proxy-demo-v1",
+      "method": "Explicit perturbation of one category; does not calibrate the real robot."
+    }
+  },
+  "/control/arm/shoulder_joint/cmd_min": {
+    "value": -30.0,
+    "provenance": {
+      "status": "estimado",
+      "source": "Controlled proxy parametrization demonstration, not physical hardware",
+      "revision": "proxy-demo-v1",
+      "method": "Explicit perturbation of one category; does not calibrate the real robot."
+    }
+  },
+  "/control/arm/shoulder_joint/cmd_max": {
+    "value": 30.0,
+    "provenance": {
+      "status": "estimado",
+      "source": "Controlled proxy parametrization demonstration, not physical hardware",
+      "revision": "proxy-demo-v1",
+      "method": "Explicit perturbation of one category; does not calibrate the real robot."
+    }
+  }
+}
