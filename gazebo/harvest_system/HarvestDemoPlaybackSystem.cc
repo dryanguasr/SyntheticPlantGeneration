@@ -201,7 +201,7 @@ class HarvestDemoPlaybackSystem final : public gz::sim::System,
       this->observations << ' ' << (q && q->size() == 1 ? (*q)[0] : nan)
                          << ' ' << (v && v->size() == 1 ? (*v)[0] : nan);
     }
-    this->observations << '\n';
+    this->observations << '\n' << std::flush;
   }
 
   private: void ReadJoints(const sdf::ElementPtr &_config,

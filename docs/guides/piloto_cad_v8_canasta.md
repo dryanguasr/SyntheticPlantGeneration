@@ -109,9 +109,16 @@ de los frutos que permanecen dentro al final.
 
 ```sh
 bash scripts/build_harvest_plugin.sh outputs/cad_v8_demo_plugins
-python3 scripts/prepare_cad_v8_demo_take.py <paquete> <rutas> <toma> --physics-step .004 --fps 12
+python3 scripts/prepare_cad_v8_demo_take.py <paquete> <rutas-codo-arriba> <toma> --physics-step .004 --fps 12 --elbow-up
 python3 scripts/run_cad_v8_demo_capture.py <toma> --source-package <paquete> --plugin-dir outputs/cad_v8_demo_plugins --output <grabación> --compact
+python3 scripts/audit_cad_v8_demo_arm.py <toma> <grabación>/native_arm_clearance.json --require-nominal-clearance
 ```
+
+La opción `--elbow-up` exige una postura recogida y trayectorias del mismo
+lado de la recta hombro–muñeca. Certifica una separación de 4 mm con el
+chasis y la canasta en el recorrido interpolado, incluidas las posiciones
+intermedias de la mordaza. La auditoría contrasta la trayectoria con las
+posiciones articulares observadas por Gazebo.
 
 La edición compacta acorta los intervalos de desplazamiento y conserva los
 fotogramas en orden. Los intervalos cercanos al corte y la suelta se reproducen

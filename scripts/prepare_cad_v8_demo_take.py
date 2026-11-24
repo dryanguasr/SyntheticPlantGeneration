@@ -21,20 +21,21 @@ PLAYBACK = 'libUchuvaHarvestDemoPlaybackSystem.so'
 class Take:
     """Time the stops, arm passes and jaw motion without changing the cut guards."""
 
-    def __init__(self, manifest, start):
+    def __init__(self, manifest, start, *, carry=None):
         robot = manifest['robot']
         drive = robot['drive']
         self.fixture = manifest['robot_task']['demo_fixture']
         self.jaw = self.fixture['gripper']
         self.arm = list(robot['arm_joint_names'])
-        self.carry = manifest['mission']['carry_joints_rad']
+        self.carry = manifest['mission']['carry_joints_rad'] if carry is None else carry
         self.joints = self.arm + [self.jaw['joint']] + drive['left_joints'] + drive['right_joints']
         self.speeds = [min(.30, limit) for limit in robot['joint_velocity_limits_rad_s']]
         self.speeds += [self.jaw['command_velocity_m_s']] + [3.] * 4
         self.wheel_radius = drive['wheel_radius_m']
         self.half_track = drive['wheel_separation_m'] / 2
         self.wheel_sign = [drive['joint_signs'][name] for name in self.joints[-4:]]
-        self.rows = [[0., *start, *robot['home_joints_rad'], self.jaw['closed_position_m'], 0., 0., 0., 0.]]
+        initial_arm = robot['home_joints_rad'] if carry is None else self.carry
+        self.rows = [[0., *start, *initial_arm, self.jaw['closed_position_m'], 0., 0., 0., 0.]]
         self.commands = []
         self.phases = []
 
@@ -127,6 +128,10 @@ class Take:
         self.hold(.36)
         self.command('release', identifier)
         self.hold(1.5)
+        if 'stow_sequence' in target:
+            for waypoint in target['stow_sequence']:
+                self.arm_to(waypoint)
+            self.arm_to(self.carry, opened=False)
 
     def save(self, directory):
         trajectory = directory / 'trajectory.tsv'
@@ -215,7 +220,36 @@ def make_world(package, manifest, directory, take, step, *, use_follow_camera, f
     return output, observer, removed_contacts
 
 
-def prepare(package, routes, output, *, limit, step, use_follow_camera=True, fps=15):
+def audit_elbow_up(manifest, package, take):
+    from uchuva_gazebo.elbow_up_clearance import ElbowUpClearance
+    from uchuva_gazebo.robot_spec import resolve_robot_profile
+
+    clearance = take.fixture['motion_clearance_m']
+    auxiliary = manifest['robot_task']['auxiliary_joint_positions']
+    if any(value != 0. for name, value in auxiliary.items() if name != take.jaw['joint']):
+        raise ValueError('Elbow-up verification requires the same CAD-zero suspension used in the take')
+    admission = ElbowUpClearance(resolve_robot_profile(manifest['robot_config']),
+                                 manifest['robot_task'], asset_root=package)
+    by_motion = {}
+    intervals = []
+    for start, end in zip(take.rows, take.rows[1:]):
+        a, b = tuple(start[5:11]), tuple(end[5:11])
+        key = tuple(sorted((a, b)))
+        if key not in by_motion:
+            if a == b:
+                result = admission.pose(a[:5], a[5], clearance=clearance)
+            else:
+                result = admission.segment(a[:5], b[:5], a[5], b[5], clearance=clearance)
+            by_motion[key] = result
+        result = by_motion[key]
+        if not result['passed']:
+            raise ValueError(f'Elbow-up clearance failed at {start[0]:.3f}–{end[0]:.3f} s: {result}')
+        intervals.append({'start_sim_s': start[0], 'end_sim_s': end[0], **result})
+    return {'passed': True, 'clearance_m': clearance, 'robot_spec_sha256': manifest['robot_spec_sha256'],
+            'arm_chassis_pairs': len(admission.arm_chassis_pairs), 'intervals': intervals}
+
+
+def prepare(package, routes, output, *, limit, step, use_follow_camera=True, fps=15, elbow_up=False):
     package, output = package.resolve(), output.resolve()
     manifest = load_verified_package(package)
     source_hash = sha256_file(package / 'manifest.json')
@@ -223,6 +257,7 @@ def prepare(package, routes, output, *, limit, step, use_follow_camera=True, fps
     proposal = json.loads(route_source)
     if proposal['source_manifest_sha256'] != source_hash:
         raise ValueError('Route belongs to a different frozen crop and robot')
+    elbow_up = elbow_up or proposal.get('schema_version') == 'v8-elbow-up-take-route/1.0'
     targets = proposal['mission']['targets'][:limit]
     original = {target['id']: target for target in manifest['mission']['targets']}
     completed = set(proposal['completed_candidate_ids'])
@@ -235,7 +270,6 @@ def prepare(package, routes, output, *, limit, step, use_follow_camera=True, fps
         if Counter(plants[identifier] for identifier in target_ids) != {p['id']: 3 for p in manifest['plants']}:
             raise ValueError('A full take requires three distinct fruits from each frozen bush')
 
-    output.mkdir(parents=True, exist_ok=False)
     config = json.loads((package / 'configuration.json').read_text(encoding='utf-8'))
     start = config['robot_start_xyzyaw']
     first = targets[0]
@@ -248,7 +282,8 @@ def prepare(package, routes, output, *, limit, step, use_follow_camera=True, fps
     first_x, first_y, _ = first['base_route'][0]
     if math.dist(start[:2], (first_x, first_y)) > 1e-8:
         start[3] = math.atan2(first_y - start[1], first_x - start[0])
-    take = Take(manifest, start)
+    carry = proposal['mission']['carry_joints_rad'] if elbow_up else None
+    take = Take(manifest, start, carry=carry)
     take.hold(1.25)
     for target in targets:
         take.harvest(target)
@@ -258,6 +293,8 @@ def prepare(package, routes, output, *, limit, step, use_follow_camera=True, fps
         for waypoint in targets[-1]['after_deposit_route']:
             take.drive(waypoint)
     take.hold(1.8)
+    evidence = audit_elbow_up(manifest, package, take) if elbow_up else None
+    output.mkdir(parents=True, exist_ok=False)
     world, observer, removed = make_world(package, manifest, output, take, step,
                                           use_follow_camera=use_follow_camera, fps=fps)
     result = {
@@ -274,6 +311,12 @@ def prepare(package, routes, output, *, limit, step, use_follow_camera=True, fps
         'files_sha256': {name: sha256_file(output / name)
                          for name in (world.name, 'trajectory.tsv', 'commands.tsv')},
     }
+    if evidence is not None:
+        report = output / 'elbow_up_clearance.json'
+        report.write_text(json.dumps(evidence, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+        result['elbow_up_clearance'] = report.name
+        result['arm_motion_policy'] = 'elbow_above_shoulder_wrist_chord_and_continuously_verified_CAD_clearance'
+        result['files_sha256'][report.name] = sha256_file(report)
     (output / 'demo_manifest.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     return result
 
@@ -287,9 +330,11 @@ def main():
     parser.add_argument('--physics-step', type=float, choices=(.001, .002, .004), default=.002)
     parser.add_argument('--fps', type=int, choices=(10, 12, 15, 20, 24), default=15)
     parser.add_argument('--fixed-camera', action='store_true')
+    parser.add_argument('--elbow-up', action='store_true',
+                        help='Require certified elbow-up motion and CAD arm clearance throughout the take')
     args = parser.parse_args()
     result = prepare(args.package, args.routes, args.output, limit=args.limit, step=args.physics_step,
-                     use_follow_camera=not args.fixed_camera, fps=args.fps)
+                     use_follow_camera=not args.fixed_camera, fps=args.fps, elbow_up=args.elbow_up)
     print(f"Prepared {len(result['target_ids'])} fruits over {result['duration_s']:.1f} simulation seconds")
 
 
