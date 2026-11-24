@@ -2,6 +2,7 @@
 import importlib.util
 from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 import unittest
 import xml.etree.ElementTree as ET
 from uchuva_gazebo.robot_spec import resolve_robot_profile
@@ -12,6 +13,22 @@ probe=importlib.util.module_from_spec(spec);spec.loader.exec_module(probe)
 
 
 class MobilityProtocolTests(unittest.TestCase):
+    def test_fixed_gripper_guard_includes_passive_descendants_but_not_suspension(self):
+        # Structural fixture deliberately avoids a gripper naming prefix.
+        joints=[{'name':'arm','parent':'base','child':'wrist','group':'arm','type':'revolute'},
+            {'name':'driver','parent':'wrist','child':'gear','group':'fixed','type':'fixed'},
+            {'name':'jaw','parent':'wrist','child':'jaw_link','group':'passive','type':'fixed'},
+            {'name':'closure_pin','parent':'jaw_link','child':'tip','group':'passive','type':'fixed'},
+            {'name':'suspension','parent':'base','child':'carrier','group':'passive','type':'revolute'}]
+        probe.require_fixed_gripper_diagnostic(SimpleNamespace(joints=joints))
+        for index in (1,2,3):
+            moving=deepcopy(joints);moving[index]['type']='revolute'
+            with self.assertRaisesRegex(ValueError,'every tool-subtree joint fixed'):
+                probe.require_fixed_gripper_diagnostic(SimpleNamespace(joints=moving))
+        outside=deepcopy(joints);outside[1].update(parent='base',group='gripper')
+        with self.assertRaisesRegex(ValueError,'inside the terminal-arm'):
+            probe.require_fixed_gripper_diagnostic(SimpleNamespace(joints=outside))
+
     def test_integrated_arm_preserves_mobility_and_uses_strict_observed_targets(self):
         original=probe.protocol(.298218,.0001)
         combined=probe.protocol(.298218,.0001,'integrated_arm')

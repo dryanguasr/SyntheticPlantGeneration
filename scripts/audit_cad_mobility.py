@@ -57,6 +57,7 @@ def main():
     geometries=[s['geometry'] for link in robot.links for s in link['collisions'] if s['geometry']['type']=='mesh']
     repo=MeshRepository(source,geometries) if geometries else None
     config=read(source/'protocol.json');poses=rows(source/'poses.jsonl');joints=rows(source/'joints.jsonl');links=rows(source/'link_poses.jsonl')
+    if config.get('experiment')=='integrated_arm':probe.require_fixed_gripper_diagnostic(robot)
     native_world=ET.parse(source/'world.sdf')
     if config.get('physics'):
         actual_detector=native_world.findtext('world/physics/dart/collision_detector','ode')

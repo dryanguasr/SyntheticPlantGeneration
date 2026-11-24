@@ -473,3 +473,30 @@ frente a las consignas +0,08 y −0,08 rad. El avance neto observado fue de
 0,04990 m, incluido el tramo de frenada. El vídeo nativo contiene 81 fotogramas
 RGB de 1280 × 720, preservados con sus timestamps y hashes. Se entrega como
 `cad_v8_function_demo_02/funcionamiento_pinza_fija_v8.mp4`.
+
+El banco integrado `cad_integrated_fixed_gripper_01` completó sus 21 s
+simulados y el paso adicional de observación. Conservó la gravedad, la
+altura de arranque, la física y los límites del ensayo anterior. Las cinco
+articulaciones del brazo recibieron consignas de +0,08 rad, −0,08 rad y
+retorno a origen con el chasis frenado. Después se ejecutó la secuencia de
+avance recto, frenado, giro y frenado. Gazebo terminó con código 0 y se
+emparejaron 2.100 poses con observaciones articulares del mismo paso.
+
+| Comprobación | Resultado observado |
+|---|---|
+| Llegada a ambas posturas y retorno | PASS, error máximo de 0,004785 rad y velocidad máxima de 0,007371 rad/s en las ventanas finales |
+| Punta del brazo | 0,234255 m entre las dos posturas, a partir de las poses nativas de la muñeca y el marco TCP |
+| Avance y giro | PASS, 0,193437 m y 0,330305 rad durante sus fases |
+| Parada final | PASS, velocidad lineal máxima de 0,001523 m/s y angular de 0,00000309 rad/s |
+| Cierres de suspensión | PASS, residual máximo de 1,022 µm y 5,697 µrad |
+| Velocidad al invertir el brazo | FAIL, la muñeca pitch alcanzó 0,336151 rad/s frente a 0,330 rad/s admitidos |
+| Resultado integrado | FAIL por el exceso de velocidad de muñeca durante la transición |
+
+Se registraron 16 ventanas con exceso de velocidad, entre 6,39 y 6,54 s
+de marca final. En esas ventanas el esfuerzo máximo en la muñeca pitch
+fue 0,155172 N·m, sin saturación de ese actuador. Los movimientos y las
+paradas observadas cumplen sus criterios separados. La auditoría de los
+registros originales en `cad_integrated_fixed_gripper_01_audit_01` confirmó
+el mismo resultado. La gráfica `cad_integrated_fixed_gripper_01/funcionamiento_pinza_fija.png`
+traza las posiciones articulares, la distancia al origen del chasis y su
+giro. El agarre, el corte y la misión de cosecha siguen pendientes.

@@ -116,6 +116,34 @@ def arm_phase_targets(robot, config):
     return targets
 
 
+def require_fixed_gripper_diagnostic(robot):
+    """Require the complete terminal-arm tool subtree to be rigid.
+
+    Passive jaw and closure-pin joints may belong to ``passive``, so the
+    actuator group alone cannot establish the reduced diagnostic topology.
+    Branching arm layouts need an explicit adapter rather than a guessed root.
+    """
+    arms=[joint for joint in robot.joints if joint.get('group')=='arm']
+    arm_parents={joint['parent'] for joint in arms}
+    terminal_links={joint['child'] for joint in arms if joint['child'] not in arm_parents}
+    if len(terminal_links)!=1:
+        raise ValueError('Fixed-gripper diagnostic requires one unambiguous terminal arm link')
+    descendants=set(terminal_links)
+    while True:
+        expanded=descendants|{j['child'] for j in robot.joints if j['parent'] in descendants}
+        if expanded==descendants:break
+        descendants=expanded
+    tool_joints=[j for j in robot.joints if j['parent'] in descendants]
+    gripper_joints=[j for j in robot.joints if j.get('group')=='gripper']
+    # The reduction may relabel every fixed joint's group to ``fixed``.
+    # Presence therefore follows topology, not the former actuator label.
+    if not tool_joints or any(j['parent'] not in descendants for j in gripper_joints):
+        raise ValueError('Gripper must be identified inside the terminal-arm tool subtree')
+    moving=[j['name'] for j in tool_joints if j['type']!='fixed']
+    if moving:
+        raise ValueError('Integrated diagnostic requires every tool-subtree joint fixed, including passive joints: '+', '.join(moving))
+
+
 def arm_sequence_checks(robot, config, joints, poses):
     """Observed positive/negative/return motion, with strict settled tail checks."""
     if config.get('experiment')!='integrated_arm':return []
@@ -399,8 +427,7 @@ def main():
             raise ValueError('Ramped controller library is missing from the frozen build')
     config=protocol(args.start_height,args.max_step_size,args.experiment)
     if args.experiment=='integrated_arm':
-        if any(j.get('group')=='gripper' and j['type']!='fixed' for j in robot.joints):
-            raise ValueError('Integrated reduced diagnostic requires the declared gripper joints physically fixed')
+        require_fixed_gripper_diagnostic(robot)
         config['arm_targets_rad']=arm_phase_targets(robot,config)
     config['wall_timeout_s']=args.wall_timeout
     if data.get('physics'):
