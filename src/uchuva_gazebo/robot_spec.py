@@ -438,6 +438,16 @@ def validate_robot_spec(document, *, require_complete=True):
         raise ValueError("Drive signs must cover exactly the driven joints with integer +/-1")
     if "native_force_drive" in document["capabilities"] and set(drive.get("joints", {})) != set(driven):
         raise ValueError("Finite-force drive requires gains for every driven joint")
+    feedback = drive.get('base_feedback')
+    if feedback is not None:
+        _number(feedback['p_gain'], 'Base yaw feedback gain', nonnegative=True)
+        for key in ('window_s', 'max_observation_age_s'):
+            _number(feedback[key], 'Base feedback '+key, positive=True)
+        if feedback['enabled'] and ('native_force_drive' not in document['capabilities'] or not driven):
+            raise ValueError('Native base feedback requires explicit finite-force wheel control')
+        for key in feedback:
+            if '/control/drive/base_feedback/'+key not in document['parameter_metadata']:
+                raise ValueError('Every base feedback setting requires explicit provenance/update_class')
     for name, settings in drive.get("joints", {}).items():
         if name not in driven:
             raise ValueError("Drive gains refer to a non-drive joint")

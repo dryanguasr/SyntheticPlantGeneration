@@ -166,6 +166,11 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 gap = box_separation(first, first_half, second, second_half)
             if gap < minimum:
                 minimum, limiting = gap, [first['link']+'/'+first['name'], second['link']+'/'+second['name']]
+    self_minimum,self_limiting=minimum,limiting
+    # Report the environment independently of internal mechanical interfaces.
+    # The authoritative total remains their minimum: this adds diagnostics,
+    # never an exemption or permission to accept internal contact.
+    minimum,limiting=report_cap,None
     for shape, half, inverse in boxes:
         name = shape['link']+'/'+shape['name']
         center = shape['pose']['xyz_m']
@@ -201,6 +206,9 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 gap = center[2]-sum(abs(axis[2])*h for axis, h in zip(axes, half))
             if gap < minimum:
                 minimum, limiting = gap, [name, 'ground']
+    environment_minimum,environment_limiting=minimum,limiting
+    if self_minimum<=minimum:
+        minimum,limiting=self_minimum,self_limiting
     if held is not None:
         # The original offset is expressed in the CUT posture's tool frame,
         # rather than rotating a world-space vector as if wrist roll were zero.
@@ -226,6 +234,8 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
             if gap < held_robot_min:
                 held_robot_min, limiting_held_robot = gap, shape['link']+'/'+shape['name']
     return {'robot_clearance_m': minimum, 'held_clearance_m': held_min if held else None,
+            'self_clearance_m': self_minimum, 'environment_clearance_m': environment_minimum,
+            'limiting_self_pair': self_limiting, 'limiting_environment_pair': environment_limiting,
             'held_robot_clearance_m': held_robot_min if held else None,
             'limiting_robot_pair': limiting, 'limiting_held_obstacle': limiting_held,
             'limiting_held_robot_link': limiting_held_robot, 'tcp_world_m': tcp['xyz_m'],

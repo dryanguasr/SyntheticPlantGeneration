@@ -21,7 +21,7 @@ def native_source_files(manifest):
     """Frozen historical packages retain their original two-source contract."""
     files = manifest.get('source', {}).get('files_sha256', {})
     if 'robot_spec_sha256' in manifest or 'gazebo/harvest_system/RobotTelemetrySystem.cc' in files:
-        extra = tuple(name for name in ('ClosedLoopSystem.cc', 'GearCouplingSystem.cc', 'JointPositionForceSystem.cc', 'PositionForceController.hh')
+        extra = tuple(name for name in ('ClosedLoopSystem.cc', 'GearCouplingSystem.cc', 'JointPositionForceSystem.cc', 'PositionForceController.hh', 'ObservationSchedule.hh')
                       if 'gazebo/harvest_system/'+name in files)
         return (*NATIVE_SOURCE_FILES, 'RobotTelemetrySystem.cc', *extra)
     return NATIVE_SOURCE_FILES
@@ -133,6 +133,8 @@ def _audit(package, run):
     if 'robot_spec_sha256' in manifest:
         from uchuva_gazebo.robot_validation import evaluate_robot_telemetry
         report['checks'] += evaluate_robot_telemetry(manifest, read_jsonl(run / 'robot_telemetry.jsonl'), samples, events)
+        from uchuva_gazebo.robot_control_validation import evaluate_base_drive_control
+        report['checks'] += evaluate_base_drive_control(manifest, commands, samples)
         if manifest['robot']['topics'].get('position_force_states'):
             from uchuva_gazebo.robot_control_validation import evaluate_position_force_control
             report['checks'] += evaluate_position_force_control(manifest,

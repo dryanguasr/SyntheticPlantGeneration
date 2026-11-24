@@ -74,6 +74,8 @@ def main():
     args=parser.parse_args();output=args.output.resolve();plugins=args.plugin_dir.resolve()
     if args.case:return run_case(output,plugins,args.case,world)
     build=json.loads((plugins/'build_provenance.json').read_text())
+    if build.get('source_sha256',{}).get('ObservationSchedule.hh') != sha(REPO/'gazebo/harvest_system/ObservationSchedule.hh'):
+        raise ValueError('Observer schedule differs from build provenance')
     observer_digest=sha(plugins/'libUchuvaRobotTelemetrySystem.so')
     if (build.get('robot_telemetry_library_sha256') != observer_digest or
         build.get('libraries_sha256',{}).get('libUchuvaRobotTelemetrySystem.so') != observer_digest or

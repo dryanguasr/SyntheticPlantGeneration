@@ -1,5 +1,6 @@
 // Original project code, MIT. One force writer and a native, bounded reference.
 #include "PositionForceController.hh"
+#include "ObservationSchedule.hh"
 #include <gz/common/Console.hh>
 #include <gz/msgs/double.pb.h>
 #include <gz/msgs/stringmsg.pb.h>
@@ -109,6 +110,7 @@ class JointPositionForceSystem final : public gz::sim::System,
     // UpdateInfo labels the end of this step; the force is applied before it.
     // Match RobotTelemetry.commanded_before_step_time exactly.
     const double time = std::chrono::duration<double>(_info.simTime-_info.dt).count();
+    const double responseTime = std::chrono::duration<double>(_info.simTime).count();
     const double dt = std::chrono::duration<double>(_info.dt).count();
     double q = Unknown, v = Unknown;
     PositionForceStep result{this->controller->Reference(), 0, 0, 0, false};
@@ -138,11 +140,13 @@ class JointPositionForceSystem final : public gz::sim::System,
     this->maxReferenceRate = std::max(this->maxReferenceRate, std::abs(result.referenceRate));
     if (result.saturated) { ++this->saturatedSteps; ++this->totalSaturatedSteps; }
     if (status != "active") ++this->invalidStateSteps;
-    if (time-this->lastPublish+1e-12 < this->publishPeriod) return;
+    if (responseTime+1e-12 < this->nextPublish) return;
     std::ostringstream out; out.imbue(std::locale::classic()); out << std::setprecision(17);
     out << "{\"schema_version\":\"joint-position-force/1.0\",\"robot_spec_sha256\":" << JsonQuote(this->hash)
         << ",\"joint_name\":" << JsonQuote(this->name) << ",\"sim_time\":" << JsonNumber(time)
         << ",\"update_info_sim_time\":" << JsonNumber(std::chrono::duration<double>(_info.simTime).count())
+        << ",\"publication_grid\":\"update_info_sim_time/1.0\""
+        << ",\"iteration\":" << _info.iterations
         << ",\"sample_phase\":\"pre_physics\",\"status\":" << JsonQuote(status)
         << ",\"requested_target_position_rad\":" << JsonNumber(this->controller->Target())
         << ",\"limited_reference_rad\":" << JsonNumber(this->controller->Reference())
@@ -163,7 +167,7 @@ class JointPositionForceSystem final : public gz::sim::System,
         << ",\"invalid_state_steps_window\":" << this->invalidStateSteps
         << ",\"window_steps\":" << this->windowSteps << "}";
     gz::msgs::StringMsg message; message.set_data(out.str()); this->publisher.Publish(message);
-    this->lastPublish = time;
+    this->nextPublish = NextObservationTime(responseTime, this->publishPeriod);
     this->ClearWindow();
   }
   public: void Reset(const gz::sim::UpdateInfo &, gz::sim::EntityComponentManager &_ecm) override
@@ -172,7 +176,7 @@ class JointPositionForceSystem final : public gz::sim::System,
     if (this->controller) this->controller->Reset();
     if (this->joint.Valid(_ecm)) this->joint.SetForce(_ecm, {0});
     this->commandSequence = this->rejectedCommands = this->totalSaturatedSteps = 0;
-    this->lastPublish = -1; this->ClearWindow();
+    this->nextPublish = 0; this->ClearWindow();
   }
   private: void ClearWindow()
   {
@@ -186,7 +190,7 @@ class JointPositionForceSystem final : public gz::sim::System,
   private: std::mutex mutex;
   private: std::string name, hash;
   private: bool valid{false};
-  private: double speed{0}, publishPeriod{.01}, lastPublish{-1}, maxVelocity{0}, maxForce{0}, maxRawForce{0}, maxReferenceRate{0};
+  private: double speed{0}, publishPeriod{.01}, nextPublish{0}, maxVelocity{0}, maxForce{0}, maxRawForce{0}, maxReferenceRate{0};
   private: std::uint64_t commandSequence{0}, rejectedCommands{0}, saturatedSteps{0}, totalSaturatedSteps{0}, windowSteps{0}, invalidStateSteps{0};
 };
 }

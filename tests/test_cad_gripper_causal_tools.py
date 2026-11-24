@@ -9,10 +9,28 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from analyze_cad_gripper_coupling import coupled_screen,polynomial_roots
 from probe_cad_gripper_contacts import diagnostic_profile,instrument_contacts,native_collision_detectors
 from analyze_cad_gripper_tree import identity,inverse,multiply,projected_poles,observed_mode
-from probe_cad_gripper_contact import fruit_fixture,verify_opening_clearance
+from probe_cad_gripper_contact import fruit_fixture,verify_opening_clearance,nonseparating_pedicel_contact,native_contact_time
 
 
 class CausalGripperToolsTests(unittest.TestCase):
+    def test_bullet_proximity_points_do_not_trigger_pedicel_contact(self):
+        pad='harvester::gripper_left_jaw::part_113_bounds'
+        contact={'collision1':{'name':pad},'collision2':{'name':'fruit_fixture::fruit_link::distal_pedicel'},
+                 'depth':[-.000187,-.000055]}
+        self.assertFalse(nonseparating_pedicel_contact(contact,pad))
+        for depths in ([],[float('nan')],[float('inf')],[True]):
+            self.assertFalse(nonseparating_pedicel_contact({**contact,'depth':depths},pad))
+        self.assertTrue(nonseparating_pedicel_contact({**contact,'depth':[-.0001,0]},pad))
+        self.assertTrue(nonseparating_pedicel_contact({**contact,'depth':[1e-6]},pad))
+        self.assertFalse(nonseparating_pedicel_contact({**contact,'depth':[1e-6],
+            'collision2':{'name':'fruit_fixture::fruit_link::berry'}},pad))
+
+    def test_contact_time_requires_native_stamp_and_does_not_use_arrival(self):
+        self.assertEqual(native_contact_time({'header':{'stamp':{'sec':'1','nsec':270200000}}}),1.2702)
+        self.assertIsNone(native_contact_time({'observation_sim_time':1.2701}))
+        self.assertIsNone(native_contact_time({'header':{'stamp':{'sec':'NaN'}}}))
+        self.assertIsNone(native_contact_time({'header':{'stamp':{'sec':1,'nsec':1000000000}}}))
+
     def test_final_witness_uses_v8_pedicel_diameter_without_changing_body_offset(self):
         pose={'xyz_m':[0,0,0],'quaternion_xyzw':[0,0,0,1]}
         root=ET.fromstring(fruit_fixture(pose))
@@ -21,11 +39,14 @@ class CausalGripperToolsTests(unittest.TestCase):
         self.assertAlmostEqual(float(root.findtext('model/pose').split()[1]),-.03)
 
     def test_extended_opening_requires_matching_admitted_mesh_and_covered_interval(self):
-        data={'links':[{'visuals':[{'geometry':{'type':'mesh','sha256':'a'*64}}]}]}
+        from admit_cad_gripper_envelope import kinematic_visual_fingerprint
+        data={'links':[{'name':'jaw','visuals':[{'name':'L1','pose':{'xyz_m':[0,0,0],'quaternion_xyzw':[0,0,0,1]},
+            'geometry':{'type':'mesh','sha256':'a'*64}}]}],'joints':[],'frames':[]}
         evidence={'status':'PASS','interval_rad':[0,.085],'cad_part_sha256':'b'*64,'visual_obj_sha256':'a'*64}
+        evidence['kinematic_visual_fingerprint']=kinematic_visual_fingerprint(data)
         verify_opening_clearance(data,.08481092765,evidence)
         for invalid in ({**evidence,'status':'FAIL'},{**evidence,'interval_rad':[0,.08]},
-                        {**evidence,'visual_obj_sha256':'c'*64}):
+                        {**evidence,'visual_obj_sha256':'c'*64},{**evidence,'kinematic_visual_fingerprint':'d'*64}):
             with self.assertRaises(ValueError):verify_opening_clearance(data,.08481092765,invalid)
     def test_native_detector_identity_ignores_terminal_color_only(self):
         self.assertEqual(native_collision_detectors('[Msg] Using [\x1b[0m\x1b[1;32mfcl\x1b[0m] collision detector'),['fcl'])

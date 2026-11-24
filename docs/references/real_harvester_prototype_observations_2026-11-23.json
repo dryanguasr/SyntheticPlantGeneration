@@ -1,13 +1,14 @@
 {
   "schema_version": "prototype-observation-register/1.0",
   "date": "2026-11-23",
-  "component": "gripper",
+  "component": "gripper_and_arm",
   "source": "User statements and photograph in the project conversation",
   "photo_sha256": "0e71766009eacffac850c7199ebc8a70e300cd9bde863183aec6b916fe55babb",
   "private_local_photo": "outputs/real_harvester_cad/prototype_photo_2026-11-23/gripper_built.jpg",
   "statements": [
     "Ya esa pieza está construida y realmente tiene una carrera muy pequeña, pero funciona.",
-    "8 mm aprox entre partes rígidas y 6 mm aprox entre partes flexibles."
+    "8 mm aprox entre partes rígidas y 6 mm aprox entre partes flexibles.",
+    "Tentativamente, todos 180° aprox"
   ],
   "observations": [
     {
@@ -45,6 +46,21 @@
     "evidence_sha256": "4039b5cc274769b679d4e7e9b80210f999651fce7ce882074a923d0b175838e3",
     "method": "Inventor BRep minimum distances at the last declared driver posture; these four pairs have identical endpoint gaps before and after the localized L1 revision.",
     "caution": "Rigid links, rigid pad carriers and blades are distinct surface pairs. The statement does not uniquely identify a measured pair or establish uncertainty."
+  },
+  "arm_travel_observation": {
+    "status": "user_reported_approximate",
+    "question_context": "Useful angular travel of the rotating arm base, shoulder, elbow and both wrist axes, relative to the saved CAD posture",
+    "joints": ["arm_yaw_joint", "arm_shoulder_joint", "arm_elbow_joint", "wrist_pitch_joint", "wrist_roll_joint"],
+    "original_value_per_joint": 180,
+    "original_unit": "degree",
+    "total_span_si_rad": 3.141592653589793,
+    "uncertainty": "Tentative approximate statement; exact endpoints, encoder calibration and mechanical stops are not established",
+    "interpretation": "180 degrees total travel, not 180 degrees in each direction",
+    "simulation_initial_interval_rad": [-1.5707963267948966, 1.5707963267948966],
+    "centering_status": "manual_initial_guess: symmetric about saved CAD posture; user has not confirmed the location of the interval centre",
+    "applies_to_gripper_or_wheels": false,
+    "acceptance_tolerances_changed": false,
+    "decision": "Prepare a distinct versioned simulation range hypothesis and repeat reach, collision and native checks. Do not transfer acceptance from the former +/-15-degree commissioning profile."
   },
   "not_established": [
     "servo command-to-joint calibration",

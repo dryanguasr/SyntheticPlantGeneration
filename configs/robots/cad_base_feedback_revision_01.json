@@ -1,0 +1,33 @@
+{
+  "schema_version": "cad-base-feedback-revision/1.0",
+  "revision_id": "cad_base_yaw_rate_p_01",
+  "status": "ESTIMATED_COMMISSIONING_CANDIDATE_NOT_NATIVE_VALIDATED",
+  "source_profile": "outputs/real_harvester_validation/cad_grouped_collision_candidate_01/profile.json",
+  "source_asset_root": "outputs/real_harvester_validation/cad_grouped_collision_candidate_01/assets",
+  "source_robot_spec_sha256": "69783d98199997b5135c41b15011d253f20055d5a34481e2d1d80d157dbd4e16",
+  "base_feedback": {
+    "enabled": true,
+    "mode": "yaw_rate_proportional",
+    "observation_source": "native_model_pose_ideal",
+    "p_gain": 1.5,
+    "window_s": 0.1,
+    "max_observation_age_s": 0.05,
+    "zero_twist_policy": "ramp_to_zero_without_feedback"
+  },
+  "provenance": {
+    "status": "estimado",
+    "source": "Root-authorized commissioning hypothesis after cad_mobility_grouped_01 and cad_drive_feedback_analysis_02; not hardware identification.",
+    "revision": "cad_base_yaw_rate_p_01",
+    "method": "Proportional yaw-rate correction gain1.5, no integral, based on ideal native model poses over an explicit0.1s window. Retain angular command0.3rad/s, acceleration0.4rad/s2 and wheel effort6.5Nm.",
+    "uncertainty": "No guarantee of physical yaw tracking or acceptance. Native model pose is privileged simulation truth. Source experiment timed out and retained a passive-gripper velocity FAIL. C0.012 remains an observed stability hypothesis: old v7 mechanical closure audits used a one-step-offset join and do not transfer synchronized-mechanism PASS. New v8 phase-aligned observations and complete native validation remain required."
+  },
+  "required_new_observation_contract": {
+    "robot_telemetry_schema": "robot-telemetry/1.1",
+    "pose_joint_time_field": "measured_after_step_time",
+    "publication_grid": "update_info_sim_time/1.0",
+    "plugin_build": "outputs/real_harvester_plugin_build_v8"
+  },
+  "preserve": "All CAD surfaces, visuals, inertias, joints, masks, inner wheel PID, actuator limits, suspension/gripper parameters, physics and acceptance thresholds.",
+  "native_harvest_eligible": false,
+  "native_validation": "NO EJECUTADO"
+}

@@ -34,10 +34,12 @@ class NativeMechanismObservationTests(unittest.TestCase):
         self.records, self.poses = [], []
         for index in range(31):
             stamp = round(1 + index * .01, 8)
-            self.records.append({'schema_version': 'robot-telemetry/1.0',
-                'robot_spec_sha256': self.robot.sha256, 'sim_time': round(stamp+.0001, 8),
-                'commanded_before_step_time': stamp,
-                'measured_after_step_time': round(stamp+.0001, 8), 'joints': [
+            self.records.append({'schema_version': 'robot-telemetry/1.1',
+                'pose_joint_time_field':'measured_after_step_time',
+                'publication_grid':'update_info_sim_time/1.0',
+                'robot_spec_sha256': self.robot.sha256, 'sim_time': stamp,
+                'commanded_before_step_time': round(stamp-.0001,8),
+                'measured_after_step_time': stamp, 'joints': [
                     {'name': 'driver', 'position': .04, 'position_available': True,
                      'force_command_available': True, 'force_command': .002,
                      'max_abs_force_command_window': .002},
@@ -62,6 +64,23 @@ class NativeMechanismObservationTests(unittest.TestCase):
         self.assertTrue(result['complete_coverage'])
         self.assertEqual(result['sample_count'], 31)
         self.assertEqual(result['metrics']['gears']['maximum_coordinate_error_rad'], 0)
+
+    def test_legacy_clock_requires_explicit_source_bound_adapter(self):
+        for row in self.records:
+            row['schema_version']='robot-telemetry/1.0'
+            del row['pose_joint_time_field'];del row['publication_grid']
+        self.assertFalse(self.evaluate()['passed'])
+        self.manifest['robot_observation_timing']={
+            'schema_version':'legacy-native-observation-timing/1.0',
+            'observer_source_sha256':'a'*64,'pose_joint_time_field':'measured_after_step_time',
+            'evidence':'Explicit fixture source verification; no inferred phase shift'}
+        self.assertTrue(self.evaluate()['passed'])
+        self.manifest['robot_observation_timing']['pose_joint_time_field']='commanded_before_step_time'
+        self.assertFalse(self.evaluate()['passed'])
+
+    def test_current_clock_cannot_be_overridden_by_legacy_adapter(self):
+        self.records[10]['pose_joint_time_field']='commanded_before_step_time'
+        self.assertFalse(self.evaluate()['passed'])
 
     def test_missing_native_pose_stream_or_missing_link_fails_closed(self):
         original = self.poses

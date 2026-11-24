@@ -3,6 +3,7 @@ import math
 from pathlib import Path
 import tempfile
 import unittest
+import itertools
 
 from uchuva_gazebo.robot_kinematics import pose_identity, axis_quaternion, transform_point
 from uchuva_gazebo.robot_mesh_geometry import (
@@ -32,6 +33,15 @@ def write_obj(path, vertices, faces):
 
 
 class MeshGeometryTests(unittest.TestCase):
+    def test_disconnected_shell_pruning_preserves_material_and_cavities(self):
+        # Analytic union: a hollow cube and a separate solid cube. The long
+        # empty span is inside the combined AABB but outside every body.
+        mesh=TriangleMesh(*combine(cube(size=4),cube(size=2,reverse=True),cube((10,0,0))))
+        for point in itertools.product((-2.1,-1.5,-.5,.5,1.5,2.1,5.,9.5,10.5,11.1), repeat=3):
+            hollow=1 < max(map(abs,point)) < 2
+            separate=max(abs(point[i]-(10 if i==0 else 0)) for i in range(3)) < 1
+            self.assertEqual(mesh.contains(point),hollow or separate,point)
+
     def test_support_bounds_match_all_transformed_vertices_without_eager_transform(self):
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'part.obj';g=write_obj(path,*combine(cube(),cube((5,1,2),size=.8)))

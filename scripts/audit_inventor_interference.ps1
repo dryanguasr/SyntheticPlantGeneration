@@ -37,9 +37,9 @@ function Export-Bodies($Bodies,[string]$Filename,$Transform){
     try{
         $writer.WriteLine('# Native Inventor BRep facets, gripper assembly-local SI metres; diagnostic visualization only')
         foreach($body in $Bodies){
-            $range=$body.RangeBox
+            $range=$body.PreciseRangeBox
             foreach($x in @($range.MinPoint.X,$range.MaxPoint.X)){foreach($y in @($range.MinPoint.Y,$range.MaxPoint.Y)){foreach($z in @($range.MinPoint.Z,$range.MaxPoint.Z)){
-                $corner=@([double]$x*.01,[double]$y*.01,[double]$z*.01)
+                $corner=@(([double]$x*.01),([double]$y*.01),([double]$z*.01))
                 for($r=0;$r -lt 3;$r++){
                     $value=$corner[$r]
                     if($null -ne $Transform){$value=[double]$Transform[$r*4+3];for($c=0;$c -lt 3;$c++){$value+=[double]$Transform[$r*4+$c]*$corner[$c]}}
@@ -74,7 +74,7 @@ function Export-Bodies($Bodies,[string]$Filename,$Transform){
         if(-not $triangles){throw 'No native interference facets'}
     }finally{$writer.Dispose()}
     return @{uri=$Filename;sha256=(Get-FileHash -LiteralPath $destination).Hash.ToLowerInvariant();vertices=$offset;triangles=$triangles;
-             chord_tolerance_m=$FacetToleranceM;frame='gripper_assembly_local';units='m';bounds_m=@{min=$minimum;max=$maximum};native_body_range_bounds_m=@{min=$nativeMinimum;max=$nativeMaximum}}
+             chord_tolerance_m=$FacetToleranceM;frame='gripper_assembly_local';units='m';bounds_m=@{min=$minimum;max=$maximum};native_body_range_bounds_m=@{min=$nativeMinimum;max=$nativeMaximum};native_bounds_method='SurfaceBody.PreciseRangeBox'}
 }
 $application=$null;$document=$null;$sourceDocument=$null;$resolver=$null;$exitCode=1
 $files=@(Get-ChildItem -LiteralPath $source -Recurse -File|Where-Object {$_.Extension -in @('.iam','.ipt','.ipj') -and $_.FullName -notmatch '[\\/]OldVersions[\\/]'})

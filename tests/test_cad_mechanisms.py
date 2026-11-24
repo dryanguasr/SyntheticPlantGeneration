@@ -13,9 +13,54 @@ cad = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cad)
 import analyze_cad_gripper_range as gripper_range
 import summarize_gripper_brep_envelope as envelope
+import admit_cad_gripper_envelope as admission
 
 
 class MechanismTests(unittest.TestCase):
+    def test_envelope_fingerprint_allows_pid_but_rejects_changed_joint_axis(self):
+        data={'links':[{'name':'jaw','visuals':[{'name':'part_104','pose':{},'geometry':{'type':'mesh','uri':'a.obj','sha256':'same','scale':[1,1,1]}}]}],
+              'joints':[{'name':'pivot','type':'revolute','parent':'base','child':'jaw','origin':{},'child_pose':{},'axis':[0,1,0],'zero_offset':0,'damping':.002}],
+              'control':{'gain':1},'frames':[]}
+        expected=admission.kinematic_visual_fingerprint(data)
+        moved=copy.deepcopy(data);moved['control']['gain']=2;moved['joints'][0]['damping']=.004
+        moved['links'][0]['visuals'][0]['geometry']['uri']='portable/new.obj'
+        self.assertEqual(expected,admission.kinematic_visual_fingerprint(moved))
+        moved['joints'][0]['axis']=[1,0,0]
+        self.assertNotEqual(expected,admission.kinematic_visual_fingerprint(moved))
+
+    def test_cover_tangency_cannot_hide_penetration_or_out_of_plane_motion(self):
+        identity=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+        names=['Gripper 1:1','Eslabon L:1','Eslabon L:2']
+        motion={'assembly_sha256':'a','samples':[{'driver_rad':q,'occurrence_transforms_m':{n:identity.copy() for n in names}} for q in (0,.1)]}
+        geometry={'status':'COMPLETED','source_files_unchanged':True,'assembly_sha256':'a','pairs':[]}
+        for name in names[1:]:
+            geometry['pairs'].append({'occurrences':[names[0],name],'driver_rad':0,'interference_count':0,
+                'interference_volumes_m3':[],'minimum_distance_m':0,'visualization_parts':[
+                    {'occurrence':names[0],'native_body_range_bounds_m':{'min':[0,.0035,0],'max':[1,.005,1]}},
+                    {'occurrence':name,'native_body_range_bounds_m':{'min':[0,.0005,0],'max':[1,.0035,1]}}]})
+        self.assertFalse(admission.prove_cover_tangencies(geometry,motion)['positive_clearance_claimed'])
+        bad=copy.deepcopy(geometry);bad['pairs'][0]['interference_volumes_m3']=[1e-15]
+        with self.assertRaises(ValueError):admission.prove_cover_tangencies(bad,motion)
+        bad=copy.deepcopy(motion);bad['samples'][1]['occurrence_transforms_m']['Eslabon L:1'][7]=.0001
+        with self.assertRaises(ValueError):admission.prove_cover_tangencies(geometry,bad)
+
+    def test_operational_admission_keeps_reserve_and_ligament_independent(self):
+        revision={'original_sources_unchanged':True,'full_arm_reference':{'status':'PRIVATE_CHAIN_VERIFIED'},
+            'maximum_saved_assembly_transform_change':0,'feature':{'pin_hole_preserved':True},
+            'final_L2_copy_sha256':'same','native_matching_planes':[{}],
+            'plan':{'original_part_sha256':'same','pin_hole_radius_m':.0015,'target_driver_rad':.08},
+            'actual_cut_planes':[{'offset_local_m':.003405}]}
+        pairs=[{'occurrences':p.copy(),'continuous_lower_gap_m':.001} for p in admission.EXPECTED_PAIRS]
+        critical=admission.EXPECTED_PAIRS.index(['Gripper y engranaje:1','Eslabon L:1'])
+        pairs[critical]['continuous_lower_gap_m']=.000201
+        summary={'pairs':pairs,'driver_interval_rad':[0,.08]}
+        observed={'source_files_unchanged':True,'pairs':[{'interference_count':0,'interference_volumes_m3':[]}]}
+        self.assertEqual(admission.evaluate(revision,{},observed,summary)['status'],'PASS')
+        bad=copy.deepcopy(summary);bad['pairs'][critical]['continuous_lower_gap_m']=.000199
+        self.assertEqual(admission.evaluate(revision,{},observed,bad)['status'],'FAIL')
+        bad=copy.deepcopy(revision);bad['actual_cut_planes'][0]['offset_local_m']=.003399
+        self.assertEqual(admission.evaluate(bad,{},observed,summary)['status'],'FAIL')
+
     def test_collision_derivatives_cannot_modify_visuals_or_physics(self):
         data=cad.resolve_robot_profile(ROOT/'configs/robots/proxy_v1.json').to_dict()
         data['capabilities'].append('collision_meshes')

@@ -84,7 +84,7 @@ def main():
     if native_code is None:
         errors.append('Native return code was not persisted by the original wrapper; it remains unknown, not assumed zero')
     result=probe.evaluate(robot,config,poses,joints,errors,native_code,link_poses=links,mesh_repository=repo,
-                          force_control=rows(source/'force_control.jsonl') if ramped else ())
+                          force_control=rows(source/'force_control.jsonl') if ramped else (),commands=rows(source/'commands.jsonl'))
     if any(sha(source/name)!=digest for name,digest in evidence.items()):raise ValueError('Raw observation changed during audit')
     if any(sha(ROOT/name)!=digest for name,digest in implementation_hashes.items()):raise ValueError('Implementation changed during audit')
     result.update(postprocessing_status='COMPLETED',native_exit_code=native_code,native_exit_code_source=native_code_source,

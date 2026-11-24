@@ -59,14 +59,32 @@ class PositionForceEvidenceTests(unittest.TestCase):
 
     def test_initial_missing_native_state_is_explicit_and_never_ready(self):
         manifest, records, native, samples = self.fixture()
-        initial = {**records[0], 'sim_time': -.01, 'status': 'waiting_for_native_state',
+        initial = {**records[0], 'sim_time': 0, 'status': 'waiting_for_native_state',
                    'measured_position_rad': None, 'measured_velocity_rad_s': None,
                    'force_command_nm': 0}
+        records = records[1:]
+        samples[0]['sim_time'] = .01
         result = evaluate_position_force_control(manifest, [initial]+records, native, samples)[0]
         self.assertTrue(result['passed'])
         self.assertEqual(result['initialization_samples'], 1)
-        initial['sim_time'] = 0
+        initial['sim_time'] = .01
         self.assertFalse(evaluate_position_force_control(manifest, [initial]+records, native, samples)[0]['passed'])
+
+    def test_isolated_gripper_scope_cannot_approve_missing_arm_observations(self):
+        manifest, records, native, samples = self.fixture()
+        manifest['robot_config']['control']['arm'] = {
+            'elbow': copy.deepcopy(manifest['robot_config']['control']['gripper']['jaw'])}
+        manifest['robot_config']['joints'].append({'name': 'elbow',
+            'limits': {'lower': -.4, 'upper': .4, 'velocity': 1}})
+        self.assertFalse(evaluate_position_force_control(manifest, records, native, samples)[0]['passed'])
+        result = evaluate_position_force_control(manifest, records, native, samples,
+                                                 control_groups=('gripper',))[0]
+        self.assertTrue(result['passed'])
+        self.assertFalse(result['full_robot_controller_scope'])
+        self.assertEqual(result['required_control_groups'], ['gripper'])
+        for groups in ((), ('all',), ('gripper', 'gripper')):
+            with self.assertRaises(ValueError):
+                evaluate_position_force_control(manifest, records, native, samples, control_groups=groups)
 
 
 if __name__ == '__main__':

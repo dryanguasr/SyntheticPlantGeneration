@@ -33,6 +33,21 @@ class MeshMotionClearanceTests(unittest.TestCase):
             self.assertAlmostEqual(result['robot_clearance_m'], .025)
             self.assertEqual(result['limiting_robot_pair'], ['first/body', 'fruit'])
 
+    def test_internal_touch_does_not_hide_environment_diagnostic(self):
+        with tempfile.TemporaryDirectory() as root:
+            config=self.fixture(root)
+            shapes,_=config.world_shapes([],[])
+            shapes[1]['pose']['xyz_m'][0]=2
+            result=resolved_world_clearance([],[],[],
+                [{'id':'nearby_fruit','center_world_m':[0,0,4.2],'radius_m':.175}],None,config)
+            self.assertEqual(result['self_clearance_m'],0)
+            self.assertAlmostEqual(result['environment_clearance_m'],.025)
+            self.assertEqual(result['limiting_environment_pair'],['first/body','nearby_fruit'])
+            # The existing total and its failure remain authoritative. An
+            # environment-only observation never admits internal contact.
+            self.assertEqual(result['robot_clearance_m'],0)
+            self.assertEqual(result['limiting_robot_pair'],result['limiting_self_pair'])
+
     def test_negative_minimum_does_not_hide_larger_obstacle_radius(self):
         with tempfile.TemporaryDirectory() as root:
             config = self.fixture(root)

@@ -74,11 +74,36 @@ def run(profile, asset_root, output):
         abs(float(xml.find("link[@name='base_link']/inertial/mass").text)-total) < 1e-10
         and math.dist([float(v) for v in xml.find("link[@name='base_link']/inertial/pose").text.split()[:3]], center) < 1e-10
         and math.dist(forward_kinematics(changed)["tcp"]["xyz_m"], base_pose["xyz_m"]) < 1e-10)
-    cap = robot.data["parameters"]["arm_effort_limit_nm"]*protocol["actuator_factor"]
-    record("actuator_ceiling", change("/parameters/arm_effort_limit_nm", cap), lambda changed, xml:
-        all(j["limits"]["effort"] == cap for j in changed.joints if j["group"] == "arm")
-        and all(v["cmd_max"] == cap and v["cmd_min"] == -cap for v in changed.data["control"]["arm"].values())
-        and all(abs(float(xml.find(f"joint[@name='{name}']/axis/limit/effort").text)-cap) < 1e-10 for name in changed.joint_names))
+    arm_controllers = robot.data["control"]["arm"]
+    parameters = robot.data["parameters"]
+    # The articulated CAD revision splits the historical common effort into
+    # per-joint values. Exercise one actuator without modifying its neighbours.
+    shoulder_parameter = "arm_shoulder_joint_simulation_effort_nm"
+    if shoulder_parameter in parameters:
+        effort_parameter, affected = shoulder_parameter, {"arm_shoulder_joint"}
+    else:
+        effort_parameter, affected = "arm_effort_limit_nm", set(robot.joint_names)
+    cap = parameters[effort_parameter]*protocol["actuator_factor"]
+    expected = {name: cap if name in affected else settings["cmd_max"]
+                for name, settings in arm_controllers.items()}
+
+    def verify_actuator_ceiling(changed, model):
+        actuator_caps = {item["joint"]: item["peak_effort"] for item in changed.data["actuators"]}
+        for joint in changed.joints:
+            name = joint["name"]
+            if name not in expected:
+                continue
+            limit = expected[name]
+            settings = changed.data["control"]["arm"][name]
+            if (joint["limits"]["effort"] != limit or actuator_caps[name] != limit
+                    or settings["cmd_max"] != limit or settings["cmd_min"] != -limit):
+                return False
+            sdf_limit = float(model.find(f"joint[@name='{name}']/axis/limit/effort").text)
+            if abs(sdf_limit-limit) >= protocol["numeric_tolerance"]:
+                return False
+        return True
+
+    record("actuator_ceiling", change("/parameters/"+effort_parameter, cap), verify_actuator_ceiling)
     try:
         resolve_robot(profile, change("/parameters/upper_arm_axis_distance_m", .4))
     except ValueError as error:

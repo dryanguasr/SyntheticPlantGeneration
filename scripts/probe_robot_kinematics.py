@@ -404,6 +404,9 @@ def main():
         library_hashes = {}
         if plugins:
             build = json.loads((plugins/'build_provenance.json').read_text())
+            if (build.get('source_sha256',{}).get('ObservationSchedule.hh') !=
+                    digest(REPO/'gazebo/harvest_system/ObservationSchedule.hh')):
+                raise ValueError('Native observation schedule differs from its build')
             if ('libUchuvaJointPositionForceSystem.so' in required and
                     build.get('source_sha256', {}).get('PositionForceController.hh') !=
                     digest(REPO/'gazebo/harvest_system/PositionForceController.hh')):

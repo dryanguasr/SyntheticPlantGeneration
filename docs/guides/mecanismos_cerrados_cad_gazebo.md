@@ -308,13 +308,15 @@ el tamiz conservador sigue siendo estable. En el ensayo nativo a 10 kHz
 desapareció el ciclo alternante; esto es evidencia del candidato numérico,
 no una calibración de rigidez o amortiguación del engranaje real.
 
-`cad_gripper_bullet_ramped_c012_02/independent_audit.json` obtuvo PASS **del
-banco aislado entre 0 y +0.04 rad**: 120 conjuntos de poses medidos, máximo
+`cad_gripper_bullet_ramped_c012_02/independent_audit.json` registró un PASS
+histórico **del banco aislado entre 0 y +0.04 rad**, posteriormente invalidado
+en su cobertura temporal conjunta como se explica abajo: 120 conjuntos de poses, máximo
 residuo traslacional 1.179e−7 m, rotacional 1.686e−5 rad, error de engranaje
 1.975e−6 rad y velocidad máxima de todas las juntas 0.5672 rad/s. El auditor
-compara el esfuerzo con `JointForceCmd` observado independientemente, verifica
-que el seguidor no recibe órdenes de motor y une poses/coordenadas por el
-instante exacto. El primer intento conserva FAIL por carecer de la última
+compara el esfuerzo con `JointForceCmd` observado independientemente y verifica
+que el seguidor no recibe órdenes de motor. Su asociación inicial entre
+poses y coordenadas usaba la fase equivocada del instante físico.
+El primer intento conserva FAIL por carecer de la última
 observación de junta; el segundo añade un único paso de observación al final,
 sin ampliar tolerancias. La validación del robot completo y de la revisión
 CAD para apertura mayor sigue siendo un ensayo separado.
@@ -357,3 +359,152 @@ La misma cota sólo implica una condición necesaria: habría que sumar al menos
 la inclinación para eliminar esa exclusión angular. No es una recomendación
 de ampliar límites ni basta para alcanzar la posición, evitar colisiones o
 garantizar movimiento mecánico. El objetivo permanece intacto y no se omite.
+
+## Recorridos comunicados por el usuario y nuevo preflight
+
+El usuario indicó «Tentativamente, todos 180° aprox» para las cinco juntas del
+brazo. `cad_arm_range_revision_01.json` y `_02.json` registran **180° totales por
+junta**, no ±180°. El intervalo exploratorio −90°/+90° conserva el cero CAD;
+su centrado es una estimación todavía sin confirmar. No cambia la pinza,
+ruedas, juntas pasivas, ganancias, esfuerzos, velocidades ni criterios de
+aceptación. `prepare_cad_arm_range_revision.py` usa el resolvedor canónico y
+comprueba que sólo cambien los diez extremos de rango y su procedencia.
+
+El preflight `cad_v8_tentative180_reach_02` encuentra soluciones de posición y
+dirección para los tres objetivos intactos. Al exigir además el margen
+articular preregistrado de 0.025 rad quedan 22, 21 y 19 candidatos. La auditoría
+`cad_v8_tentative180_static_03` revisa los tres de mayor margen por objetivo
+con todas las colisiones CAD y vegetales: **ninguno de esos nueve pasa 4 mm**.
+En el primer objetivo limita el chasis contra vegetación u otro fruto; en los
+otros dos, la carcasa `part_98` contra el fruto objetivo. No se exceptúan los
+frutos ni se trasladan plantas. Este muestreo no prueba imposibilidad global;
+tampoco admite rutas continuas o dinámica. El perfil de esta búsqueda
+conserva una revisión CAD anterior, identificada en sus hashes; no se
+transfiere aceptación a revisiones posteriores.
+
+## Contacto efectivo frente a proximidad de Bullet
+
+El banco `cad_gripper_final_contact_01` usa el perfil común con rangos
+exploratorios y la revisión CAD cuyo sobre operativo nominal pasó su auditoría
+geométrica. Observó apertura de 5.996 mm para un testigo de pedicelo de 3.6 mm,
+velocidad máxima de 0.564 rad/s, error de engranaje de 5.175e−6 rad y residuo
+de cierre menor de 2.360e−7 m. La auditoría de fuerza debe declarar
+`control_groups=('gripper',)` porque el brazo no está físicamente presente en
+este banco. La auditoría por defecto sigue exigiendo todos los controladores
+del robot completo.
+
+La revisión de los datos crudos encontró un defecto del criterio de contacto
+del banco: DART 6.13.2 conserva puntos del manifold Bullet con profundidad
+negativa. Su conversión es `penetrationDepth = -m_distance1`, y Gazebo copia
+esa profundidad sin cambiar su signo; son puntos de proximidad separada,
+no contacto superficial. Véanse las fuentes versionadas de
+[DART](https://github.com/dartsim/dart/blob/v6.13.2/dart/collision/bullet/BulletCollisionDetector.cpp#L631)
+y [Gazebo Physics](https://github.com/gazebosim/gz-physics/blob/gz-physics7_7.8.0/dartsim/src/SimulationFeatures.cc#L262).
+El registro izquierdo de ese ensayo tiene 46.777 puntos, todos negativos.
+Por ello `independent_scope_audit.json` conserva **FAIL de contacto**, aunque
+el control de la pinza y la compatibilidad del latch ideal pasan sus criterios
+separados. La cobertura conjunta de mecanismos quedó después invalidada por
+la corrección temporal descrita abajo. El resultado original permanece intacto.
+
+`probe_cad_gripper_contact.py` ahora exige el par exacto goma–pedicelo, al
+menos una profundidad finita no negativa y el instante nativo del mensaje
+de contacto, reciente y no futuro. Conserva todos los puntos crudos, incluidos
+los negativos; no modifica colisiones ni parámetros físicos. El auditor
+`audit_cad_gripper_contact.py` vuelve a comprobar poses y coordenadas nativas,
+mandos pasivos, contacto previo a ARM y transición del latch; guarda hashes
+de evidencias y fuentes consumidas. Esta corrección exige repetir el banco,
+no convertir retrospectivamente el ensayo anterior en PASS.
+
+El segundo banco `cad_gripper_final_contact_02` conserva el mismo SHA de robot,
+paso y parámetros. Abre 5.996 mm y pasa control y límites, pero conserva
+**FAIL**: el contacto efectivo es unilateral y el guard impide ARM/CUT.
+La izquierda registra profundidad máxima −55.7 µm y fuerza nula; la derecha
+sí registra profundidad no negativa y hasta 0.396 N. No se desplaza el testigo
+ni se reduce fricción para obtener aceptación.
+
+`diagnose_cad_pedicel_contact.py` contrasta esos registros con las mismas mallas
+y las poses medidas. Encuentra puntos interiores al cilindro finito en caras
+de ambas gomas. El informe declara la diferencia temporal entre las últimas
+muestras y la invariancia observada de la pose del testigo. El replay estático
+`replay_bullet_pedicel_contacts.cc` usa la biblioteca Bullet instalada: el
+cilindro conserva radio 1.8 mm y margen automático 0.18 mm. La selección de
+DART clasifica la goma como no convexa. Con su dispatcher estándar, el replay
+mundial reproduce una profundidad negativa del registro con diferencia menor
+de 3e−11 m; expresar la misma geometría relativa alrededor del origen cambia
+el signo. Esto demuestra sensibilidad del contacto pequeño al cálculo nativo;
+no demuestra fallo del CAD o falta de fuerza del actuador. Registrar GImpact
+explícitamente produce otras profundidades grandes y no se adopta como arreglo.
+Los dos intentos y las comparaciones se conservan; sigue pendiente validar
+dos contactos efectivos con una representación geométrica equivalente.
+
+Las consultas estáticas adicionales de `cad_pedicel_geometry_diagnostic_02`
+normalizan las distancias al cambiar sólo la escala de las coordenadas de la
+consulta. A escala 10 y 100, Bullet recupera profundidades de aproximadamente
+0.722/0.650 mm, compatibles con la geometría; esto diagnostica sensibilidad
+numérica y **no propone cambiar unidades del modelo físico**. La biblioteca
+ODE instalada reconoce ambos contactos con profundidades máximas 0.721812 y
+0.650289 mm e invariancia de marco mejor que 1e−16 m. FCL con cilindro analítico
+también reconoce ambos, pero ese replay no reproduce la teselación de 16
+segmentos ni el postprocesamiento que DART aplica con FCL. En la postura
+abierta medida, ambos detectores dan cero contactos. Son consultas aisladas;
+no heredan aceptación de dinámica ni resuelven por sí solas las tangencias
+internas tapa–eslabón.
+
+Se evaluó además una partición de la goma en 49 celdas convexas mediante
+`partition_cad_pad_mesh.py`. Un núcleo de visibilidad comprobado con aritmética
+racional permite descomponer en tetraedros y fusionar sólo uniones exactamente
+convexas. Se conservan los 124 triángulos externos, el volumen y los vacíos;
+no se toma una envolvente convexa global. La prueba geométrica pasa, pero el
+replay de Bullet a escala SI sigue sin detectar correctamente ambos contactos.
+Por ello **la partición no se incorpora al robot**. Su certificado sólo prueba
+equivalencia geométrica, no una mejora de la física.
+
+## Corrección de fase temporal de la auditoría
+
+La observación posterior por paso físico verificó que el timestamp del
+`PosePublisher` corresponde a `RobotTelemetry.measured_after_step_time`,
+no a `commanded_before_step_time`. Este último sigue siendo correcto para
+comparar el esfuerzo del controlador publicado en PreUpdate. Son dos
+contratos diferentes; no se emparejan por cercanía.
+
+Los registros anteriores de 100 Hz tienen poses en 0.0100, 0.0200… s y
+coordenadas medidas en 0.0101, 0.0201… s. Por ello no contienen ninguna pareja
+exacta para auditar simultáneamente pose y coordenada. El nuevo
+`cad_gripper_bullet_ramped_c012_02/independent_temporal_audit_03.json` conserva
+FAIL y `joint_pose_coverage=NOT_OBSERVED`; el PASS histórico permanece como
+registro del error de auditoría, no como aceptación vigente. Lo mismo se
+aplica a `cad_gripper_final_contact_02/independent_temporal_audit_02.json`.
+El control de fuerza y sus máximos por paso conservan sus comprobaciones
+independientes. La nueva adquisición debe alinear los observadores antes de
+afirmar cobertura completa de mecanismos; no se reconstruyen poses mediante FK.
+
+## Control de giro experimental
+
+`scripts/prepare_cad_base_feedback.py` prepara la revisión
+`configs/robots/cad_base_feedback_revision_01.json`. La realimentación usa
+poses del modelo de Gazebo y estima la velocidad angular sobre 0,1 s. Su
+ganancia proporcional de 1,5 es una estimación para el ensayo. Los límites
+de orden angular (0,3 rad/s), aceleración (0,4 rad/s²) y par de rueda
+(6,5 N·m) siguen en el perfil. El comando cero aplica la rampa de parada.
+Las poses vencidas o inválidas impiden emitir una nueva orden de movimiento.
+El auditor vuelve a calcular la referencia, los límites y las rampas desde
+las poses registradas. Las poses ideales de Gazebo no calibran la odometría.
+
+## Verificación de holgura en el corte V8
+
+`scripts/bound_cad_v8_cut_clearance.py` usa el perfil resuelto, sus mallas de
+colisión de muñeca y el paquete V8 congelado. El script compara los centros y
+radios del manifiesto con las esferas del SDF y cubre ambos sentidos del eje
+del pedicelo y los 360° de giro alrededor de él. La cota superior incluye
+el error admisible de posición, la inclinación y el intervalo entre muestras.
+Si esa cota queda por debajo de los 4 mm requeridos, la postura de corte
+falla incluso permitiendo mover libremente la base del robot. El resultado
+depende del marco de corte y de la esfera conservadora del capacho del perfil
+evaluado. Este análisis tampoco sustituye la auditoría de los mecanismos
+internos, la trayectoria o el contacto de las gomas.
+
+El dominio de posición del análisis es la precisión de planificación de
+10 µm alrededor del punto de corte. La tolerancia de 20 mm de la guarda de
+Gazebo cumple otra función y no define una zona física de filo. El análisis
+con `--edge-envelope` permite estudiar la envolvente nominal de los dos
+filos a lo largo de la carrera CAD sin ajustar esos criterios.

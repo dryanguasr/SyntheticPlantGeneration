@@ -1044,6 +1044,20 @@
               "type": "number",
               "exclusiveMinimum": 0
             },
+            "base_feedback": {
+              "type": "object",
+              "properties": {
+                "enabled": {"type": "boolean"},
+                "mode": {"enum": ["yaw_rate_proportional"]},
+                "observation_source": {"enum": ["native_model_pose_ideal"]},
+                "p_gain": {"type": "number", "minimum": 0},
+                "window_s": {"type": "number", "exclusiveMinimum": 0},
+                "max_observation_age_s": {"type": "number", "exclusiveMinimum": 0},
+                "zero_twist_policy": {"enum": ["ramp_to_zero_without_feedback"]}
+              },
+              "required": ["enabled", "mode", "observation_source", "p_gain", "window_s", "max_observation_age_s", "zero_twist_policy"],
+              "additionalProperties": false
+            },
             "backend": {
               "type": "string"
             }

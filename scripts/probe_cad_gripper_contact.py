@@ -26,7 +26,32 @@ sys.path.insert(0,str(REPO/'src'))
 from uchuva_gazebo.robot_spec import load_robot_json,ResolvedRobot,canonical_hash,verify_robot_assets
 from uchuva_gazebo.robot_sdf import resolved_robot_model,pose_rpy
 from uchuva_gazebo.robot_kinematics import compose_poses,rotate_vector,transform_point,forward_kinematics
+from uchuva_gazebo.robot_validation import native_pose_joint_timestamp
 from probe_cad_suspension_loop import node,dump,sha,numbers
+
+
+def nonseparating_pedicel_contact(contact,pad_collision):
+    """A Bullet proximity manifold alone does not establish surface contact.
+
+    DART 6.13.2 converts depth = -Bullet distance and retains negative depths.
+    Keep every raw point, but require a finite nonnegative depth for the exact
+    pad/pedicel pair before the bench stops closing or requests the ideal latch.
+    """
+    names={contact.get(key,{}).get('name','') for key in ('collision1','collision2')}
+    if names!={pad_collision,'fruit_fixture::fruit_link::distal_pedicel'}:return False
+    return any(type(depth) in (int,float) and math.isfinite(depth) and depth>=0
+               for depth in contact.get('depth',[]))
+
+
+def native_contact_time(contact):
+    """Read native contact time; callback arrival / joint time is not a fallback."""
+    stamp=contact.get('header',{}).get('stamp')
+    if not isinstance(stamp,dict):return None
+    try:
+        sec=int(stamp.get('sec',0));nsec=int(stamp.get('nsec',0))
+    except (TypeError,ValueError,OverflowError):return None
+    if sec<0 or not 0<=nsec<10**9:return None
+    return sec+nsec*1e-9
 
 
 def verify_opening_clearance(data,reference,evidence):
@@ -41,6 +66,9 @@ def verify_opening_clearance(data,reference,evidence):
     bound={shape['geometry'].get('sha256','').lower() for link in data['links']
            for shape in link.get('visuals',[]) if shape['geometry']['type']=='mesh'}
     if visual_sha not in bound:raise ValueError('Admitted CAD mesh is absent from the actual profile')
+    from admit_cad_gripper_envelope import kinematic_visual_fingerprint
+    if evidence.get('kinematic_visual_fingerprint')!=kinematic_visual_fingerprint(data):
+        raise ValueError('Gripper CAD shapes, kinematic axes or frame placement differ from the admitted envelope')
 
 
 def build_world(robot, asset_root, contact_test=False):
@@ -200,13 +228,18 @@ def run(output, plugins):
         from google.protobuf.json_format import MessageToDict
         row=MessageToDict(msg,preserving_proto_field_name=True)
         now=records['joints'][-1]['sim_time'] if records['joints'] else 0
-        hits=[]
+        hits=[];nonseparating=[]
         for contact in row.get('contact',[]):
             names=[contact.get(k,{}).get('name','') for k in ('collision1','collision2')]
             if any('fruit_fixture' in name for name in names):hits.append(contact)
+            pad=data['model_name']+'::gripper_'+side+'_jaw::part_'+('113' if side=='left' else '114')+'_bounds'
+            if nonseparating_pedicel_contact(contact,pad):
+                stamp=native_contact_time(contact)
+                if stamp is not None:nonseparating.append(stamp)
         with mutex:
-            records['contacts'].append({'side':side,'observation_sim_time':now,'native_message':row,'fixture_contact':bool(hits)})
-            if hits:phase['contact_times'][side]=now
+            records['contacts'].append({'side':side,'observation_sim_time':now,'native_message':row,
+                'fixture_contact':bool(hits),'nonseparating_pedicel_contact':bool(nonseparating)})
+            if nonseparating:phase['contact_times'][side]=max(nonseparating)
     def state_callback(msg):
         with mutex:records['states'].append(json.loads(msg.data))
     def event_callback(msg):
@@ -251,7 +284,7 @@ def run(output, plugins):
                         phase['close_started']=now
                         phase['close_initial_q']=next(j['position'] for j in records['joints'][-1]['joints'] if j['name']==driver)
                         records['transitions'].append({'sim_time':now,'phase':'closing_on_pedicel'})
-                    double_contact=all(side in phase['contact_times'] and now-phase['contact_times'][side]<.1 for side in ('left','right'))
+                    double_contact=all(side in phase['contact_times'] and 0<=now-phase['contact_times'][side]<.1 for side in ('left','right'))
                     if double_contact and not phase['armed']:
                         snapshots['contact']={'joints':records['joints'][-1],'geometry':latest['jaw_geometry'],'contact_times':dict(phase['contact_times'])}
                         harvest_command.publish(StringMsg(data='arm contact_fixture'));phase['armed']=True
@@ -309,7 +342,10 @@ def run(output, plugins):
     view=SimpleNamespace(to_dict=lambda:bench_data)
     native_robot=ResolvedRobot(data,canonical_hash(data));native_steps={};mechanism_errors=[];orientation_max=0.
     for row in records['joints']:
-        key=round(row['commanded_before_step_time']*1e9)
+        # PosePublisher PostUpdate and measured coordinates describe the same
+        # completed step. commanded_before_step_time is for force commands.
+        try:key=round(native_pose_joint_timestamp(row)*1e9)
+        except ValueError as error:mechanism_errors.append(str(error));continue
         if key in native_steps:mechanism_errors.append('Duplicate native physics step')
         native_steps[key]=row
         try:mechanism_errors.extend(audit_passive_gear_commands(native_robot,row)['failures'])
@@ -358,7 +394,7 @@ def run(output, plugins):
             'joint_velocity_tolerance_rad_s':0,'effort_tolerance_nm':1e-6,'orientation_state_max_age_s':.02}}}
         force_audit=evaluate_position_force_control(manifest,records['force_control'],records['joints'],
             [{'ready':True,'sim_time':records['poses'][0]['sim_time']},
-             {'ready':True,'sim_time':records['poses'][-1]['sim_time']}])
+             {'ready':True,'sim_time':records['poses'][-1]['sim_time']}],control_groups=('gripper',))
         if any(not row['passed'] for row in force_audit):errors.append('Independent native force audit failed')
     if contact_test:
         passed=bool(snapshots.get('held')) and bool(snapshots.get('contact')) and not errors and code==0 and mechanism_ok and joint_limits_ok and latch_ok
@@ -413,6 +449,9 @@ def main():
         'opening_scope':'Explicit profile/CAD revision bench path, not a calibrated hardware range',
         'opening_clearance_evidence_sha256':sha(args.opening_clearance_evidence) if args.opening_clearance_evidence else None,
         'contact_hold_policy':'After native contact at both pads, hold the measured driver coordinate using the same single force controller; never command passive joints.',
+        'contact_evidence_policy':'Exact pad / distal_pedicel collision pair with finite depth >= 0 and native contact.header time no older than 0.1 s and not in the future; negative-depth Bullet proximity points remain in raw logs but never trigger holding or arming.',
+        'force_controller_audit_scope':['gripper'],
+        'joint_pose_timestamp_contract':'PosePublisher.header.stamp == RobotTelemetry.measured_after_step_time; exact nanosecond equality, no nearest matching.',
         'position_schedule':[{'start_s':t,'position_rad':q} for t,q in
             [(0,0),(.5,args.open_reference_rad/2),(1.7,args.open_reference_rad),(2.9,args.open_reference_rad/2),(4.1,0)]],
         'contact_test':args.contact_test,'fixture':{'pedicel_radius_m':.0018,'berry_radius_m':.016,'mass_kg':.006,
@@ -426,6 +465,8 @@ def main():
     if check.returncode:raise RuntimeError('Invalid SDF')
     plugins=output/'plugins';plugins.mkdir();source=args.plugin_dir.resolve();build=json.loads((source/'build_provenance.json').read_text())
     systems=['HarvestSystem','RobotTelemetrySystem','ClosedLoopSystem','GearCouplingSystem']
+    if sha(REPO/'gazebo/harvest_system/ObservationSchedule.hh')!=build['source_sha256'].get('ObservationSchedule.hh'):
+        raise ValueError('Stale or absent native observation schedule helper')
     if data['control']['gripper'][driver].get('reference_mode')=='ramped_position':
         systems.append('JointPositionForceSystem')
         if sha(REPO/'gazebo/harvest_system/PositionForceController.hh')!=build['source_sha256']['PositionForceController.hh']:
@@ -436,9 +477,16 @@ def main():
             raise ValueError('Stale plugin '+name)
         shutil.copyfile(source/library,plugins/library)
     shutil.copyfile(source/'build_provenance.json',plugins/'build_provenance.json')
+    snapshot=output/'audit_sources';snapshot.mkdir()
+    consumed=['robot_control_validation.py','robot_mechanism_validation.py','robot_kinematics.py',
+              'robot_spec.py','robot_validation.py']
+    for name in consumed:shutil.copyfile(REPO/'src/uchuva_gazebo'/name,snapshot/name)
+    shutil.copyfile(REPO/'gazebo/harvest_system/ObservationSchedule.hh',snapshot/'ObservationSchedule.hh')
     (output/'probe_source.py').write_bytes(Path(__file__).read_bytes())
     dump(output/'provenance.json',{'script_sha256':sha(__file__),'profile_sha256':sha(args.profile),'canonical_robot_sha256':robot.sha256,
-        'build_provenance_sha256':sha(source/'build_provenance.json'),'asset_root':str(args.asset_root.resolve())})
+        'build_provenance_sha256':sha(source/'build_provenance.json'),'asset_root':str(args.asset_root.resolve()),
+        'observation_contract':'robot-telemetry/1.1; pose stamp equals measured_after_step_time',
+        'consumed_audit_sources_sha256':{p.name:sha(p) for p in snapshot.iterdir()}})
     os.environ['GZ_PARTITION']='cad-gripper-'+uuid.uuid4().hex;os.environ['GZ_SIM_SYSTEM_PLUGIN_PATH']=str(plugins)
     run(output,plugins);return 0
 

@@ -25,6 +25,7 @@ import time
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / 'src'))
 from uchuva_gazebo.harvester_robot import HarvesterConfig, inverse_kinematics
+from uchuva_gazebo.robot_drive_control import DriveReferenceController
 from uchuva_gazebo.harvest_pilot import load_verified_package, sha256_file
 from uchuva_gazebo.harvest_validation import (angle_error, deposited_interval, distance,
     fruit_map, local_point, rotate_vector, world_point, yaw_of)
@@ -105,6 +106,7 @@ class NativePilot:
         self.drive_publishers = {}
         if self.resolved_robot is not None:
             drive = manifest['robot']['drive']
+            self.drive_controller = DriveReferenceController(drive)
             self.drive_publishers = {name: self.node.advertise(
                 self.resolved_robot.to_dict()['namespace']+'/drive/'+name+'/cmd_vel', Double)
                 for name in drive['left_joints']+drive['right_joints']}
@@ -173,6 +175,8 @@ class NativePilot:
                     state['robot_joint_positions'] = dict(self.all_joints)
                     state['robot_link_poses'] = dict(self.native_link_poses)
                     state['robot_link_pose_sim_time'] = self.native_link_pose_time
+                    if state.get('ready') and getattr(self, 'drive_controller', None) is not None:
+                        self.drive_controller.observe_pose(state['sim_time'], state['robot_pose'])
                 state['joint_state_sim_time'] = self.joint_time
                 self.state = state
                 self.last_state_wall = time.monotonic()
@@ -395,23 +399,16 @@ class NativePilot:
             raise ValueError('Base commands must be finite')
         if getattr(self, 'resolved_robot', None):
             drive = self.manifest['robot']['drive']
-            linear = max(-drive['max_linear_velocity'], min(drive['max_linear_velocity'], float(linear)))
-            angular = max(-drive['max_angular_velocity'], min(drive['max_angular_velocity'], float(angular)))
-            stamp = self.snapshot()['sim_time']
-            previous = getattr(self, '_last_base_reference', (0.0, 0.0, 0.0))
-            dt = max(0.0, stamp-previous[0])
-            linear = previous[1]+max(-drive['max_linear_acceleration']*dt, min(drive['max_linear_acceleration']*dt, linear-previous[1]))
-            angular = previous[2]+max(-drive['max_angular_acceleration']*dt, min(drive['max_angular_acceleration']*dt, angular-previous[2]))
-            self._last_base_reference = (stamp, linear, angular)
-            wheel_references = {}
-            for side, sign in (('left_joints', -1), ('right_joints', 1)):
-                wheel_speed = (linear+sign*angular*drive['wheel_separation_m']/2)/drive['wheel_radius_m']
-                for name in drive[side]:
-                    msg = self.Double()
-                    bound = drive['joints'][name]['command_velocity']
-                    msg.data = max(-bound, min(bound, wheel_speed*drive['joint_signs'][name]))
-                    wheel_references[name] = msg.data
-                    self.drive_publishers[name].publish(msg)
+            with self.condition:
+                stamp = self.snapshot()['sim_time']
+                if not hasattr(self, 'drive_controller'):
+                    self.drive_controller = DriveReferenceController(drive)
+                drive_record = self.drive_controller.step(linear, angular, stamp)
+            linear, angular = drive_record['linear_m_s'], drive_record['angular_rad_s']
+            wheel_references = drive_record['wheel_velocity_references_rad_s']
+            for name, reference in wheel_references.items():
+                msg = self.Double(); msg.data = reference
+                self.drive_publishers[name].publish(msg)
         else:
             msg = self.Twist()
             msg.linear.x, msg.angular.z = float(linear), float(angular)
@@ -422,6 +419,7 @@ class NativePilot:
                                    'linear_m_s': linear, 'angular_rad_s': angular}
             if getattr(self, 'resolved_robot', None):
                 record['wheel_velocity_references_rad_s'] = wheel_references
+                record['drive_reference'] = drive_record
             self._line('commands', record)
 
     def send_joints(self, values):

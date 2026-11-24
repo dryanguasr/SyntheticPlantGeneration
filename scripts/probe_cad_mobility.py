@@ -27,7 +27,8 @@ from uchuva_gazebo.robot_spec import load_robot_json, resolve_robot_profile, ver
 from uchuva_gazebo.robot_sdf import resolved_robot_model, resolved_robot_contract
 from uchuva_gazebo.robot_kinematics import forward_kinematics, collision_shapes, rotate_vector, compose_poses
 from uchuva_gazebo.robot_validation import evaluate_robot_telemetry
-from uchuva_gazebo.robot_control_validation import evaluate_position_force_control
+from uchuva_gazebo.robot_control_validation import evaluate_position_force_control, evaluate_base_drive_control
+from uchuva_gazebo.robot_drive_control import DriveReferenceController
 from uchuva_gazebo.robot_mesh_geometry import MeshRepository
 from uchuva_gazebo.robot_mechanism_validation import audit_mechanism_sample, audit_passive_gear_commands
 from uchuva_gazebo.harvest_validation import yaw_of, angle_error
@@ -123,7 +124,7 @@ def world(robot, config):
     return ET.tostring(sdf,encoding='unicode')+'\n'
 
 
-def evaluate(robot, config, poses, joints, errors, native_code, *, link_poses=(), mesh_repository=None, force_control=()):
+def evaluate(robot, config, poses, joints, errors, native_code, *, link_poses=(), mesh_repository=None, force_control=(), commands=()):
     limits=config['criteria']
     checks=[{'name':'native_exit_and_callbacks','passed':native_code==0 and not errors,'errors':errors}]
     if len(poses)<2 or len(joints)<2:
@@ -134,16 +135,18 @@ def evaluate(robot, config, poses, joints, errors, native_code, *, link_poses=()
     try:
         checks+=evaluate_robot_telemetry(manifest,joints,observations,[])
         checks+=evaluate_position_force_control(manifest,force_control,joints,observations)
+        checks+=evaluate_base_drive_control(manifest,commands,poses)
     except (KeyError,TypeError,ValueError) as error:
         checks.append({'name':'robot_observation_audit','passed':False,'error':str(error)})
     def check(name,passed,**metrics):
         checks.append({'name':name,'passed':bool(passed),**metrics})
     check('complete_protocol_observed',poses[-1]['sim_time']-poses[0]['sim_time']>=limits['minimum_observed_span_s'])
     if robot.data.get('closures') or robot.data.get('gear_couplings'):
-        # PosePublisher stamps PostUpdate geometry with UpdateInfo.simTime;
-        # the observer labels the same step's response simTime + dt. Join via
-        # its explicit pre-step stamp, never by nearest commanded coordinates.
-        by_time={round(row['commanded_before_step_time'],9):row for row in joints}
+        # Both v7+ RobotTelemetry response and PosePublisher use PostUpdate
+        # simTime. A pre-step stamp joins a different physical iteration.
+        # Historical 100 Hz publication phases can be offset: reject missing
+        # exact response times, never substitute a nearby sample.
+        by_time={round(row['measured_after_step_time'],9):row for row in joints}
         mechanism_errors=[];mechanism_count=0;closure_maxima={};gear_maxima={}
         for row in link_poses:
             joint=by_time.get(round(row['sim_time'],9))
@@ -171,7 +174,8 @@ def evaluate(robot, config, poses, joints, errors, native_code, *, link_poses=()
         mechanism_span=link_poses[-1]['sim_time']-link_poses[0]['sim_time'] if link_poses else 0.
         check('native_mechanism_constraints_observed',mechanism_count>=2 and not mechanism_errors and
               mechanism_gap<=config['acceptance']['max_telemetry_gap_s'] and mechanism_span>=limits['minimum_observed_span_s'],
-              synchronized_samples=mechanism_count,maximum_sample_gap_s=mechanism_gap if math.isfinite(mechanism_gap) else None,
+              synchronized_samples=mechanism_count,observation_status='OBSERVED' if not mechanism_errors else 'NO_OBSERVADO',
+              timestamp_contract='PoseV stamp == measured_after_step_time',maximum_sample_gap_s=mechanism_gap if math.isfinite(mechanism_gap) else None,
               observed_span_s=mechanism_span,closure_maxima=closure_maxima,maximum_gear_error_rad=gear_maxima,errors=mechanism_errors)
         check('gear_follower_has_no_motor_command',not passive_errors,errors=passive_errors)
     tilts=[math.acos(max(-1,min(1,rotate_vector(p['pose'][3:],[0,0,1])[2]))) for p in poses]
@@ -303,7 +307,7 @@ def main():
         raise ValueError('Observer binary/source does not match its build provenance; rebuild before diagnostic')
     data=robot.to_dict(); drive=data['control']['drive']; contract=resolved_robot_contract(robot)
     if contract['topics'].get('position_force_states'):
-        for name in ('JointPositionForceSystem.cc','PositionForceController.hh'):
+        for name in ('JointPositionForceSystem.cc','PositionForceController.hh','ObservationSchedule.hh'):
             if build.get('source_sha256',{}).get(name)!=sha(REPO/'gazebo/harvest_system'/name):
                 raise ValueError('Ramped controller source does not match its build provenance: '+name)
         if 'libUchuvaJointPositionForceSystem.so' not in build.get('libraries_sha256',{}):
@@ -318,7 +322,7 @@ def main():
         if args.experiment=='full':config['scope']='CAD diagnostic with declared native closed loops; mounting and actuator/contact parameters remain estimated'
         config['mechanism_acceptance']={'suspension_closure_position_m':.001,'gripper_closure_position_m':.0005,
             'closure_rotation_rad':.001,'gear_coordinate_rad':.001,
-            'native_pose_joint_join':'PoseV header exactly equals observer commanded_before_step_time; both PostUpdate from the same iteration',
+            'native_pose_joint_join':'PoseV header exactly equals observer measured_after_step_time; no nearest/interpolated substitute',
             'passive_gear_motor_command_tolerance':1e-12}
     output=args.output.resolve(); output.mkdir(parents=True,exist_ok=False)
     dump(output/'protocol.json',config)
@@ -350,7 +354,7 @@ def main():
         'runner_sha256':sha(__file__),'assets_sha256':assets,'observer_sha256':sha(plugins/'libUchuvaRobotTelemetrySystem.so'),
         'build_provenance_sha256':sha(plugins/'build_provenance.json'),'sdf_sha256':sha(sdf),
         'libraries_sha256':libraries,
-        'implementation_files_sha256':{name:sha(REPO/'src/uchuva_gazebo'/name) for name in ('robot_spec.py','robot_sdf.py','robot_kinematics.py','robot_validation.py','robot_control_validation.py','robot_collision_filters.py','closed_loops.py','robot_mesh_geometry.py','robot_mechanism_validation.py') if (REPO/'src/uchuva_gazebo'/name).exists()},
+        'implementation_files_sha256':{name:sha(REPO/'src/uchuva_gazebo'/name) for name in ('robot_spec.py','robot_sdf.py','robot_kinematics.py','robot_validation.py','robot_control_validation.py','robot_drive_control.py','robot_collision_filters.py','closed_loops.py','robot_mesh_geometry.py','robot_mechanism_validation.py') if (REPO/'src/uchuva_gazebo'/name).exists()},
         'gazebo_versions':subprocess.check_output(['gz','sim','--versions'],text=True).strip()})
     validation=subprocess.run(['gz','sdf','-k',str(sdf)],capture_output=True,text=True)
     (output/'sdf_check.log').write_text(validation.stdout+validation.stderr)
@@ -367,7 +371,7 @@ def main():
     node_=Node(); poses=[]; joints=[]; commands=[]; link_poses=[]; force_control=[]; errors=[]; lock=threading.Lock()
     wheel_publishers={name:node_.advertise(data['namespace']+'/drive/'+name+'/cmd_vel',Double) for name in drive['joints']}
     arm_publishers={name:node_.advertise(topic,Double) for name,topic in contract['topics']['joint_commands'].items()}
-    previous=[0.,0.,0.]
+    drive_controller=DriveReferenceController(drive)
     arm_references={name:0. for name in arm_publishers}
     def link_pose_callback(message):
         try:
@@ -402,6 +406,7 @@ def main():
                 with lock:
                     if poses and stamp<=poses[-1]['sim_time']:
                         raise ValueError('Non-increasing observed pose timestamp')
+                    drive_controller.observe_pose(stamp,values)
                     poses.append({'sim_time':stamp,'phase':phase_at(config,stamp)['name'],'pose':values})
         except Exception as error:
             errors.append('pose_callback: '+str(error))
@@ -414,27 +419,26 @@ def main():
             if type(stamp) not in (int,float) or not math.isfinite(stamp) or (joints and stamp<=joints[-1]['sim_time']):
                 raise ValueError('Invalid or non-increasing robot observation timestamp')
             row['phase']=phase['name']
-            dt=max(0,stamp-previous[0])
-            target_v=max(-drive['max_linear_velocity'],min(drive['max_linear_velocity'],phase['linear_m_s']))
-            target_w=max(-drive['max_angular_velocity'],min(drive['max_angular_velocity'],phase['angular_rad_s']))
-            v=previous[1]+max(-drive['max_linear_acceleration']*dt,min(drive['max_linear_acceleration']*dt,target_v-previous[1]))
-            w=previous[2]+max(-drive['max_angular_acceleration']*dt,min(drive['max_angular_acceleration']*dt,target_w-previous[2]))
-            previous[:]=[stamp,v,w]
-            wheel_refs={}
-            for side,sign in (('left_joints',-1),('right_joints',1)):
-                speed=(v+sign*w*drive['wheel_separation_m']/2)/drive['wheel_radius_m']
-                for name in drive[side]:
-                    bound=drive['joints'][name]['command_velocity']
-                    value=max(-bound,min(bound,speed*drive['joint_signs'][name]))
-                    msg=Double(); msg.data=value; wheel_publishers[name].publish(msg); wheel_refs[name]=value
+            with lock:
+                dt=max(0,stamp-drive_controller.previous[0])
+                try:
+                    drive_record=drive_controller.step(phase['linear_m_s'],phase['angular_rad_s'],stamp)
+                except ValueError as error:
+                    errors.append('drive_feedback: '+str(error))
+                    drive_record=drive_controller.step(0,0,stamp)
+                    drive_record['rejected_request_error']=str(error)
+            wheel_refs=drive_record['wheel_velocity_references_rad_s']
+            for name,value in wheel_refs.items():
+                msg=Double(); msg.data=value; wheel_publishers[name].publish(msg)
             for name,publisher in arm_publishers.items():
                 rate=data['control']['arm'][name]['command_velocity']
                 arm_references[name]+=max(-rate*dt,min(rate*dt,data['arm_home_positions'][name]-arm_references[name]))
                 msg=Double(); msg.data=arm_references[name]; publisher.publish(msg)
             with lock:
                 joints.append(row)
-                commands.append({'sim_time':stamp,'phase':phase['name'],'linear_m_s':v,'angular_rad_s':w,
-                                 'wheel_velocity_references_rad_s':wheel_refs,'arm_positions_rad':dict(arm_references)})
+                commands.append({'sim_time':stamp,'phase':phase['name'],'linear_m_s':drive_record['linear_m_s'],'angular_rad_s':drive_record['angular_rad_s'],
+                                 'wheel_velocity_references_rad_s':wheel_refs,'arm_positions_rad':dict(arm_references),
+                                 'drive_reference':drive_record})
         except Exception as error:
             errors.append(str(error))
     if not node_.subscribe(Pose_V,'/probe/cad_model_pose',pose_callback) or not node_.subscribe(StringMsg,contract['topics_robot_telemetry'],joint_callback):
@@ -488,7 +492,7 @@ def main():
     for topic in contract['topics'].get('position_force_states',{}).values():node_.unsubscribe(topic)
     for name,records in (('poses',poses),('joints',joints),('commands',commands),('link_poses',link_poses),('force_control',force_control)):
         (output/(name+'.jsonl')).write_text(''.join(json.dumps(row,allow_nan=False)+'\n' for row in records))
-    result=evaluate(robot,config,poses,joints,errors,code,link_poses=link_poses,mesh_repository=mesh_repository,force_control=force_control)
+    result=evaluate(robot,config,poses,joints,errors,code,link_poses=link_poses,mesh_repository=mesh_repository,force_control=force_control,commands=commands)
     result.setdefault('robot_spec_sha256',robot.sha256)
     result.setdefault('native_harvest_eligible',False)
     result.setdefault('scope',config['scope'])

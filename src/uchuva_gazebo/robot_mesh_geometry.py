@@ -385,6 +385,19 @@ class TriangleMesh:
                 if surrounding_material<=0:
                     raise ValueError('Collision shell is inside-out or has ambiguous overlapping orientation')
         self.component_signed_volumes=tuple(volumes)
+        # A closed oriented component contributes zero winding outside its
+        # own bounds, even when other components overlap or form cavities.
+        # Require closure at the actual coordinates for this optimization:
+        # the admission-only 1-nm seam keys cannot justify pruning a crack.
+        self.containment_components=[]
+        for group,bounds in zip(groups,group_bounds):
+            balance=Counter()
+            for triangle in group:
+                for a,b in zip(triangle,triangle[1:]+triangle[:1]):
+                    if a!=b:balance[tuple(sorted((a,b)))]+=1 if a<b else -1
+            exact_closed=verify_closed and not any(balance.values())
+            self.containment_components.append((group,bounds if exact_closed else None))
+        self.containment_components=tuple(self.containment_components)
         self.nodes=_build_nodes(self.triangles)
         self.bounds=self.nodes[0].bounds
 
@@ -393,7 +406,10 @@ class TriangleMesh:
             return False
         # Generalized oriented winding handles overlapping closed shells where
         # a parity ray would incorrectly classify a double overlap as outside.
-        try:return _winding(self.triangles,point)>.5
+        try:
+            return sum(_winding(group,point) for group,bounds in self.containment_components
+                if bounds is None or all(bounds[0][i]-1e-12<=point[i]<=bounds[1][i]+1e-12
+                                         for i in range(3)))>.5
         except ValueError:return True
 
     def support(self,direction):

@@ -18,16 +18,21 @@ sys.path.insert(0,str(ROOT/'src'))
 from uchuva_gazebo.robot_spec import resolve_robot_profile
 from uchuva_gazebo.robot_mechanism_validation import audit_mechanism_sample,audit_passive_gear_commands
 from uchuva_gazebo.robot_control_validation import evaluate_position_force_control
+from uchuva_gazebo.robot_validation import native_pose_joint_timestamp
 
 
 def read_rows(path):return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def audit(directory):
+def audit(directory,legacy_timing_adapter=None):
     data=json.loads((directory/'profile.json').read_text());robot=resolve_robot_profile(data)
     result=json.loads((directory/'result.json').read_text());protocol=json.loads((directory/'protocol.json').read_text())
     errors=[]
+    if legacy_timing_adapter is not None:
+        build=json.loads((directory/'plugins/build_provenance.json').read_text())
+        if not isinstance(legacy_timing_adapter,dict) or legacy_timing_adapter.get('observer_source_sha256')!=build['source_sha256']['RobotTelemetrySystem.cc']:
+            raise ValueError('Legacy clock adapter does not match the frozen observer source')
     if result.get('status')!='OBSERVED' or result.get('native_exit_code')!=0 or result.get('errors'):
         errors.append('Native acquisition did not complete successfully')
     if protocol.get('no_contact_diagnostic'):
@@ -42,7 +47,8 @@ def audit(directory):
     limits={j['name']:j['limits'] for j in data['joints'] if j['name'] in expected_joints}
     velocity_max=0.
     for row in records:
-        key=round(row['commanded_before_step_time']*1e9)
+        try:key=round(native_pose_joint_timestamp(row,legacy_timing_adapter)*1e9)
+        except ValueError as error:errors.append(str(error));continue
         if key in observed:errors.append('Duplicate native physics step')
         observed[key]=row
         if row['robot_spec_sha256']!=robot.sha256:errors.append('Wrong native robot hash')
@@ -66,7 +72,7 @@ def audit(directory):
     # closures. The original whole-robot identity is still checked above.
     mechanism_data={**data,'closures':[c for c in data['closures'] if c['body'] in expected_links]}
     view=SimpleNamespace(to_dict=lambda:mechanism_data)
-    maxima={};times=[];gear_max=0.
+    maxima={};times=[];gear_max=0.;matched=0
     for message in read_rows(directory/'poses.jsonl'):
         poses={};stamps=set()
         for row in message['pose']:
@@ -79,10 +85,11 @@ def audit(directory):
                 'quaternion_xyzw':[float(row['orientation'].get(key,0)) for key in 'xyzw']}
         if len(stamps)!=1 or set(poses)!=expected_links:
             errors.append('Native pose timestamp/coverage disagreement');continue
-        stamp=stamps.pop();state=observed.get(stamp)
+        stamp=stamps.pop();times.append(stamp*1e-9);state=observed.get(stamp)
         if state is None:errors.append('No native joint observation for exact pose step');continue
+        matched+=1
         sample=audit_mechanism_sample(view,{j['name']:j['position'] for j in state['joints']},poses)
-        errors.extend(sample['failures']);times.append(stamp*1e-9)
+        errors.extend(sample['failures'])
         for closure in sample['closures']:
             peak=maxima.setdefault(closure['name'],{'position_error_m':0.,'orientation_error_rad':0.})
             for key in peak:peak[key]=max(peak[key],closure[key])
@@ -97,15 +104,19 @@ def audit(directory):
             'max_telemetry_gap_s':.02,'joint_position_tolerance_rad':.01,
             'joint_velocity_tolerance_rad_s':0,'effort_tolerance_nm':1e-6,'orientation_state_max_age_s':.02}}}
         force=evaluate_position_force_control(manifest,read_rows(directory/'force_control.jsonl'),records,
-            [{'ready':True,'sim_time':times[0]},{'ready':True,'sim_time':times[-1]}])
+            [{'ready':True,'sim_time':times[0]},{'ready':True,'sim_time':times[-1]}],control_groups=('gripper',))
         if any(not row['passed'] for row in force):errors.append('Independent force-controller audit failed')
     driver=next(iter(data['control']['gripper']))
     last=next(j for j in records[-1]['joints'] if j['name']==driver)
     if abs(last['position']-protocol['open_reference_rad'])>.01:errors.append('Driver target residual exceeds original .01 rad')
     return {'status':'PASS' if not errors else 'FAIL','scope':__doc__,
         'not_full_robot_or_harvest_acceptance':True,'errors':sorted(set(errors)),
-        'source_robot_spec_sha256':robot.sha256,'native_link_pose_samples':len(times),
-        'maximum_native_velocity_rad_s':velocity_max,'closure_maxima':maxima,'maximum_native_gear_error_rad':gear_max,
+        'source_robot_spec_sha256':robot.sha256,'native_link_pose_samples':len(times),'exact_pose_joint_samples':matched,
+        'joint_pose_timestamp_contract':'PosePublisher.header.stamp == RobotTelemetry.'+(legacy_timing_adapter['pose_joint_time_field'] if legacy_timing_adapter else 'measured_after_step_time'),
+        'legacy_timing_adapter':legacy_timing_adapter,
+        'joint_pose_coverage':'OBSERVED' if matched==len(times) and times else 'NOT_OBSERVED',
+        'maximum_native_velocity_rad_s':velocity_max,'closure_maxima':maxima,
+        'maximum_native_gear_error_rad':gear_max if matched else None,
         'independent_force_audit':force,'final_driver_position_rad':last['position'],
         'evidence_result_sha256':sha(directory/'result.json'),'audit_script_sha256':sha(Path(__file__)),
         'consumed_source_sha256':{name:sha(ROOT/'src/uchuva_gazebo'/name) for name in (
@@ -117,8 +128,10 @@ def audit(directory):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('directory',type=Path)
-    parser.add_argument('--output',type=Path,required=True);args=parser.parse_args()
-    report=audit(args.directory)
+    parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--legacy-timing-adapter',type=Path);args=parser.parse_args()
+    adapter=json.loads(args.legacy_timing_adapter.read_text()) if args.legacy_timing_adapter else None
+    report=audit(args.directory,adapter)
     with args.output.open('x',encoding='utf-8') as handle:json.dump(report,handle,indent=2,allow_nan=False);handle.write('\n')
     print(json.dumps(report,indent=2));return 0 if report['status']=='PASS' else 1
 

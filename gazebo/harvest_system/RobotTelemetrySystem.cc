@@ -1,4 +1,5 @@
 // Original project code, MIT. Gazebo Harmonic native observation, not motor sensing.
+#include "ObservationSchedule.hh"
 #include <gz/common/Console.hh>
 #include <gz/msgs/stringmsg.pb.h>
 #include <gz/plugin/Register.hh>
@@ -156,11 +157,13 @@ class RobotTelemetrySystem final : public gz::sim::System,
     }
     if (now + 1e-12 < this->nextPublish) return;
     std::ostringstream out;
-    out << "{\"schema_version\":\"robot-telemetry/1.0\",\"robot_spec_sha256\":"
+    out << "{\"schema_version\":\"robot-telemetry/1.1\",\"robot_spec_sha256\":"
         << Quote(this->hash) << ",\"sim_time\":" << Number(now)
         << ",\"iteration\":" << info.iterations << ",\"reset_count\":" << this->resets
         << ",\"commanded_before_step_time\":" << Number(this->commandTime)
         << ",\"measured_after_step_time\":" << Number(now)
+        << ",\"pose_joint_time_field\":\"measured_after_step_time\""
+        << ",\"publication_grid\":\"update_info_sim_time/1.0\""
         << ",\"sample_count\":" << this->samples
         << ",\"wrench_semantics\":\"simulated_transmitted_joint_frame_not_motor_torque\",\"joints\":[";
     bool first = true;
@@ -209,7 +212,7 @@ class RobotTelemetrySystem final : public gz::sim::System,
     message.set_data(out.str());
     this->publisher.Publish(message);
     this->samples = 0;
-    this->nextPublish = now + this->period;
+    this->nextPublish = NextObservationTime(now, this->period);
   }
 
   public: void Reset(const gz::sim::UpdateInfo &,

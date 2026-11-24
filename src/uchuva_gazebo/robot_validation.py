@@ -30,6 +30,36 @@ def acceptance_config(task):
     return {name: values[name] for name in ACCEPTANCE_FIELDS}
 
 
+def native_pose_joint_timestamp(row, legacy_adapter=None):
+    """Select an explicit observer clock, never infer a nearest-time pairing.
+
+    Early telemetry/1.0 builds changed labels without changing the schema.
+    Reanalysis of those records therefore requires an explicit source-bound
+    adapter. Current native records publish their timing contract themselves.
+    """
+    if row.get('schema_version')=='robot-telemetry/1.1':
+        if (row.get('pose_joint_time_field')!='measured_after_step_time' or
+                row.get('publication_grid')!='update_info_sim_time/1.0'):
+            raise ValueError('Invalid native observation timing contract')
+        field='measured_after_step_time'
+    elif row.get('schema_version')=='robot-telemetry/1.0':
+        adapter=legacy_adapter or {}
+        if not isinstance(adapter,dict):
+            raise ValueError('Legacy timing adapter must be an explicit object')
+        digest=adapter.get('observer_source_sha256','')
+        field=adapter.get('pose_joint_time_field')
+        if (adapter.get('schema_version')!='legacy-native-observation-timing/1.0' or
+                field not in ('measured_after_step_time','commanded_before_step_time') or
+                not isinstance(digest,str) or len(digest)!=64 or any(c not in '0123456789abcdef' for c in digest) or
+                not isinstance(adapter.get('evidence'),str) or not adapter['evidence'].strip()):
+            raise ValueError('Legacy native observation requires an explicit source-bound timing adapter')
+    else:
+        raise ValueError('Unknown native observation schema')
+    stamp=row.get(field)
+    if not _finite(stamp):raise ValueError('Invalid native pose/joint timestamp')
+    return stamp
+
+
 def evaluate_native_mechanisms(manifest, records, pose_records, samples):
     """Join native observations; a correct FK tree is not a closure observation."""
     from .robot_mechanism_validation import audit_mechanism_sample, audit_passive_gear_commands
@@ -59,7 +89,11 @@ def evaluate_native_mechanisms(manifest, records, pose_records, samples):
             if len(errors) < 20:
                 errors.append('Invalid native joint physics-step timestamps')
             continue
-        key = round(before*1_000_000_000)
+        try:
+            key = round(native_pose_joint_timestamp(row,manifest.get('robot_observation_timing'))*1_000_000_000)
+        except ValueError as error:
+            if len(errors)<20:errors.append(str(error))
+            continue
         if key in joint_steps:
             if len(errors) < 20:
                 errors.append('Duplicate native joint physics-step timestamp')
@@ -75,10 +109,8 @@ def evaluate_native_mechanisms(manifest, records, pose_records, samples):
                     row.get('robot_spec_sha256') != robot.sha256 or
                     row.get('frame_id') != robot.data['model_name'] or set(row['links']) != expected):
                 raise ValueError('Native mechanism pose identity/frame/links mismatch')
-            # PosePublisher stamps UpdateInfo.simTime. The native observer's
-            # post-step value is labelled simTime+dt, with simTime preserved
-            # as commanded_before_step_time. Join the exact same iteration,
-            # rather than accepting a nearby sample from a previous step.
+            # Both current observers stamp the same post-Physics iteration.
+            # A source-bound adapter is mandatory for historical clock labels.
             observed = joint_steps.get(round(stamp*1_000_000_000))
             if observed is None:
                 raise ValueError('No native mechanism joint state from the exact physics step')
@@ -114,7 +146,8 @@ def evaluate_native_mechanisms(manifest, records, pose_records, samples):
     return [{'name': 'native_mechanisms_observed', 'passed': not errors and coverage,
              'errors': errors, 'sample_count': len(observed_times), 'complete_coverage': coverage,
              'maximum_observation_gap_s': gap if math.isfinite(gap) else None, 'metrics': maxima,
-             'timestamp_join': 'PosePublisher stamp equals observer commanded_before_step_time; both contain post-Physics values of the same iteration',
+             'timestamp_join': 'Exact native clock declared by telemetry/1.1 or an explicit source-bound legacy adapter; no nearest-time substitution',
+             'legacy_timing_adapter': manifest.get('robot_observation_timing'),
              'source': 'native link poses, joint coordinates and actuator commands; no FK substitution'}]
 
 
@@ -144,8 +177,9 @@ def evaluate_robot_telemetry(manifest, records, samples, events):
             stamp = row['sim_time']
             if not _finite(stamp):
                 raise ValueError('invalid simulation timestamp')
-            if row.get('schema_version') != 'robot-telemetry/1.0' or row.get('robot_spec_sha256') != robot.sha256:
+            if row.get('schema_version') not in ('robot-telemetry/1.0','robot-telemetry/1.1') or row.get('robot_spec_sha256') != robot.sha256:
                 raise ValueError('wrong robot identity or telemetry schema')
+            if row['schema_version']=='robot-telemetry/1.1':native_pose_joint_timestamp(row)
             if row.get('reset_count') != 0 or type(row.get('sample_count')) is not int or row['sample_count'] < 1:
                 raise ValueError('reset or unobserved physics window')
             iteration = row.get('iteration')
