@@ -7,6 +7,13 @@ montaje de estos accesorios son hipótesis de la simulación. La pinza emplea un
 mordaza prismática por esfuerzo y una oposición fija. Su abertura flexible de
 6 mm se deriva del recorrido aproximado comunicado y de la geometría CAD cerrada.
 
+La caja electrónica queda 50 mm hacia atrás respecto de la primera colocación
+interna. Dos rieles la apoyan sobre abrazaderas instaladas en el travesaño
+inferior CAD 119. La canasta conserva su posición y apoya sobre otros dos rieles
+anclados al travesaño CAD 117. Los herrajes contribuyen a la inercia del chasis
+y conservan colisión externa. Al cambiar sus posiciones, volver a verificar
+las caras de apoyo y el espacio libre de baterías, suspensión y brazo.
+
 ## Preparar una revisión
 
 Desde la raíz del repositorio, usar directorios de salida nuevos. Mantener el

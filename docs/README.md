@@ -26,6 +26,9 @@ función, no por orden de creación. La única excepción deliberada es
 - [Generador actual y contrato Gazebo](guides/generador_actual_y_contrato_gazebo.md).
 - [Piloto de uchuvas desmontables](guides/piloto_cosecha_desmontable.md) y
   [ciclos auditados en Gazebo Harmonic](reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md).
+- [Piloto CAD V8 con canasta a bordo](guides/piloto_cad_v8_canasta.md) y
+  [percepción diagnóstica de cosecha](guides/percepcion_cosecha_diagnostica.md).
+  [Resultados del piloto CAD V8](reports/piloto_cad_v8_canasta_2026-11-24.md).
 - [Auditoría ciega de segmentación](guides/auditoria_ciega_segmentacion.md) y
   [manual para estudiantes](guides/manual_estudiantes_revision_cruzada.pdf).
 - [Video del DJI Neo en Android y PC](guides/video_dron_pc_rtmp.md): recepción

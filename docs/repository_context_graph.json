@@ -2974,7 +2974,7 @@
       "id": "entrypoint.harvest_pilot",
       "type": "entrypoint",
       "label": "Piloto de uchuva desmontable con carro 4WD y brazo de cinco GDL",
-      "summary": "Piloto rigido con robot modular, corte y retencion ideal por plugin Harmonic y auditor de evidencia. Conserva el perfil historico de seis frutos y permite arboles v8 admitidos mediante catalogos de poses, unidades explicitas, visuales detallados y colisiones prismaticas conservadoras agrupadas. Compilacion, contacto y cosecha nativos se documentan por configuracion y experimento, separados de las pruebas puras; sin percepcion autonoma ni fisica medida.",
+      "summary": "Piloto rigido con corte y retencion ideales por plugin Harmonic. Los perfiles historicos conviven con una demostracion CAD de mordaza prismatica, canasta movil y seleccion de objetivos en los arboles V8 congelados. La auditoria separa el resultado observado, el diagnostico RGB y la visibilidad de instancia del simulador. Las pruebas y las aproximaciones se identifican por escenario y perfil.",
       "paths": [
         "src/uchuva_gazebo/harvest_plants.py",
         "src/uchuva_gazebo/harvest_visuals.py",
@@ -2993,6 +2993,14 @@
         "scripts/build_harvest_plugin.sh",
         "scripts/run_harvest_pilot.py",
         "scripts/audit_harvest_pilot.py",
+        "scripts/prepare_cad_v8_demo_robot.py",
+        "scripts/prepare_cad_v8_experiment.py",
+        "scripts/screen_cad_v8_demo.py",
+        "scripts/probe_harvest_jaw_guard.py",
+        "scripts/harvest_rgb_tournament.py",
+        "src/uchuva_gazebo/harvest_basket.py",
+        "src/uchuva_gazebo/harvest_perception.py",
+        "gazebo/harvest_system/JawStateGuard.hh",
         "tests/test_harvest_plants.py",
         "tests/test_harvest_visuals.py",
         "tests/test_harvest_collision_mesh.py",
@@ -3000,11 +3008,16 @@
         "tests/test_harvest_pilot.py",
         "tests/test_harvest_validation.py",
         "docs/guides/piloto_cosecha_desmontable.md",
+        "docs/guides/piloto_cad_v8_canasta.md",
+        "docs/guides/percepcion_cosecha_diagnostica.md",
+        "docs/reports/piloto_cad_v8_canasta_2026-11-24.md",
         "docs/reports/piloto_cosecha_desmontable_2026-10-30.md",
         "docs/reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md",
         "src/uchuva_gazebo/harvest_clearance.py",
         "tests/test_harvest_clearance.py",
-        "tests/test_harvest_runtime_contract.py"
+        "tests/test_harvest_runtime_contract.py",
+        "tests/test_harvest_onboard.py",
+        "tests/test_harvest_perception.py"
       ],
       "evidence": [
         {
