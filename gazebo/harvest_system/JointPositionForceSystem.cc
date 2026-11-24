@@ -9,6 +9,7 @@
 #include <gz/sim/Joint.hh>
 #include <gz/sim/Model.hh>
 #include <gz/sim/System.hh>
+#include <gz/sim/components/JointType.hh>
 #include <gz/transport/Node.hh>
 #include <sdf/Element.hh>
 #include <cstdint>
@@ -71,6 +72,11 @@ class JointPositionForceSystem final : public gz::sim::System,
       if (!this->joint.Valid(_ecm) || this->hash.size() != 64 || topic.empty() ||
           stateTopic.empty() || topic == stateTopic)
         throw std::invalid_argument("Invalid joint, hash or transport topics");
+      const auto *type = _ecm.Component<gz::sim::components::JointType>(this->joint.Entity());
+      if (!type || (type->Data() != sdf::JointType::PRISMATIC &&
+                    type->Data() != sdf::JointType::REVOLUTE))
+        throw std::invalid_argument("Force position control requires a one-axis revolute/prismatic joint");
+      this->prismatic = type->Data() == sdf::JointType::PRISMATIC;
       this->speed = config->Get<double>("command_velocity");
       const double publishRate = config->Get<double>("publish_rate", 100).first;
       if (!std::isfinite(publishRate) || publishRate <= 0 || publishRate > 10000)
@@ -148,6 +154,18 @@ class JointPositionForceSystem final : public gz::sim::System,
         << ",\"publication_grid\":\"update_info_sim_time/1.0\""
         << ",\"iteration\":" << _info.iterations
         << ",\"sample_phase\":\"pre_physics\",\"status\":" << JsonQuote(status)
+        << ",\"joint_type\":" << JsonQuote(this->prismatic ? "prismatic" : "revolute")
+        << ",\"position_unit\":" << JsonQuote(this->prismatic ? "m" : "rad")
+        << ",\"velocity_unit\":" << JsonQuote(this->prismatic ? "m/s" : "rad/s")
+        << ",\"force_unit\":" << JsonQuote(this->prismatic ? "N" : "Nm")
+        << ",\"legacy_suffix_fields_are_SI_aliases\":true"
+        << ",\"requested_target_position\":" << JsonNumber(this->controller->Target())
+        << ",\"limited_reference\":" << JsonNumber(this->controller->Reference())
+        << ",\"measured_position\":" << JsonNumber(q)
+        << ",\"measured_velocity\":" << JsonNumber(v)
+        << ",\"unsaturated_force\":" << JsonNumber(result.unsaturatedForce)
+        << ",\"force_command\":" << JsonNumber(result.force)
+        << ",\"command_velocity\":" << JsonNumber(this->speed)
         << ",\"requested_target_position_rad\":" << JsonNumber(this->controller->Target())
         << ",\"limited_reference_rad\":" << JsonNumber(this->controller->Reference())
         << ",\"measured_position_rad\":" << JsonNumber(q)
@@ -190,6 +208,7 @@ class JointPositionForceSystem final : public gz::sim::System,
   private: std::mutex mutex;
   private: std::string name, hash;
   private: bool valid{false};
+  private: bool prismatic{false};
   private: double speed{0}, publishPeriod{.01}, nextPublish{0}, maxVelocity{0}, maxForce{0}, maxRawForce{0}, maxReferenceRate{0};
   private: std::uint64_t commandSequence{0}, rejectedCommands{0}, saturatedSteps{0}, totalSaturatedSteps{0}, windowSteps{0}, invalidStateSteps{0};
 };

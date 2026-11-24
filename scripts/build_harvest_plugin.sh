@@ -27,7 +27,7 @@ if not library.is_file():
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 metadata = {'source_sha256': {name: sha(repo / 'gazebo/harvest_system' / name)
-                             for name in ('HarvestSystem.cc', 'CMakeLists.txt', 'RobotTelemetrySystem.cc', 'ClosedLoopSystem.cc', 'GearCouplingSystem.cc', 'JointPositionForceSystem.cc', 'PositionForceController.hh', 'ObservationSchedule.hh')},
+                             for name in ('HarvestSystem.cc', 'CMakeLists.txt', 'RobotTelemetrySystem.cc', 'ClosedLoopSystem.cc', 'GearCouplingSystem.cc', 'JointPositionForceSystem.cc', 'PositionForceController.hh', 'ObservationSchedule.hh', 'JawStateGuard.hh')},
             'library_sha256': sha(library),
             'robot_telemetry_library_sha256': sha(build / 'libUchuvaRobotTelemetrySystem.so'),
             'libraries_sha256': {name: sha(build / name) for name in
