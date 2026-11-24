@@ -190,3 +190,42 @@ La edición con contador y la compacta están en
 en el mismo orden y se verificaron por decodificación completa. Duran
 562,083 s y 265,548 s, respectivamente. Se conservaron estos archivos
 locales fuera de Git. La regresión de cosecha en WSL pasó 100 pruebas.
+
+## Repetición con codo arriba
+
+Se conservaron los nueve identificadores y las poses, visuales y materiales de
+los tres arbustos V8. Se eligieron otras posturas de corte y se usó el codo
+arriba desde la marcha inicial hasta la salida final. La pinza baja hacia la
+abertura de la canasta desde una posición elevada, libera el capacho y se
+retira por encima del borde.
+
+El barrido continuo cubre los 183 intervalos de la trayectoria, incluidos
+los cierres y aperturas de mordaza. La cota inferior de holgura es de 4 mm
+entre los 1.586 pares brazo–carro y en los pares internos de brazo incluidos
+en la comprobación. Los cuerpos y exclusiones se tomaron del CAD nominal.
+Se certificaron por separado las 38 maniobras de chasis frente a tallos bajos
+V8 con una cota mínima de 6,85 mm.
+
+El diagnóstico de los recorridos inmediatamente posteriores al corte
+observó doce muestras de proximidad entre el capacho retenido y tallos
+vecinos. Esas muestras corresponden al cultivo de la toma. El perfil mantiene
+el movimiento guiado y la gravedad y los contactos de los frutos liberados.
+
+El paquete certificado está en `cad_v8_elbow_up_full_package_01/` y la
+ruta de entrada en `cad_v8_elbow_up_take_routes_shortbase_01.json`.
+La corrida independiente está en `cad_v8_elbow_up_native_01/`.
+Gazebo aceptó los nueve cortes y las nueve sueltas. La auditoría confirmó
+**tres frutos de cada arbusto dentro de la canasta** tras el desplazamiento
+final a 501,236 s. Las sueltas se observaron desde reposo, con 77,6–84,8 mm
+entre el capacho y el fondo. Las velocidades máximas observadas de muñeca
+fueron 0,300 rad/s en pitch y 0,209 rad/s en roll.
+
+La auditoría nativa contrastó 9.640 muestras de 0,004 a 501,232 s. Certificó
+4 mm de holgura y un margen de codo arriba de al menos 0,236 rad en todas
+ellas. El intervalo máximo entre muestras fue de 0,052 s. La evidencia
+queda en `native_arm_clearance.json` y `native_harvest_evidence.json`.
+
+Los vídeos `cosecha_v8.mp4` y `cosecha_v8_compacta.mp4` conservan los
+6.016 fotogramas de la toma y duran 501,333 s y 290,683 s. Las dos ediciones
+pasaron decodificación completa. La regresión del subsistema de robot
+en WSL pasó 117 pruebas.
