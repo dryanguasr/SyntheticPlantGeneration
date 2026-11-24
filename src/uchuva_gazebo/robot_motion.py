@@ -9,7 +9,8 @@ import math
 from collections import OrderedDict
 
 from .robot_kinematics import (forward_kinematics, solve_ik, collision_shapes,
-    pose_identity, compose_poses, inverse_pose, transform_point, rotate_vector, axis_quaternion)
+    pose_identity, compose_poses, inverse_pose, transform_point, rotate_vector, axis_quaternion,
+    validate_auxiliary_joint_positions)
 from .robot_sdf import pose_rpy
 
 
@@ -54,9 +55,9 @@ class ResolvedMotionConfig:
         self.joint_limits = [(by_name[n]['limits']['lower'], by_name[n]['limits']['upper']) for n in robot.joint_names]
         if self.frame not in {f['name'] for f in robot.frames}:
             raise ValueError(f'Unknown task frame: {self.frame}')
-        self.aux_positions = dict(task.get('auxiliary_joint_positions', {}))
+        self.aux_positions = validate_auxiliary_joint_positions(robot, task.get('auxiliary_joint_positions', {}))
         missing = [j['name'] for j in robot.joints if j.get('group') in ('passive', 'gripper')
-                   and j['name'] not in self.aux_positions]
+                   and j['type'] != 'fixed' and j['name'] not in self.aux_positions]
         if missing:
             raise ValueError(f'Planning requires explicit passive/gripper joint positions: {missing}')
 
@@ -87,7 +88,8 @@ class ResolvedMotionConfig:
             raise ValueError('Resolved IK uses the explicit task direction, not proxy Euler constraints')
         result = solve_ik(self.robot, target, target_direction=self.direction,
                           tool_frame=self.frame, tool_axis=self.tool_axis,
-                          orientation_mode='position_direction', seed=seed)
+                          orientation_mode='position_direction', seed=seed,
+                          auxiliary_joint_positions=self.aux_positions)
         if not result.success:
             raise ValueError(f'Resolved robot IK failed: {result.reason}; position={result.position_error_m}, direction={result.direction_error_rad}')
         values = result.joint_positions

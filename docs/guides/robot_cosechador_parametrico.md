@@ -5,6 +5,15 @@ un `ResolvedRobot` inmutable en SI con hash de contenido. SDF, FK/IK, límites,
 marcos, colisiones, contrato y auditoría consumen ese mismo resultado.
 El perfil del robot es independiente del cultivo, mundo y objetivos.
 
+El contrato actual del cosechador admite brazos revolutos; rechaza un brazo
+prismático antes de exportar sus campos en radianes. Las articulaciones
+prismáticas pasivas y de mordaza mantienen sus coordenadas en metros.
+La tarea IK debe recibir el estado auxiliar observado cuando éste afecte la
+cadena, y la comprobación de colisiones usa ese mismo estado. Las poses y
+dimensiones de obstáculos externos deben ser válidas antes de admitir una
+postura. La [corrección del PR 1](../reports/correcciones_revision_pr1_2026-11-24.md)
+documenta los casos negativos y las regresiones.
+
 ## Preparar una revisión
 
 ```powershell

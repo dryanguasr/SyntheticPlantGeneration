@@ -49,6 +49,10 @@ fijado de Diego contra su manifiesto, sin necesitar Git ni ROS 2.
 inspecciona el contrato del robot y observaciones opcionales, sin actuar.
 Consultar la [guía](../docs/guides/integracion_physalisharvest.md).
 
+`physalisharvest_ros.py compilar` prepara los dos paquetes ROS preservados;
+`estado` y `monitor` usan el mismo `--output-root` y `install/setup.bash`.
+`--dry-run` permite inspeccionar el comando sin iniciar procesos ni hardware.
+
 | Script | Propósito |
 |---|---|
 | `prepare_robot_model.py` | Resuelve perfiles y overrides con procedencia; genera SDF, contrato, configuración efectiva y reporte |

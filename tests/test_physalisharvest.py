@@ -3,6 +3,7 @@ import copy
 import json
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -100,6 +101,58 @@ class AstraPointTests(unittest.TestCase):
 
 
 class IntegrationPlanTests(unittest.TestCase):
+    def test_prismatic_arm_cannot_be_exported_as_a_radian_contract(self):
+        data = resolve_robot("proxy_v1").to_dict()
+        next(joint for joint in data["joints"]
+             if joint["name"] == "wrist_roll_joint")["type"] = "prismatic"
+        robot = resolve_robot(data)
+        for export in (robot_contract, build_integration_plan, build_robot_sdf):
+            with self.subTest(export=export.__name__), self.assertRaisesRegex(ValueError, "revolute arm"):
+                export(robot)
+
+    def test_prismatic_arm_cli_does_not_write_a_mislabelled_report(self):
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+        from check_physalisharvest_integration import main
+
+        data = resolve_robot("proxy_v1").to_dict()
+        next(joint for joint in data["joints"]
+             if joint["name"] == "wrist_roll_joint")["type"] = "prismatic"
+        with tempfile.TemporaryDirectory() as directory:
+            profile = Path(directory) / "profile.json"
+            output = Path(directory) / "report.json"
+            profile.write_text(json.dumps(data), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "revolute arm"):
+                main(["--profile", str(profile), "--output", str(output)])
+            self.assertFalse(output.exists())
+
+    def test_gripper_units_remain_specific_to_its_joint_type(self):
+        from uchuva_gazebo.robot_kinematics import pose_identity
+
+        for kind, unit in (("prismatic", "m"), ("revolute", "rad")):
+            data = resolve_robot("proxy_v1").to_dict()
+            parent = robot_contract(resolve_robot(data))["tool_link"]
+            data["links"].append({
+                "name": "review_jaw", "visuals": [], "collisions": [],
+                "inertial": {"mass_kg": .01, "com_m": [0, 0, 0],
+                             "tensor_kg_m2": [.001, .001, .001, 0, 0, 0]},
+            })
+            data["joints"].append({
+                "name": "review_jaw_joint", "parent": parent, "child": "review_jaw",
+                "type": kind, "group": "gripper", "axis": [1, 0, 0],
+                "origin": pose_identity(), "child_pose": pose_identity(), "zero_offset": 0,
+                "limits": {"lower": 0, "upper": .008, "velocity": .005, "effort": 1},
+            })
+            control = copy.deepcopy(next(iter(data["control"]["arm"].values())))
+            control.update(cmd_min=-1, cmd_max=1, command_velocity=.003)
+            data["control"]["gripper"] = {"review_jaw_joint": control}
+            plan = build_integration_plan(resolve_robot(data))
+            binding = next(row for row in plan["bindings"]
+                           if row.get("joint_name") == "review_jaw_joint")
+            with self.subTest(kind=kind):
+                self.assertEqual(binding["units"], unit)
+                self.assertTrue(all(row["units"] == "rad" for row in plan["bindings"]
+                                    if row["role"] == "arm_position_reference"))
+
     def test_contract_twist_and_odometry_do_not_imply_native_endpoints(self):
         robot = resolve_robot("proxy_v1")
         plan = build_integration_plan(robot)

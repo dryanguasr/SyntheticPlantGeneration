@@ -148,6 +148,32 @@ def collision_shapes(robot, frame_poses):
     return tuple(result)
 
 
+def validate_auxiliary_joint_positions(robot, positions):
+    """Copy finite, bounded non-arm coordinates held fixed during a task solve.
+
+    Omitting this optional map preserves the historical nominal-zero state.
+    Callers claiming an observed passive/gripper state must supply it explicitly.
+    """
+    if positions is None:
+        return {}
+    if not isinstance(positions, Mapping):
+        raise ValueError("Auxiliary joint positions must be an explicit mapping")
+    rows = {row["name"]: row for row in robot.joints}
+    if set(positions)-set(rows) or set(positions) & set(robot.joint_names):
+        raise ValueError("Auxiliary coordinates must name known non-arm joints")
+    result = {}
+    for name, value in positions.items():
+        value = _number(value, name)
+        joint = rows[name]
+        if joint["type"] == "fixed":
+            if value != 0:
+                raise ValueError(f"Fixed joint {name} cannot have a moving coordinate")
+        elif not joint["limits"]["lower"] <= value <= joint["limits"]["upper"]:
+            raise ValueError(f"Auxiliary joint {name} exceeds limits")
+        result[name] = value
+    return result
+
+
 @dataclass(frozen=True)
 class IKResult:
     success: bool
@@ -184,13 +210,15 @@ def _solve_linear(matrix, right):
 def solve_ik(robot, target_position_m, target_direction=None, *, tool_frame="tcp",
              seed=None, orientation_mode="position_direction", tool_axis=(0, 0, 1),
              position_tolerance_m=1e-5, direction_tolerance_rad=1e-4,
-             max_iterations=160, damping=.003, max_step_rad=.20):
+             max_iterations=160, damping=.003, max_step_rad=.20,
+             auxiliary_joint_positions=None):
     """Bounded damped least squares: position + an explicit tool-axis direction.
 
     A direction has two independent constraints. Its axial rotation is free.
     Position-only is available only by explicit mode, never implicit fallback.
     Failure preserves the best candidate/residuals and does not imply global
     infeasibility. Numerical tolerances are solver controls, not CAD accuracy.
+    Supplied non-arm coordinates remain fixed in every FK/Jacobian evaluation.
     """
     robot.require_capability("ik_position_direction")
     names = robot.joint_names
@@ -214,6 +242,7 @@ def solve_ik(robot, target_position_m, target_direction=None, *, tool_frame="tcp
     elif target_direction is not None:
         raise ValueError("Position-only mode cannot silently ignore a supplied direction")
     rows = {row["name"]: row for row in robot.joints}
+    auxiliary = validate_auxiliary_joint_positions(robot, auxiliary_joint_positions)
     if any(rows[name]["type"] != "revolute" for name in names):
         raise ValueError("Five-axis task solver currently requires revolute arm joints")
     if seed is None:
@@ -230,7 +259,8 @@ def solve_ik(robot, target_position_m, target_direction=None, *, tool_frame="tcp
     orientation_weight = .3  # metre-scale numerical balancing, not a tolerance.
 
     def observe(values):
-        frames = forward_kinematics(robot, values)
+        positions = {**auxiliary, **dict(zip(names, values))}
+        frames = forward_kinematics(robot, positions)
         if tool_frame not in frames:
             raise ValueError("Unknown IK task frame")
         pose = frames[tool_frame]

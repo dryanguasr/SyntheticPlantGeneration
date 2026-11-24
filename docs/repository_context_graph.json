@@ -34,7 +34,7 @@
       "id": "module.parametric_harvester",
       "type": "module",
       "label": "Robot paramétrico con procedencia CAD y observación física",
-      "summary": "Descripción JSON canónica resuelta e inmutable para SDF, FK/IK, control, colisiones y auditoría. Conserva el proxy histórico y el CAD diagnóstico reducido. Candidatos articulados con cierres nativos, engranajes pasivos, mallas cóncavas y control por esfuerzo con referencia limitada por paso; la auditoría contrasta observadores independientes. Las revisiones locales CAD preservan originales y recalculan inercia por pieza; las pruebas aisladas no admiten automáticamente el robot completo ni cosecha. La carrera corta aproximada comunicada por el usuario conserva su incertidumbre. Sin calibración del prototipo.",
+      "summary": "Descripción JSON canónica resuelta e inmutable para SDF, FK/IK, control, colisiones y auditoría. Conserva el proxy histórico y el CAD diagnóstico reducido. Candidatos articulados con cierres nativos, engranajes pasivos, mallas cóncavas y control por esfuerzo con referencia limitada por paso; la auditoría contrasta observadores independientes. Las revisiones locales CAD preservan originales y recalculan inercia por pieza; las pruebas aisladas no admiten automáticamente el robot completo ni cosecha. La carrera corta aproximada comunicada por el usuario conserva su incertidumbre. Sin calibración del prototipo. Revisión PR1: IK/FK/colisiones comparten auxiliares observados; la API rechaza obstáculos y separaciones inválidas; cierre y apertura de la mordaza incluyen posiciones intermedias sin certificar continuidad. El contrato del cosechador rechaza brazos no revolutos antes de emitir campos en radianes.",
       "paths": [
         "src/uchuva_gazebo/robot.py",
         "src/uchuva_gazebo/robot_spec.py",
@@ -174,7 +174,10 @@
         "docs/references/real_harvester_cad_inventory_2026-11-23.json",
         "docs/references/real_harvester_prototype_observations_2026-11-23.json",
         "docs/reports/robot_cosechador_parametrico_2026-11-23.md",
-        "docs/reports/robot_cosechador_mecanismos_2026-11-23.md"
+        "docs/reports/robot_cosechador_mecanismos_2026-11-23.md",
+        "tests/test_robot_task_regressions.py",
+        "tests/test_jaw_motion_clearance.py",
+        "docs/reports/correcciones_revision_pr1_2026-11-24.md"
       ],
       "evidence": [
         {
@@ -196,6 +199,10 @@
         {
           "path": "scripts/export_inventor_robot.ps1",
           "locator": "SkipAllUnresolvedFiles"
+        },
+        {
+          "path": "src/uchuva_gazebo/robot_harvest_planning.py",
+          "locator": "def audit_jaw_transition("
         }
       ]
     },
@@ -3090,7 +3097,7 @@
       "id": "module.physalisharvest_integration",
       "type": "module",
       "label": "Conciliación del cosechador y PhysalisHarvest",
-      "summary": "Contrato puro derivado de RobotSpec y observaciones ópticas ArUco con reloj explícito. Snapshot externo íntegro y atribuido, sin autoridad botánica ni relicenciamiento MIT. Banco físico 2WD separado del robot digital. TF, adaptación de control, puente y misión física pendientes; pruebas de software no equivalen a cosecha autónoma.",
+      "summary": "Contrato puro derivado de RobotSpec y observaciones ópticas ArUco con reloj explícito. Snapshot externo íntegro y atribuido, sin autoridad botánica ni relicenciamiento MIT. Banco físico 2WD separado del robot digital. TF, adaptación de control, puente y misión física pendientes; pruebas de software no equivalen a cosecha autónoma. Lanzador canónico externo al snapshot: compilar y consultar nodos originales comparte install configurable bajo outputs; dry-run no inicia procesos y ejecución exige instalación existente. No abre cámara/serie ni arma implícitamente.",
       "paths": [
         "src/uchuva_gazebo/physalisharvest.py",
         "scripts/check_physalisharvest_integration.py",
@@ -3098,7 +3105,11 @@
         "tests/test_physalisharvest.py",
         "contributions/physalisharvest.provenance.json",
         "docs/guides/integracion_physalisharvest.md",
-        "docs/reports/conciliacion_cosechador_physalisharvest_2026-11-24.md"
+        "docs/reports/conciliacion_cosechador_physalisharvest_2026-11-24.md",
+        "src/uchuva_gazebo/physalisharvest_launch.py",
+        "scripts/physalisharvest_ros.py",
+        "tests/test_physalisharvest_launch.py",
+        "docs/reports/correcciones_revision_pr1_2026-11-24.md"
       ],
       "evidence": [
         {
@@ -3112,6 +3123,10 @@
         {
           "path": "docs/reports/conciliacion_cosechador_physalisharvest_2026-11-24.md",
           "locator": "## Arquitectura conciliada"
+        },
+        {
+          "path": "src/uchuva_gazebo/physalisharvest_launch.py",
+          "locator": "def create_launch_plan("
         }
       ]
     }

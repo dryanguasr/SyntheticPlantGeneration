@@ -43,6 +43,9 @@ def resolved_robot_contract(robot):
     namespace = data['namespace']
     names = list(robot.joint_names)
     by_name = {j['name']: j for j in data['joints']}
+    if any(by_name[name]['type'] != 'revolute' for name in names):
+        raise ValueError('The harvester contract supports revolute arm joints only; '
+                         'a prismatic arm requires an explicit unit-aware contract')
     frames = {row['name']: row for row in data['frames']}
     if 'tcp' not in frames:
         raise ValueError('Robot profile must define its tcp frame')

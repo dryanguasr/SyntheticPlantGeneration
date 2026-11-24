@@ -21,7 +21,8 @@ PREAPPROACH_OFFSETS = ((-.10, 0., .10), (-.08, 0., .04), (-.08, 0., 0.),
 
 def _position_joints(config, point, seed):
     solved = solve_ik(config.robot, point, tool_frame=config.frame, seed=seed,
-                      orientation_mode='position_only')
+                      orientation_mode='position_only',
+                      auxiliary_joint_positions=getattr(config, 'aux_positions', {}))
     if not solved.success:
         raise ValueError(f'Position-only IK failed: {solved.reason}')
     values = solved.joint_positions
@@ -65,6 +66,78 @@ def _lift_candidates(config, outgoing, carry):
             yield _position_joints(config, point, outgoing), point
         except ValueError:
             continue
+
+
+def audit_jaw_transition(joints, base, cylinders, fruits, config, *, joint_name,
+                         start_m, end_m, held=None, samples=81, clearance_m=.004):
+    """Sample a prismatic jaw stroke with the arm and other auxiliaries fixed.
+
+    The 1 mm increment is an engineering sampling resolution, not a guarantee
+    of continuous clearance. The requested density is retained when finer;
+    an odd count includes the stroke midpoint even for a two-sample request.
+    Every posture uses the existing geometric audit and contact policy.
+    """
+    from .harvest_clearance import audit_joint_segment
+
+    if type(samples) is not int or not 2 <= samples <= 10001:
+        raise ValueError('Jaw transition requires between 2 and 10001 requested samples')
+    if type(clearance_m) not in (int, float) or not math.isfinite(clearance_m) or clearance_m <= 0:
+        raise ValueError('Jaw transition requires positive finite clearance')
+    joint = next((row for row in config.robot.joints if row['name'] == joint_name), None)
+    if joint is None or joint.get('group') != 'gripper' or joint.get('type') != 'prismatic':
+        raise ValueError('Jaw transition requires a declared prismatic gripper joint')
+    if joint_name not in config.aux_positions:
+        raise ValueError('Jaw transition requires an explicit auxiliary joint state')
+    for value in (start_m, end_m):
+        if (type(value) not in (int, float) or not math.isfinite(value) or
+                not joint['limits']['lower'] <= value <= joint['limits']['upper']):
+            raise ValueError('Jaw transition endpoints must be finite and within joint limits')
+    count = max(samples, 3, math.ceil(abs(end_m-start_m)/.001) + 1)
+    count += (count-1) % 2
+    if count > 10001:
+        raise ValueError('Jaw transition exceeds the bounded sampling budget')
+    result = None
+    previous_tcp = None
+    for index in range(count):
+        fraction = index/(count-1)
+        position = (1-fraction)*start_m + fraction*end_m
+        observed = {**config.aux_positions, joint_name: position}
+        motion = config.for_observed_joints(observed)
+        row = audit_joint_segment(joints, joints, base, cylinders, fruits,
+            held=held, config=motion, samples=2, clearance_m=clearance_m,
+            stop_on_failure=True, report_cap=clearance_m)
+        if result is None:
+            result = {**row, 'samples': 0, 'requested_samples': 2*count,
+                'auxiliary_joint': joint_name, 'auxiliary_start_m': start_m,
+                'auxiliary_end_m': end_m, 'auxiliary_samples': 0,
+                'auxiliary_requested_samples': count,
+                'maximum_auxiliary_sample_step_m': abs(end_m-start_m)/(count-1),
+                'method': 'sampled_prismatic_jaw_with_fixed_arm',
+                'continuous_clearance_certified': False}
+        result['samples'] += row['samples']
+        result['auxiliary_samples'] += 1
+        result['minimum_joint_margin_rad'] = min(result['minimum_joint_margin_rad'], row['minimum_joint_margin_rad'])
+        for key, detail in (
+                ('minimum_robot_clearance_m', 'limiting_robot_pair'),
+                ('minimum_held_clearance_m', 'limiting_held_obstacle'),
+                ('minimum_held_robot_clearance_m', 'limiting_held_robot_link')):
+            if row[key] is not None and (result[key] is None or row[key] < result[key]):
+                result[key] = row[key]
+                if detail in row:
+                    result[detail] = row[detail]
+                result[detail+'_auxiliary_sample'] = index
+        tcp = motion.fk(joints)['position_m']
+        if previous_tcp is not None:
+            result['maximum_tcp_sample_step_m'] = max(result['maximum_tcp_sample_step_m'], math.dist(previous_tcp, tcp))
+        previous_tcp = tcp
+        if not row['passed']:
+            result.update(passed=False, failed_auxiliary_fraction=fraction,
+                          failed_auxiliary_position_m=position)
+            for key in ('first_failure_only', 'first_failure_scope', 'unobserved_fields_at_failure'):
+                if key in row:
+                    result[key] = row[key]
+            break
+    return result
 
 
 def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
@@ -120,6 +193,8 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
                 c = config.for_direction(rotate_vector(inverse['quaternion_xyzw'], world_direction))
                 if fixture:
                     c = c.for_target_cut(fruit['id'])
+                    jaw = fixture['gripper']
+                    c = c.for_observed_joints({**c.aux_positions, jaw['joint']: jaw['closed_position_m']})
                 record = {'base_pose': list(base), 'direction_sign': sign}
                 try:
                     qcut = list(c.solve(local_cut, seed=seed))
@@ -133,7 +208,6 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
                             pose_from_rpy(fruit['center_world_m'], [0, 0, 0]))}
                 opened = c
                 if fixture:
-                    jaw = fixture['gripper']
                     opened = c.for_observed_joints({**c.aux_positions, jaw['joint']: jaw['open_position_m']})
 
                 def segment(first, second, a, b, *, carrying=False, motion=c):
@@ -167,9 +241,12 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
                     return row
 
                 if fixture:
-                    closure = segment('cut_open', 'cut_closed', qcut, qcut)
+                    closure = audit_jaw_transition(qcut, base, cylinders, occupied, c,
+                        joint_name=jaw['joint'], start_m=jaw['open_position_m'],
+                        end_m=jaw['closed_position_m'], samples=samples, clearance_m=clearance_m)
+                    closure.update({'from': 'cut_open', 'to': 'cut_closed', 'held': False})
                     if not closure['passed']:
-                        rejected.append({**record, 'reason': 'closed_cut_geometry', 'segments': [closure]})
+                        rejected.append({**record, 'reason': 'jaw_closure_collision_or_margin', 'segments': [closure]})
                         continue
                 approach = None
                 for qpre, local_pre, error in _preapproach_candidates(c, local_cut, qcut, carry, expanded):
@@ -240,9 +317,14 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
                                         break
                             if not all(part['passed'] for part in transfer_segments):
                                 continue
-                            clear_open = segment('above_basket_closed', 'above_basket_open', release, release,
-                                                 carrying=True, motion=opened)
+                            clear_open = audit_jaw_transition(release, base, cylinders, occupied, c,
+                                joint_name=jaw['joint'], start_m=jaw['closed_position_m'],
+                                end_m=jaw['open_position_m'], held=held, samples=samples,
+                                clearance_m=clearance_m)
+                            clear_open.update({'from': 'above_basket_closed', 'to': 'above_basket_open', 'held': True})
                             if not clear_open['passed']:
+                                rejected.append({**record, 'reason': 'jaw_opening_collision_or_margin',
+                                    'deposit_joints': list(release), 'segments': [clear_open]})
                                 continue
                             # The attached world fruit has already been removed from its crop pose.
                             # The separate return audit below uses the released tray volume.

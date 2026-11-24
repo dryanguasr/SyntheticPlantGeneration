@@ -136,6 +136,12 @@ comprobar otro sensor. No se instalaron dependencias nuevas para centralizarlo.
 
 ## Registro de verificación de esta sesión
 
+La revisión posterior del corte inicial encontró defectos no cubiertos por
+las pruebas de esta tabla. El [registro de correcciones del PR 1](correcciones_revision_pr1_2026-11-24.md)
+conserva sus causas, cambios y verificaciones nuevas. Los resultados iniciales
+se mantienen como evidencia histórica; no certificaban los casos negativos
+añadidos después de la revisión.
+
 Se ejecutaron comprobaciones nuevas el 24 de noviembre de 2026. Las cifras
 siguientes corresponden a esta rama aislada, sin repetir misiones V8. Ninguna
 dependencia se instaló para obtener estos resultados.

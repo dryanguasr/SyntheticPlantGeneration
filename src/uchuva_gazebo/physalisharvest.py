@@ -139,6 +139,9 @@ def build_integration_plan(resolved_robot):
 
     Interface names here are declarations, not confirmation that a Gazebo
     producer or a ROS consumer is running. No extra robot geometry is defined.
+    The current harvester contract supports revolute arm joints only. Its
+    radian fields must not be reused for a prismatic arm; passive mechanisms
+    and a prismatic gripper retain their separate SI coordinates.
     """
     from .robot import robot_contract
 

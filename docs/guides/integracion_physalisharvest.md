@@ -66,6 +66,12 @@ validar esas observaciones sin importar ROS 2, abrir puertos ni actuar.
 reloj actual declarados, ambos compatibles. Rechaza campos adicionales de
 verdad del simulador, marcos erróneos, tiempos inválidos y datos no finitos.
 
+El contrato actual del cosechador usa un brazo revoluto y rechaza un brazo
+prismático antes de emitir campos en radianes. Las coordenadas prismáticas de
+la mordaza y los mecanismos pasivos siguen en metros. El solver y el auditor
+deben compartir el estado auxiliar observado; la apertura y el cierre se
+criban también en posiciones intermedias de la mordaza.
+
 | Campo o recurso | Semántica que se conserva |
 | --- | --- |
 | `PointStamped` | XYZ en metros, con marco y tiempo explícitos |
@@ -119,26 +125,46 @@ salida nueva para cada revisión. Para una observación guardada, la CLI admite
 un puente ROS ni publica comandos.
 
 Si **ya existe** un entorno Ubuntu 24.04/Jazzy con las dependencias del banco,
-se puede compilar el aporte directamente, sin duplicar paquetes:
+la entrada canónica del proyecto compila y consulta los nodos desde una única
+instalación externa al snapshot. Funciona desde Python en Windows/WSL o Linux:
 
-```bash
-source /opt/ros/jazzy/setup.bash
-export PYTHONDONTWRITEBYTECODE=1
-colcon --log-base outputs/physalisharvest_ros/log build --base-paths contributions/physalisharvest/ros2_ws/src \
-  --packages-select bench_2wd bench_2wd_drv8833 \
-  --build-base outputs/physalisharvest_ros/build \
-  --install-base outputs/physalisharvest_ros/install
+```powershell
+python scripts/physalisharvest_ros.py compilar --dry-run
+python scripts/physalisharvest_ros.py compilar --output-root outputs/physalisharvest_ros
+python scripts/physalisharvest_ros.py estado --output-root outputs/physalisharvest_ros --dry-run
+python scripts/physalisharvest_ros.py estado --output-root outputs/physalisharvest_ros
+python scripts/physalisharvest_ros.py monitor --output-root outputs/physalisharvest_ros
 ```
 
-En esta conciliación se compilaron ambos paquetes en Ubuntu 24.04/Jazzy y
-pasaron seis pruebas originales de ROS 2 con mensajes locales y tuberías
-simuladas. No se probó cámara, serie ni motor. Para repetir las pruebas, cargar
-`outputs/physalisharvest_ros/install/local_setup.bash` y ejecutar `python3 -m
-pytest` sobre `bench_2wd/test/test_transport.py` y
-`bench_2wd_drv8833/test/test_ros.py`, usando sus rutas dentro del snapshot.
-El [informe](../reports/conciliacion_cosechador_physalisharvest_2026-11-24.md)
-registra el entorno, las comprobaciones y la evidencia local. No ejecutar el lanzador del banco, abrir
-serie, cargar firmware ni armar motores como parte de una revisión estática.
+`--output-root` es el mismo en compilación y lanzamiento; sus subdirectorios
+`build`, `install` y `log` permanecen bajo `outputs/`. El lanzador verifica los
+107 archivos originales y exige `install/setup.bash` antes de ejecutar un nodo.
+`--dry-run` muestra el comando y si existe la instalación sin iniciar procesos.
+`estado` espera mensajes reales del tópico de estado: no inicia un controlador.
+Se puede cancelar con Ctrl+C o pasar `-- --once` para leer un solo mensaje.
+`--domain-id` y `--distro` permiten seleccionar el dominio y WSL explícitamente.
+
+Las acciones `recibir`, `fuente` y `controlador` invocan los nodos originales;
+`fuente` consume su entrada estándar, sin abrir una cámara. Los argumentos
+originales del nodo se pasan después de `--`. `armar` y `parar` invocan el
+cliente de sesión original; el armado sigue siendo una acción explícita con
+sus confirmaciones. Este lanzador no abre puerto serie, inicia la Astra ni
+sustituye el puente físico. Las consultas no arman motores.
+
+Los lanzadores y GUI históricos bajo `contributions/physalisharvest/` conservan
+su ruta interna `ros2_ws/install`. No corresponden a esta instalación externa:
+usar la entrada canónica para estos comandos ROS, sin copiar paquetes ni
+modificar los originales para ajustar sus rutas.
+
+La conciliación inicial compiló ambos paquetes y ejecutó seis pruebas ROS
+con mensajes locales y tuberías simuladas. La corrección posterior volvió a
+compilarlos mediante esta entrada y verificó `estado -- --once` con un
+publicador local de prueba. No se probó cámara, serie ni motor. Para repetir
+las pruebas originales, cargar el `install/local_setup.bash` de la instalación
+seleccionada y ejecutar `python3 -m pytest` sobre `bench_2wd/test/test_transport.py`
+y `bench_2wd_drv8833/test/test_ros.py`, usando sus rutas dentro del snapshot.
+El [registro de correcciones](../reports/correcciones_revision_pr1_2026-11-24.md)
+conserva la evidencia y sus límites.
 
 ## Dependencias y materiales que no viajan con el corte
 

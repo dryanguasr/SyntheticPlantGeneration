@@ -19,6 +19,7 @@ función, no por orden de creación. La única excepción deliberada es
 
 - [Integración centralizada con PhysalisHarvest](guides/integracion_physalisharvest.md)
   y [matriz de compatibilidad y pruebas](reports/conciliacion_cosechador_physalisharvest_2026-11-24.md).
+  [Correcciones de la revisión del PR 1](reports/correcciones_revision_pr1_2026-11-24.md).
 
 - [Robot cosechador paramétrico](guides/robot_cosechador_parametrico.md) y
   [exportación nativa de Inventor](guides/exportacion_cad_inventor_robot.md).
