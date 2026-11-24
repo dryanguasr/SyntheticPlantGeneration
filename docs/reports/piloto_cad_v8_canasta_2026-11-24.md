@@ -109,6 +109,14 @@ segundo arbusto. Gazebo alcanzó 1,8513 s simulados y el estado del fruto seguí
 siendo `ATTACHED` cuando se agotó la espera de asentamiento en tiempo real.
 Se preservaron la telemetría y los 19 cuadros RGB en
 `cad_v8_stationary_trial_native_01/`.
+Un segundo intento con la GPU mantuvo el paso de 0,1 ms y perdió telemetría
+antes del corte. El ensayo aislado con paso de 0,5 ms conservó fuerzas,
+límites de movimiento y guardas de corte. El plan de ese fruto del segundo
+arbusto pasó la comprobación densa de aproximación, retirada con fruto y
+trayectoria hasta la apertura de la pinza sobre la canasta. Véanse
+`cad_v8_stationary_trial_exact_waypoints_refined_01.json` y
+`cad_v8_stationary_trial_exact_held_refined_01.json`. Ambas comprobaciones
+usan la geometría V8 original y conservan los 4 mm.
 
 Las dos ediciones de `admitted_cut_static_video_01/` muestran tres de las posturas
 en los mismos 93 cuadros RGB nativos. La edición anotada marca veinte

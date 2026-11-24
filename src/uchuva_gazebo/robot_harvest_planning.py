@@ -296,7 +296,9 @@ def onboard_release_joints(config, fruit, carry, basket):
     lo, hi = basket['inner_min_m'], basket['inner_max_m']
     x, y = [(a+b)/2 for a,b in zip(lo[:2], hi[:2])]
     horizontal_centers = [(x, y)]
+    heights = (.06, .12, .20, .28)
     if getattr(config, 'task', {}).get('demo_fixture', {}).get(WRIST_OPTION):
+        heights = (*heights, .34, .42, .50)
         radius = fruit['radius_m']
         horizontal_centers.extend((x+dx, y+dy) for dx, dy in ((-.04, 0.), (.04, 0.), (0., -.04), (0., .04))
                                   if lo[0]+radius <= x+dx <= hi[0]-radius and
@@ -304,7 +306,7 @@ def onboard_release_joints(config, fruit, carry, basket):
     offset = fruit['held_offset_in_tool_m']
     poses = (carry, [0., -.7, .9, .2, 0.], [0., .7, -.9, -.2, 0.])
     targets = ([cx, cy, hi[2]+fruit['radius_m']+height]
-               for cx, cy in horizontal_centers for height in (.06, .12, .20, .28))
+               for cx, cy in horizontal_centers for height in heights)
     for center in targets:
         for seed in poses:
             q = list(seed)
