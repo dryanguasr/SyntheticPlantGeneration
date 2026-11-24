@@ -14,17 +14,23 @@
 #include <gz/transport/Node.hh>
 #include <sdf/Element.hh>
 #include <algorithm>
+#include <cerrno>
 #include <chrono>
 #include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <fcntl.h>
 #include <fstream>
 #include <iomanip>
 #include <limits>
 #include <locale>
+#include <memory>
 #include <set>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <unistd.h>
 
 namespace uchuva
 {
@@ -51,6 +57,23 @@ std::ifstream Open(const std::string &_path)
   input.imbue(std::locale::classic());
   if (!input) throw std::runtime_error("Cannot read " + _path);
   return input;
+}
+
+std::FILE *OpenExclusiveObservation(const std::string &_path)
+{
+  const int descriptor = ::open(_path.c_str(), O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, 0644);
+  if (descriptor < 0)
+    throw std::runtime_error("Cannot create native observations without replacing evidence: " +
+        _path + ": " + std::strerror(errno));
+  std::FILE *stream = ::fdopen(descriptor, "w");
+  if (!stream)
+  {
+    const int error = errno;
+    ::close(descriptor);
+    throw std::runtime_error("Cannot stream native observations: " +
+        _path + ": " + std::strerror(error));
+  }
+  return stream;
 }
 
 bool ReadRow(std::ifstream &_file, std::istringstream &_row)
@@ -101,14 +124,16 @@ class HarvestDemoPlaybackSystem final : public gz::sim::System,
       }
       if (config->HasElement("observations_file"))
       {
-        this->observations.open(config->Get<std::string>("observations_file"));
-        if (!this->observations)
-          throw std::runtime_error("Cannot open native playback observations");
-        this->observations.imbue(std::locale::classic());
-        this->observations << std::setprecision(15) << "time x y z roll pitch yaw";
+        this->observations.reset(OpenExclusiveObservation(
+            config->Get<std::string>("observations_file")));
+        std::ostringstream header;
+        header.imbue(std::locale::classic());
+        header << "time x y z roll pitch yaw";
         for (const auto &name : this->jointNames)
-          this->observations << ' ' << name << "_position " << name << "_velocity";
-        this->observations << '\n';
+          header << ' ' << name << "_position " << name << "_velocity";
+        header << '\n';
+        if (!this->WriteObservation(header.str()))
+          throw std::runtime_error("Cannot write native playback observation header");
       }
       this->valid = true;
       gzmsg << "HarvestDemoPlaybackSystem: " << this->frames.size()
@@ -187,21 +212,34 @@ class HarvestDemoPlaybackSystem final : public gz::sim::System,
   public: void PostUpdate(const gz::sim::UpdateInfo &_info,
       const gz::sim::EntityComponentManager &_ecm) override
   {
-    if (!this->valid || !this->observations.is_open() || _info.paused) return;
+    if (!this->valid || !this->observations || _info.paused) return;
     const double time = std::chrono::duration<double>(_info.simTime).count();
     if (time + 1e-10 < this->nextObservation) return;
     this->nextObservation = time + .05;
     const auto pose = gz::sim::worldPose(this->model.Entity(), _ecm);
-    this->observations << time << ' ' << pose;
+    std::ostringstream row;
+    row.imbue(std::locale::classic());
+    row << std::setprecision(15) << time << ' ' << pose;
     for (const auto &joint : this->joints)
     {
       const auto q = joint.Position(_ecm);
       const auto v = joint.Velocity(_ecm);
       const auto nan = std::numeric_limits<double>::quiet_NaN();
-      this->observations << ' ' << (q && q->size() == 1 ? (*q)[0] : nan)
-                         << ' ' << (v && v->size() == 1 ? (*v)[0] : nan);
+      row << ' ' << (q && q->size() == 1 ? (*q)[0] : nan)
+          << ' ' << (v && v->size() == 1 ? (*v)[0] : nan);
     }
-    this->observations << '\n' << std::flush;
+    row << '\n';
+    if (!this->WriteObservation(row.str()))
+    {
+      gzerr << "HarvestDemoPlaybackSystem: native observation write failed\n";
+      this->valid = false;
+    }
+  }
+
+  private: bool WriteObservation(const std::string &_row)
+  {
+    return std::fwrite(_row.data(), 1, _row.size(), this->observations.get()) == _row.size()
+        && std::fflush(this->observations.get()) == 0;
   }
 
   private: void ReadJoints(const sdf::ElementPtr &_config,
@@ -298,7 +336,7 @@ class HarvestDemoPlaybackSystem final : public gz::sim::System,
   private: std::vector<HarvestCommand> commands;
   private: gz::transport::Node node;
   private: gz::transport::Node::Publisher publisher;
-  private: std::ofstream observations;
+  private: std::unique_ptr<std::FILE, decltype(&std::fclose)> observations{nullptr, &std::fclose};
   private: size_t segment{0};
   private: size_t nextCommand{0};
   private: double previousTime{-1.};

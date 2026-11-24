@@ -22,11 +22,12 @@ sys.path.insert(0, str(REPO / 'src'))
 
 from audit_harvest_pilot import strict_json_loads
 from uchuva_gazebo.harvest_basket import load_fruit_vertices
-from uchuva_gazebo.harvest_pilot import _video_observer, sha256_file
+from uchuva_gazebo.harvest_pilot import _video_observer, load_verified_package, sha256_file
 from uchuva_gazebo.harvest_validation import deposited_interval
 
 CAMERA_LIBRARY = 'libUchuvaHarvestDemoCameraSystem.so'
 CAMERA_SYSTEM = 'uchuva::HarvestDemoCameraSystem'
+PLAYBACK_SYSTEM = 'uchuva::HarvestDemoPlaybackSystem'
 
 
 def prepare_camera(world, robot_name='harvester', *, eye_offset=(-1.58, -.90, 1.42),
@@ -135,13 +136,39 @@ def stop_server(process):
         process.wait(timeout=5)
 
 
-def capture(package, source_package, plugin_dirs, output, wall_timeout, *, record_video):
-    from harvest_native_video import NativeVideoRecorder
+def playback_observations(package, world, manifest):
+    """Bind the native writer to this verified take and preserve earlier runs.
 
+    Prepared worlds contain absolute paths. A moved package must be prepared
+    again instead of silently reading another copy of its trajectory. The
+    plugin also creates the observation file atomically, so concurrent or
+    direct Gazebo launches cannot truncate it after this preflight check.
+    """
+    plugins = ET.parse(world).findall(f".//plugin[@name='{PLAYBACK_SYSTEM}']")
+    if len(plugins) != 1:
+        raise ValueError('A take requires exactly one native playback writer')
+    plugin = plugins[0]
+    for tag, name in (('trajectory_file', 'trajectory.tsv'), ('commands_file', 'commands.tsv')):
+        value = plugin.findtext(tag)
+        if (not value or name not in manifest['files_sha256']
+                or (package / value).resolve() != package / name):
+            raise ValueError(f'Playback {tag} differs from the verified take artifact')
+    observation = package / 'native_motion.tsv'
+    if observation.exists() or observation.is_symlink():
+        raise FileExistsError(f'Native joint evidence already exists; prepare a new take: {observation}')
+    value = plugin.findtext('observations_file')
+    if not value or (package / value).resolve() != observation:
+        raise ValueError('Playback observations_file must belong to this take package')
+    return observation
+
+
+def capture(package, source_package, plugin_dirs, output, wall_timeout, *, record_video):
+    package = Path(package).resolve(strict=True)
+    source_package = Path(source_package).resolve(strict=True)
     manifest_file = package / 'demo_manifest.json'
     manifest = read_json(manifest_file)
     source_file = source_package / 'manifest.json'
-    source = read_json(source_file)
+    source = load_verified_package(source_package)
     world = (package / manifest['world_file']).resolve(strict=True)
     if not world.is_relative_to(package):
         raise ValueError('Demo world path escapes its package')
@@ -151,6 +178,7 @@ def capture(package, source_package, plugin_dirs, output, wall_timeout, *, recor
         artifact = (package / name).resolve(strict=True)
         if not artifact.is_relative_to(package) or sha256_file(artifact) != expected:
             raise ValueError(f'Mismatched demonstration artifact {name}')
+    native_motion = playback_observations(package, world, manifest)
     check = subprocess.run(['gz', 'sdf', '-k', str(world)], capture_output=True, text=True, timeout=60)
     if check.returncode:
         raise RuntimeError(f'Gazebo rejected the demonstration SDF: {check.stdout}{check.stderr}')
@@ -173,6 +201,7 @@ def capture(package, source_package, plugin_dirs, output, wall_timeout, *, recor
                   'partition': partition, 'server_command': command, 'maximum_wall_seconds': wall_timeout,
                   'expected_simulation_seconds': duration, 'demo_manifest_sha256': sha256_file(manifest_file),
                   'source_manifest_sha256': sha256_file(source_file), 'world_sha256': sha256_file(world),
+                  'native_motion_file': str(native_motion),
                   'target_ids': manifest['target_ids'], 'record_requested': record_video,
                   'plugin_sha256': {str(library): sha256_file(library) for directory in plugin_dirs
                                     for library in sorted(directory.glob('libUchuva*.so'))}}
@@ -185,6 +214,7 @@ def capture(package, source_package, plugin_dirs, output, wall_timeout, *, recor
         try:
             signals = HarvestSignals(output, interaction, stack)
             if record_video:
+                from harvest_native_video import NativeVideoRecorder
                 video = NativeVideoRecorder(output, video_settings)
             server = subprocess.Popen(command, cwd=package, stdout=log, stderr=subprocess.STDOUT,
                                       start_new_session=True)
@@ -223,15 +253,17 @@ def capture(package, source_package, plugin_dirs, output, wall_timeout, *, recor
                 except (OSError, RuntimeError, subprocess.SubprocessError) as error:
                     failure = failure or str(error)
     provenance.update(status='FAILED' if failure else 'CAPTURED', error=failure,
-                      wall_seconds=time.monotonic() - started)
+                      wall_seconds=time.monotonic() - started,
+                      native_motion_sha256=sha256_file(native_motion) if native_motion.is_file() else None)
     write_json(output / 'run.json', provenance)
     return failure
 
 
 def deposit_evidence(source_package, output):
+    source_package = Path(source_package).resolve(strict=True)
     source_file = source_package / 'manifest.json'
     source_digest = sha256_file(source_file)
-    source = read_json(source_file)
+    source = load_verified_package(source_package)
     run = read_json(output / 'run.json')
     recorded_source = run.get('source_manifest_sha256') or run.get('manifest_sha256')
     if recorded_source != source_digest:

@@ -91,6 +91,13 @@ quedan registrados por escenario y perfil.
 
 ## Toma continua con movimiento prescrito
 
+Preparar un paquete de toma nuevo para cada ejecución. Si ya existe
+`native_motion.tsv`, el lanzador y el plugin rechazan su reutilización para
+conservar la evidencia anterior, incluso ante lanzamientos concurrentes.
+No mover un paquete preparado: las rutas del SDF deben corresponder a sus
+propios archivos de trayectoria, comandos y observaciones. El lanzador y la
+auditoría comprueban también los hashes de los activos del paquete de origen.
+
 El perfil de vídeo conserva las plantas y las mallas V8 del paquete verificado.
 Las cinco fases son acercamiento del carro, acercamiento de la pinza, corte,
 separación y depósito. El avance, las ruedas, el brazo y la mordaza siguen

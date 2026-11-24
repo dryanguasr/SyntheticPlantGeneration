@@ -1,5 +1,9 @@
 # Conciliación del cosechador digital y PhysalisHarvest
 
+Este documento conserva el corte inicial de conciliación. La revisión posterior,
+la autorización de fusión del usuario y los avances de todos los frentes se
+registran en [la continuidad de integración](integracion_avances_locales_2026-11-24.md).
+
 Fecha de corte: **24 de noviembre de 2026**. Este informe documenta la
 centralización en la rama de revisión
 [`codex/integracion-physalisharvest-20261124`](https://github.com/dryanguasr/SyntheticPlantGeneration/tree/codex/integracion-physalisharvest-20261124)

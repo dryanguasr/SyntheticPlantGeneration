@@ -1,0 +1,13 @@
+{
+  "method_context": "Rule-based spatial reaction/diffusion as a generative visual method, not evidence of the physiological mechanism of calyx aging",
+  "references": [
+    {
+      "author": "Alan M. Turing",
+      "year": 1952,
+      "title": "The Chemical Basis of Morphogenesis",
+      "doi": "10.1098/rstb.1952.0012",
+      "url": "https://doi.org/10.1098/rstb.1952.0012",
+      "use": "Historical conceptual context for local reaction/diffusion pattern generation. The implemented collar-driven activation/pigment model is a separate engineering hypothesis, not a reproduction or fitted calyx physiology model."
+    }
+  ]
+}

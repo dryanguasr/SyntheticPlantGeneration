@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sobremadura · cuatro modelos</title>
+  <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+  <header class="masthead">
+    <div><div class="eyebrow">REVISIÓN DE APARIENCIA · 13 NOV 2026</div><h1>Sobremadura: cuatro modelos</h1>
+      <p>Las mismas 94 fotos reales. Etiquetas originales y predicciones guardadas, sin entrenar ni generar imágenes nuevas.</p></div>
+    <div class="paused">● Generación pausada<br><small>Comprobada al crear esta revisión</small></div>
+  </header>
+  <div class="provenance-warning" id="campaignNotice"></div>
+  <div class="workspace">
+    <aside>
+      <label for="seed">Semilla del modelo</label>
+      <select id="seed"><option>20261022</option><option selected>20261023</option><option>20261024</option></select>
+      <label for="filter">Mostrar fotos</label>
+      <select id="filter">
+        <option value="labelled">Con etiqueta Sobremadura</option>
+        <option value="unlabelled">Sin etiqueta Sobre, con algún candidato</option>
+        <option value="unmatched">Candidato Sobre sin etiqueta cercana</option>
+        <option value="regression">Reciente: menos TP de Sobre</option>
+        <option value="gain">Reciente: más TP de Sobre</option>
+        <option value="all">Todas las 94 fotos</option>
+      </select>
+      <label for="group">Grupo de adquisición</label><select id="group"><option value="all">Todos los grupos</option></select>
+      <label for="search">Buscar fila o archivo</label><input id="search" type="search" placeholder="Ej. 113, 183 o 364">
+      <div class="list-summary" id="listCount"></div>
+      <nav id="photoList" aria-label="Fotos de evaluación"></nav>
+    </aside>
+    <main>
+      <section class="toolbar">
+        <div class="title-row"><h2 id="photoTitle">Cargando predicciones…</h2><div><button id="previous" aria-label="Foto anterior">←</button><button id="next" aria-label="Foto siguiente">→</button></div></div>
+        <p id="photoMeta"></p>
+        <div class="controls">
+          <label><input type="checkbox" id="showGT" checked> Etiquetas originales</label>
+          <label><input type="checkbox" id="showPred" checked> Predicciones</label>
+          <label><input type="checkbox" id="onlySobre"> Sólo predicciones Sobre</label>
+          <label><input type="checkbox" id="lowScores"> Sobre bajo el umbral</label>
+          <button id="fullPhoto">Foto completa</button><button id="focusSobre">Acercar Sobre anotadas</button>
+          <a id="originalLink" target="_blank" rel="noopener">Abrir RGB original</a>
+        </div>
+        <div class="legend"><span class="gt-key">┄ Etiqueta original</span><span class="pintona">━ Pintona</span><span class="madura">━ Madura</span><span class="sobre">━ Sobremadura</span><span id="thresholdText"></span></div>
+        <p class="absence" id="absence"></p>
+      </section>
+      <div class="model-grid" id="models"></div>
+      <section class="target-section">
+        <h3>Candidatos que compiten sobre cada Sobremadura anotada</h3>
+        <p>IoU ≥0,5 con la caja real. Se muestran las clases competidoras y el mejor score Sobre, incluso bajo el umbral. Puede haber varias clases sobre el mismo objeto: no equivale a una clasificación inequívoca.</p>
+        <div class="table-scroll"><table id="targetTable"></table></div>
+      </section>
+      <details class="provenance" id="candidateReview"><summary>Candidatos Sobre y sus anotaciones cercanas</summary>
+        <p>“Sin etiqueta cercana” significa IoU &lt;0,1 con toda caja original; no certifica fondo ni una omisión. Pulsa Acercar para revisar la región en los cuatro modelos.</p>
+        <div class="table-scroll"><table id="candidateTable"></table></div>
+      </details>
+      <section class="case-section"><h3>Tres casos para revisar</h3><div id="cases"></div></section>
+      <details class="provenance"><summary>Qué modelo hay detrás de cada panel</summary>
+        <p>“Sintética” significa reales + sintéticas sin transformaciones clásicas; no entrenamiento exclusivamente virtual. Los modelos históricos no usan las nuevas texturas. Cada familia tiene tres semillas y 4.000 actualizaciones por corrida; el checkpoint se eligió en validación.</p>
+        <table><thead><tr><th>Panel</th><th>Datos de entrenamiento</th><th>Campaña</th></tr></thead><tbody id="modelRegistry"></tbody></table>
+        <p><a href="model_registry.json">Registro de checkpoints y hashes</a> · <a href="gallery_summary.json">Cobertura de esta galería</a> · <a href="input_lock.json">Entradas verificadas</a></p>
+      </details>
+      <p class="footnote">Las vistas se reducen para revisión; el RGB y las etiquetas de origen permanecen intactos. FP y FN se refieren a las anotaciones actuales. Una región sin etiqueta no queda adjudicada biológicamente por esta galería. Test de desarrollo consultado históricamente; sin selección de modelos o umbrales a partir de esta revisión.</p>
+    </main>
+  </div>
+  <script src="gallery_data.js"></script><script src="gallery.js"></script>
+</body></html>

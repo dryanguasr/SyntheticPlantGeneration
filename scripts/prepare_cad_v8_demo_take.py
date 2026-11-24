@@ -304,6 +304,7 @@ def prepare(package, routes, output, *, limit, step, use_follow_camera=True, fps
         'passive_mechanisms': 'frozen_at_cad_zero_for_this_take',
         'source_package': str(package), 'source_manifest_sha256': source_hash,
         'route_source_sha256': hashlib.sha256(route_source).hexdigest(), 'world_file': world.name,
+        'native_motion_file': 'native_motion.tsv',
         'world_name': manifest['world_name'], 'video_observer': observer,
         'targets': targets, 'target_ids': target_ids,
         'duration_s': take.rows[-1][0], 'physics_step_s': step,

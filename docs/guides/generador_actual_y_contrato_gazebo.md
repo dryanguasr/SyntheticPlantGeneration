@@ -132,3 +132,110 @@ La ejecución del 29/10 quedó cerrada con 144 pares, veinte árboles visibles y
 sin entrenamiento. El [informe verificable](../reports/dataset_cultivo_admitido_2026-10-29.md)
 explica la integridad de anotaciones y las brechas que deben controlarse antes
 de utilizar estas vistas en un piloto de aumentación.
+
+## Captura optimizada y benchmark emparejado
+
+La ruta histórica permanece intacta. `render_spatial_dataset_optimized.py`
+es una entrada nueva que recibe campaña fuente, salida independiente,
+segundos efectivos y máximo de imágenes explícitos. No debe apuntar a una
+campaña cerrada ni ejecutarse como una ampliación implícita de su presupuesto.
+Produce una escena por proceso para conservar el límite de memoria; al
+reanudar la misma salida conserva su reloj nativo y lock de fuentes.
+
+`CaptureSession` conserva resolución 960×720, Cycles/OptiX, doce muestras,
+denoising, materiales y el rasterizador exacto de máscaras sin antialiasing.
+Reutiliza luces/nodos, registro de instancias y colores de IDs; falla si un
+material RGB lee Object Info Color, incluidos grupos anidados. Los demás
+objetos siguen presentes como oclusores negros. No descarta órganos ni
+etiquetas por distancia. El fingerprint binario lee coordenadas completas,
+topología y transformaciones antes y después de cada vista; no usa una
+muestra ni un hash cacheado de geometría. El hash histórico completo permanece
+como comprobación de entrada y salida de la escena. Los dos formatos de hash
+son distintos y no se presentan como equivalentes.
+
+`mask_arrays.py` acelera cuantización y estadísticas con el NumPy ya incluido
+en Blender, sin instalar dependencias. Conserva redondeo en doble precisión,
+colores desconocidos mediante la regla histórica, tolerancia, desempate,
+transparencia y cajas por extremos de píxeles. Si NumPy no está disponible o
+se pide retirar componentes pequeños, delega al rasterizador histórico.
+
+`CaptureJournal` compromete `view.json` individualmente y actualiza un índice
+pequeño. `committed_views()` sigue siendo compatible; el manifiesto completo
+se consolida al terminar la escena, evitando reescribir todas las instancias
+en cada toma. Los pares existentes no se sobrescriben. Un fallo entre commit
+e índice se recupera leyendo los registros individuales.
+
+La semilla de condiciones de captura es independiente de la arquitectura,
+clases y cámara. Alterna los perfiles diagnósticos existentes de campo,
+difusa y sombra, con variación moderada de azimut, elevación y exposición.
+Son heurísticas explícitas, no una medición de iluminación del cultivo. La
+configuración efectiva se guarda por vista; los materiales revisados no se
+recalibran en esta optimización.
+
+`benchmark_spatial_capture.py` reconstruye una escena de la campaña fuente y
+repite su auditoría física completa antes de guardar un `.blend`. Ambas rutas
+reabren ese mismo archivo con tres cámaras y condiciones idénticas. El
+reporte `report_capture_benchmark.py` informa igualdad estricta de píxeles
+RGB/máscara, instancias, clases, cajas, YOLO, cámara y luz. El cierre adicional
+conserva exactas las anotaciones y separa una equivalencia numérica RGB de
+máximo 1/255 y error absoluto medio ≤0,001 niveles de byte por canal. Ese
+criterio es de ingeniería, no una tolerancia botánica o física. Se realiza
+además una repetición del método original para observar su propia variación.
+Un RGB que difiere no se declara idéntico bit a bit. Mide tiempo nativo que excluye
+suspensión, separando preparación, render, máscaras, controles e I/O. El
+pronóstico conserva la auditoría de cada escena y el reciclado cada 24 vistas;
+tres vistas de una escena no proporcionan un intervalo de confianza.
+
+Un hash calculado antes de serializar no se da por válido automáticamente al
+reabrir el `.blend`. Si difiere, se preserva el intento y se detiene la captura.
+`audit_saved_capture_scene.py` comprueba invariancia de cámara y repite malla,
+suelo y orientación sobre el archivo recargado, sin relajar tolerancias. Sólo
+entonces se fija un nuevo hash exacto posterior a la recarga para ambas rutas,
+conservando el anterior como procedencia. No se atribuye la diferencia a una
+causa numérica concreta sin aislarla. Una discrepancia entre métodos después
+de fijar esa referencia sigue siendo un fallo, no una normalización admitida.
+
+En el ensayo se identificó la caché de `matrix_world` de frutos internos
+ocultos al recargar: no entran en el grafo de viewport hasta ser evaluados.
+`refresh_hidden_fruit_transforms()` usa el mismo ciclo de visibilidad temporal
+del auditor de suelo y restaura los flags, sin cambiar `hide_render`, mallas
+o canales de transformación. Así vuelve a coincidir el hash exacto posterior
+a la auditoría; los intentos anteriores quedan preservados.
+
+### Escenas compartidas y caché de Cycles
+
+`render_spatial_dataset_persistent.py` selecciona explícitamente
+`DualSceneCaptureSession` y fija sus fuentes en un lock nuevo. RGB conserva
+Cycles con datos persistentes; otra escena Workbench comparte **todos** los
+objetos y colecciones, incluidos oclusores, sin copiar ni simplificar
+geometría. Sus ajustes de color son independientes de RGB. La comparación
+real de tres vistas exige máscaras/etiquetas exactas y el criterio RGB
+publicado; no se debe confundir ese ensayo con un entrenamiento.
+
+La variante conserva una escena por proceso. Un supervisor de producción debe
+reciclar cada bloque completo y vigilar el límite efectivo, sin reabrir el
+presupuesto de una campaña cerrada. Presupuesto y máximo se pasan expresamente
+a una **salida nueva**; reanudar no permite cambiarlos. La caché requiere
+memoria adicional: tres vistas no certifican por sí solas el pico de RAM de
+una campaña larga.
+
+La planificación `balanced_depth_light/2` asigna campo/difusa/sombra a todas
+las profundidades dentro de cada escena, con cantidades equilibradas. Evita
+acoplar permanentemente un ciclo de tres luces al de tres distancias. Conserva
+la semilla independiente, variaciones moderadas y perfiles/materiales existentes.
+Las pruebas puras comprueban ese balance.
+
+Si cambia el rendimiento del equipo durante un benchmark, se repiten la
+referencia y la preparación: la aceleración del sistema no se atribuye al
+código. `run_matched_capture_benchmark.py` reconstruye los mismos árboles y
+repite las tres vistas originales antes de proyectar tiempos con
+`summarize_capture_optimization.py`.
+
+La política de tamaño de entrenamiento se aplica sobre una derivación
+explícita, conservando máscara y metadatos completos. El exportador histórico
+contiene filtros de lado mínimo de 6 píxeles y 24 píxeles visibles. Esos valores
+no se deben atribuir automáticamente al entrenador factorial, cuya captura
+conserva incluso fragmentos de un píxel. Una continuación debe congelar el
+filtro vigente, su convención de resolución y la política de regiones
+ignoradas antes de entrenar; no basta borrar cajas del RGB para declarar
+correcto un conjunto de entrenamiento.

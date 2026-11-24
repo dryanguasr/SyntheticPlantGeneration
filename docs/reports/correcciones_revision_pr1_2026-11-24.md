@@ -3,8 +3,10 @@
 La revisión del corte `068f3d890c7d6a009033e5fd75f366dffeb207b6` encontró
 cuatro defectos de software y una discrepancia entre la compilación y los
 lanzadores ROS. Este registro corresponde a su corrección en
-`codex/integracion-physalisharvest-20261124`. La fusión a `main` sigue pendiente
-de revisión del usuario.
+`codex/integracion-physalisharvest-20261124`. En ese corte la fusión a `main`
+estaba pendiente de revisión. La autorización posterior y la integración de
+todos los frentes se documentan en el
+[registro de continuidad](integracion_avances_locales_2026-11-24.md).
 
 ## Cambios y criterios de regresión
 

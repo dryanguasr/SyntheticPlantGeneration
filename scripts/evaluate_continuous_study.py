@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'src'))
-from uchuva_gazebo.continuous_evaluation import mask_iou_matrix,one_to_one_masks,target_scope
+from uchuva_gazebo.continuous_evaluation import packed_mask_iou_matrix,one_to_one_masks,target_scope
 from uchuva_gazebo.segmentation_evaluation import decode_panoptic_rgb,mask_matches,mask_confusion
 from uchuva_lsystem.segmentation_cycles import write,sha
 
@@ -38,10 +38,10 @@ def main():
         for line in (a.estimates/'observations.jsonl').open(encoding='utf-8'):
             observation=json.loads(line);stamp=observation['stamp_ns'];instances=frames[stamp]['instances']
             cache=json.loads((a.cache/f'{stamp}.json').read_text());proposals=cache['proposals']
-            with np.load(a.cache/f'{stamp}.npz') as packed:
-                h,w=map(int,packed['shape']);masks=np.unpackbits(packed['packed_masks'],axis=1,count=h*w).reshape(-1,h,w).astype(bool)
             native=cv2.imread(str(a.flight/'paired'/pairs[stamp]['mask']))
-            codes=decode_panoptic_rgb(native[:,:,::-1]);ious=mask_iou_matrix(masks,codes,instances)
+            codes=decode_panoptic_rgb(native[:,:,::-1])
+            with np.load(a.cache/f'{stamp}.npz') as packed:
+                ious=packed_mask_iou_matrix(packed['packed_masks'],packed['shape'],codes,instances)
             target,ignore=target_scope(ious,instances,objects)
             included=[i for i,v in enumerate(proposals) if v['cross_tile_suppressed_by'] is None and not ignore[i]]
             included.sort(key=lambda i:-proposals[i]['confidence'])

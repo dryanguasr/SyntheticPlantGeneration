@@ -6,6 +6,15 @@ from uchuva_gazebo.localization import canonical_pose,robust_triangulate,reconci
 
 
 class MarkerLocalizationTests(unittest.TestCase):
+    def test_zero_parallax_reports_hypothesis_rejections(self):
+        observations=[dict(R=np.eye(3),t=[0,0,0],point_px=[640,360],
+                           marker_id=0,observation_id=str(i)) for i in range(4)]
+        K=np.array([[700,0,640],[0,700,360],[0,0,1.]])
+        result=robust_triangulate(observations,K)
+        self.assertEqual(result['status'],'unavailable')
+        self.assertEqual(result['reason'],'no_consistent_three_view_geometry')
+        self.assertEqual(result['hypothesis_outcomes'],{'insufficient_parallax':4})
+
     def test_competing_crossing_detections_do_not_share_persistent_id(self):
         image=np.random.default_rng(19).integers(0,255,(100,100,3),dtype=np.uint8)
         tracker=PersistentTracker()

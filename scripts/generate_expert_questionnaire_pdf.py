@@ -189,7 +189,7 @@ def draw_cover(pdf: FormPDF) -> None:
     y -= 2
     y = pdf.section("Estado de la evidencia", y)
     y = pdf.wrapped(
-        "literature_reported = publicación primaria; measured_local = medición del predio; estimated = juicio experto sin instrumento; to_be_measured = dato todavía desconocido. Marque el nivel en cada sección cuando sea posible.",
+        "literature_reported = publicación primaria; real_dataset_measured = medición del predio con método, fuente e instrumento registrados; manual_initial_guess = juicio experto sin instrumento; to_be_measured = dato todavía desconocido. measured_local se conserva solo como alias histórico, no como prueba de medición. Marque el nivel en cada sección cuando sea posible.",
         MARGIN_X + 8, y, PAGE_W - 2 * MARGIN_X - 16, 8.5, 12,
     )
     pdf.finish_page()

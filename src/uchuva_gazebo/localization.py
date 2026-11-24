@@ -1,5 +1,6 @@
 """RGB-only tracking, robust triangulation and marker-local reconciliation."""
 import itertools
+from collections import Counter
 import cv2
 import numpy as np
 from .multiview import iou,triangulate,unambiguous_assignment
@@ -69,8 +70,10 @@ def robust_triangulate(observations,K):
     indices=np.unique(np.linspace(0,len(observations)-1,min(12,len(observations))).astype(int))
     sample=[observations[i] for i in indices];best=[];best_error=float('inf')
     triples=list(itertools.combinations(range(len(sample)),3))
+    hypothesis_outcomes=Counter()
     for position in np.unique(np.linspace(0,len(triples)-1,min(40,len(triples))).astype(int)):
         result=triangulate([sample[i] for i in triples[position]],K)
+        hypothesis_outcomes[result.get('reason',result['status'])]+=1
         if result['status']!='estimated':continue
         point=np.asarray(result['position_marker_m']);inliers=[];errors=[]
         for o in observations:
@@ -80,7 +83,8 @@ def robust_triangulate(observations,K):
             if error<=3:inliers.append(o);errors.append(error)
         mean=float(np.mean(errors)) if errors else float('inf')
         if len(inliers)>len(best) or (len(inliers)==len(best) and mean<best_error):best=inliers;best_error=mean
-    if len(best)<3:return dict(status='unavailable',reason='no_consistent_three_view_geometry')
+    if len(best)<3:return dict(status='unavailable',reason='no_consistent_three_view_geometry',
+                              hypothesis_outcomes=dict(hypothesis_outcomes))
     result=triangulate(best,K)
     if result['status']=='estimated':
         deviations=[]

@@ -28,10 +28,12 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 metadata = {'source_sha256': {name: sha(repo / 'gazebo/harvest_system' / name)
                              for name in ('HarvestSystem.cc', 'CMakeLists.txt', 'RobotTelemetrySystem.cc', 'ClosedLoopSystem.cc', 'GearCouplingSystem.cc', 'JointPositionForceSystem.cc', 'PositionForceController.hh', 'ObservationSchedule.hh', 'JawStateGuard.hh')},
+            'demo_source_sha256': {name: sha(repo / 'gazebo/harvest_system' / name)
+                                   for name in ('HarvestDemoCameraSystem.cc', 'HarvestDemoPlaybackSystem.cc')},
             'library_sha256': sha(library),
             'robot_telemetry_library_sha256': sha(build / 'libUchuvaRobotTelemetrySystem.so'),
             'libraries_sha256': {name: sha(build / name) for name in
-                                ('libUchuvaHarvestSystem.so', 'libUchuvaRobotTelemetrySystem.so', 'libUchuvaClosedLoopSystem.so', 'libUchuvaGearCouplingSystem.so', 'libUchuvaJointPositionForceSystem.so')},
+                                ('libUchuvaHarvestSystem.so', 'libUchuvaRobotTelemetrySystem.so', 'libUchuvaClosedLoopSystem.so', 'libUchuvaGearCouplingSystem.so', 'libUchuvaJointPositionForceSystem.so', 'libUchuvaHarvestDemoCameraSystem.so', 'libUchuvaHarvestDemoPlaybackSystem.so')},
             'cmake_version': subprocess.check_output(['cmake', '--version'], text=True).splitlines()[0],
             'runtime_validation': 'pending_gazebo'}
 (build / 'build_provenance.json').write_text(json.dumps(metadata, indent=2) + '\n')
