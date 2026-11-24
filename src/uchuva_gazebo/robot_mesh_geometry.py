@@ -18,17 +18,21 @@ from pathlib import Path, PurePosixPath
 from .robot_kinematics import inverse_pose, transform_point, rotate_vector
 
 
-def _sub(a, b): return tuple(x-y for x, y in zip(a, b))
-def _dot(a, b): return sum(x*y for x, y in zip(a, b))
+def _sub(a, b): return a[0]-b[0], a[1]-b[1], a[2]-b[2]
+def _dot(a, b): return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]
 def _cross(a, b): return (a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0])
 def _clamp(value): return max(0., min(1., value))
+
+
+def _along(a, direction, fraction):
+    return (a[0]+fraction*direction[0], a[1]+fraction*direction[1], a[2]+fraction*direction[2])
 
 
 def point_segment_distance(point, a, b):
     direction = _sub(b, a)
     denominator = _dot(direction, direction)
     fraction = _clamp(_dot(_sub(point, a), direction)/denominator) if denominator else 0.
-    return math.dist(point, tuple(a[i]+fraction*direction[i] for i in range(3)))
+    return math.dist(point, _along(a, direction, fraction))
 
 
 def point_triangle_distance(point, a, b, c):
@@ -37,7 +41,7 @@ def point_triangle_distance(point, a, b, c):
     if denominator > 0:
         x, y = _dot(_cross(w,v),normal)/denominator, _dot(_cross(u,w),normal)/denominator
         if x >= 0 and y >= 0 and x+y <= 1:
-            return math.dist(point, tuple(a[i]+x*u[i]+y*v[i] for i in range(3)))
+            return math.dist(point, _along(_along(a, u, x), v, y))
     return min(point_segment_distance(point,a,b), point_segment_distance(point,b,c), point_segment_distance(point,c,a))
 
 
@@ -61,26 +65,40 @@ def segment_segment_distance(p, q, a, b):
                 t, s = 0., _clamp(-cc/aa)
             elif t > 1:
                 t, s = 1., _clamp((bb-cc)/aa)
-    return math.dist(tuple(p[i]+s*d1[i] for i in range(3)), tuple(a[i]+t*d2[i] for i in range(3)))
+    return math.dist(_along(p, d1, s), _along(a, d2, t))
 
 
-def segment_triangle_distance(start, end, a, b, c):
+def _segment_intersects_triangle(start, end, a, b, c):
     direction, edge1, edge2 = _sub(end,start), _sub(b,a), _sub(c,a)
     h = _cross(direction,edge2); determinant = _dot(edge1,h)
     if determinant != 0:
         delta = _sub(start,a); u = _dot(delta,h)/determinant
         q = _cross(delta,edge1); v = _dot(direction,q)/determinant
         t = _dot(edge2,q)/determinant
-        if -1e-12 <= u <= 1+1e-12 and -1e-12 <= v and u+v <= 1+1e-12 and -1e-12 <= t <= 1+1e-12:
-            return 0.
+        return -1e-12 <= u <= 1+1e-12 and -1e-12 <= v and u+v <= 1+1e-12 and -1e-12 <= t <= 1+1e-12
+    return False
+
+
+def segment_triangle_distance(start, end, a, b, c):
+    if _segment_intersects_triangle(start, end, a, b, c):
+        return 0.
     return min(point_triangle_distance(start,a,b,c), point_triangle_distance(end,a,b,c),
                segment_segment_distance(start,end,a,b), segment_segment_distance(start,end,b,c),
                segment_segment_distance(start,end,c,a))
 
 
 def triangle_triangle_distance(first, second):
-    return min(*(segment_triangle_distance(first[i],first[(i+1)%3],*second) for i in range(3)),
-               *(segment_triangle_distance(second[i],second[(i+1)%3],*first) for i in range(3)))
+    first_edges = ((first[0], first[1]), (first[1], first[2]), (first[2], first[0]))
+    second_edges = ((second[0], second[1]), (second[1], second[2]), (second[2], second[0]))
+    if (any(_segment_intersects_triangle(a, b, *second) for a, b in first_edges) or
+            any(_segment_intersects_triangle(a, b, *first) for a, b in second_edges)):
+        return 0.
+    # The segment/triangle decomposition visits each vertex twice.
+    # Keep both edge directions used by the nearly parallel case.
+    return min(*(point_triangle_distance(p, *second) for p in first),
+               *(point_triangle_distance(p, *first) for p in second),
+               *(segment_segment_distance(a, b, c, d) for a, b in first_edges for c, d in second_edges),
+               *(segment_segment_distance(c, d, a, b) for a, b in first_edges for c, d in second_edges))
 
 
 def _bounds(points):
@@ -88,7 +106,12 @@ def _bounds(points):
 
 
 def _bounds_gap(first, second):
-    return math.sqrt(sum(max(first[0][i]-second[1][i],second[0][i]-first[1][i],0.)**2 for i in range(3)))
+    lo_a, hi_a = first
+    lo_b, hi_b = second
+    x = max(lo_a[0]-hi_b[0], lo_b[0]-hi_a[0], 0.)
+    y = max(lo_a[1]-hi_b[1], lo_b[1]-hi_a[1], 0.)
+    z = max(lo_a[2]-hi_b[2], lo_b[2]-hi_a[2], 0.)
+    return math.sqrt(x*x+y*y+z*z)
 
 
 def _winding(triangles, point):
@@ -438,9 +461,10 @@ class _PosedMesh:
     def __init__(self, mesh, pose):
         self.mesh,self.pose=mesh,pose
         self.inverse=inverse_pose(pose)
+        self.rotation_rows = tuple(rotate_vector(self.inverse['quaternion_xyzw'], axis)
+                                   for axis in ((1, 0, 0), (0, 1, 0), (0, 0, 1)))
         lower,upper=[],[]
-        for axis in range(3):
-            direction=rotate_vector(self.inverse['quaternion_xyzw'],[int(axis==i) for i in range(3)])
+        for axis, direction in enumerate(self.rotation_rows):
             upper.append(pose['xyz_m'][axis]+mesh.support(direction))
             lower.append(pose['xyz_m'][axis]-mesh.support(tuple(-v for v in direction)))
         self.bounds=tuple(lower),tuple(upper)
@@ -449,16 +473,21 @@ class _PosedMesh:
         self.triangle_cache={}
         self.triangle_bounds_cache={}
 
+    def transform(self, point):
+        x, y, z = self.pose['xyz_m']
+        first, second, third = self.rotation_rows
+        return (x+_dot(first, point), y+_dot(second, point), z+_dot(third, point))
+
     def bounds_of(self,index):
         if index not in self.node_bounds:
             lo,hi=self.mesh.nodes[index].bounds
-            self.node_bounds[index]=_bounds([transform_point(self.pose,p) for p in itertools.product(*zip(lo,hi))])
+            self.node_bounds[index]=_bounds([self.transform(p) for p in itertools.product(*zip(lo,hi))])
         return self.node_bounds[index]
 
     def triangle(self,index):
         if index not in self.triangle_cache:
             for i in self.mesh.faces[index]:
-                if i not in self.vertex_cache:self.vertex_cache[i]=tuple(transform_point(self.pose,self.mesh.vertices[i]))
+                if i not in self.vertex_cache:self.vertex_cache[i]=self.transform(self.mesh.vertices[i])
             self.triangle_cache[index]=tuple(self.vertex_cache[i] for i in self.mesh.faces[index])
         return self.triangle_cache[index]
 

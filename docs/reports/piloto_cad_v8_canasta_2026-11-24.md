@@ -82,6 +82,29 @@ dos procesos de captura terminaron con código −11 después del último cuadro
 El MP4 completo se decodificó y los resultados de los procesos permanecen en
 `rejected_approach_static_video_01/video_evidence.json`.
 
+## Muñeca y carcasa en la demostración
+
+La variante ampliada omite 19 geometrías frente al cultivo. Se incluyeron los
+dos conjuntos de muñeca y carcasa y las piezas CAD 111 y 112 «Mordaza blanda»
+como componentes de los dedos. Los 4 mm para las demás piezas, las parejas de
+autocontacto y las poses V8 se conservaron. Gazebo reprodujo el filtro de la
+carcasa frente a la máscara del cultivo y mantuvo el contacto con la máscara
+del antebrazo en cuerpos de prueba. Véase `wrist_crop_native_probe_01/result.json`.
+
+Con la política ampliada, cuatro frutos del primer arbusto, nueve del segundo y
+cuatro del tercero tienen al menos una posición estática admitida para el corte.
+Las posturas consolidadas están en `cad_v8_wrist_admitted_cut_01.json`. Las
+primeras rutas de prueba encontraron interferencias del fruto sostenido con
+tallos vecinos en la retirada y, en otro candidato, una transferencia sin
+trayectoria admitida hasta la canasta. Estos resultados se refieren a los
+recorridos muestreados y conservan sus parejas e identidades V8.
+
+Las dos ediciones de `admitted_cut_static_video_01/` muestran tres de las posturas
+en los mismos 93 cuadros RGB nativos. La edición anotada marca veinte
+intersecciones geométricas de las piezas exentas. Se conservaron los 31 cuadros
+de cada captura pese al código de salida −11 de Gazebo al terminar. Los dos
+MP4 se verificaron por decodificación y se rotularon con **0 de 9 cosechas**.
+
 ## Reproducción
 
 La [guía de operación](../guides/piloto_cad_v8_canasta.md) reúne los pasos de

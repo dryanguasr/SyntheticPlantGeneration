@@ -145,6 +145,7 @@ def plan_targets(plant_bundle, config, robot_config):
                           'nominal_joints_rad': row['joint_waypoints'],
                           'withdrawal_sequence': [n for n in row['sequence'] if n.startswith('extraction_')],
                           'deposit_joints': row['deposit_joints'], 'sampled_clearance': row['audit'],
+                          **({'deposit_sequence': row['deposit_sequence']} if 'deposit_sequence' in row else {}),
                           'base_route': outbound, 'after_deposit_route': route, 'base_route_audit': audits,
                           'cut_axis_world': row['cut_axis_world']})
             previous = station
@@ -402,7 +403,10 @@ def build_pilot(config):
         manifest['perception_observers'] = observers
         if crop_policy:
             manifest['crop_collision_policy'] = crop_policy
-            manifest['limitations'].append('User-authorized video approximation: only the six hash-verified CAD finger, blade and pad shapes omit crop contacts in both planning and native physics. Supports 111/112, wrist, housing, ground, basket, internal mask pairs and all other crop contacts retain their existing policy. This is not physical gripper/cutting validation.')
+            if crop_policy.get('wrist_housing_extension'):
+                manifest['limitations'].append('User-authorized video approximation: eight hash-verified finger/blade/pad shapes, including CAD Mordaza blanda parts 111/112, and eleven wrist/housing shapes omit crop contacts in both planning and native physics. The rest of the arm, ground, basket, internal mask pairs and all other crop contacts retain their existing policy. This is not physical gripper/cutting validation.')
+            else:
+                manifest['limitations'].append('User-authorized video approximation: only the six hash-verified CAD finger, blade and pad shapes omit crop contacts in both planning and native physics. Supports 111/112, wrist, housing, ground, basket, internal mask pairs and all other crop contacts retain their existing policy. This is not physical gripper/cutting validation.')
         if c['plants'].get('ideal_cut_segment_m'):
             manifest['limitations'].append('The designated terminal pedicel span is a virtual cutting zone. Only the named blades and pads may enter it during the matching pickup. The retained plant support remains a native collider.')
     occupied = set(plants['meshes']) | set(soil_assets['meshes']) | set(plants.get('texture_assets', {})) | set(source_assets) | set(soil_assets['generated_binary_assets'])

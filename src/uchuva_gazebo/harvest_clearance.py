@@ -311,7 +311,7 @@ def audit_joint_segment(start, end, base, cylinders, fruit_specs, *, held=None,
     held_extra = (math.dist(held["center_world_m"], held["cut_point_world_m"]) + held["radius_m"]) if held else 0.0
     if hasattr(c, 'world_shapes'):
         # No proxy-size broad phase may prune collisions of a different robot.
-        near_cylinders = _CylinderIndex(cylinders)
+        near_cylinders = cylinders if isinstance(cylinders, _CylinderIndex) else _CylinderIndex(cylinders)
         limits = c.joint_limits
     else:
         near_cylinders = _legacy_near_cylinders(c, base, cylinders, held_extra)
@@ -346,18 +346,41 @@ def _audit_samples(start, end, base, near_cylinders, cylinders, fruit_specs,
               "clearance_threshold_m": clearance_m, "distance_report_cap_m": report_cap,
               "broad_phase_cylinders": len(near_cylinders), "source_cylinders": len(cylinders)}
     previous_tcp = None
+    early_resolved_failure = (hasattr(c, 'world_shapes') and stop_on_failure and
+                              report_cap == clearance_m)
     for index in range(count):
         t = index / (count - 1)
         joints = [(1 - t) * a + t * b for a, b in zip(start, end)]
         margin = min(min(value - bound[0], bound[1] - value) for value, bound in zip(joints, limits))
         result["minimum_joint_margin_rad"] = min(result["minimum_joint_margin_rad"], margin)
-        state = _world_clearance(joints, base, near_cylinders, fruit_specs, held, c, report_cap=report_cap)
+        if early_resolved_failure:
+            from .robot_motion import resolved_world_clearance
+            state = resolved_world_clearance(joints, base, near_cylinders, fruit_specs, held, c,
+                report_cap=report_cap, reject_on_first_failure=True)
+        else:
+            state = _world_clearance(joints, base, near_cylinders, fruit_specs, held, c, report_cap=report_cap)
         result["samples"] += 1
+        partial = state.get('first_failure_only', False)
+        if partial:
+            if not early_resolved_failure or not state['robot_clearance_m'] < clearance_m:
+                raise ValueError('Partial clearance requires a proven failure below the exact threshold')
+            result['first_failure_only'] = True
+            result['first_failure_scope'] = state['scope']
+            result['unobserved_fields_at_failure'] = []
         for source, target, detail in (
             ("robot_clearance_m", "minimum_robot_clearance_m", "limiting_robot_pair"),
             ("held_clearance_m", "minimum_held_clearance_m", "limiting_held_obstacle"),
             ("held_robot_clearance_m", "minimum_held_robot_clearance_m", "limiting_held_robot_link"),
         ):
+            if partial and source not in state:
+                if held:
+                    result['unobserved_fields_at_failure'].append(source)
+                    # No positive clearance claim for a check that never ran.
+                    # If earlier samples ran, keep their measured minimum and
+                    # identify the missing observation at the failure sample.
+                    if index == 0:
+                        result[target] = None
+                continue
             if state[source] is not None and state[source] < result[target]:
                 result[target] = state[source]
                 result[detail] = state[detail]
@@ -365,7 +388,7 @@ def _audit_samples(start, end, base, near_cylinders, cylinders, fruit_specs,
         if previous_tcp is not None:
             result["maximum_tcp_sample_step_m"] = max(result["maximum_tcp_sample_step_m"], math.dist(previous_tcp, state["tcp_world_m"]))
         previous_tcp = state["tcp_world_m"]
-        if margin < .025 or any(state[key] is not None and state[key] < clearance_m for key in ("robot_clearance_m", "held_clearance_m", "held_robot_clearance_m")):
+        if margin < .025 or partial or any(state[key] is not None and state[key] < clearance_m for key in ("robot_clearance_m", "held_clearance_m", "held_robot_clearance_m")):
             result["passed"] = False
             if stop_on_failure:
                 break

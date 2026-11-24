@@ -11,22 +11,29 @@ from uchuva_gazebo.harvest_basket import DEMO_FIXTURE_SCHEMA
 from uchuva_gazebo.harvester_robot import set_collision_bitmask
 from uchuva_gazebo.robot_collision_filters import collision_masks
 from uchuva_gazebo.robot_crop_collision_policy import (
-    OPTION, FINGER_BLADE_CROP_SHAPES, _CAD_PARTS, _subset_masks,
-    finger_blade_crop_exclusions, compile_crop_collision_policy,
+    OPTION, WRIST_OPTION, FINGER_BLADE_CROP_SHAPES, WRIST_HOUSING_CROP_SHAPES,
+    WRIST_EXTENSION_JAW_SHAPES, _CAD_PARTS, _WRIST_CAD_PARTS, _ADDITIONAL_JAW_PARTS, _subset_masks,
+    finger_blade_crop_exclusions, crop_collision_exclusions, compile_crop_collision_policy,
     apply_robot_crop_collision_masks, scene_crop_collision_policy,
     verify_scene_crop_collision_masks)
 from uchuva_gazebo.robot_motion import resolved_world_clearance, pose_from_center
 
 
-def fixture():
+def fixture(include_wrist=False):
     links = {name: {'name': name, 'collisions': []} for name in
              ('base_link', 'arm_wrist_roll', 'gripper_left_jaw', 'gripper_right_jaw')}
-    for name, (_, digest) in _CAD_PARTS.items():
+    if include_wrist:
+        links['arm_wrist_pitch'] = {'name': 'arm_wrist_pitch', 'collisions': []}
+    parts = {**_CAD_PARTS, **(_WRIST_CAD_PARTS if include_wrist else {}),
+             **(_ADDITIONAL_JAW_PARTS if include_wrist else {})}
+    for name, (_, digest) in parts.items():
         link, shape = name.split('/')
         links[link]['collisions'].append({'name': shape, 'geometry': {
             'type': 'mesh', 'sha256': digest, 'scale': [1, 1, 1]}})
     for link, name in (('base_link', 'basket_floor'), ('arm_wrist_roll', 'part_99_bounds'),
                        ('gripper_left_jaw', 'part_111_bounds'), ('gripper_right_jaw', 'part_112_bounds')):
+        if link+'/'+name in parts:
+            continue
         links[link]['collisions'].append({'name': name, 'geometry': {'type': 'box', 'size_m': [.1]*3}})
     data = {'model_name': 'robot', 'links': list(links.values()), 'joints': [],
             'collision_policy': {'excluded_pairs': [{'links': ['gripper_left_jaw', 'gripper_right_jaw']}]}}
@@ -49,6 +56,54 @@ def model_with_masks(robot):
 
 
 class CropPolicyTests(unittest.TestCase):
+    def test_wrist_extension_is_separate_requires_fingers_and_exact_full_inventory(self):
+        robot, task = fixture(include_wrist=True)
+        baseline = compile_crop_collision_policy(robot, task)
+        task['demo_fixture'][WRIST_OPTION] = False
+        self.assertEqual(compile_crop_collision_policy(robot, task), baseline)
+        task['demo_fixture'][WRIST_OPTION] = True
+        self.assertEqual(finger_blade_crop_exclusions(robot, task), FINGER_BLADE_CROP_SHAPES)
+        self.assertEqual(crop_collision_exclusions(robot, task),
+                         FINGER_BLADE_CROP_SHAPES | WRIST_HOUSING_CROP_SHAPES | WRIST_EXTENSION_JAW_SHAPES)
+        for invalid in ('true', 1, None):
+            changed = deepcopy(task); changed['demo_fixture'][WRIST_OPTION] = invalid
+            with self.assertRaises(ValueError): crop_collision_exclusions(robot, changed)
+        changed = deepcopy(task); changed['demo_fixture'][OPTION] = False
+        with self.assertRaises(ValueError): crop_collision_exclusions(robot, changed)
+        wrist = next(link for link in robot.links if link['name'] == 'arm_wrist_roll')
+        saved = wrist['collisions'][0]['geometry']['sha256']
+        wrist['collisions'][0]['geometry']['sha256'] = '0'*64
+        with self.assertRaises(ValueError): crop_collision_exclusions(robot, task)
+        wrist['collisions'][0]['geometry']['sha256'] = saved
+        # New, unreviewed wrist geometry is not silently covered by a prefix.
+        wrist['collisions'].append({'name': 'unreviewed', 'geometry': {'type': 'box', 'size_m': [.1]*3}})
+        with self.assertRaises(ValueError): crop_collision_exclusions(robot, task)
+
+    def test_wrist_extension_preserves_internal_pairs_and_omits_only_the_reclassified_jaw_parts(self):
+        robot, task = fixture(include_wrist=True)
+        task['demo_fixture'][WRIST_OPTION] = True
+        policy = compile_crop_collision_policy(robot, task)
+        self.assertEqual(len(policy['excluded_shapes']), 19)
+        self.assertIn('wrist_housing_extension', policy)
+        old, new = policy['original_robot_masks'], policy['robot_masks']
+        omitted = FINGER_BLADE_CROP_SHAPES | WRIST_HOUSING_CROP_SHAPES | WRIST_EXTENSION_JAW_SHAPES
+        for a, b in itertools.combinations(old, 2):
+            self.assertEqual(bool(old[a]&old[b]), bool(new[a]&new[b]), (a, b))
+        for name, mask in new.items():
+            self.assertEqual(bool(mask&policy['crop_mask']), name not in omitted, name)
+            self.assertTrue(mask&65535)
+        self.assertTrue(new['base_link/basket_floor']&policy['crop_mask'])
+        for name in WRIST_EXTENSION_JAW_SHAPES:
+            self.assertFalse(new[name]&policy['crop_mask'])
+            self.assertTrue(new[name]&65535)
+        self.assertEqual(policy['wrist_housing_extension']['additional_jaw_shapes'], sorted(WRIST_EXTENSION_JAW_SHAPES))
+        model = model_with_masks(robot)
+        apply_robot_crop_collision_masks(model, policy)
+        for row in policy['excluded_shapes']:
+            link, name = row['name'].split('/')
+            node = model.find(f"link[@name='{link}']/collision[@name='{name}']")
+            self.assertEqual(int(node.findtext('surface/contact/collide_bitmask')) & policy['crop_mask'], 0)
+
     def test_six_exact_parts_opt_in_and_changed_assets_fail_closed(self):
         robot, task = fixture()
         self.assertEqual(len(finger_blade_crop_exclusions(robot, task)), 6)
@@ -156,6 +211,36 @@ class PlannerScopeTests(unittest.TestCase):
     def test_ground_and_self_contacts_remain_failures_with_same_threshold(self):
         for config, scope in ((self.config(center=(0, 0, .02)), 'ground'),
                               (self.config(other=(.04, 0, 1)), 'self')):
+            result = resolved_world_clearance([], [], [], [], None, config,
+                report_cap=.004, reject_on_first_failure=True)
+            self.assertLess(result['robot_clearance_m'], .004)
+            self.assertEqual(result['scope'], scope)
+
+    def test_only_the_matching_virtual_terminal_leaves_the_crop_after_cut(self):
+        config = self.config(name='part_112_bounds')
+        terminal = {'id': 'virtual-cut-span', 'ideal_cut_target': 'fruit',
+                    'start': [0, 0, .8], 'end': [0, 0, 1.2], 'radius': .01}
+        fruit = {'id': 'fruit', 'center_world_m': [0, 0, 1], 'radius_m': .02,
+                 'held_offset_in_tool_m': [0, 0, 0]}
+        self.assertLess(resolved_world_clearance([], [], [terminal], [], None, config)['robot_clearance_m'], 0)
+        result = resolved_world_clearance([], [], [terminal], [], fruit, config)
+        self.assertEqual(result['robot_clearance_m'], .5)
+        self.assertEqual(result['held_clearance_m'], .5)
+        neighbor = {**terminal, 'ideal_cut_target': 'different-fruit'}
+        self.assertLess(resolved_world_clearance([], [], [neighbor], [], fruit, config)['held_clearance_m'], 0)
+
+    def test_wrist_extension_omits_crop_but_retains_arm_ground_and_self(self):
+        crop = {'id': 'crop', 'start': [0, 0, .8], 'end': [0, 0, 1.2], 'radius': .01}
+        wrist = self.config(link='arm_wrist_roll', name='part_98_bounds')
+        self.assertLess(resolved_world_clearance([], [], [crop], [], None, wrist)['robot_clearance_m'], 0)
+        wrist.crop_collision_excluded_shapes |= WRIST_HOUSING_CROP_SHAPES
+        self.assertEqual(resolved_world_clearance([], [], [crop], [], None, wrist)['robot_clearance_m'], .5)
+        arm = self.config(link='arm_forearm', name='body')
+        arm.crop_collision_excluded_shapes |= WRIST_HOUSING_CROP_SHAPES
+        self.assertLess(resolved_world_clearance([], [], [crop], [], None, arm)['robot_clearance_m'], 0)
+        for config, scope in ((self.config(link='arm_wrist_roll', name='part_98_bounds', center=(0, 0, .02)), 'ground'),
+                              (self.config(link='arm_wrist_roll', name='part_98_bounds', other=(.04, 0, 1)), 'self')):
+            config.crop_collision_excluded_shapes |= WRIST_HOUSING_CROP_SHAPES
             result = resolved_world_clearance([], [], [], [], None, config,
                 report_cap=.004, reject_on_first_failure=True)
             self.assertLess(result['robot_clearance_m'], .004)

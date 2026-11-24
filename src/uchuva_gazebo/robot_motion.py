@@ -6,14 +6,15 @@ they never join separate fingers, wheels or links across empty space.
 from __future__ import annotations
 
 import math
+from collections import OrderedDict
 
 from .robot_kinematics import (forward_kinematics, solve_ik, collision_shapes,
-    pose_identity, compose_poses, inverse_pose, transform_point, rotate_vector)
+    pose_identity, compose_poses, inverse_pose, transform_point, rotate_vector, axis_quaternion)
 from .robot_sdf import pose_rpy
 
 
 class ResolvedMotionConfig:
-    def __init__(self, robot, task, *, asset_root=None, mesh_repository=None):
+    def __init__(self, robot, task, *, asset_root=None, mesh_repository=None, self_collision_cache=None):
         robot.require_capability('collision_primitives')
         if not isinstance(task, dict) or task.get('orientation_mode') != 'position_direction':
             raise ValueError('Resolved harvest requires explicit robot_task orientation_mode=position_direction')
@@ -25,8 +26,8 @@ class ResolvedMotionConfig:
         if length < 1e-12:
             raise ValueError('robot_task.target_direction cannot be zero')
         self.robot, self.task = robot, dict(task)
-        from .robot_crop_collision_policy import finger_blade_crop_exclusions
-        self.crop_collision_excluded_shapes = finger_blade_crop_exclusions(robot, self.task)
+        from .robot_crop_collision_policy import crop_collision_exclusions
+        self.crop_collision_excluded_shapes = crop_collision_exclusions(robot, self.task)
         self.mesh_repository = mesh_repository
         geometries = [s['geometry'] for link in robot.links for s in link['collisions']
                       if s['geometry']['type'] == 'mesh']
@@ -35,6 +36,11 @@ class ResolvedMotionConfig:
                 raise ValueError('Mesh collision planning requires an explicit verified asset root')
             from .robot_mesh_geometry import MeshRepository
             self.mesh_repository = MeshRepository(asset_root, geometries)
+        self.self_collision_cache = (_RigidPairDistanceCache(robot, self.mesh_repository)
+                                     if self_collision_cache is None else self_collision_cache)
+        if (self.self_collision_cache.robot_sha256 != robot.sha256 or
+                self.self_collision_cache.repository is not self.mesh_repository):
+            raise ValueError('Self-collision cache belongs to a different robot or mesh repository')
         self.direction = [v/length for v in direction]
         axis = task.get('tool_axis')
         if not isinstance(axis, (list, tuple)) or len(axis) != 3 or any(type(v) not in (int, float) or not math.isfinite(v) for v in axis) or abs(sum(v*v for v in axis)-1) > 1e-7:
@@ -61,7 +67,7 @@ class ResolvedMotionConfig:
 
     def for_direction(self, direction):
         return ResolvedMotionConfig(self.robot, {**self.task, 'target_direction': list(direction)},
-                                    mesh_repository=self.mesh_repository)
+                                    mesh_repository=self.mesh_repository, self_collision_cache=self.self_collision_cache)
 
     def for_observed_joints(self, positions):
         """Use measured passive/jaw coordinates in clearance, never stale zeros."""
@@ -69,11 +75,12 @@ class ResolvedMotionConfig:
         if not names <= positions.keys():
             raise ValueError('Missing observed passive/gripper joint state')
         return ResolvedMotionConfig(self.robot, {**self.task,
-            'auxiliary_joint_positions': {n: positions[n] for n in names}}, mesh_repository=self.mesh_repository)
+            'auxiliary_joint_positions': {n: positions[n] for n in names}}, mesh_repository=self.mesh_repository,
+            self_collision_cache=self.self_collision_cache)
 
     def for_target_cut(self, identifier):
         return ResolvedMotionConfig(self.robot, {**self.task, 'active_cut_target': identifier},
-                                    mesh_repository=self.mesh_repository)
+                                    mesh_repository=self.mesh_repository, self_collision_cache=self.self_collision_cache)
 
     def solve(self, target, pitch=0, roll=0, *, seed=None):
         if pitch != 0 or roll != 0:
@@ -100,6 +107,108 @@ class ResolvedMotionConfig:
             raise ValueError('Base pose requires xyz/yaw or xyz/xyzw')
         poses = forward_kinematics(self.robot, self.positions(values), base_pose=base_pose)
         return collision_shapes(self.robot, poses), poses[self.frame]
+
+
+class _RigidPairDistanceCache:
+    """Bounded LRU of self distances in the pair's common-ancestor frame.
+
+    Geometry and link-local poses belong to one immutable RobotSpec. A pair
+    depends only on coordinates in the two exclusive ancestry branches; root
+    pose, common ancestors and unrelated joints cancel. Coordinates are never
+    quantized. Saturated BVH queries store a lower bound, reusable only when it
+    covers the requested cap. This does not certify continuous motion.
+    """
+    def __init__(self, robot, repository, max_entries=8192):
+        if type(max_entries) is not int or max_entries < 1:
+            raise ValueError('Self-collision LRU requires a positive bounded capacity')
+        self.robot_sha256, self.repository = robot.sha256, repository
+        self.max_entries = max_entries
+        data = robot.to_dict()
+        self.shapes = {link['name']+'/'+shape['name']: {**shape, 'link': link['name']}
+                       for link in data['links'] for shape in link['collisions']}
+        by_child = {joint['child']: joint for joint in data['joints']}
+        self.paths = {}
+        for link in data['links']:
+            path, current = [], link['name']
+            while current != data['root_link']:
+                row = by_child[current]
+                path.append(row)
+                current = row['parent']
+            self.paths[link['name']] = tuple(reversed(path))
+        self.link_pair_plans = {}
+        self.entries = OrderedDict()
+        self.stats = {'hits': 0, 'misses': 0, 'cap_rechecks': 0, 'evictions': 0,
+                      'exact_hits': 0, 'lower_bound_hits': 0}
+
+    def _plan(self, first_link, second_link):
+        key = first_link, second_link
+        if key not in self.link_pair_plans:
+            first, second = self.paths[first_link], self.paths[second_link]
+            common = 0
+            while common < min(len(first), len(second)) and first[common]['name'] == second[common]['name']:
+                common += 1
+            left, right = first[common:], second[common:]
+            coordinates = tuple(sorted(row['name'] for row in (*left, *right) if row['type'] != 'fixed'))
+            self.link_pair_plans[key] = left, right, coordinates
+        return self.link_pair_plans[key]
+
+    @staticmethod
+    def _branch_pose(branch, positions):
+        pose = pose_identity()
+        for row in branch:
+            motion = pose_identity()
+            if row['type'] != 'fixed':
+                q = positions.get(row['name'], 0) + row['zero_offset']
+                if row['type'] == 'revolute':
+                    motion['quaternion_xyzw'] = axis_quaternion(row['axis'], q)
+                else:
+                    motion['xyz_m'] = [q*v for v in row['axis']]
+            pose = compose_poses(compose_poses(compose_poses(pose, row['origin']), motion), row['child_pose'])
+        return pose
+
+    def distance(self, first_name, second_name, positions, cap):
+        first_name, second_name = sorted((first_name, second_name))
+        first, second = self.shapes[first_name], self.shapes[second_name]
+        left, right, coordinates = self._plan(first['link'], second['link'])
+        values = tuple(positions.get(name, 0) for name in coordinates)
+        if any(not math.isfinite(value) for value in values):
+            raise ValueError('Self-collision cache coordinates must be finite')
+        key = first_name, second_name, values
+        entry = self.entries.get(key)
+        if entry is not None:
+            value, exact = entry
+            if exact or value >= cap:
+                self.entries.move_to_end(key)
+                self.stats['hits'] += 1
+                self.stats['exact_hits' if exact else 'lower_bound_hits'] += 1
+                return min(value, cap) if exact else cap
+            self.stats['cap_rechecks'] += 1
+        self.stats['misses'] += 1
+        # Evaluate in a deterministic rigid frame, independent of which base
+        # pose or common-ancestor coordinate happened to populate the cache.
+        a = {**first, 'pose': compose_poses(self._branch_pose(left, positions), first['pose'])}
+        b = {**second, 'pose': compose_poses(self._branch_pose(right, positions), second['pose'])}
+        first_half = None if a['geometry']['type'] == 'mesh' else shape_box(a)
+        second_half = None if b['geometry']['type'] == 'mesh' else shape_box(b)
+        if first_half is None or second_half is None:
+            if self.repository is None:
+                raise ValueError('Self-collision mesh query requires the verified repository')
+            low_a, high_a = self.repository.conservative_world_bounds(a)
+            low_b, high_b = self.repository.conservative_world_bounds(b)
+            lower = math.sqrt(sum(max(low_a[i]-high_b[i], low_b[i]-high_a[i], 0)**2 for i in range(3)))
+            value = cap if lower >= cap else self.repository.shape_distance(a, b, limit=cap)
+            exact = value < cap
+        else:
+            value = box_separation(a, first_half, b, second_half)
+            exact = True
+        if math.isnan(value):
+            raise ValueError('Invalid self-collision distance')
+        self.entries[key] = value, exact
+        self.entries.move_to_end(key)
+        if len(self.entries) > self.max_entries:
+            self.entries.popitem(last=False)
+            self.stats['evictions'] += 1
+        return min(value, cap) if exact else cap
 
 
 def shape_box(shape):
@@ -174,6 +283,8 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
     limiting = limiting_held = limiting_held_robot = None
     drive_links = {j['child'] for j in config.robot.joints if j.get('group') == 'drive'}
     exclusions = {tuple(sorted(row['links'])) for row in config.robot.data['collision_policy']['excluded_pairs']}
+    pair_cache = getattr(config, 'self_collision_cache', None)
+    self_positions = config.positions(values) if pair_cache is not None else None
 
     def rejected(gap, pair, scope):
         return {'robot_clearance_m': gap, 'limiting_robot_pair': pair, 'first_failure_only': True,
@@ -187,11 +298,16 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 pair = tuple(sorted((first['link'], second['link'])))
                 if first['link'] == second['link'] or pair in exclusions:
                     continue
-                if first_half is None or second_half is None:
+                uses_mesh = first_half is None or second_half is None
+                if uses_mesh:
                     a, b = bounds[index], bounds[second_index]
                     lower_bound = math.sqrt(sum(max(a[0][i]-b[1][i], b[0][i]-a[1][i], 0)**2 for i in range(3)))
                     if lower_bound >= gap_min:
                         continue
+                if pair_cache is not None:
+                    gap = pair_cache.distance(first['link']+'/'+first['name'], second['link']+'/'+second['name'],
+                                              self_positions, gap_min)
+                elif uses_mesh:
                     gap = repository.shape_distance(first, second, limit=gap_min)
                 else:
                     gap = box_separation(first, first_half, second, second_half)
@@ -208,20 +324,25 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
     matching_blades = set(task.get('demo_fixture', {}).get('ideal_cut_blade_shapes', []))
     crop_excluded = getattr(config, 'crop_collision_excluded_shapes', frozenset())
     active_cut = task.get('active_cut_target')
+    detached_id = held['id'] if held is not None else None
     for index, (shape, half, inverse) in enumerate(boxes):
         name = shape['link']+'/'+shape['name']
+        ignores_crop = name in crop_excluded
         center = shape['pose']['xyz_m']
         if half is None:
-            low, high = repository.world_bounds(shape)
+            low, high = bounds[index]
             center = [(a+b)/2 for a,b in zip(low, high)]
             bound = math.dist(low, high)/2
         else:
             bound = math.sqrt(sum(v*v for v in half))
         # A previous penetration must not shrink the spatial query inside the
         # body: deeper intersections still contribute to the reported minimum.
-        nearby = cylinders.near(center, bound+max(0, minimum)) if hasattr(cylinders, 'near') else cylinders
+        nearby = (() if ignores_crop else
+                  cylinders.near(center, bound+max(0, minimum)) if hasattr(cylinders, 'near') else cylinders)
         for obstacle in nearby:
-            if name in crop_excluded:
+            if detached_id is not None and obstacle.get('ideal_cut_target') == detached_id:
+                # The static world contains only the proximal collider here.
+                # The virtual terminal was used before cutting this target.
                 continue
             if (active_cut is not None and obstacle.get('ideal_cut_target') == active_cut and name in matching_blades
                     and math.dist(tcp['xyz_m'], obstacle['end']) <= .02):
@@ -240,9 +361,7 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 minimum, limiting = gap, [name, obstacle['id']]
                 if reject_on_first_failure:
                     return rejected(gap, limiting, 'crop')
-        for fruit_shape, fruit in fruit_shapes:
-            if name in crop_excluded:
-                continue
+        for fruit_shape, fruit in (() if ignores_crop else fruit_shapes):
             if held is not None and fruit['id'] == held['id']:
                 continue
             if bounds is not None:
@@ -261,7 +380,7 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                     return rejected(gap, limiting, 'fruit')
         if shape['link'] not in drive_links:
             if half is None:
-                gap = low[2]
+                gap = minimum if low[2] >= minimum else repository.world_bounds(shape)[0][2]
             else:
                 axes = [rotate_vector(shape['pose']['quaternion_xyzw'], [int(i==j) for i in range(3)]) for j in range(3)]
                 gap = center[2]-sum(abs(axis[2])*h for axis, h in zip(axes, half))
@@ -289,6 +408,8 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
         held_min, limiting_held = min(report_cap, floor_gap), 'ground'
         nearby = cylinders.near(center, radius+max(0, held_min)) if hasattr(cylinders, 'near') else cylinders
         for obstacle in nearby:
+            if obstacle.get('ideal_cut_target') == detached_id:
+                continue
             gap = _point_segment_distance(center, obstacle['start'], obstacle['end'])-radius-obstacle['radius']
             if held_shape and gap < held_min:
                 gap = _bounded_radius_gap(repository.segment_distance, obstacle['radius'], held_min,

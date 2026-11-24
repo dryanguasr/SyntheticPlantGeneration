@@ -43,6 +43,19 @@ las parejas de autocontacto, el contacto con la canasta y el suelo, y el umbral
 de 4 mm. El manifiesto registra las parejas excluidas y las máscaras emitidas.
 La omisión se usa para la demostración virtual.
 
+Para la edición que también omite contactos del cultivo con la muñeca y la
+carcasa, agregar `--ignore-wrist-housing-crop-contacts` junto al primer flag.
+Esta edición incluye las dos piezas «Mordaza blanda» del Inventor, 111 y 112,
+como componentes de los dedos. El manifiesto distingue la muñeca, la carcasa
+y las piezas de mordaza. Las plantas, los límites de corte y los contactos
+del brazo, chasis y canasta conservan la configuración vigente.
+El cálculo de autocontacto reutiliza pares con la misma configuración
+relativa en el árbol de articulaciones. Los segmentos aprobados conservan
+el paso articular máximo de 0,004 rad. Las posiciones previas al corte
+pueden variar su orientación, y la posición de corte conserva el eje del
+pedicelo. Tras el corte, el tramo terminal virtual del fruto apartado
+deja de ser un obstáculo fijo. El tramo proximal real permanece activo.
+
 La superficie cerrada del capacho V8 se usa como colisión en el perfil nuevo.
 El cierre y corte idealizados reservan hasta 8 mm terminales del pedicelo elegido.
 El tallo proximal sigue siendo rígido y los visuales mantienen sus posiciones.

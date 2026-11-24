@@ -1,13 +1,26 @@
 import copy
 import math
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
+from uchuva_gazebo.robot_harvest_planning import onboard_release_joints
 from uchuva_gazebo.harvest_validation import deposited_interval, world_point
 
 
 class OnboardBasketTests(unittest.TestCase):
     basket = {'frame': 'robot_base', 'inner_min_m': [.12, -.13, .114],
               'inner_max_m': [.34, .13, .190]}
+
+    def test_release_uses_ordered_ik_result_from_joint_vector_seed(self):
+        config = SimpleNamespace(robot=SimpleNamespace(joint_names=('x', 'y', 'z', 'p', 'r')), frame='cut')
+        config.fk = lambda q: {'position_m': q[:3], 'quaternion_xyzw': [0., 0., 0., 1.]}
+        fruit = {'radius_m': .03, 'held_offset_in_tool_m': [.01, 0., 0.]}
+        with patch('uchuva_gazebo.robot_harvest_planning.solve_ik',
+                   side_effect=lambda _, p, **kw: SimpleNamespace(success=True, joint_positions=(*p, 0., 0.))):
+            posture = next(onboard_release_joints(config, fruit, [0.]*5, self.basket))
+        self.assertAlmostEqual(posture[0], .22)
+        self.assertAlmostEqual(posture[2], .28)
 
     def test_deposit_stays_in_rotating_and_translating_basket(self):
         rows = []

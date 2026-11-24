@@ -848,7 +848,8 @@ class CadV8Pilot(NativePilot):
                 self.move_joints(q[waypoint])
             self.carry()
             self.set_phase('deposit_position', identifier)
-            self.move_joints(plan['deposit_joints'])
+            for waypoint in plan.get('deposit_sequence', [plan['deposit_joints']]):
+                self.move_joints(waypoint)
             self.move_jaw(True)
             self.set_phase('release', identifier)
             state = self.snapshot()

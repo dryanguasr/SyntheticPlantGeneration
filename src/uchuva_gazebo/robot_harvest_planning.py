@@ -10,14 +10,70 @@ import math
 
 from .robot_kinematics import (pose_from_rpy, inverse_pose, transform_point,
                                rotate_vector, compose_poses, solve_ik)
+from .robot_crop_collision_policy import WRIST_OPTION
+from .robot_motion import resolved_world_clearance
+
+
+PREAPPROACH_OFFSETS = ((-.10, 0., .10), (-.08, 0., .04), (-.08, 0., 0.),
+                      (-.06, -.05, .02), (-.06, .05, .02),
+                      (0., -.07, .03), (0., .07, .03), (0., 0., .075))
+
+
+def _position_joints(config, point, seed):
+    solved = solve_ik(config.robot, point, tool_frame=config.frame, seed=seed,
+                      orientation_mode='position_only')
+    if not solved.success:
+        raise ValueError(f'Position-only IK failed: {solved.reason}')
+    values = solved.joint_positions
+    return [values[name] for name in config.robot.joint_names] if isinstance(values, dict) else list(values)
+
+
+def _preapproach_candidates(config, point, seed, carry, expanded):
+    """Keep the exact cutter direction for the cut; vary waypoints outside its guard."""
+    offsets = PREAPPROACH_OFFSETS if expanded else PREAPPROACH_OFFSETS[:1]
+    horizontal = math.hypot(*point[:2])
+    if expanded and horizontal > 0:
+        radial = [-value/horizontal for value in point[:2]]
+        offsets = ((*[.09*value for value in radial], .06),
+                   (*[.07*value for value in radial], .02), *offsets)
+    failures = []
+    for offset in offsets:
+        target = [a+b for a, b in zip(point, offset)]
+        for directed in ((True, False) if expanded else (True,)):
+            try:
+                joints = list(config.solve(target, seed=seed)) if directed else _position_joints(config, target, seed)
+                yield joints, target, None
+            except ValueError as error:
+                failures.append(str(error))
+    if expanded:
+        for fraction in (.20, .35, .55, .75):
+            waypoint = [a+(b-a)*fraction for a, b in zip(seed, carry)]
+            target = config.fk(waypoint)['position_m']
+            if math.dist(point, target) >= .055:
+                yield waypoint, target, None
+    if failures:
+        yield None, None, failures[0]
+
+
+def _lift_candidates(config, outgoing, carry):
+    start = config.fk(outgoing)['position_m']
+    end = config.fk(carry)['position_m']
+    center = [(a+b)/2 for a,b in zip(start, end)]
+    for height in (.08, .15, .22):
+        point = [center[0], center[1], max(start[2], end[2]) + height]
+        try:
+            yield _position_joints(config, point, outgoing), point
+        except ValueError:
+            continue
 
 
 def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
                           pickup_standoff_m=.5, target_ids=None):
-    from .harvest_clearance import (planned_crop_obstacles, audit_joint_segment,
+    from .harvest_clearance import (_CylinderIndex, planned_crop_obstacles, audit_joint_segment,
                                    EXTRACTION_OFFSETS)
     task = config.task
     fixture = task.get('demo_fixture')
+    expanded = bool(fixture and fixture.get(WRIST_OPTION))
     if type(samples) is not int or samples < 2:
         raise ValueError('At least two segment samples are required')
     if not math.isfinite(clearance_m) or clearance_m <= 0:
@@ -30,7 +86,7 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
     carry = list(task.get('carry_joints_rad',
                         [config.robot.data['arm_home_positions'][n] for n in config.robot.joint_names]))
     carry_local = config.fk(carry)['position_m']
-    cylinders, fruits = planned_crop_obstacles(bundle), bundle['fruits']
+    cylinders, fruits = _CylinderIndex(planned_crop_obstacles(bundle)), bundle['fruits']
     occupied = fruits + bundle.get('static_fruit_obstacles', [])
     if not fruits or len({f['id'] for f in fruits}) != len(fruits):
         raise ValueError('Resolved planning requires nonempty unique fruit identities')
@@ -57,7 +113,6 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
             pose = pose_from_rpy(base[:3], [0, 0, base[3]])
             inverse = inverse_pose(pose)
             local_cut = transform_point(inverse, cut)
-            local_pre = [local_cut[0]-.10, local_cut[1], local_cut[2]+.10]
             for sign in ((1, -1) if task.get('cut_axis_bidirectional') else (1,)):
                 world_direction = [sign*v for v in axis]
                 if isinstance(candidate, dict) and math.dist(world_direction, candidate['cut_axis_world']) > 1e-10:
@@ -68,7 +123,6 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
                 record = {'base_pose': list(base), 'direction_sign': sign}
                 try:
                     qcut = list(c.solve(local_cut, seed=seed))
-                    qpre = list(c.solve(local_pre, seed=qcut))
                 except ValueError as error:
                     rejected.append({**record, 'reason': str(error)})
                     continue
@@ -83,8 +137,28 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
                     opened = c.for_observed_joints({**c.aux_positions, jaw['joint']: jaw['open_position_m']})
 
                 def segment(first, second, a, b, *, carrying=False, motion=c):
+                    payload = held if carrying else None
+                    if expanded and a != b:
+                        joint_margin = min(min(x-lo, hi-x, y-lo, hi-y)
+                                           for x, y, (lo, hi) in zip(a, b, motion.joint_limits))
+                        if joint_margin < fixture['minimum_joint_margin_rad']:
+                            return {'from': first, 'to': second, 'held': carrying, 'passed': False,
+                                    'reason': 'joint_margin', 'minimum_joint_margin_rad': joint_margin}
+                        # Reject an obstructed segment before walking hundreds
+                        # of small steps. Every passing segment is still sampled
+                        # at the original density and joint increment.
+                        for fraction in (1., .5, .25, .75):
+                            trial = [x+(y-x)*fraction for x, y in zip(a, b)]
+                            state = resolved_world_clearance(trial, base, cylinders, occupied, payload, motion,
+                                report_cap=clearance_m, reject_on_first_failure=True)
+                            if any(state.get(key, clearance_m) is not None and
+                                   state.get(key, clearance_m) < clearance_m for key in
+                                   ('robot_clearance_m', 'held_clearance_m', 'held_robot_clearance_m')):
+                                return {'from': first, 'to': second, 'held': carrying, 'passed': False,
+                                        'reason': 'early_segment_clearance_failure', 'fraction': fraction,
+                                        'clearance': state, 'clearance_threshold_m': clearance_m}
                     row = audit_joint_segment(a, b, base, cylinders, occupied,
-                        held=held if carrying else None, config=motion, samples=samples,
+                        held=payload, config=motion, samples=2 if a == b else samples,
                         clearance_m=clearance_m, stop_on_failure=True,
                         report_cap=clearance_m if fixture else .5)
                     row.update({'from': first, 'to': second, 'held': carrying})
@@ -92,46 +166,79 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
                         row.update(passed=False, reason='joint_margin')
                     return row
 
-                approach = []
-                for first, second, a, b in (('carry', 'preapproach', carry, qpre),
-                                             ('preapproach', 'cut', qpre, qcut)):
-                    row = segment(first, second, a, b, motion=opened)
-                    approach.append(row)
-                    if not row['passed']:
-                        break
-                if not all(row['passed'] for row in approach):
-                    rejected.append({**record, 'reason': 'approach_collision_or_margin', 'segments': approach})
-                    continue
                 if fixture:
                     closure = segment('cut_open', 'cut_closed', qcut, qcut)
                     if not closure['passed']:
                         rejected.append({**record, 'reason': 'closed_cut_geometry', 'segments': [closure]})
                         continue
-                    approach.append(closure)
-                for offset in EXTRACTION_OFFSETS:
+                approach = None
+                for qpre, local_pre, error in _preapproach_candidates(c, local_cut, qcut, carry, expanded):
+                    if error:
+                        rejected.append({**record, 'reason': error})
+                        continue
+                    ingress = [segment('carry', 'preapproach', carry, qpre, motion=opened)]
+                    if ingress[0]['passed']:
+                        ingress.append(segment('preapproach', 'cut', qpre, qcut, motion=opened))
+                    if all(row['passed'] for row in ingress):
+                        approach = [*ingress, closure] if fixture else ingress
+                        break
+                    rejected.append({**record, 'reason': 'approach_collision_or_margin', 'segments': ingress})
+                if approach is None:
+                    continue
+                offsets = EXTRACTION_OFFSETS
+                if expanded:
+                    offsets = (tuple(a-b for a, b in zip(local_pre, local_cut)), *offsets)
+                for offset in offsets:
                     local_out = [v+d for v, d in zip(local_cut, offset)]
                     try:
-                        qout = list(c.solve(local_out, seed=qcut))
+                        qout = qpre if expanded and offset == offsets[0] else list(c.solve(local_out, seed=qcut))
                     except ValueError as error:
-                        rejected.append({**record, 'offset_m': list(offset), 'reason': str(error)})
-                        continue
+                        if not expanded:
+                            rejected.append({**record, 'offset_m': list(offset), 'reason': str(error)})
+                            continue
+                        try:
+                            qout = _position_joints(c, local_out, qcut)
+                        except ValueError as fallback_error:
+                            rejected.append({**record, 'offset_m': list(offset), 'reason': str(fallback_error)})
+                            continue
                     extraction = []
-                    for first, second, a, b in (('cut', 'extraction_0', qcut, qout),
-                                                ('extraction_0', 'carry', qout, carry)):
-                        row = segment(first, second, a, b, carrying=True)
-                        extraction.append(row)
-                        if not row['passed']:
-                            break
+                    extraction.append(segment('cut', 'extraction_0', qcut, qout, carrying=True))
+                    qlift = lift_point = None
+                    if extraction[0]['passed']:
+                        transfer = segment('extraction_0', 'carry', qout, carry, carrying=True)
+                        extraction.append(transfer)
+                        if expanded and not transfer['passed']:
+                            for candidate_lift, point in _lift_candidates(c, qout, carry):
+                                beginning = segment('extraction_0', 'extraction_1', qout, candidate_lift, carrying=True)
+                                if not beginning['passed']:
+                                    continue
+                                end = segment('extraction_1', 'carry', candidate_lift, carry, carrying=True)
+                                if end['passed']:
+                                    qlift, lift_point = candidate_lift, point
+                                    extraction = [extraction[0], beginning, end]
+                                    break
                     if not all(row['passed'] for row in extraction):
                         rejected.append({**record, 'offset_m': list(offset),
                             'reason': 'extraction_collision_or_margin', 'segments': extraction})
                         continue
                     deposit = None
+                    deposit_lift = None
                     deposit_segments = []
                     if fixture:
                         for release in onboard_release_joints(c, held, carry, fixture['bin']):
                             transfer = segment('carry', 'above_basket', carry, release, carrying=True)
-                            if not transfer['passed']:
+                            transfer_segments = [transfer]
+                            lift_used = None
+                            if expanded and not transfer['passed']:
+                                for lift, _ in _lift_candidates(c, carry, release):
+                                    start = segment('carry', 'deposit_lift', carry, lift, carrying=True)
+                                    if not start['passed']:
+                                        continue
+                                    end = segment('deposit_lift', 'above_basket', lift, release, carrying=True)
+                                    if end['passed']:
+                                        lift_used, transfer_segments = lift, [start, end]
+                                        break
+                            if not all(part['passed'] for part in transfer_segments):
                                 continue
                             clear_open = segment('above_basket_closed', 'above_basket_open', release, release,
                                                  carrying=True, motion=opened)
@@ -139,19 +246,30 @@ def plan_resolved_harvest(bundle, config, *, samples=81, clearance_m=.004,
                                 continue
                             # The attached world fruit has already been removed from its crop pose.
                             # The separate return audit below uses the released tray volume.
-                            deposit, deposit_segments = release, [transfer, clear_open]
+                            deposit, deposit_lift = release, lift_used
+                            deposit_segments = [*transfer_segments, clear_open]
                             break
                         if deposit is None:
                             rejected.append({**record, 'reason': 'no_safe_onboard_deposit_pose'})
-                            continue
+                            # Each withdrawal returns to the same carry pose.
+                            # This transfer depends only on the current cut
+                            # attachment, so another withdrawal cannot fix it.
+                            break
                     segments = approach+extraction+deposit_segments
+                    joints = {'carry': carry, 'preapproach': qpre, 'cut': qcut, 'extraction_0': qout}
+                    waypoints = {'carry': carry_local, 'preapproach': local_pre, 'cut': local_cut, 'extraction_0': local_out}
+                    sequence = ['carry', 'preapproach', 'cut', 'extraction_0']
+                    if qlift is not None:
+                        joints['extraction_1'] = qlift
+                        waypoints['extraction_1'] = lift_point
+                        sequence.append('extraction_1')
                     accepted = {'pickup_base_pose': list(base), 'cut_axis_world': world_direction,
-                        'joint_waypoints': {'carry': carry, 'preapproach': qpre, 'cut': qcut, 'extraction_0': qout},
-                        'tcp_waypoints_world_m': {name: transform_point(pose, point) for name, point in
-                            [('carry', carry_local), ('preapproach', local_pre), ('cut', local_cut), ('extraction_0', local_out)]},
-                        'sequence': ['carry', 'preapproach', 'cut', 'extraction_0', 'carry'],
+                        'joint_waypoints': joints,
+                        'tcp_waypoints_world_m': {name: transform_point(pose, point) for name, point in waypoints.items()},
+                        'sequence': [*sequence, 'carry'],
                         'extraction_offset_m': list(offset),
                         **({'deposit_joints': deposit} if fixture else {}),
+                        **({'deposit_sequence': [deposit_lift, deposit]} if deposit_lift is not None else {}),
                         'audit': {'passed': True, 'segments': segments, 'rejected_candidates': rejected,
                             'minimum_robot_clearance_m': min(r['minimum_robot_clearance_m'] for r in segments),
                             'minimum_held_clearance_m': min(r['minimum_held_clearance_m'] for r in extraction),
@@ -177,10 +295,17 @@ def onboard_release_joints(config, fruit, carry, basket):
     """Solve for the latched fruit above the aperture, with position-only IK."""
     lo, hi = basket['inner_min_m'], basket['inner_max_m']
     x, y = [(a+b)/2 for a,b in zip(lo[:2], hi[:2])]
+    horizontal_centers = [(x, y)]
+    if getattr(config, 'task', {}).get('demo_fixture', {}).get(WRIST_OPTION):
+        radius = fruit['radius_m']
+        horizontal_centers.extend((x+dx, y+dy) for dx, dy in ((-.04, 0.), (.04, 0.), (0., -.04), (0., .04))
+                                  if lo[0]+radius <= x+dx <= hi[0]-radius and
+                                  lo[1]+radius <= y+dy <= hi[1]-radius)
     offset = fruit['held_offset_in_tool_m']
     poses = (carry, [0., -.7, .9, .2, 0.], [0., .7, -.9, -.2, 0.])
-    for height in (.06, .12, .20, .28):
-        center = [x, y, hi[2]+fruit['radius_m']+height]
+    targets = ([cx, cy, hi[2]+fruit['radius_m']+height]
+               for cx, cy in horizontal_centers for height in (.06, .12, .20, .28))
+    for center in targets:
         for seed in poses:
             q = list(seed)
             for _ in range(8):
@@ -189,18 +314,17 @@ def onboard_release_joints(config, fruit, carry, basket):
                 if math.dist([a+b for a,b in zip(motion['position_m'], point)], center) <= .002:
                     yield q
                     break
-                solved = solve_ik(config.robot, [a-b for a,b in zip(center, point)],
-                                  tool_frame=config.frame, seed=q, orientation_mode='position_only')
-                if not solved.success:
+                try:
+                    q = _position_joints(config, [a-b for a,b in zip(center, point)], q)
+                except ValueError:
                     break
-                q = [solved.joint_positions[name] for name in config.robot.joint_names]
 
 
 def audited_drive_route(start, route, config, cylinders, fruits, clearance_m):
     """Check stowed robot at in-place turns and along each approach leg."""
     from .harvest_clearance import _CylinderIndex
-    from .robot_motion import resolved_world_clearance
-    cylinders = _CylinderIndex(cylinders)
+    if not isinstance(cylinders, _CylinderIndex):
+        cylinders = _CylinderIndex(cylinders)
     task = config.task
     carry = list(task.get('carry_joints_rad',
                              [config.robot.data['arm_home_positions'][n] for n in config.robot.joint_names]))
@@ -220,7 +344,8 @@ def audited_drive_route(start, route, config, cylinders, fruits, clearance_m):
         poses.extend((goal[0], goal[1], heading+after_turn*i/post) for i in range(1, post+1))
         for px, py, yaw in poses:
             base = [px, py, height, yaw]
-            row = resolved_world_clearance(carry, base, cylinders, fruits, None, config, report_cap=clearance_m)
+            row = resolved_world_clearance(carry, base, cylinders, fruits, None, config,
+                                           report_cap=clearance_m, reject_on_first_failure=True)
             samples += 1
             if row['robot_clearance_m'] < clearance_m:
                 return {'passed': False, 'pose': base, 'samples': samples, 'clearance': row}

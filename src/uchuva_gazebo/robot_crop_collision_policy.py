@@ -16,6 +16,7 @@ from .robot_collision_filters import collision_masks
 
 
 OPTION = 'ignore_finger_blade_crop_contacts'
+WRIST_OPTION = 'ignore_wrist_housing_crop_contacts'
 POLICY_SCHEMA = 'cad-finger-blade-crop-omission/1.0'
 # Dedicated CAD fingers, blades and pads. The rigid pad supports 111/112,
 # housing 98, cover 99, wrist and every other part are deliberately absent.
@@ -28,6 +29,30 @@ _CAD_PARTS = {
     'gripper_right_jaw/part_114_bounds': ('Goma:2', 'e7197c337019297e9347acf1424a35fcce3b2ffbbb7313fc90457d72fdebe358'),
 }
 FINGER_BLADE_CROP_SHAPES = frozenset(_CAD_PARTS)
+# Explicit follow-up authorization: the complete two-link wrist assembly in
+# the admitted grouped CAD profile, not arbitrary names beginning with wrist.
+# The pitch group preserves source pieces 78,79,81,84,85,87,88,93,94,97.
+# The short links/gears below were already fixed into wrist_roll by the demo
+# reduction. The follow-up CAD classification of jaw parts 111/112 is separate.
+_WRIST_CAD_PARTS = {
+    'arm_wrist_pitch/rigid_mesh_arm_wrist_pitch_0': ('CAD wrist pitch group: parts 78,79,81,84,85,87,88,93,94,97', '62b59de59618ac94af7a36b19560d5feb6cd8f23a736bf332fdb36ba10c8147a'),
+    'arm_wrist_roll/part_86_bounds': ('horn plastico:1', 'ed42e509fd68c91dfa3e2c750a7b038f9e28d7db4c1f9b9e36c30ad7d5b1b9ff'),
+    'arm_wrist_roll/part_98_bounds': ('Gripper ensamble:1/Gripper y engranaje:1', '90cb3dc6f8ce866c7764d83621bdf2d4a7cdc05b08fab9a228070192ad484116'),
+    'arm_wrist_roll/part_99_bounds': ('Gripper ensamble:1/Gripper 1:1', '467081cbeed75cb450f43ae3707f8ba7610b92ac67acfe51a411753599f51eac'),
+    'arm_wrist_roll/part_100_bounds': ('Gripper ensamble:1/Engranaje recto2:1', '193aefe39c7d70f50efea0547fa71f5f702c5e4cd41d048629c13b62683e951b'),
+    'arm_wrist_roll/part_101_bounds': ('Gripper ensamble:1/Engranaje recto1:1', 'b6930cd1dce93153f81355e141adb84d791b993e49bc6c405c7c82d9b6df2f6e'),
+    'arm_wrist_roll/part_102_bounds': ('Gripper ensamble:1/Rodamiento:1/SKF 623-2Z:1', '12b02335a51364c7372fa241b6fffef18e328923f9afb5d8b277f25a73e85e0c'),
+    'arm_wrist_roll/part_103_bounds': ('Gripper ensamble:1/TowerPro_MG946R:1', '93bfd0014d3829c8869ddb72ddae1f1dc7f608885dbc4e5eefff8bf0fe14a4cd'),
+    'arm_wrist_roll/part_105_bounds': ('Gripper ensamble:1/Eslabon 1:1', '98b7427e9ce527762834a936c434183824e34d647c54aec0df17d80d547bbe12'),
+    'arm_wrist_roll/part_107_bounds': ('Gripper ensamble:1/Eslabon 1:2', '98b7427e9ce527762834a936c434183824e34d647c54aec0df17d80d547bbe12'),
+    'arm_wrist_roll/part_108_bounds': ('Gripper ensamble:1/Wheel_gear v2:1', '66fcf64b6ef89efc51d78b758a12318b446799a0111bc3a240a3667189ebef2b'),
+}
+WRIST_HOUSING_CROP_SHAPES = frozenset(_WRIST_CAD_PARTS)
+_ADDITIONAL_JAW_PARTS = {
+    'gripper_left_jaw/part_111_bounds': ('Gripper ensamble:1/Mordaza blanda:1', 'c8b6893da55a6825ecd9d9750b2f581729e5a61d067331a88d4dc070c4b2bd14'),
+    'gripper_right_jaw/part_112_bounds': ('Gripper ensamble:1/Mordaza blanda:2', 'c8b6893da55a6825ecd9d9750b2f581729e5a61d067331a88d4dc070c4b2bd14'),
+}
+WRIST_EXTENSION_JAW_SHAPES = frozenset(_ADDITIONAL_JAW_PARTS)
 
 
 def _shape_inventory(robot):
@@ -57,6 +82,29 @@ def finger_blade_crop_exclusions(robot, task):
                 tuple(geometry.get('scale', (1, 1, 1))) != (1, 1, 1)):
             raise ValueError(f'Crop-contact omission requires the exact dedicated CAD shape: {name}')
     return FINGER_BLADE_CROP_SHAPES
+
+
+def crop_collision_exclusions(robot, task):
+    """Return the authorized union; wrist omission requires the finger opt-in."""
+    fixture = task.get('demo_fixture', {})
+    wrist = fixture.get(WRIST_OPTION, False)
+    if type(wrist) is not bool:
+        raise ValueError(f'demo_fixture.{WRIST_OPTION} must be a boolean')
+    fingers = finger_blade_crop_exclusions(robot, task)
+    if not wrist:
+        return fingers
+    if not fingers:
+        raise ValueError('Wrist/housing crop omission requires the prior finger/blade opt-in')
+    inventory = _shape_inventory(robot)
+    wrist_inventory = {name for name in inventory if name.split('/')[0] in ('arm_wrist_pitch', 'arm_wrist_roll')}
+    if wrist_inventory != WRIST_HOUSING_CROP_SHAPES:
+        raise ValueError('Wrist crop omission requires the complete known CAD wrist inventory')
+    for name, (_, digest) in {**_WRIST_CAD_PARTS, **_ADDITIONAL_JAW_PARTS}.items():
+        geometry = inventory.get(name, {}).get('geometry', {})
+        if (geometry.get('type') != 'mesh' or geometry.get('sha256') != digest or
+                tuple(geometry.get('scale', (1, 1, 1))) != (1, 1, 1)):
+            raise ValueError(f'Wrist crop omission requires the exact admitted CAD shape: {name}')
+    return fingers | WRIST_HOUSING_CROP_SHAPES | WRIST_EXTENSION_JAW_SHAPES
 
 
 def _subset_masks(original, omitted):
@@ -100,26 +148,40 @@ def _seal(report):
 
 
 def compile_crop_collision_policy(robot, task):
-    omitted = finger_blade_crop_exclusions(robot, task)
+    omitted = crop_collision_exclusions(robot, task)
     if not omitted:
         return None
     inventory = _shape_inventory(robot)
     masks = collision_masks(robot.to_dict())
     original = {name: masks[name.split('/')[0]] for name in inventory}
     revised, crop_mask = _subset_masks(original, omitted)
-    return _seal({
+    cad_parts = {**_CAD_PARTS, **_WRIST_CAD_PARTS, **_ADDITIONAL_JAW_PARTS}
+    report = {
         'schema_version': POLICY_SCHEMA, 'robot_spec_sha256': robot.sha256,
         'scope': 'only_crop_against_named_fingers_blades_and_pads',
         'status': 'explicit_video_approximation_not_physical_harvest_validation',
-        'excluded_shapes': [{'name': name, 'cad_occurrence': _CAD_PARTS[name][0],
-                             'collision_sha256': _CAD_PARTS[name][1]} for name in sorted(omitted)],
+        'excluded_shapes': [{'name': name, 'cad_occurrence': cad_parts[name][0],
+                             'collision_sha256': cad_parts[name][1]} for name in sorted(omitted)],
         'original_robot_masks': original, 'robot_masks': revised, 'crop_mask': crop_mask,
         'other_external_mask': 65535,
         'internal_shape_pairs_verified': len(original)*(len(original)-1)//2,
         'preserved': ['all_internal_mask_pairs', 'native_adjacency', 'all_geometry_and_inertias',
                       'ground', 'basket', 'supports_111_112', 'all_other_robot_crop_pairs',
                       'crop_crop_contacts', 'clearance_thresholds'],
-    })
+    }
+    if omitted & WRIST_HOUSING_CROP_SHAPES:
+        report['schema_version'] = 'cad-finger-blade-wrist-crop-omission/1.2'
+        report['scope'] = 'only_crop_against_named_fingers_blades_pads_and_complete_cad_wrist'
+        report['preserved'].remove('supports_111_112')
+        report['wrist_housing_extension'] = {
+            'option': WRIST_OPTION,
+            'cad_import_report_sha256': '8479a9b6a178bf98682090fbeb5c4676e9e52fb2b28a2f5fe4e36fbcef3735c6',
+            'grouping_manifest_sha256': 'f1482cf70f66f4c3910c378ab2bdb606a27cd7a2c8999465031570aca66e5bb9',
+            'additional_shapes': sorted(WRIST_HOUSING_CROP_SHAPES),
+            'additional_jaw_shapes': sorted(WRIST_EXTENSION_JAW_SHAPES),
+            'jaw_classification': 'CAD occurrences Mordaza blanda:1/:2 mounted on the jaw links; included in this follow-up authorization only. Their rigid meshes and internal contacts remain unchanged.',
+        }
+    return _seal(report)
 
 
 def apply_robot_crop_collision_masks(model, policy):

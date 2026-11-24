@@ -17,8 +17,7 @@ sys.path.insert(0, str(ROOT/'src'))
 from uchuva_gazebo.harvest_basket import DEMO_FIXTURE_SCHEMA, validated_demonstration
 from uchuva_gazebo.harvest_clearance import _CylinderIndex, planned_crop_obstacles
 from uchuva_gazebo.harvest_pilot import sha256_file, write_package
-from uchuva_gazebo.harvest_plants import build_harvest_plants
-from uchuva_gazebo.robot_crop_collision_policy import finger_blade_crop_exclusions
+from uchuva_gazebo.harvest_plants import DEFAULT_PLANT_CONFIG, build_harvest_plants
 from uchuva_gazebo.robot_harvest_planning import plan_resolved_harvest
 from uchuva_gazebo.robot_motion import ResolvedMotionConfig, resolved_world_clearance
 from uchuva_gazebo.robot_spec import resolve_robot_profile
@@ -29,7 +28,7 @@ def write(path, value):
 
 
 def build_config(base, robot, robot_directory, derivation, lock, screen, *, rgb_comparison, ideal_cut_segment,
-                 ignore_finger_blade_crop_contacts=False):
+                 ignore_finger_blade_crop_contacts=False, ignore_wrist_housing_crop_contacts=False):
     config = deepcopy(base)
     config['world_name'] = 'uchuva_cad_v8_demonstration'
     config['robot_profile'] = str(robot_directory/'profile.json')
@@ -40,6 +39,9 @@ def build_config(base, robot, robot_directory, derivation, lock, screen, *, rgb_
     config['video_observer'] = {'pose': [-4.8, -2.9, 2.7, 0., .320, .829], 'width': 1280,
                                'height': 720, 'fps': 10, 'horizontal_fov_rad': 1.1,
                                'topic': '/harvest/video_observer/image'}
+    if ignore_wrist_housing_crop_contacts:
+        # Put all three stations and the connecting aisle in one native view.
+        config['video_observer'].update(pose=[-4.4, 1.8, 2.45, 0., .409, 0.], horizontal_fov_rad=1.47)
     jaw = derivation['gripper']
     if robot.sha256 != derivation['robot_spec_sha256']:
         raise ValueError('Profile differs from recorded CAD derivation')
@@ -67,6 +69,8 @@ def build_config(base, robot, robot_directory, derivation, lock, screen, *, rgb_
                             ideal_cut_segment_m=ideal_cut_segment)
     if ignore_finger_blade_crop_contacts:
         config['robot_task']['demo_fixture']['ignore_finger_blade_crop_contacts'] = True
+    if ignore_wrist_housing_crop_contacts:
+        config['robot_task']['demo_fixture']['ignore_wrist_housing_crop_contacts'] = True
     return config
 
 
@@ -79,11 +83,17 @@ def main():
     parser.add_argument('--static-only', action='store_true')
     parser.add_argument('--ignore-finger-blade-crop-contacts', action='store_true',
                         help='Demonstration only: exempt the declared fingers, pads and blades from crop contacts')
+    parser.add_argument('--ignore-wrist-housing-crop-contacts', action='store_true',
+                        help='Also exempt the CAD wrist and gripper housing from crop contacts in this demonstration')
+    parser.add_argument('--plant', action='append', choices=('plant_000', 'plant_001', 'plant_002'),
+                        help='Restrict this candidate search to the named locked plant(s); all plants stay in the field')
     parser.add_argument('--ideal-cut-segment', type=float, default=.008,
                         help='Length of the target pedicel reserved for the explicitly idealized blade and pad interaction')
     args = parser.parse_args()
     if args.candidates_per_target < 1:
         parser.error('--candidates-per-target must be positive')
+    if args.ignore_wrist_housing_crop_contacts and not args.ignore_finger_blade_crop_contacts:
+        parser.error('--ignore-wrist-housing-crop-contacts requires --ignore-finger-blade-crop-contacts')
     lock = read(ROOT/'configs/robots/cad_v8_acceptance_lock.json')
     base = read(ROOT/'configs/harvest_pilot_v8.json')
     if verify(base, lock)['status'] != 'PASS':
@@ -94,33 +104,48 @@ def main():
         raise ValueError('Expected exact-surface screening evidence for the locked V8 scene')
     config = build_config(base, robot, args.robot_directory, read(args.robot_directory/'derivation.json'),
                           lock, screen, rgb_comparison=args.rgb_comparison, ideal_cut_segment=args.ideal_cut_segment,
-                          ignore_finger_blade_crop_contacts=args.ignore_finger_blade_crop_contacts)
+                          ignore_finger_blade_crop_contacts=args.ignore_finger_blade_crop_contacts,
+                          ignore_wrist_housing_crop_contacts=args.ignore_wrist_housing_crop_contacts)
     task = config['robot_task']
     fixture = validated_demonstration(robot, task)
     threshold = fixture['motion_clearance_m']
-    exempt_shapes = finger_blade_crop_exclusions(robot, task)
+    from uchuva_gazebo.robot_crop_collision_policy import crop_collision_exclusions
+    exempt_shapes = crop_collision_exclusions(robot, task)
     args.output.mkdir(parents=True, exist_ok=False)
-    selection = {f['id']: [p for p in f['poses'] if p['target_vs_tool_m'] >= threshold
-                           or p.get('limiting_shape') in exempt_shapes]
-                 for f in screen['targets']}
+    selection = {}
+    for fruit in screen['targets']:
+        poses = [row for row in fruit['poses'] if row['target_vs_tool_m'] >= threshold
+                 or row.get('limiting_shape') in exempt_shapes]
+        if args.ignore_wrist_housing_crop_contacts:
+            # The old tool score includes the now-excluded shapes. Favor
+            # stations farther out in the aisle for the P/D and chassis checks.
+            poses.sort(key=lambda row: (row['base_pose'][0], abs(row['base_pose'][3])))
+        selection[fruit['id']] = poses
     # Screening starts from the candidates' identical catalog geometry. To
     # avoid trimming reserve pedicels during the final audit, re-export only
     # the final subset and repeat planning from that exact package.
-    possible = [f for f in screen['targets'] if selection[f['id']]]
+    possible = [f for f in screen['targets'] if selection[f['id']] and
+                (not args.plant or f['plant_id'] in args.plant)]
     plants = deepcopy(config['plants'])
     plants['max_dynamic_fruits_per_plant'] = max(Counter(f['plant_id'] for f in possible).values(), default=1)
+    # Screening can represent more reserve fruits than the final native scene.
+    # The imported morphological sources are unaffected by this export budget.
+    default_budget = DEFAULT_PLANT_CONFIG['reproductive_units_max']
+    plants['reproductive_units_max'] = max(plants.get('reproductive_units_max', default_budget),
+                                          plants['max_dynamic_fruits_per_plant'])
     plants['target_ids'] = [f['id'] for f in possible]
     report = {'status': 'NO EJECUTADO', 'scope': 'sampled CAD planning and route admission before native dynamics',
         'robot_spec_sha256': robot.sha256, 'tool_screen_robot_spec_sha256': screen['robot_spec_sha256'],
         'cut_screen_sha256': sha256_file(args.cut_screen), 'motion_clearance_m': threshold,
         'rgb_comparison_sha256': fixture['rgb_comparison_sha256'], 'tool_only_eligible_ids': plants['target_ids'],
         'checks': [], 'feasible_fruit_ids': [], 'native_executed': False}
-    if args.ignore_finger_blade_crop_contacts:
-        report['ignored_finger_blade_crop_shapes'] = sorted(exempt_shapes)
+    if exempt_shapes:
+        report['ignored_crop_contact_shapes'] = sorted(exempt_shapes)
     report_path = args.output/'selection.json'
     write(report_path, report)
     if not possible:
         return 1
+    print(f"Screening {len(possible)} frozen crop targets", flush=True)
     bundle = build_harvest_plants(plants, collision_screen=True)
     motion = ResolvedMotionConfig(robot, task, asset_root=args.robot_directory/'assets')
     for fruit in bundle['fruits']:
