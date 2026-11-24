@@ -357,6 +357,15 @@ El contacto bilateral conserva **FAIL**. Sólo la goma derecha registró puntos
 no separados. La guarda impidió ARM y CUT, por lo que el latch quedó sin
 ejecutar. La auditoría independiente está en `cad_gripper_final_contact_03`.
 
+El detector alternativo ODE reconoció ambos contactos de goma con el
+pedicelo en la consulta estática. La repetición `cad_gripper_ode_cad05_q0_01`
+con la pinza CAD final, las mismas máscaras, observador sincronizado y
+consigna cero dio **FAIL**. Los contactos entre tapa y eslabones aparecieron
+desde el primer paso, junto a avisos del detector de mallas. El pico de
+velocidad fue 1,443 rad/s y el cierre izquierdo alcanzó 0,008243 rad de
+residual angular frente a 0,001 rad permitido. Se conserva el ensayo y el
+perfil integrado permanece en Bullet.
+
 En un banco analítico, Bullet Featherstone transmitió esfuerzo en ambos
 sentidos a través de su restricción de engranajes, sin un motor seguidor.
 El mismo backend con la pinza CAD completa excedió límites articulares y
@@ -376,7 +385,12 @@ estima 7,120 N·m para el hombro en reposo. En el banco nativo de gravedad
 nominal alcanzó un error máximo de 0,004750 rad en la ventana final. La
 variante limitada a 6 N·m se saturó en 9.804 pasos y alcanzó 0,294681 rad de
 error. El caso negativo confirma el efecto de cambiar un límite de esfuerzo
-en simulación. Queda pendiente la respuesta del chasis con carga añadida.
+en simulación. En `cad_battery_settle_bench_01`, añadir 1 kg de carga
+hipotética a 0,1 m hacia atrás modificó las posiciones telescópicas medias
+en la última ventana de asentamiento. La compresión adicional fue de
+0,390–0,479 mm delante y 1,133–1,184 mm detrás. El ensayo conserva el inicio
+y la física originales del chasis. La respuesta dinámica a desplazamientos
+con esa carga y las propiedades de la batería real siguen pendientes.
 
 El análisis `cad_v8_rigid_wrist_bound_02` verificó el SDF contra el manifiesto
 V8 y calculó cotas superiores de holgura de **3,472 mm**, **2,891 mm** y
@@ -407,3 +421,37 @@ los objetivos 1 y 2 por debajo de 4 mm en la teselación evaluada. El primer
 objetivo queda muy cerca del umbral en este cálculo y la tercera cota es
 la evidencia más clara del bloqueo de la misión de los tres objetivos.
 Los cortes y el vídeo de misión permanecen **NO EJECUTADOS**.
+
+## Movilidad completa con realimentación de giro
+
+`cad_mobility_feedback_01` completó los 15 s y el paso adicional de
+observación. El proceso de Gazebo terminó normalmente tras 1.367,91 s de
+reloj. En el tramo de giro, el coste de resolver cada paso fue mayor que en
+el asentamiento y el avance. Los criterios físicos y las fases se evaluaron
+con su duración original. La ganancia proporcional de la revisión fue 1,5
+sobre una estimación de velocidad angular en una ventana de 0,1 s, a partir
+de la pose ideal que publica Gazebo. Los límites de rueda se conservaron.
+
+| Comprobación | Resultado observado |
+|---|---|
+| Avance recto | PASS, 0,193481 m |
+| Giro completo | PASS, 0,331055 rad sobre el mínimo de 0,250 rad |
+| Parada final | PASS, máximo de 0,001468 m/s y 0,00002181 rad/s en la ventana final |
+| Brazo en la fase estática | PASS, error máximo de 0,004758 rad |
+| Cierres de suspensión y pinza | PASS en 1.500 muestras sincronizadas |
+| Velocidad inicial de la pinza | FAIL, 1,543424 rad/s en el eslabón corto derecho frente a 1,030 rad/s admitidos |
+| Movilidad integrada | FAIL por el exceso de velocidad inicial registrado |
+
+La auditoría `cad_mobility_feedback_01_audit_01` volvió a calcular las
+referencias del controlador a partir de poses nativas y verificó 1.501
+muestras de mando. Un segundo cálculo desde las poses y velocidades crudas
+confirmó el giro, la parada y el pico de velocidad en la pinza. Los resultados de avance,
+giro y parada corresponden al chasis en el simulador con pose ideal. La
+estimación de la odometría, las capacidades reales de los motores, el
+contacto bilateral y la calibración funcional siguen pendientes.
+
+El registro de órdenes de la misión conserva ahora el timestamp usado para
+calcular cada referencia de rueda, incluso si llega una pose nueva durante
+la publicación. La prueba reproduce ese orden de callbacks. El código del
+ensayo de movilidad ya usaba un único timestamp y sus archivos congelados
+siguen asociados a la revisión ejecutada.

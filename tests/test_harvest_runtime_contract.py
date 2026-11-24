@@ -94,6 +94,27 @@ def callback_fixture():
 
 
 class HarvestRuntimeContractTests(unittest.TestCase):
+    def test_base_command_keeps_reference_time_when_state_changes_during_publish(self):
+        pilot=callback_fixture()
+        pilot.resolved_robot=object()
+        pilot.manifest['robot']['drive']={
+            'left_joints':['left'], 'right_joints':['right'],
+            'joint_signs':{'left':1,'right':1},
+            'joints':{name:{'command_velocity':8} for name in ('left','right')},
+            'wheel_radius_m':.11, 'wheel_separation_m':.61655,
+            'max_linear_velocity':.15, 'max_angular_velocity':.3,
+            'max_linear_acceleration':.2, 'max_angular_acceleration':.4}
+        pilot.state=artificial_sample(1.)
+        pilot.Double=SimpleNamespace
+        def publish(_message):
+            pilot.state=artificial_sample(1.01)
+        pilot.drive_publishers={name:SimpleNamespace(publish=publish) for name in ('left','right')}
+        pilot.send_base(0,.2)
+        record=json.loads(pilot.streams['commands'].getvalue())
+        self.assertEqual(pilot.state['sim_time'],1.01)
+        self.assertEqual(record['sim_time'],1.)
+        self.assertEqual(record['sim_time'],record['drive_reference']['sim_time'])
+
     def test_deposit_uses_controlled_cut_frame_instead_of_offset_tcp(self):
         pilot = NativePilot.__new__(NativePilot)
         pilot.resolved_robot = object()

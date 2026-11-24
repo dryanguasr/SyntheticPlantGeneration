@@ -418,6 +418,9 @@ class NativePilot:
                                    'sim_time': self.state['sim_time'] if self.state else None,
                                    'linear_m_s': linear, 'angular_rad_s': angular}
             if getattr(self, 'resolved_robot', None):
+                # Publishing may allow a newer native-state callback. Keep the
+                # timestamp used to compute this reference, not that later state.
+                record['sim_time'] = stamp
                 record['wheel_velocity_references_rad_s'] = wheel_references
                 record['drive_reference'] = drive_record
             self._line('commands', record)
