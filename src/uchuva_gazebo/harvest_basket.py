@@ -54,7 +54,7 @@ def validated_demonstration(robot, task):
     if any(a >= b for a, b in zip(lo, hi)):
         raise ValueError('Basket interior has an empty axis')
     base = next(link for link in data['links'] if link['name'] == data['root_link'])
-    parts = {s['name']: s for s in base['collisions'] if s['name'].startswith('basket_')}
+    parts = {s['name']: s for s in base['collisions'] if s['name'] in BASKET_PARTS}
     if set(parts) != BASKET_PARTS:
         raise ValueError('The base must carry a basket with a floor and four separate collision walls')
     boxes = []
@@ -79,4 +79,12 @@ def validated_demonstration(robot, task):
         raise ValueError('Basket interior disagrees with native floor and wall locations')
     if any(all(min(b[i], hi[i]) - max(a[i], lo[i]) > 1e-9 for i in range(3)) for a,b in boxes):
         raise ValueError('A native basket collider obstructs the declared interior')
+    for part in base['collisions']:
+        if not part['name'].startswith('basket_') or part['name'] in BASKET_PARTS:
+            continue
+        pose, shape = part['pose'], part['geometry']
+        height = shape['size_m'][2] if shape['type'] == 'box' else shape.get('length_m', math.inf)
+        if (not part['name'].startswith('basket_mount_') or pose['quaternion_xyzw'] != [0, 0, 0, 1]
+                or pose['xyz_m'][2] + height/2 > lo[2]+1e-9):
+            raise ValueError('A basket mount must stay below the useful aperture')
     return fixture

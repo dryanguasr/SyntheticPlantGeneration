@@ -31,13 +31,14 @@ DEFAULTS={
     'batteries':[
         {'name':'battery_left','center_m':[-.10,.08,0.],'size_m':[.15,.08,.08],'mass_kg':1.0},
         {'name':'battery_right','center_m':[-.10,-.08,0.],'size_m':[.15,.08,.08],'mass_kg':1.0}],
-    'electronics':{'name':'electronics_white','center_m':[.10,0.,0.],'size_m':[.14,.10,.08],'mass_kg':.35},
+    'electronics':{'name':'electronics_white','center_m':[.05,0.,0.],'size_m':[.14,.10,.08],'mass_kg':.35},
     'basket':{'inner_min_m':[.12,-.13,.114],'inner_max_m':[.34,.13,.190],
               'wall_thickness_m':.004,'mass_kg':.35},
     'gripper':{'open_gap_m':.006,'effort_limit_n':2.,'command_velocity_m_s':.005,
                'position_tolerance_m':.0002,'maximum_settled_speed_m_s':.001,'stable_time_s':.2,
                'p_gain_n_m':1000.,'estimated_damping_ratio':1.},
     'wrist_pitch_command_velocity_rad_s':.25,
+    'mounts':{'enabled':True,'estimated_steel_density_kg_m3':7850.},
 }
 
 
@@ -76,6 +77,60 @@ def basket_parts(config):
     volume=sum(math.prod(size) for _,_,size in parts)
     return [{'name':name,'center_m':center,'size_m':size,
              'mass_kg':config['mass_kg']*math.prod(size)/volume} for name,center,size in parts]
+
+
+def mount_parts(settings):
+    """Small welded/bolted stand-in assemblies; no strength certification.
+
+    The native square-tube faces are measured from CAD parts 119 and 117.
+    Clamp plates touch only their upper/lower planes. Shanks sit outside
+    the tube, so no original CAD holes or solids need to be modified.
+    All primitives have disjoint interiors; the mass is their volume sum.
+    """
+    config=settings.get('mounts',{})
+    if not config.get('enabled',False):return []
+    density=config['estimated_steel_density_kg_m3']
+    if not math.isfinite(density) or density<=0:raise ValueError('Invalid support density')
+    if settings['electronics']['center_m']!=[.05,0.,0.] or settings['electronics']['size_m']!=[.14,.10,.08]:
+        raise ValueError('The verified electronics bracket requires the declared internal enclosure placement')
+    if settings['basket']['inner_min_m']!=[.12,-.13,.114] or settings['basket']['wall_thickness_m']!=.004:
+        raise ValueError('The verified basket bracket requires the declared floor placement')
+    parts=[]
+    def add(name,center,size,*,role,mate=None,cylinder=False):
+        geometry={'type':'cylinder','radius_m':size[0]/2,'length_m':size[2]} if cylinder else {'type':'box','size_m':size}
+        volume=math.pi*(size[0]/2)**2*size[2] if cylinder else math.prod(size)
+        parts.append({'name':name,'center_m':center,'size_m':size,'geometry':geometry,
+            'mass_kg':density*volume,'color_rgba':[.55,.58,.61,1.],
+            'role':role,'mating_cad_face':mate,'parameter_status':'engineering_heuristic'})
+    assemblies=[('electronics_mount',0.,-.095775,-.076725,.035,.05,.134,.006,.002,-.04,'part_119'),
+                ('basket_mount',.1625,.076725,.095775,.095,.245,.190,.008,.004,.110,'part_117')]
+    for prefix,x,z_bottom,z_top,y_span,rail_x,rail_length,rail_width,rail_thickness,rail_top,cad_part in assemblies:
+        for side,y in [('left',y_span),('right',-y_span)]:
+            tag=prefix+'_'+side
+            add(tag+'_rail',[rail_x,y,rail_top-rail_thickness/2],[rail_length,rail_width,rail_thickness],role='Longitudinal rail touching the payload underside')
+            for face,z,normal in [('upper',z_top+.001,-1),('lower',z_bottom-.001,1)]:
+                add(tag+'_'+face+'_clamp',[x,y,z],[.040,.010,.002],role='Tube clamp plate',
+                    mate={'part':cad_part,'axis':'z','coordinate_m':z_top if face=='upper' else z_bottom,
+                          'support_outward_normal_z':normal,'tube_center_x_m':x})
+            for end,dx in [('rear',-.016),('front',.016)]:
+                add(tag+'_'+end+'_shank',[x+dx,y,(z_bottom+z_top)/2],[.004,.004,z_top-z_bottom],role='Clamp bolt shank',cylinder=True)
+                for cap,z in [('head',z_top+.003),('nut',z_bottom-.003)]:
+                    add(tag+'_'+end+'_'+cap,[x+dx,y,z],[.007,.007,.002],role='Idealized bolt head/nut',cylinder=True)
+            post_bottom=z_top+.002;post_top=rail_top-rail_thickness
+            if post_top<=post_bottom:raise ValueError('Support standoff has nonpositive length')
+            for end,dx in [('rear',-.005),('front',.005)]:
+                add(tag+'_'+end+'_standoff',[x+dx,y,(post_bottom+post_top)/2],[.004,.004,post_top-post_bottom],role='Welded standoff joining top clamp and rail')
+    return parts
+
+
+def component_inertia(component):
+    geometry=component.get('geometry',{'type':'box','size_m':component['size_m']})
+    if geometry['type']=='box':return box_inertia(component['mass_kg'],geometry['size_m'])
+    radius,length,mass=geometry['radius_m'],geometry['length_m'],component['mass_kg']
+    if min(radius,length,mass)<=0:raise ValueError('Invalid support cylinder')
+    transverse=mass*(3*radius*radius+length*length)/12
+    return {'mass_kg':mass,'com_m':[0,0,0],
+            'tensor_kg_m2':[transverse,transverse,mass*radius*radius/2,0,0,0]}
 
 
 def mesh_vertices(geometry,asset_root):
@@ -175,17 +230,18 @@ def derive(source,asset_root,settings,evidence):
     exclusions[jaw_pair]='Certified internal mechanical clearance: closed native mesh half-spaces separated by '+format(closed_gap,'.17g')+' m; opening moves only left jaw along negative grasp X, increasing separation for the entire declared stroke. External contacts remain active.'
     new['collision_policy']={'mode':'explicit_pairs','excluded_pairs':[{'links':list(pair),'reason':reason} for pair,reason in sorted(exclusions.items())]}
 
-    components=[*settings['batteries'],settings['electronics'],*basket_parts(settings['basket'])]
+    brackets=mount_parts(settings)
+    components=[*settings['batteries'],settings['electronics'],*basket_parts(settings['basket']),*brackets]
     base=next(l for l in new['links'] if l['name']==new['root_link'])
     mass_parts=[(raw_inertia(base['inertial']),pose())]
     for component in components:
         name,center,size,mass=(component[k] for k in ('name','center_m','size_m','mass_kg'))
         if not name or any(s['name']==name for s in base['visuals']+base['collisions']):raise ValueError('Duplicate component name')
-        inertia=box_inertia(mass,size)
+        inertia=component_inertia(component)
         if len(center)!=3 or any(not math.isfinite(v) for v in center):raise ValueError('Invalid component center')
-        geometry={'type':'box','size_m':size}
-        color=([.91,.92,.90,1.] if name.startswith('electronics') else
-               [.12,.22,.28,1.] if name.startswith('battery') else [.18,.36,.31,1.])
+        geometry=copy.deepcopy(component.get('geometry',{'type':'box','size_m':size}))
+        color=component.get('color_rgba',([.91,.92,.90,1.] if name.startswith('electronics') else
+               [.12,.22,.28,1.] if name.startswith('battery') else [.18,.36,.31,1.]))
         base['visuals'].append({'name':name+'_visual','pose':pose(center),'geometry':copy.deepcopy(geometry),'color_rgba':color})
         base['collisions'].append({'name':name,'pose':pose(center),'geometry':copy.deepcopy(geometry),'surface':{'mu':.6,'mu2':.6}})
         mass_parts.append((raw_inertia(inertia),pose(center)))
@@ -257,6 +313,10 @@ def derive(source,asset_root,settings,evidence):
         'link_count':len(actual['links']),'visual_count':sum(len(l['visuals']) for l in actual['links']),
         'collision_count':sum(len(l['collisions']) for l in actual['links']),
         'added_components':components,'collision_masks':masks,
+        'supports':{'count':len(brackets),'mass_kg':sum(c['mass_kg'] for c in brackets),
+            'density_status':'Estimated steel density, not measured purchased hardware',
+            'method':'Rigid same-link clamp plates, bolts, standoffs and narrow rails. CAD tube faces and payload underside are explicit mating planes; no global collision suppression.',
+            'limitations':'Basket rails cantilever from the rear crossmember. Strength, screw preload, welds and fatigue are not FEA- or hardware-validated.'},
         'gripper':{'joint':moving_joint,'open_position_m':travel,'closed_position_m':0.,
             'position_tolerance_m':grip['position_tolerance_m'],'maximum_speed_m_s':grip['maximum_settled_speed_m_s'],
             'stable_time_s':grip['stable_time_s'],'command_velocity_m_s':grip['command_velocity_m_s'],
@@ -272,7 +332,7 @@ def derive(source,asset_root,settings,evidence):
             'guide_approximation':'Ideal prismatic parent-child guide, not the original CAD four-bar or validated tooth/contact mechanics.',
             'grasp_frame_note':'Existing grasp_center is fixed at CAD q0. Unilateral opening shifts the gap midpoint by -q/2; this is not a calibrated physical gripping point.'},
         'bin':{'frame':'chassis','root_link':actual['root_link'],'inner_min_m':basket['inner_min_m'],
-            'inner_max_m':basket['inner_max_m'],'collision_names':[c['name'] for c in components if c['name'].startswith('basket_')],
+            'inner_max_m':basket['inner_max_m'],'collision_names':[c['name'] for c in basket_parts(basket)],
             'open_top':True,'wall_thickness_m':basket['wall_thickness_m']},
         'wrist_revision':{'parameter':'demo_wrist_pitch_command_velocity_rad_s','before_rad_s':old['control']['arm']['wrist_pitch_joint']['command_velocity'],
             'after_rad_s':speed,'gains_effort_and_joint_limit_unchanged':True,

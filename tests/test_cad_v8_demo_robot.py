@@ -9,7 +9,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'), str(ROOT/'scripts')]
-from prepare_cad_v8_demo_robot import DEFAULTS, basket_parts, box_inertia, derive, pose
+from prepare_cad_v8_demo_robot import DEFAULTS, basket_parts, box_inertia, derive, pose, mount_parts
 from uchuva_gazebo.robot_spec import resolve_robot_profile
 from uchuva_gazebo.robot_kinematics import forward_kinematics, inverse_pose, compose_poses, transform_point
 
@@ -62,7 +62,8 @@ class DemoRobotTests(unittest.TestCase):
     def test_mass_surfaces_and_motion_preserved_except_declared_slider(self):
         with tempfile.TemporaryDirectory() as tmp:
             folder=Path(tmp);source=self.fixture(folder);old=source.to_dict()
-            robot,report=derive(source,folder,copy.deepcopy(DEFAULTS),old['provenance'])
+            settings=copy.deepcopy(DEFAULTS);settings['mounts']['enabled']=False
+            robot,report=derive(source,folder,settings,old['provenance'])
             new=robot.to_dict()
             self.assertAlmostEqual(report['added_mass_kg'],2.7,places=12)
             self.assertEqual(len(new['links']),len(old['links'])-6)
@@ -121,6 +122,28 @@ class DemoRobotTests(unittest.TestCase):
             gap2=sum(max(0,abs(a-b)-(x+y)/2)**2 for a,b,x,y in
                      zip(box['center_m'],other['center_m'],box['size_m'],other['size_m']))
             self.assertGreaterEqual(gap2,.004**2)
+
+    def test_supports_form_connected_nonoverlapping_mounts(self):
+        parts=mount_parts(DEFAULTS)
+        self.assertEqual(len(parts),44)
+        self.assertGreater(sum(p['mass_kg'] for p in parts),0)
+        graph={p['name']:set() for p in parts}
+        for a,b in itertools.combinations(parts,2):
+            overlaps=[min(a['center_m'][i]+a['size_m'][i]/2,b['center_m'][i]+b['size_m'][i]/2)-
+                      max(a['center_m'][i]-a['size_m'][i]/2,b['center_m'][i]-b['size_m'][i]/2) for i in range(3)]
+            self.assertLessEqual(min(overlaps),1e-12,'Mount interiors must not double-count material')
+            if min(overlaps)>=-1e-12:
+                graph[a['name']].add(b['name']);graph[b['name']].add(a['name'])
+        reached={p['name'] for p in parts if p['mating_cad_face']}
+        pending=list(reached)
+        while pending:
+            for name in graph[pending.pop()]-reached:
+                reached.add(name);pending.append(name)
+        self.assertEqual(reached,set(graph),'No fastener, rail or post may float separately')
+        for p in parts:
+            if p['name'].endswith('_rail'):
+                expected=-.04 if p['name'].startswith('electronics') else .110
+                self.assertAlmostEqual(p['center_m'][2]+p['size_m'][2]/2,expected,places=12)
 
 
 if __name__=='__main__':unittest.main()

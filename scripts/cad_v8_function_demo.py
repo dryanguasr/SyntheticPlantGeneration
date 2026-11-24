@@ -142,6 +142,8 @@ def prepare(args):
             phase['jaw_position_m'] = (demo['gripper']['open_position_m'] if phase['name'] in
                 ('arm_positive', 'arm_return', 'brake') else demo['gripper']['closed_position_m'])
         observer.update(pose=[-3.15, -1.65, 1.90, 0., .48, .96], horizontal_fov_rad=1.34)
+        if args.mount_closeup:
+            observer.update(pose=[-1.15, -.27, 1.08, 0., .35, 2.07], horizontal_fov_rad=1.00)
     root = ET.fromstring(mobility.world(robot, protocol))
     world = root.find('world')
     source_world = ET.parse(plants/manifest['world_file']).getroot().find('world')
@@ -409,11 +411,14 @@ def main():
     parser.add_argument('--package', type=Path)
     parser.add_argument('--robot-derivation', type=Path, help='Use the explicit CAD payload and short-stroke demonstration profile')
     parser.add_argument('--duration', type=float, help='Native seconds to record in the short-stroke visual preflight')
+    parser.add_argument('--mount-closeup', action='store_true', help='Frame the chassis and the accessory mounts in the native camera')
     for name in ('profile', 'asset-root', 'plant-package', 'acceptance-lock', 'plugin-dir'):
         parser.add_argument('--'+name, type=Path)
     args = parser.parse_args()
     if args.duration is not None and (not args.robot_derivation or not 3 <= args.duration <= 8):
         parser.error('--duration requires --robot-derivation and a finite interval from 3 to 8 seconds')
+    if args.mount_closeup and not args.robot_derivation:
+        parser.error('--mount-closeup requires --robot-derivation')
     if args.run:
         if args.package is None:
             parser.error('--run requires --package')
