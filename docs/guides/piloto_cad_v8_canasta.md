@@ -34,6 +34,15 @@ retiene las parejas limitantes. Un paquete parcial puede contener de uno a ocho
 objetivos, con un máximo de tres por planta. Conservar sus resultados con el
 número real de depósitos.
 
+Para la demostración con la excepción de contacto, agregar
+`--ignore-finger-blade-crop-contacts` a `prepare_cad_v8_experiment.py`. El
+planificador y el SDF omiten el contacto del cultivo con los dedos CAD 104 y
+106, las cuchillas 109 y 110, y las gomas montadas en los dedos 113 y 114. Los
+soportes 111 y 112, la carcasa y la muñeca conservan sus colisiones. Se mantienen
+las parejas de autocontacto, el contacto con la canasta y el suelo, y el umbral
+de 4 mm. El manifiesto registra las parejas excluidas y las máscaras emitidas.
+La omisión se usa para la demostración virtual.
+
 La superficie cerrada del capacho V8 se usa como colisión en el perfil nuevo.
 El cierre y corte idealizados reservan hasta 8 mm terminales del pedicelo elegido.
 El tallo proximal sigue siendo rígido y los visuales mantienen sus posiciones.

@@ -252,6 +252,11 @@ def build_pilot(config):
                                                   'bin_center_xy_m', 'deposit_base_xyyaw') for v in c[key]):
         raise ValueError('Non-finite scene parameters')
     plants = build_harvest_plants(c['plants'])
+    crop_policy = None
+    if resolved_robot is not None:
+        from .robot_crop_collision_policy import scene_crop_collision_policy
+        crop_policy = scene_crop_collision_policy(resolved_robot, c['robot_task'],
+            [row['model_name'] for row in (*plants['plants'], *plants['fruits'])])
     if fixture:
         for fruit in plants['fruits']:
             if 'collision_geometry' in fruit:
@@ -304,7 +309,11 @@ def build_pilot(config):
         world.append(generic_harvester_model(robot_config, start=c['robot_start_xyzyaw']))
     else:
         from .robot_sdf import resolved_robot_model
-        world.append(resolved_robot_model(resolved_robot, start=c['robot_start_xyzyaw']))
+        robot_model = resolved_robot_model(resolved_robot, start=c['robot_start_xyzyaw'])
+        if crop_policy:
+            from .robot_crop_collision_policy import apply_robot_crop_collision_masks
+            apply_robot_crop_collision_masks(robot_model, crop_policy)
+        world.append(robot_model)
     bin_spec = fixture['bin'] if fixture else _bin(world, c['bin_center_xy_m'])
     observers = {}
     if fixture:
@@ -318,7 +327,12 @@ def build_pilot(config):
     # successive attachments to the same tool skeleton in DART.
     for model in world.findall('model'):
         if model.get('name') != contract['model_name']:
-            set_collision_bitmask(model, 0xFFFF)
+            mask = (crop_policy['crop_mask'] if crop_policy and
+                    model.get('name') in crop_policy['crop_model_names'] else 0xFFFF)
+            set_collision_bitmask(model, mask)
+    if crop_policy:
+        from .robot_crop_collision_policy import verify_scene_crop_collision_masks
+        verify_scene_crop_collision_masks(world, contract['model_name'], crop_policy)
     interaction = e(world, 'plugin', filename='UchuvaHarvestSystem', name='uchuva::HarvestSystem')
     e(interaction, 'robot_model', contract['model_name'])
     e(interaction, 'tool_link', contract['tool_link'])
@@ -386,6 +400,9 @@ def build_pilot(config):
         manifest['video_observer'] = c['video_observer']
     if fixture:
         manifest['perception_observers'] = observers
+        if crop_policy:
+            manifest['crop_collision_policy'] = crop_policy
+            manifest['limitations'].append('User-authorized video approximation: only the six hash-verified CAD finger, blade and pad shapes omit crop contacts in both planning and native physics. Supports 111/112, wrist, housing, ground, basket, internal mask pairs and all other crop contacts retain their existing policy. This is not physical gripper/cutting validation.')
         if c['plants'].get('ideal_cut_segment_m'):
             manifest['limitations'].append('The designated terminal pedicel span is a virtual cutting zone. Only the named blades and pads may enter it during the matching pickup. The retained plant support remains a native collider.')
     occupied = set(plants['meshes']) | set(soil_assets['meshes']) | set(plants.get('texture_assets', {})) | set(source_assets) | set(soil_assets['generated_binary_assets'])
@@ -487,6 +504,15 @@ def load_verified_package(directory):
         if settings.get('robot_task') != manifest['robot_task']:
             raise ValueError('Task constraints differ between effective mission and frozen configuration')
         expected = resolved_robot_model(robot, start=settings['robot_start_xyzyaw'])
+        from .robot_crop_collision_policy import (scene_crop_collision_policy,
+            apply_robot_crop_collision_masks, verify_scene_crop_collision_masks)
+        crop_policy = scene_crop_collision_policy(robot, settings['robot_task'],
+            [row['model_name'] for row in (*manifest['plants'], *manifest['fruits'])])
+        if manifest.get('crop_collision_policy') != crop_policy:
+            raise ValueError('Crop-contact policy differs from the frozen robot/task/plant inventory')
+        if crop_policy:
+            apply_robot_crop_collision_masks(expected, crop_policy)
+            verify_scene_crop_collision_masks(world, robot.data['model_name'], crop_policy)
         def canonical(node):
             return (node.tag, tuple(sorted(node.attrib.items())), (node.text or '').strip(), tuple(canonical(child) for child in node))
         if actual is None or canonical(actual) != canonical(expected):

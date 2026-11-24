@@ -25,6 +25,8 @@ class ResolvedMotionConfig:
         if length < 1e-12:
             raise ValueError('robot_task.target_direction cannot be zero')
         self.robot, self.task = robot, dict(task)
+        from .robot_crop_collision_policy import finger_blade_crop_exclusions
+        self.crop_collision_excluded_shapes = finger_blade_crop_exclusions(robot, self.task)
         self.mesh_repository = mesh_repository
         geometries = [s['geometry'] for link in robot.links for s in link['collisions']
                       if s['geometry']['type'] == 'mesh']
@@ -138,6 +140,19 @@ def box_separation(first, first_half, second, second_half):
     return max(gaps)
 
 
+def _bounded_radius_gap(query, radius, minimum, *args):
+    """Preserve a saturated query's cap instead of subtracting roundoff from it.
+
+    A bounded distance returning its cutoff only certifies that the pair
+    cannot improve the current minimum. It is not a measured surface distance.
+    Unsaturated distances retain their exact subtraction, including breaches
+    arbitrarily close to the acceptance threshold; no epsilon is introduced.
+    """
+    cutoff = max(0, minimum + radius)
+    raw = query(*args, limit=cutoff)
+    return minimum if raw >= cutoff else raw - radius
+
+
 def resolved_world_clearance(values, base, cylinders, fruits, held, config, report_cap=.5,
                              *, reject_on_first_failure=False):
     from .harvest_clearance import _segment_box_distance, _point_box_distance, _point_segment_distance
@@ -191,6 +206,7 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
     # never an exemption or permission to accept internal contact.
     task = getattr(config, 'task', {})
     matching_blades = set(task.get('demo_fixture', {}).get('ideal_cut_blade_shapes', []))
+    crop_excluded = getattr(config, 'crop_collision_excluded_shapes', frozenset())
     active_cut = task.get('active_cut_target')
     for index, (shape, half, inverse) in enumerate(boxes):
         name = shape['link']+'/'+shape['name']
@@ -205,6 +221,8 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
         # body: deeper intersections still contribute to the reported minimum.
         nearby = cylinders.near(center, bound+max(0, minimum)) if hasattr(cylinders, 'near') else cylinders
         for obstacle in nearby:
+            if name in crop_excluded:
+                continue
             if (active_cut is not None and obstacle.get('ideal_cut_target') == active_cut and name in matching_blades
                     and math.dist(tcp['xyz_m'], obstacle['end']) <= .02):
                 continue
@@ -214,15 +232,17 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 if any(min(a,b)-hi >= reach or lo-max(a,b) >= reach for a,b,lo,hi in
                        zip(obstacle['start'], obstacle['end'], low_bound, high_bound)):
                     continue
-            gap = (repository.segment_distance(shape, obstacle['start'], obstacle['end'],
-                                                limit=max(0, minimum+obstacle['radius']))
+            gap = (_bounded_radius_gap(repository.segment_distance, obstacle['radius'], minimum,
+                                       shape, obstacle['start'], obstacle['end'])
                    if half is None else _segment_box_distance(transform_point(inverse, obstacle['start']),
-                   transform_point(inverse, obstacle['end']), half))-obstacle['radius']
+                   transform_point(inverse, obstacle['end']), half)-obstacle['radius'])
             if gap < minimum:
                 minimum, limiting = gap, [name, obstacle['id']]
                 if reject_on_first_failure:
                     return rejected(gap, limiting, 'crop')
         for fruit_shape, fruit in fruit_shapes:
+            if name in crop_excluded:
+                continue
             if held is not None and fruit['id'] == held['id']:
                 continue
             if bounds is not None:
@@ -230,9 +250,9 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 reach = max(0, minimum) + fruit['radius_m']
                 if any(p-hi >= reach or lo-p >= reach for p,lo,hi in zip(fruit['center_world_m'], low_bound, high_bound)):
                     continue
-            gap = (repository.point_distance(shape, fruit['center_world_m'],
-                                              limit=max(0, minimum+fruit['radius_m'])) if half is None
-                   else _point_box_distance(transform_point(inverse, fruit['center_world_m']), half))-fruit['radius_m']
+            gap = (_bounded_radius_gap(repository.point_distance, fruit['radius_m'], minimum,
+                                       shape, fruit['center_world_m']) if half is None
+                   else _point_box_distance(transform_point(inverse, fruit['center_world_m']), half)-fruit['radius_m'])
             if fruit_shape is not None and gap < minimum:
                 gap = repository.shape_distance(shape, fruit_shape, limit=max(0, minimum))
             if gap < minimum:
@@ -271,8 +291,8 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
         for obstacle in nearby:
             gap = _point_segment_distance(center, obstacle['start'], obstacle['end'])-radius-obstacle['radius']
             if held_shape and gap < held_min:
-                gap = repository.segment_distance(held_shape, obstacle['start'], obstacle['end'],
-                    limit=max(0, held_min+obstacle['radius']))-obstacle['radius']
+                gap = _bounded_radius_gap(repository.segment_distance, obstacle['radius'], held_min,
+                                          held_shape, obstacle['start'], obstacle['end'])
             if gap < held_min:
                 held_min, limiting_held = gap, obstacle['id']
         for fruit_shape, fruit in fruit_shapes:
@@ -286,9 +306,11 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 if gap < held_min:
                     held_min, limiting_held = gap, fruit['id']
         for shape, half, inverse in boxes:
-            gap = (repository.point_distance(shape, center,
-                                              limit=max(0, held_robot_min+radius)) if half is None
-                   else _point_box_distance(transform_point(inverse, center), half))-radius
+            if shape['link']+'/'+shape['name'] in crop_excluded:
+                continue
+            gap = (_bounded_radius_gap(repository.point_distance, radius, held_robot_min,
+                                       shape, center) if half is None
+                   else _point_box_distance(transform_point(inverse, center), half)-radius)
             if held_shape and gap < held_robot_min:
                 gap = repository.shape_distance(shape, held_shape, limit=max(0, held_robot_min))
             if gap < held_robot_min:

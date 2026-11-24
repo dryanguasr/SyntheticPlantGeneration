@@ -18,6 +18,7 @@ from uchuva_gazebo.harvest_basket import DEMO_FIXTURE_SCHEMA, validated_demonstr
 from uchuva_gazebo.harvest_clearance import _CylinderIndex, planned_crop_obstacles
 from uchuva_gazebo.harvest_pilot import sha256_file, write_package
 from uchuva_gazebo.harvest_plants import build_harvest_plants
+from uchuva_gazebo.robot_crop_collision_policy import finger_blade_crop_exclusions
 from uchuva_gazebo.robot_harvest_planning import plan_resolved_harvest
 from uchuva_gazebo.robot_motion import ResolvedMotionConfig, resolved_world_clearance
 from uchuva_gazebo.robot_spec import resolve_robot_profile
@@ -27,7 +28,8 @@ def write(path, value):
     path.write_text(json.dumps(value, indent=2, allow_nan=False)+'\n', encoding='utf-8')
 
 
-def build_config(base, robot, robot_directory, derivation, lock, screen, *, rgb_comparison, ideal_cut_segment):
+def build_config(base, robot, robot_directory, derivation, lock, screen, *, rgb_comparison, ideal_cut_segment,
+                 ignore_finger_blade_crop_contacts=False):
     config = deepcopy(base)
     config['world_name'] = 'uchuva_cad_v8_demonstration'
     config['robot_profile'] = str(robot_directory/'profile.json')
@@ -63,6 +65,8 @@ def build_config(base, robot, robot_directory, derivation, lock, screen, *, rgb_
     config['plants'].update(explicit_targets_allow_partial=True, max_dynamic_fruits_per_plant=3,
                             fruit_collision_representation='closed_v8_calyx_mesh',
                             ideal_cut_segment_m=ideal_cut_segment)
+    if ignore_finger_blade_crop_contacts:
+        config['robot_task']['demo_fixture']['ignore_finger_blade_crop_contacts'] = True
     return config
 
 
@@ -73,9 +77,13 @@ def main():
     parser.add_argument('--candidates-per-target', type=int, default=4)
     parser.add_argument('--package', type=Path, help='Write a verified harvest bundle if a subset passes the preflight')
     parser.add_argument('--static-only', action='store_true')
+    parser.add_argument('--ignore-finger-blade-crop-contacts', action='store_true',
+                        help='Demonstration only: exempt the declared fingers, pads and blades from crop contacts')
     parser.add_argument('--ideal-cut-segment', type=float, default=.008,
                         help='Length of the target pedicel reserved for the explicitly idealized blade and pad interaction')
     args = parser.parse_args()
+    if args.candidates_per_target < 1:
+        parser.error('--candidates-per-target must be positive')
     lock = read(ROOT/'configs/robots/cad_v8_acceptance_lock.json')
     base = read(ROOT/'configs/harvest_pilot_v8.json')
     if verify(base, lock)['status'] != 'PASS':
@@ -84,13 +92,16 @@ def main():
     screen = read(args.cut_screen)
     if screen['reference_sha256'] != lock['frozen_manifest']['sha256'] or not screen['exact_calyx']:
         raise ValueError('Expected exact-surface screening evidence for the locked V8 scene')
-    args.output.mkdir(parents=True, exist_ok=False)
     config = build_config(base, robot, args.robot_directory, read(args.robot_directory/'derivation.json'),
-                          lock, screen, rgb_comparison=args.rgb_comparison, ideal_cut_segment=args.ideal_cut_segment)
+                          lock, screen, rgb_comparison=args.rgb_comparison, ideal_cut_segment=args.ideal_cut_segment,
+                          ignore_finger_blade_crop_contacts=args.ignore_finger_blade_crop_contacts)
     task = config['robot_task']
     fixture = validated_demonstration(robot, task)
     threshold = fixture['motion_clearance_m']
-    selection = {f['id']: [p for p in f['poses'] if p['target_vs_tool_m'] >= threshold]
+    exempt_shapes = finger_blade_crop_exclusions(robot, task)
+    args.output.mkdir(parents=True, exist_ok=False)
+    selection = {f['id']: [p for p in f['poses'] if p['target_vs_tool_m'] >= threshold
+                           or p.get('limiting_shape') in exempt_shapes]
                  for f in screen['targets']}
     # Screening starts from the candidates' identical catalog geometry. To
     # avoid trimming reserve pedicels during the final audit, re-export only
@@ -104,6 +115,8 @@ def main():
         'cut_screen_sha256': sha256_file(args.cut_screen), 'motion_clearance_m': threshold,
         'rgb_comparison_sha256': fixture['rgb_comparison_sha256'], 'tool_only_eligible_ids': plants['target_ids'],
         'checks': [], 'feasible_fruit_ids': [], 'native_executed': False}
+    if args.ignore_finger_blade_crop_contacts:
+        report['ignored_finger_blade_crop_shapes'] = sorted(exempt_shapes)
     report_path = args.output/'selection.json'
     write(report_path, report)
     if not possible:
@@ -125,7 +138,8 @@ def main():
                                              motion.for_target_cut(identifier), report_cap=threshold,
                                              reject_on_first_failure=True)
             passed = state['robot_clearance_m'] >= threshold
-            report['checks'].append({'id': identifier, 'base_pose': pose['base_pose'], 'scope': 'cut_pose_only',
+            report['checks'].append({'id': identifier, 'base_pose': pose['base_pose'], 'q': pose['q'],
+                                     'scope': 'cut_pose_only',
                                      'passed': passed, 'clearance': state})
             print(f"{identifier} static={passed} clearance={state['robot_clearance_m']:.6g} "
                   f"limiting={state['limiting_robot_pair']}", flush=True)

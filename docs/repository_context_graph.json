@@ -46,6 +46,7 @@
         "src/uchuva_gazebo/robot_drive_control.py",
         "src/uchuva_gazebo/robot_mechanism_validation.py",
         "src/uchuva_gazebo/robot_collision_filters.py",
+        "src/uchuva_gazebo/robot_crop_collision_policy.py",
         "src/uchuva_gazebo/robot_mesh_geometry.py",
         "src/uchuva_gazebo/robot_harvest_planning.py",
         "src/uchuva_gazebo/closed_loops.py",

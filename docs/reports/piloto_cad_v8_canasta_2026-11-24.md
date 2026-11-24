@@ -52,6 +52,36 @@ Evidencia geométrica en `cad_v8_demo_tool_screen_exact_baseline_01.json`,
 `cad_v8_demo_candidates_06/selection.json`; la repetición con fijaciones está
 en `cad_v8_demo_candidates_mounted_01/selection.json`.
 
+## Demostración con contacto selectivo de la pinza
+
+Se activó una excepción de contacto de los dedos CAD 104 y 106, las cuchillas
+109 y 110 y las gomas 113 y 114 frente al cultivo. El perfil mantiene los
+soportes, la carcasa, la muñeca, las poses V8 y el umbral de 4 mm. Las máscaras
+de la escena se contrastaron con 4.186 parejas internas del robot. En una
+prueba aislada con Gazebo y DART, una esfera de cultivo atravesó el dedo, el
+soporte detuvo otra esfera de cultivo y un objeto ordinario conservó contacto
+con el dedo. La prueba usa las máscaras emitidas sobre cuerpos de ensayo.
+Evidencia en `finger_blade_crop_native_probe_02/result.json`.
+
+Se evaluaron 115 posturas de corte para nueve candidatos V8 con la excepción
+activa. Una resta con coma flotante generó siete rechazos aparentes justo en
+el límite. Se corrigió la consulta acotada y se repitieron esas siete posturas
+con los mismos 4 mm. Las siete incumplieron el margen por contactos de muñeca
+o carcasa con ramas y capachos vecinos. Una comprobación independiente de una
+de esas posturas encontró 3,280 mm entre la carcasa y el prisma nativo y una
+intersección del chasis con el cultivo en la misma parada con el brazo recogido.
+Ninguna de las 115 posturas pasó a ejecución de cosecha. Evidencia en
+`cad_v8_demo_candidates_finger_blade_02/selection.json`,
+`cad_v8_near_clearance_routes_02.json` y `cad_v8_full_body_approach_03/result.json`.
+
+El montaje `rejected_approach_static_video_01/diagnostico_posturas_sin_corte.mp4`
+contiene 93 cuadros de cámaras nativas en 9,3 s. Las dos posturas históricas
+son fijas y están rotuladas con el contacto de los dedos omitido en la revisión
+y el bloqueo de la muñeca. Se conservó el resultado de **0 de 9 frutos**. Los
+dos procesos de captura terminaron con código −11 después del último cuadro.
+El MP4 completo se decodificó y los resultados de los procesos permanecen en
+`rejected_approach_static_video_01/video_evidence.json`.
+
 ## Reproducción
 
 La [guía de operación](../guides/piloto_cad_v8_canasta.md) reúne los pasos de

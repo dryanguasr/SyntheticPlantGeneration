@@ -22,7 +22,8 @@ def source_metadata():
         'harvest_pilot.py', 'harvest_plants.py', 'harvest_visuals.py', 'harvest_collision_mesh.py',
         'harvest_clearance.py', 'harvester_robot.py', 'harvest_validation.py',
         'robot_spec.py', 'robot_kinematics.py', 'robot_sdf.py', 'robot_motion.py', 'robot_validation.py',
-        'robot_collision_filters.py', 'robot_harvest_planning.py', 'robot_mesh_geometry.py', 'harvest_basket.py', 'harvest_perception.py',
+        'robot_collision_filters.py', 'robot_crop_collision_policy.py', 'robot_harvest_planning.py',
+        'robot_mesh_geometry.py', 'harvest_basket.py', 'harvest_perception.py',
         'robot_mechanism_validation.py', 'robot_control_validation.py', 'robot_drive_control.py')]
     paths += [REPO / 'src/uchuva_lsystem' / filename for filename in (
         'grammar.py', 'parameters.py', 'morphology.py', 'collisions.py', 'scene.py', 'blender_geometry.py', 'texture_assets.py')]

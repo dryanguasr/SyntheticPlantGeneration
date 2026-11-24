@@ -605,7 +605,11 @@ class MeshRepository:
     def shape_distance(self,first,second,limit=math.inf):
         if first['geometry']['type']=='sphere':
             radius=first['geometry']['radius_m']
-            return max(0.,self.point_distance(second,first['pose']['xyz_m'],limit+radius)-radius)
+            cutoff=limit+radius
+            raw=self.point_distance(second,first['pose']['xyz_m'],cutoff)
+            # Saturation certifies >=limit. Subtracting the radius from the
+            # rounded cutoff can fabricate a sub-limit clearance by one ULP.
+            return limit if raw>=cutoff else max(0.,raw-radius)
         if second['geometry']['type']=='sphere':return self.shape_distance(second,first,limit)
         a,b=self.prepare(first),self.prepare(second)
         best=limit;heap=[(_bounds_gap(a.bounds,b.bounds),0,0)]
