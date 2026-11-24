@@ -1,0 +1,47 @@
+name: Puerta ROS aislada
+
+on:
+  pull_request:
+    branches: [main, feat/vision, feat/arm, feat/locomotion, feat/2WD]
+    paths:
+      - scripts/run_ros_tests.sh
+      - scripts/probe_ros_test_gate.sh
+      - .github/workflows/ros-gate.yml
+  push:
+    branches: [main]
+    paths:
+      - scripts/run_ros_tests.sh
+      - scripts/probe_ros_test_gate.sh
+      - .github/workflows/ros-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  ros_gate:
+    name: Prueba controlada de puerta ROS
+    runs-on: ubuntu-24.04
+    container: ros:jazzy-ros-base@sha256:00b8d47a6e6384a2834e3d01fa87ae767876543baa574f2d64a75c04ea33c698
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - name: Instalar herramientas de la prueba aislada
+        run: apt-get update && apt-get install -y python3-colcon-common-extensions cmake build-essential
+      - name: Comprobar fallo y corrección de prueba ROS
+        shell: bash
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          bash scripts/probe_ros_test_gate.sh "$RUNNER_TEMP/probe-logs"
+      - name: Conservar evidencia de la prueba aislada
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: evidencia-puerta-ros
+          path: ${{ runner.temp }}/probe-logs/
+          if-no-files-found: warn

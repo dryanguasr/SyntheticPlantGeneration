@@ -1,0 +1,4 @@
+READY BOTH_FULL
+ERR STATE
+CANCELLED 14870 GPIO 0 0 0 0
+PASS: arranque y parada sin habilitar movimiento

@@ -1,0 +1,2 @@
+GPIO 25=0 26=0 27=0 14=0
+PASS: lectura digital de los cuatro GPIO en bajo

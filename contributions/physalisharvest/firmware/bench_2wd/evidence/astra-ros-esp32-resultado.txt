@@ -1,0 +1,7 @@
+Dispositivo: Orbbec Astra
+Pixel RGB (320, 238); depth (331, 251) = 970 mm
+ROS /astra/xyz: {'frame': 'astra_depth_optical_frame', 'stamp_ns': 1795120925316078400, 'xyz': [0.01870804214477539, 0.018708072662353515, 0.97]}
+RX READY XYZ1
+TX XYZ1 1 0.018708 0.018708 0.970000
+RX ECHO 1 0.018708 0.018708 0.970000
+PASS: XYZ confirmado por ESP32 a seis decimales

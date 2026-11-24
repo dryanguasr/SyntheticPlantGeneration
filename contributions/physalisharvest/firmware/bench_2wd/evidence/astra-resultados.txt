@@ -1,0 +1,11 @@
+Prueba puntual Astra Pro — 2026-11-19, Windows
+Referencia astra-rgbd-ros2-integration: 7b4cd1b50ddecae7ea30494160e519d9e4191038
+OpenNI 2.3.0.86 x64; DirectShow índice 1; RGB y depth crudo 640x480
+SHA-256 de calibración: 4b06398231164640534c33fe549be33a85165a2ca5e61eb9fdc1819a79ce0583
+Una pareja nueva de la caja. Dos esquinas superiores anotadas visualmente.
+Nombre; RGB (px); depth crudo (px); profundidad local (m); reproyección (px); error antes (px); error después (px)
+Superior izquierda; (359,235); (371,249); 0.754; (357.42,234.51); 18.44; 1.65
+Superior derecha; (444,253); (452,275); 0.769; (444.29,259.31); 23.41; 6.31
+RMS de esos dos residuos: 21.07 px antes; 4.61 px después
+Se usó la mediana de profundidad positiva de una ventana en el interior de cada esquina y la misma pareja para ambos cálculos.
+Las otras esquinas quedaron parcialmente ocluidas. No se estimó incertidumbre ni exactitud 3D.

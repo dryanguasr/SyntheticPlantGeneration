@@ -1,0 +1,324 @@
+{
+  "uses": [
+    {
+      "tool": "Codex",
+      "date": "2026-11-16",
+      "artifact_type": "código, pruebas y documentación",
+      "paths": [
+        "scripts/check_common.py",
+        "scripts/check_repository.py",
+        "scripts/check_git_context.py",
+        "tests/test_verificadores.py",
+        "docs/pruebas/verificacion-local.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "Solicitud y requisitos proporcionados por el responsable; revisión del resultado pendiente.",
+      "verification": "Pruebas unitarias y verificaciones locales; consultar resultados de ejecución."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-16",
+      "artifact_type": "workflow y documentación de CI",
+      "paths": [
+        ".github/workflows/ci.yml",
+        "CONTRIBUTING.md",
+        "docs/pruebas/ci.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "Requisitos aportados por el responsable; revisión de integración pendiente.",
+      "verification": "Comprobaciones locales; ejecución en GitHub pendiente."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-16",
+      "artifact_type": "correcciones CI, pruebas y documentación",
+      "paths": [
+        ".github/workflows/ci.yml",
+        "scripts/run_ros_tests.sh",
+        "scripts/probe_ros_test_gate.sh",
+        "scripts/report_ros_packages.py",
+        "docs/interfaces/propuesta-integracion-ros2.md",
+        "docs/pruebas/ci.md",
+        "CONTRIBUTING.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json",
+        "tests/test_verificadores.py"
+      ],
+      "human_intervention": "Requisitos y aprobación del AGENTS.md aportados por el responsable; revisión técnica pendiente.",
+      "verification": "Verificaciones locales y ejecución GitHub Actions sujetas a resultados observados."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-16",
+      "artifact_type": "documentación e instrucciones de agentes",
+      "paths": [
+        "ros2_ws/src/robot_percepcion_decision/AGENTS.md",
+        "ros2_ws/src/robot_percepcion_decision/README.md",
+        "ros2_ws/src/robot_brazo/AGENTS.md",
+        "ros2_ws/src/robot_brazo/README.md",
+        "ros2_ws/src/robot_locomocion/AGENTS.md",
+        "ros2_ws/src/robot_locomocion/README.md",
+        "ros2_ws/src/robot_interfaces/AGENTS.md",
+        "ros2_ws/src/robot_interfaces/README.md",
+        "docs/entorno-reproducible.md",
+        "docs/integracion/README.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "Requisitos aportados por el responsable; revisión pendiente.",
+      "verification": "Verificaciones de estructura y enlaces; consultar ejecución del PR."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-16",
+      "artifact_type": "corrección documental",
+      "paths": [
+        "README.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "Inconsistencia identificada por el responsable; revisión pendiente.",
+      "verification": "Comprobación estática local y CI del PR."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-16",
+      "artifact_type": "política y verificador Git",
+      "paths": [
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "scripts/check_git_context.py",
+        "tests/test_verificadores.py",
+        "docs/pruebas/verificacion-local.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json",
+        "ros2_ws/src/robot_brazo/AGENTS.md",
+        "ros2_ws/src/robot_interfaces/AGENTS.md",
+        "ros2_ws/src/robot_locomocion/AGENTS.md",
+        "ros2_ws/src/robot_percepcion_decision/AGENTS.md"
+      ],
+      "human_intervention": "Requisitos proporcionados por el responsable; revisión pendiente.",
+      "verification": "Pruebas locales y CI del PR."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-16",
+      "artifact_type": "corrección del verificador y documentación",
+      "paths": [
+        "scripts/check_git_context.py",
+        "tests/test_verificadores.py",
+        "docs/pruebas/verificacion-local.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "Corrección solicitada por el responsable; revisión pendiente.",
+      "verification": "Pruebas unitarias y verificador estático; consultar ejecución del PR."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-19",
+      "artifact_type": "migración de nomenclatura, CI, verificador Git, pruebas y documentación",
+      "paths": [
+        ".github/workflows/ci.yml",
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        "scripts/check_git_context.py",
+        "tests/test_verificadores.py",
+        "README.md",
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "docs/entorno-reproducible.md",
+        "docs/pruebas/ci.md",
+        "docs/pruebas/verificacion-local.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json",
+        "ros2_ws/src/robot_percepcion_decision/AGENTS.md",
+        "ros2_ws/src/robot_brazo/AGENTS.md",
+        "ros2_ws/src/robot_locomocion/AGENTS.md",
+        "ros2_ws/src/robot_interfaces/AGENTS.md"
+      ],
+      "human_intervention": "Requisitos proporcionados por el responsable; revisión e integración humanas pendientes.",
+      "verification": "Consultar verificaciones locales y GitHub Actions en el PR de migración."
+    },
+    {
+      "tool": "ChatGPT y Codex",
+      "date": "2026-11-19",
+      "artifact_type": "documentación de ingeniería v2",
+      "paths": [
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "El responsable seleccionó y copió los documentos preparados con asistencia de ChatGPT. Codex auditó y preparó el PR para revisión humana.",
+      "verification": "Comparación SHA-256, validación de dos bloques Mermaid, verificadores de repositorio y contexto Git y pruebas unitarias."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-19",
+      "artifact_type": "paquete ROS 2, diagnóstico, prueba F0 y documentación",
+      "paths": [
+        "ros2_ws/src/robot_locomocion/bench_2wd/AGENTS.md",
+        "ros2_ws/src/robot_locomocion/bench_2wd/README.md",
+        "ros2_ws/src/robot_locomocion/bench_2wd/setup.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd/setup.cfg",
+        "ros2_ws/src/robot_locomocion/bench_2wd/resource/bench_2wd",
+        "ros2_ws/src/robot_locomocion/bench_2wd/package.xml",
+        "ros2_ws/src/robot_locomocion/bench_2wd/bench_2wd/__init__.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd/bench_2wd/receiver.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd/bench_2wd/smoke_test.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd/test/test_transport.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd/astra_click.py",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "El responsable suministró los requisitos, el cableado declarado y la referencia Astra. Revisión humana pendiente.",
+      "verification": "En Jazzy sobre WSL 2 pasaron el verificador de repositorio, las 19 pruebas existentes, la compilación, colcon test y los ocho casos sintéticos por ROS 2. Se comprobó el hash del JSON externo."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-19",
+      "artifact_type": "firmware y clientes de ensayo, registros textuales y documentación",
+      "paths": [
+        "firmware/bench_2wd",
+        "ros2_ws/src/robot_locomocion/bench_2wd/README.md",
+        "README.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "El operador preparó la escena de la cámara, supervisó la alimentación y la habilitación, realizó las lecturas de multímetro y confirmó el giro de las ruedas.",
+      "verification": "Revisión puntual RGB-depth de dos esquinas, eco de un XYZ real, secuencia en seco, ensayos de PWM y giro cualitativo supervisado. Los resultados desfavorables y límites figuran en firmware/bench_2wd/README.md."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-19",
+      "artifact_type": "visor de diagnóstico, documentación y marcadores sintéticos codificados con OpenCV",
+      "paths": [
+        "ros2_ws/src/robot_locomocion/bench_2wd/astra_aruco.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd/marcadores_aruco/",
+        "ros2_ws/src/robot_locomocion/bench_2wd/README.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "El responsable definió la prueba con un marcador, las indicaciones de corrección y la parada a 0,50 m.",
+      "verification": "Con OpenCV 4.11.0 se decodificaron los tres PNG y se comprobaron indicaciones de avance, corrección, parada por umbral axial, profundidad inválida e ID incorrecto con entradas sintéticas. El visor abrió la Astra con OpenNI 2.3.0.86 y mostró el estado sin marcador. La distancia real requiere referencia independiente."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-20",
+      "artifact_type": "controlador ROS 2 experimental, firmware DRV8833, puente, pruebas y documentación",
+      "paths": [
+        "ros2_ws/src/robot_locomocion/bench_2wd/astra_aruco.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/",
+        "firmware/bench_2wd/drv8833_ros/",
+        "firmware/bench_2wd/tools/drv8833_ros_usb.py",
+        "firmware/bench_2wd/tools/reproducir_drv8833.py",
+        "firmware/bench_2wd/tools/test/test_drv8833_bridge.py",
+        "docs/interfaces/bench-2wd-drv8833.md",
+        "README.md",
+        "docs/AI_USAGE.md",
+        "docs/ai_usage.json"
+      ],
+      "human_intervention": "El operador suministró el cableado DRV8833, definió el armado sin marcador y pidió auditoría sin ensayo físico.",
+      "verification": "Compilación ROS 2 Jazzy/WSL 2 y Arduino ESP32 3.3.12. La guía del banco registra las pruebas sintéticas y MOCK. No se cargó firmware ni se accionó el montaje nuevo."
+    },
+    {
+      "tool": "Codex y generador de imágenes integrado",
+      "date": "2026-11-20",
+      "artifact_type": "consola Windows, monitor ROS 2, pruebas, escena de vista previa y emblema",
+      "paths": [
+        "firmware/bench_2wd/tools/consola_2wd.py",
+        "firmware/bench_2wd/tools/wsl_clock.py",
+        "firmware/bench_2wd/tools/assets/physalisharvest-2wd.png",
+        "firmware/bench_2wd/tools/drv8833_ros_usb.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd/astra_aruco.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/",
+        "docs/interfaces/bench-2wd-drv8833.md",
+        "README.md"
+      ],
+      "human_intervention": "El operador definió la consola, la ruta prevista y el uso del símbolo recortado en la cabecera.",
+      "verification": "Inspección visual de Tk en modo desconectado y pruebas ROS en Jazzy y transporte MOCK. Cámara y puerto serie físicos fuera de la prueba."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-20",
+      "artifact_type": "ruta ArUco, búsqueda acotada, pruebas y documentación",
+      "paths": [
+        "firmware/bench_2wd/tools/consola_2wd.py",
+        "firmware/bench_2wd/tools/drv8833_ros_usb.py",
+        "firmware/bench_2wd/tools/reproducir_drv8833.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd/astra_aruco.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/",
+        "docs/interfaces/bench-2wd-drv8833.md"
+      ],
+      "human_intervention": "El operador definió la ruta de tres marcadores, búsqueda izquierda y límite de cinco segundos.",
+      "verification": "ROS 2 Jazzy con datos sintéticos y frontera serial MOCK. Detección múltiple OpenCV sobre imágenes sintéticas. Cámara y ESP32 desconectados."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-20",
+      "artifact_type": "PWM de corrección y sondeo, control ROS y pruebas",
+      "paths": [
+        "firmware/bench_2wd/drv8833_ros/",
+        "firmware/bench_2wd/tools/drv8833_ros_usb.py",
+        "firmware/bench_2wd/tools/consola_2wd.py",
+        "firmware/bench_2wd/tools/test/test_drv8833_bridge.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/",
+        "docs/interfaces/bench-2wd-drv8833.md"
+      ],
+      "human_intervention": "El operador reportó pérdida de nitidez durante los giros y pidió sondeo sin límite total y estado Esperando ArUco.",
+      "verification": "Compilación y pruebas de software con datos sintéticos y GPIO/serial MOCK. Sin actuación física."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-20",
+      "artifact_type": "Alineación ArUco por pulsos y PWM simétrico",
+      "paths": [
+        "firmware/bench_2wd/drv8833_ros/",
+        "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/",
+        "docs/interfaces/bench-2wd-drv8833.md"
+      ],
+      "human_intervention": "El operador pidió alinear antes de avanzar y fijó un mínimo de 85 % de PWM durante el movimiento, con corrección menor que avance.",
+      "verification": "Casos sintéticos ROS y GPIO MOCK. La respuesta mecánica queda pendiente de verificación."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-20",
+      "artifact_type": "Firmware DRV8833 V4 y verificación de versión en el puente y la consola",
+      "paths": [
+        "firmware/bench_2wd/drv8833_ros/",
+        "firmware/bench_2wd/tools/",
+        "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/README.md",
+        "docs/interfaces/bench-2wd-drv8833.md"
+      ],
+      "human_intervention": "El operador solicitó 100 % de PWM durante el movimiento y conservar la lógica de sondeo.",
+      "verification": "GPIO y USB MOCK, sin ensayo físico."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-20",
+      "artifact_type": "Ajuste de pulsos y confirmación de alineación en ROS 2",
+      "paths": [
+        "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/",
+        "docs/interfaces/bench-2wd-drv8833.md"
+      ],
+      "human_intervention": "El operador propuso pulsos de 100 ms y pausas de 500 ms y autorizó la prueba.",
+      "verification": "Prueba ROS 2 Jazzy con datos sintéticos, sin actuación física."
+    },
+    {
+      "tool": "Codex",
+      "date": "2026-11-20",
+      "artifact_type": "Sondeo sin profundidad local y ajuste de avance DRV8833 V5",
+      "paths": [
+        "firmware/bench_2wd/",
+        "ros2_ws/src/robot_locomocion/bench_2wd/astra_aruco.py",
+        "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/",
+        "docs/interfaces/bench-2wd-drv8833.md"
+      ],
+      "human_intervention": "El operador reportó deriva hacia la derecha y solicitó sondear cuando el marcador visible carece de profundidad válida.",
+      "verification": "Datos sintéticos y GPIO/USB simulados. Calibración física pendiente."
+    }
+  ]
+}

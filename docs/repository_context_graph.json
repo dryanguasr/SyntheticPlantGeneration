@@ -177,11 +177,26 @@
         "docs/reports/robot_cosechador_mecanismos_2026-11-23.md"
       ],
       "evidence": [
-        {"path": "src/uchuva_gazebo/robot_spec.py", "locator": "class ResolvedRobot"},
-        {"path": "src/uchuva_gazebo/robot_kinematics.py", "locator": "def forward_kinematics"},
-        {"path": "gazebo/harvest_system/RobotTelemetrySystem.cc", "locator": "class RobotTelemetrySystem"},
-        {"path": "gazebo/harvest_system/JointPositionForceSystem.cc", "locator": "class JointPositionForceSystem"},
-        {"path": "scripts/export_inventor_robot.ps1", "locator": "SkipAllUnresolvedFiles"}
+        {
+          "path": "src/uchuva_gazebo/robot_spec.py",
+          "locator": "class ResolvedRobot"
+        },
+        {
+          "path": "src/uchuva_gazebo/robot_kinematics.py",
+          "locator": "def forward_kinematics"
+        },
+        {
+          "path": "gazebo/harvest_system/RobotTelemetrySystem.cc",
+          "locator": "class RobotTelemetrySystem"
+        },
+        {
+          "path": "gazebo/harvest_system/JointPositionForceSystem.cc",
+          "locator": "class JointPositionForceSystem"
+        },
+        {
+          "path": "scripts/export_inventor_robot.ps1",
+          "locator": "SkipAllUnresolvedFiles"
+        }
       ]
     },
     {
@@ -3070,6 +3085,35 @@
           "locator": "# Resultados experimentales para edición"
         }
       ]
+    },
+    {
+      "id": "module.physalisharvest_integration",
+      "type": "module",
+      "label": "Conciliación del cosechador y PhysalisHarvest",
+      "summary": "Contrato puro derivado de RobotSpec y observaciones ópticas ArUco con reloj explícito. Snapshot externo íntegro y atribuido, sin autoridad botánica ni relicenciamiento MIT. Banco físico 2WD separado del robot digital. TF, adaptación de control, puente y misión física pendientes; pruebas de software no equivalen a cosecha autónoma.",
+      "paths": [
+        "src/uchuva_gazebo/physalisharvest.py",
+        "scripts/check_physalisharvest_integration.py",
+        "scripts/verify_physalisharvest_snapshot.py",
+        "tests/test_physalisharvest.py",
+        "contributions/physalisharvest.provenance.json",
+        "docs/guides/integracion_physalisharvest.md",
+        "docs/reports/conciliacion_cosechador_physalisharvest_2026-11-24.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/physalisharvest.py",
+          "locator": "def normalize_astra_point("
+        },
+        {
+          "path": "src/uchuva_gazebo/physalisharvest.py",
+          "locator": "def build_integration_plan("
+        },
+        {
+          "path": "docs/reports/conciliacion_cosechador_physalisharvest_2026-11-24.md",
+          "locator": "## Arquitectura conciliada"
+        }
+      ]
     }
   ],
   "edges": [
@@ -3078,7 +3122,10 @@
       "relation": "depends_on",
       "target": "module.parametric_harvester",
       "evidence": [
-        {"path": "src/uchuva_gazebo/harvest_pilot.py", "locator": "robot_spec_sha256"}
+        {
+          "path": "src/uchuva_gazebo/harvest_pilot.py",
+          "locator": "robot_spec_sha256"
+        }
       ]
     },
     {
@@ -6004,6 +6051,17 @@
         {
           "path": "src/uchuva_gazebo/harvest_plants.py",
           "locator": "pedicel_id"
+        }
+      ]
+    },
+    {
+      "source": "module.physalisharvest_integration",
+      "target": "module.parametric_harvester",
+      "relation": "depends_on",
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/physalisharvest.py",
+          "locator": "from .robot import robot_contract"
         }
       ]
     }

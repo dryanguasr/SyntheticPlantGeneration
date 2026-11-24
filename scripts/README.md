@@ -43,6 +43,12 @@ reemplazados están en `legacy/scripts/`.
 
 ## Puente hacia Gazebo
 
+`verify_physalisharvest_snapshot.py` comprueba los 107 archivos del aporte
+fijado de Diego contra su manifiesto, sin necesitar Git ni ROS 2.
+`check_physalisharvest_integration.py --profile proxy_v1 --output outputs/physalisharvest_revision/integration.json`
+inspecciona el contrato del robot y observaciones opcionales, sin actuar.
+Consultar la [guía](../docs/guides/integracion_physalisharvest.md).
+
 | Script | Propósito |
 |---|---|
 | `prepare_robot_model.py` | Resuelve perfiles y overrides con procedencia; genera SDF, contrato, configuración efectiva y reporte |
