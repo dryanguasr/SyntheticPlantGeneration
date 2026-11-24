@@ -508,3 +508,57 @@ El dominio de posición del análisis es la precisión de planificación de
 Gazebo cumple otra función y no define una zona física de filo. El análisis
 con `--edge-envelope` permite estudiar la envolvente nominal de los dos
 filos a lo largo de la carrera CAD sin ajustar esos criterios.
+
+## Prueba de funcionamiento con la pinza inmovilizada
+
+Para ensayar el brazo y el chasis mientras se resuelve el contacto de las
+mordazas, `prepare_cad_fixed_gripper_diagnostic.py` deriva un perfil con las
+ocho articulaciones de la pinza fijas en la postura CAD de referencia. El
+preparador compara el SDF resultante con el anterior y comprueba que conserve
+masas, inercias, visuales, colisionadores, máscaras y poses de montaje. Las
+cuatro restricciones de la suspensión y los controles del brazo y el chasis
+se mantienen. El resultado usa la pinza como carga rígida del brazo.
+
+En WSL, ejecutar el preparador con el SHA canónico del perfil de origen.
+Usar directorios de destino nuevos en cada ensayo.
+
+```bash
+python3 scripts/prepare_cad_fixed_gripper_diagnostic.py \
+  --profile outputs/real_harvester_validation/cad_base_feedback_candidate_01/profile.json \
+  --asset-root outputs/real_harvester_validation/cad_base_feedback_candidate_01/assets \
+  --expected-source-sha256 f4f1b8bdb9e4e4a8171ed6203be2661efd1a51474de9cfaf667d08e132ccbef9 \
+  --output outputs/real_harvester_validation/pinza_fija_derivacion_nueva
+
+python3 scripts/probe_cad_mobility.py \
+  --experiment integrated_arm --start-height 0.298218017078388 \
+  --max-step-size 0.0001 --wall-timeout 1800 \
+  --profile outputs/real_harvester_validation/pinza_fija_derivacion_nueva/profile.json \
+  --asset-root outputs/real_harvester_validation/pinza_fija_derivacion_nueva/assets \
+  --plugin-dir outputs/real_harvester_plugin_build_v8 \
+  --output outputs/real_harvester_validation/pinza_fija_ensayo_nuevo
+```
+
+El ensayo incorpora tres fases de brazo bajo gravedad, con consignas de
++0,08 rad, −0,08 rad y retorno a origen. Sigue la secuencia original de
+avance, frenado, giro y frenado. Se comprueban los límites de esfuerzo y
+velocidad, el seguimiento en las fases de brazo y los cierres de suspensión
+observados. El perfil diagnóstico deja el agarre, corte y cosecha pendientes.
+
+Para grabar una demostración breve con el perfil fijo de referencia,
+`scripts/cad_v8_function_demo.py` prepara un paquete aparte. Verifica el
+manifiesto V8 y mantiene las mallas y poses del cultivo. En esa escena
+los tres frutos objetivo son estáticos. La cámara nativa observa dos
+movimientos del hombro, su retorno y un avance corto por el corredor.
+
+```bash
+python3 scripts/cad_v8_function_demo.py \
+  --profile outputs/real_harvester_validation/cad_fixed_gripper_diagnostic_01/profile.json \
+  --asset-root outputs/real_harvester_validation/cad_fixed_gripper_diagnostic_01/assets \
+  --plant-package outputs/harvest_pilot_v8_c4_gui \
+  --acceptance-lock configs/robots/cad_v8_acceptance_lock.json \
+  --plugin-dir outputs/real_harvester_plugin_build_v8 \
+  --output outputs/real_harvester_validation/pinza_fija_video_paquete_nuevo
+python3 scripts/cad_v8_function_demo.py --run \
+  --package outputs/real_harvester_validation/pinza_fija_video_paquete_nuevo \
+  --output outputs/real_harvester_validation/pinza_fija_video_ensayo_nuevo
+```

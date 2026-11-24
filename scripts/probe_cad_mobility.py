@@ -80,12 +80,96 @@ def protocol(start_height, max_step_size=.001, experiment='full'):
             {'name':'stop_after_turn','start_s':4.5,'end_s':6,'linear_m_s':0,'angular_rad_s':0}]
         config['criteria']['minimum_observed_span_s']=5.8
         config['schedule_revision']='Only schedule/coverage duration changed for isolation; the turn lasts3s and all physical thresholds stay identical. Full15s test still required.'
+    elif experiment=='integrated_arm':
+        config['experiment']='integrated_arm'
+        config['scope']='Integrated base/arm diagnostic with the gripper physically fixed at CAD q0; no gripper or harvest validation'
+        config['duration_s']=21
+        config['criteria']['minimum_observed_span_s']=20.8
+        config['criteria'].update(arm_target_error_rad=.01, arm_settled_velocity_rad_s=.01,
+                                  arm_target_tail_s=.5)
+        moving=config['phases'][2:]
+        for phase in moving:
+            phase['start_s']+=6;phase['end_s']+=6
+        config['phases']=config['phases'][:2]+[
+            {'name':name,'start_s':start,'end_s':start+2,'linear_m_s':0,'angular_rad_s':0,
+             'arm_offset_rad':offset}
+            for name,start,offset in (('arm_positive',4,.08),('arm_negative',6,-.08),('arm_return',8,0.))]+moving
+        config['schedule_revision']='Adds three2s arm excursions before the unchanged straight/stop/turn/stop sequence. Arm error and settled velocity use strict .01rad/.01rad/s diagnostic limits; original static .035rad criterion remains separate.'
     elif experiment!='full':raise ValueError('Unknown commissioning experiment')
     return config
 
 
 def phase_at(config, stamp):
     return next((p for p in config['phases'] if p['start_s']<=stamp<p['end_s']),config['phases'][-1])
+
+
+def arm_phase_targets(robot, config):
+    """Freeze numerical joint targets, rejecting undeclared or clipped travel."""
+    home=robot.data['arm_home_positions']
+    joints={joint['name']:joint for joint in robot.joints}
+    targets={phase['name']:{name:value+phase.get('arm_offset_rad',0.) for name,value in home.items()}
+             for phase in config['phases']}
+    for values in targets.values():
+        for name,value in values.items():
+            if not joints[name]['limits']['lower']<=value<=joints[name]['limits']['upper']:
+                raise ValueError('Integrated arm target exceeds joint travel: '+name)
+    return targets
+
+
+def arm_sequence_checks(robot, config, joints, poses):
+    """Observed positive/negative/return motion, with strict settled tail checks."""
+    if config.get('experiment')!='integrated_arm':return []
+    limits=config['criteria'];targets=arm_phase_targets(robot,config);checks=[]
+    names=set(robot.joint_names)
+    for phase in config['phases']:
+        if 'arm_offset_rad' not in phase:continue
+        start,end=phase['end_s']-limits['arm_target_tail_s'],phase['end_s']
+        rows=[row for row in joints if start<=row['sim_time']<end]
+        errors=[];metrics={name:{'maximum_target_error_rad':0.,'maximum_velocity_rad_s':0.,
+                              'minimum_position_rad':math.inf,'maximum_position_rad':-math.inf} for name in names}
+        for row in rows:
+            observed={j['name']:j for j in row['joints'] if j['name'] in names}
+            if set(observed)!=names:errors.append('Missing observed arm joint');continue
+            for name,joint in observed.items():
+                if (not joint.get('position_available') or not joint.get('velocity_available') or
+                    any(type(joint.get(key)) not in (int,float) or not math.isfinite(joint[key])
+                        for key in ('position','velocity','max_abs_velocity_window'))):
+                    errors.append('Invalid native arm state: '+name);continue
+                value=metrics[name];position=joint['position']
+                value['maximum_target_error_rad']=max(value['maximum_target_error_rad'],abs(position-targets[phase['name']][name]))
+                value['maximum_velocity_rad_s']=max(value['maximum_velocity_rad_s'],abs(joint['velocity']),joint['max_abs_velocity_window'])
+                value['minimum_position_rad']=min(value['minimum_position_rad'],position)
+                value['maximum_position_rad']=max(value['maximum_position_rad'],position)
+        times=[row['sim_time'] for row in rows]
+        gap=max([times[0]-start,end-times[-1],*[b-a for a,b in zip(times,times[1:])]]) if times else math.inf
+        if len(times)<2 or gap>config['acceptance']['max_telemetry_gap_s']:errors.append('Incomplete settled arm observation interval')
+        for name,value in metrics.items():
+            if not math.isfinite(value['minimum_position_rad']):
+                errors.append('Unobserved arm excursion: '+name)
+                value['minimum_position_rad']=value['maximum_position_rad']=None
+            if value['maximum_target_error_rad']>limits['arm_target_error_rad']:errors.append('Target error: '+name)
+            if value['maximum_velocity_rad_s']>limits['arm_settled_velocity_rad_s']:errors.append('Unsettled joint: '+name)
+            offset=phase['arm_offset_rad']
+            value['minimum_signed_excursion_from_home_rad']=(
+                (value['minimum_position_rad']-robot.data['arm_home_positions'][name]) if offset>0 else
+                (robot.data['arm_home_positions'][name]-value['maximum_position_rad'])) if offset and value['minimum_position_rad'] is not None else None
+        check={'name':phase['name']+'_observed','passed':not errors,'targets_rad':targets[phase['name']],
+               'samples':len(rows),'maximum_sample_gap_s':gap if math.isfinite(gap) else None,
+               'joint_metrics':metrics,'errors':errors}
+        checks.append(check)
+        base=[p for p in poses if start<=p['sim_time']<end]
+        speeds=[(math.dist(a['pose'][:3],b['pose'][:3])/(b['sim_time']-a['sim_time']),
+                 abs(angle_error(yaw_of(b['pose']),yaw_of(a['pose'])))/(b['sim_time']-a['sim_time']))
+                for a,b in zip(base,base[1:]) if b['sim_time']>a['sim_time']]
+        linear=max((s[0] for s in speeds),default=math.inf);angular=max((s[1] for s in speeds),default=math.inf)
+        base_times=[row['sim_time'] for row in base]
+        base_gap=max([base_times[0]-start,end-base_times[-1],*[b-a for a,b in zip(base_times,base_times[1:])]]) if base_times else math.inf
+        checks.append({'name':phase['name']+'_base_stopped','passed':bool(speeds) and base_gap<=config['acceptance']['max_telemetry_gap_s'] and
+            linear<=limits['maximum_stopped_linear_speed_m_s'] and angular<=limits['maximum_stopped_angular_speed_rad_s'],
+            'maximum_sample_gap_s':base_gap if math.isfinite(base_gap) else None,
+            'maximum_speed_m_s':linear if math.isfinite(linear) else None,
+            'maximum_yaw_rate_rad_s':angular if math.isfinite(angular) else None})
+    return checks
 
 
 def world(robot, config):
@@ -187,6 +271,7 @@ def evaluate(robot, config, poses, joints, errors, native_code, *, link_poses=()
     home=robot.data['arm_home_positions']
     arm_error=max((abs(j['position']-home[j['name']]) for row in joints if static_phase['start_s']<=row['sim_time']<=static_phase['end_s'] for j in row['joints'] if j['name'] in home and j['position_available']),default=math.inf)
     check('static_arm_holds_declared_posture',arm_error<=limits['maximum_static_arm_error_rad'],maximum_error_rad=arm_error if math.isfinite(arm_error) else None)
+    checks+=arm_sequence_checks(robot,config,joints,poses)
     for phase in ('straight','turn'):
         if not any(p['name']==phase for p in config['phases']):continue
         rows=[p for p in poses if p['phase']==phase]
@@ -283,7 +368,7 @@ def main():
                         help='Explicit physics integration step; acceptance thresholds and phase durations stay unchanged')
     parser.add_argument('--wall-timeout',type=float,default=180,
                         help='Computational wall-clock budget, independent of simulated duration and acceptance tolerances')
-    parser.add_argument('--experiment',choices=('full','turn_only'),default='full',
+    parser.add_argument('--experiment',choices=('full','turn_only','integrated_arm'),default='full',
                         help='The short causal turn experiment never substitutes full15s mobility admission')
     args=parser.parse_args()
     if not math.isfinite(args.start_height) or args.start_height<=0:
@@ -313,6 +398,10 @@ def main():
         if 'libUchuvaJointPositionForceSystem.so' not in build.get('libraries_sha256',{}):
             raise ValueError('Ramped controller library is missing from the frozen build')
     config=protocol(args.start_height,args.max_step_size,args.experiment)
+    if args.experiment=='integrated_arm':
+        if any(j.get('group')=='gripper' and j['type']!='fixed' for j in robot.joints):
+            raise ValueError('Integrated reduced diagnostic requires the declared gripper joints physically fixed')
+        config['arm_targets_rad']=arm_phase_targets(robot,config)
     config['wall_timeout_s']=args.wall_timeout
     if data.get('physics'):
         config['physics']=data['physics']
@@ -432,7 +521,8 @@ def main():
                 msg=Double(); msg.data=value; wheel_publishers[name].publish(msg)
             for name,publisher in arm_publishers.items():
                 rate=data['control']['arm'][name]['command_velocity']
-                arm_references[name]+=max(-rate*dt,min(rate*dt,data['arm_home_positions'][name]-arm_references[name]))
+                target=config.get('arm_targets_rad',{}).get(phase['name'],data['arm_home_positions'])[name]
+                arm_references[name]+=max(-rate*dt,min(rate*dt,target-arm_references[name]))
                 msg=Double(); msg.data=arm_references[name]; publisher.publish(msg)
             with lock:
                 joints.append(row)

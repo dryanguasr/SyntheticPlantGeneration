@@ -455,3 +455,21 @@ calcular cada referencia de rueda, incluso si llega una pose nueva durante
 la publicación. La prueba reproduce ese orden de callbacks. El código del
 ensayo de movilidad ya usaba un único timestamp y sus archivos congelados
 siguen asociados a la revisión ejecutada.
+
+## Funcionamiento con pinza fija y demostración V8
+
+Se preparó `cad_fixed_gripper_diagnostic_01` para ensayar el resto del robot
+con las ocho articulaciones de la pinza fijas en la postura CAD de referencia.
+Se conservan 35 eslabones, 239 visuales, 40 colisionadores, los 18,249873 kg
+del modelo, las máscaras de contacto, los controles de brazo y chasis y los
+cuatro cierres de suspensión. El SHA canónico del diagnóstico es
+`100172ef1472a624c9e6288065bb82712b4b3ff53dbfab89c92dbb4b5e7d3059`.
+
+La demostración `cad_v8_function_demo_02/run_01` completó 8 s con el mismo
+perfil. Conservó las mallas y poses de los tres arbustos V8. Los tres frutos
+objetivo quedaron estacionarios y el chasis se mantuvo dentro del corredor
+predeterminado. El hombro registró aproximadamente +0,0753 rad y −0,0847 rad,
+frente a las consignas +0,08 y −0,08 rad. El avance neto observado fue de
+0,04990 m, incluido el tramo de frenada. El vídeo nativo contiene 81 fotogramas
+RGB de 1280 × 720, preservados con sus timestamps y hashes. Se entrega como
+`cad_v8_function_demo_02/funcionamiento_pinza_fija_v8.mp4`.

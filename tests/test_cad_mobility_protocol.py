@@ -1,5 +1,6 @@
 """Guard the physical acceptance contract across isolated commissioning runs."""
 import importlib.util
+from copy import deepcopy
 from pathlib import Path
 import unittest
 import xml.etree.ElementTree as ET
@@ -11,6 +12,46 @@ probe=importlib.util.module_from_spec(spec);spec.loader.exec_module(probe)
 
 
 class MobilityProtocolTests(unittest.TestCase):
+    def test_integrated_arm_preserves_mobility_and_uses_strict_observed_targets(self):
+        original=probe.protocol(.298218,.0001)
+        combined=probe.protocol(.298218,.0001,'integrated_arm')
+        self.assertEqual(combined['duration_s'],21)
+        self.assertEqual(combined['acceptance'],original['acceptance'])
+        self.assertEqual(combined['ground_contact'],original['ground_contact'])
+        for key,value in original['criteria'].items():
+            if key!='minimum_observed_span_s':self.assertEqual(combined['criteria'][key],value)
+        for old in original['phases'][2:]:
+            new=next(p for p in combined['phases'] if p['name']==old['name'])
+            self.assertEqual({**old,'start_s':old['start_s']+6,'end_s':old['end_s']+6},new)
+        self.assertEqual(combined['criteria']['arm_target_error_rad'],.01)
+        self.assertEqual(combined['criteria']['arm_settled_velocity_rad_s'],.01)
+        robot=resolve_robot_profile('proxy_v1')
+        targets=probe.arm_phase_targets(robot,combined)
+        for name,home in robot.data['arm_home_positions'].items():
+            self.assertAlmostEqual(targets['arm_positive'][name],home+.08)
+            self.assertAlmostEqual(targets['arm_negative'][name],home-.08)
+            self.assertEqual(targets['arm_return'][name],home)
+        combined['phases'][2]['arm_offset_rad']=100
+        with self.assertRaisesRegex(ValueError,'travel'):probe.arm_phase_targets(robot,combined)
+
+    def test_arm_excursion_cannot_pass_with_static_missing_or_unsettled_observations(self):
+        robot=resolve_robot_profile('proxy_v1');config=probe.protocol(.3,.0001,'integrated_arm')
+        targets=probe.arm_phase_targets(robot,config);joints=[];poses=[]
+        for phase in config['phases']:
+            if 'arm_offset_rad' not in phase:continue
+            for i in range(50):
+                stamp=phase['end_s']-.5+i*.01
+                joints.append({'sim_time':stamp,'joints':[{'name':name,'position':q,'velocity':0.,
+                    'max_abs_velocity_window':0.,'position_available':True,'velocity_available':True}
+                    for name,q in targets[phase['name']].items()]})
+                poses.append({'sim_time':stamp,'pose':[0,0,.3,0,0,0,1]})
+        self.assertTrue(all(row['passed'] for row in probe.arm_sequence_checks(robot,config,joints,poses)))
+        for field,value in (('position',0.),('max_abs_velocity_window',.011),('position_available',False)):
+            altered=deepcopy(joints);altered[0]['joints'][0][field]=value
+            self.assertFalse(all(row['passed'] for row in probe.arm_sequence_checks(robot,config,altered,poses)))
+        self.assertFalse(all(row['passed'] for row in probe.arm_sequence_checks(robot,config,joints[20:],poses)))
+        self.assertFalse(all(row['passed'] for row in probe.arm_sequence_checks(robot,config,joints,poses[20:])))
+
     def test_isolation_keeps_physical_thresholds_and_three_second_turn(self):
         full=probe.protocol(.298218,.0001)
         short=probe.protocol(.298218,.0001,'turn_only')

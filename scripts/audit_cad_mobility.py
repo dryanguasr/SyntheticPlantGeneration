@@ -67,6 +67,8 @@ def main():
     expected=probe.protocol(config['start_xyzyaw'][2],config['dt_s'],config.get('experiment','full'))
     for key in ('acceptance','criteria','phases','duration_s','dt_s','start_xyzyaw','ground_contact'):
         if config[key]!=expected[key]:raise ValueError('Frozen mobility acceptance contract differs: '+key)
+    if config.get('experiment')=='integrated_arm' and config.get('arm_targets_rad')!=probe.arm_phase_targets(robot,expected):
+        raise ValueError('Frozen integrated arm targets differ from the resolved profile and protocol')
     errors=[];native_code=None;native_code_source=None
     if (source/'native_completion.json').is_file():
         completion=read(source/'native_completion.json')
