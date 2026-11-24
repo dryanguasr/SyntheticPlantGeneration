@@ -55,6 +55,8 @@ el paso articular máximo de 0,004 rad. Las posiciones previas al corte
 pueden variar su orientación, y la posición de corte conserva el eje del
 pedicelo. Tras el corte, el tramo terminal virtual del fruto apartado
 deja de ser un obstáculo fijo. El tramo proximal real permanece activo.
+Cuando la esfera envolvente de un capacho vecino queda cerca del paso, se
+consulta la malla cerrada derivada de su geometría V8, con el mismo margen.
 
 La superficie cerrada del capacho V8 se usa como colisión en el perfil nuevo.
 El cierre y corte idealizados reservan hasta 8 mm terminales del pedicelo elegido.

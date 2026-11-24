@@ -99,6 +99,17 @@ tallos vecinos en la retirada y, en otro candidato, una transferencia sin
 trayectoria admitida hasta la canasta. Estos resultados se refieren a los
 recorridos muestreados y conservan sus parejas e identidades V8.
 
+El refinamiento por superficie resuelve algunos rechazos de la esfera
+envolvente. En una retirada del arbusto central, la envolvente daba 1,676 mm
+entre el fruto retenido y un vecino. El cáliz cerrado original dio 5,258 mm con
+el mismo umbral de 4 mm. Véase `held_calyx_lazy_pair_001_01/result.json`.
+
+La primera prueba dinámica se inició con el chasis estacionado frente al
+segundo arbusto. Gazebo alcanzó 1,8513 s simulados y el estado del fruto seguía
+siendo `ATTACHED` cuando se agotó la espera de asentamiento en tiempo real.
+Se preservaron la telemetría y los 19 cuadros RGB en
+`cad_v8_stationary_trial_native_01/`.
+
 Las dos ediciones de `admitted_cut_static_video_01/` muestran tres de las posturas
 en los mismos 93 cuadros RGB nativos. La edición anotada marca veinte
 intersecciones geométricas de las piezas exentas. Se conservaron los 31 cuadros

@@ -364,14 +364,18 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
         for fruit_shape, fruit in (() if ignores_crop else fruit_shapes):
             if held is not None and fruit['id'] == held['id']:
                 continue
+            fruit_radius = fruit.get('planning_broadphase_radius_m', fruit['radius_m'])
             if bounds is not None:
                 low_bound, high_bound = bounds[index]
-                reach = max(0, minimum) + fruit['radius_m']
+                reach = max(0, minimum) + fruit_radius
                 if any(p-hi >= reach or lo-p >= reach for p,lo,hi in zip(fruit['center_world_m'], low_bound, high_bound)):
                     continue
-            gap = (_bounded_radius_gap(repository.point_distance, fruit['radius_m'], minimum,
+            gap = (_bounded_radius_gap(repository.point_distance, fruit_radius, minimum,
                                        shape, fruit['center_world_m']) if half is None
-                   else _point_box_distance(transform_point(inverse, fruit['center_world_m']), half)-fruit['radius_m'])
+                   else _point_box_distance(transform_point(inverse, fruit['center_world_m']), half)-fruit_radius)
+            if gap < minimum and 'planning_calyx_recipe' in fruit:
+                from .harvest_plants import static_calyx_clearance_shape
+                fruit_shape = static_calyx_clearance_shape(fruit, repository)
             if fruit_shape is not None and gap < minimum:
                 gap = repository.shape_distance(shape, fruit_shape, limit=max(0, minimum))
             if gap < minimum:
@@ -418,10 +422,14 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 held_min, limiting_held = gap, obstacle['id']
         for fruit_shape, fruit in fruit_shapes:
             if fruit['id'] != held['id']:
-                gap = math.dist(center, fruit['center_world_m'])-radius-fruit['radius_m']
+                fruit_radius = fruit.get('planning_broadphase_radius_m', fruit['radius_m'])
+                gap = math.dist(center, fruit['center_world_m'])-radius-fruit_radius
+                if gap < held_min and 'planning_calyx_recipe' in fruit:
+                    from .harvest_plants import static_calyx_clearance_shape
+                    fruit_shape = static_calyx_clearance_shape(fruit, repository)
                 if (held_shape or fruit_shape) and gap < held_min:
                     first = held_shape or {'geometry': {'type': 'sphere', 'radius_m': radius}, 'pose': pose_from_center(center)}
-                    second = fruit_shape or {'geometry': {'type': 'sphere', 'radius_m': fruit['radius_m']},
+                    second = fruit_shape or {'geometry': {'type': 'sphere', 'radius_m': fruit_radius},
                                              'pose': pose_from_center(fruit['center_world_m'])}
                     gap = repository.shape_distance(first, second, limit=max(0, held_min))
                 if gap < held_min:

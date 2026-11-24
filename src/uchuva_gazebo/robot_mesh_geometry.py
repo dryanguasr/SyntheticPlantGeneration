@@ -526,6 +526,7 @@ class MeshRepository:
         self.asset_root=Path(asset_root).resolve(strict=True)
         if not self.asset_root.is_dir():raise ValueError('Mesh asset root must be a directory')
         self.meshes={};self.primitives={};self.posed=OrderedDict();self.asset_hashes={}
+        self.generated_recipes={}
         for geometry in geometries:
             if 'geometry' in geometry:geometry=geometry['geometry']
             if geometry.get('type')=='mesh':self._load(geometry)
@@ -541,6 +542,20 @@ class MeshRepository:
             vertices, faces, _, _ = parse_collision_obj(contents)
             self.meshes[uri, digest] = TriangleMesh(vertices, faces)
             self.asset_hashes[uri] = digest
+
+    def register_generated_recipe(self, recipe_sha256, builder):
+        """Build an immutable, SHA-addressed planning mesh once, on demand."""
+        if (not isinstance(recipe_sha256, str) or len(recipe_sha256) != 64
+                or any(c not in '0123456789abcdef' for c in recipe_sha256)):
+            raise ValueError('Generated mesh recipe requires a SHA256 identity')
+        if recipe_sha256 not in self.generated_recipes:
+            contents = builder()
+            digest = hashlib.sha256(contents.encode('utf-8')).hexdigest()
+            geometry = {'type': 'mesh', 'uri': f'planning_meshes/{digest}.obj',
+                        'sha256': digest, 'scale': [1, 1, 1]}
+            self.register_generated_obj(geometry, contents)
+            self.generated_recipes[recipe_sha256] = geometry
+        return self.generated_recipes[recipe_sha256]
 
     def _load(self,geometry):
         uri,digest=geometry.get('uri'),geometry.get('sha256')

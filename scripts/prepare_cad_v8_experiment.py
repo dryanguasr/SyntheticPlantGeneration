@@ -71,6 +71,7 @@ def build_config(base, robot, robot_directory, derivation, lock, screen, *, rgb_
         config['robot_task']['demo_fixture']['ignore_finger_blade_crop_contacts'] = True
     if ignore_wrist_housing_crop_contacts:
         config['robot_task']['demo_fixture']['ignore_wrist_housing_crop_contacts'] = True
+        config['plants']['refine_static_calyx_clearance'] = True
     return config
 
 

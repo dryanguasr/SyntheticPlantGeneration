@@ -16,6 +16,7 @@ import json
 import math
 from pathlib import Path
 import re
+from types import SimpleNamespace
 import xml.etree.ElementTree as ET
 
 from uchuva_lsystem.collisions import CollisionProxy, build_scene_proxies
@@ -61,6 +62,7 @@ DEFAULT_PLANT_CONFIG = {
     "source_units_per_metre": UNITS_PER_METRE,
     "target_ids": [],
     "explicit_targets_allow_partial": False,
+    "refine_static_calyx_clearance": False,
     "fruit_collision_representation": "conservative_calyx_bounding_sphere",
     "ideal_cut_segment_m": 0.0,
     "collision_representation": "analytic_cylinders",
@@ -96,6 +98,10 @@ def _config(config):
         raise ValueError("Unsupported plant collision representation")
     if c['fruit_collision_representation'] not in {'conservative_calyx_bounding_sphere', 'closed_v8_calyx_mesh'}:
         raise ValueError('Unsupported fruit collision representation')
+    if type(c['refine_static_calyx_clearance']) is not bool:
+        raise ValueError('refine_static_calyx_clearance must be a boolean')
+    if c['refine_static_calyx_clearance'] and not c['explicit_targets_allow_partial']:
+        raise ValueError('Static calyx refinement requires the explicitly targeted planning fixture')
     c['ideal_cut_segment_m'] = _finite(c['ideal_cut_segment_m'], 'ideal cut segment length')
     if not 0 <= c['ideal_cut_segment_m'] <= .008 or (c['ideal_cut_segment_m'] and not c['explicit_targets_allow_partial']):
         raise ValueError('The explicitly targeted fixture can reserve at most 8 mm for ideal cutting')
@@ -424,6 +430,62 @@ def calyx_collider(calyx_mesh):
                       for face, face_normals in zip(welded, normal_faces)))
 
 
+def _calyx_recipe_hash(recipe):
+    return hashlib.sha256(json.dumps(recipe, sort_keys=True, separators=(',', ':'),
+                                     allow_nan=False).encode()).hexdigest()
+
+
+def _calyx_recipe_bound(recipe):
+    """Enclose the unchanged renderer, including its decimal OBJ rounding."""
+    if (set(recipe) != {'schema', 'interpreter_version', 'units_per_metre', 'axes', 'half_extents'}
+            or recipe['schema'] != 'planning-static-v8-calyx/1'
+            or recipe['interpreter_version'] != VISUAL_VERSION
+            or recipe['units_per_metre'] != UNITS_PER_METRE):
+        raise ValueError('Unsupported static calyx planning recipe')
+    axes, half = recipe['axes'], recipe['half_extents']
+    if len(axes) != 3 or any(len(axis) != 3 for axis in axes) or len(half) != 3:
+        raise ValueError('Static calyx recipe requires three axes and half-extents')
+    for value in (*half, *(value for axis in axes for value in axis)):
+        _finite(value, 'static calyx recipe coordinate')
+    if min(half) <= 0:
+        raise ValueError('Static calyx half-extents must be positive')
+    # Gershgorin bounds the largest eigenvalue of A A^T even for a source
+    # basis with small normalization roundoff. The renderer stays inside
+    # that ellipsoid; each OBJ coordinate is rounded to ten decimal places.
+    gram_bound = max(sum(abs(math.fsum(a*b for a, b in zip(axis, other)))
+                         for other in axes) for axis in axes)
+    radius = max(half) / UNITS_PER_METRE * math.sqrt(gram_bound)
+    rounding_bound = math.sqrt(3) * 1e-10 + 64 * math.ulp(radius)
+    return math.nextafter(radius + rounding_bound, math.inf)
+
+
+def static_calyx_clearance_recipe(proxy):
+    """Serializable planning surface; it adds no native collision geometry."""
+    recipe = {'schema': 'planning-static-v8-calyx/1', 'interpreter_version': VISUAL_VERSION,
+              'units_per_metre': UNITS_PER_METRE, 'axes': [list(axis) for axis in proxy.axes],
+              'half_extents': list(proxy.half_extents)}
+    return {'planning_calyx_recipe': recipe, 'planning_calyx_recipe_sha256': _calyx_recipe_hash(recipe),
+            'planning_broadphase_radius_m': _calyx_recipe_bound(recipe)}
+
+
+def static_calyx_clearance_shape(fruit, repository):
+    """Materialize a verified recipe only after its broad-phase envelope hits."""
+    recipe = fruit['planning_calyx_recipe']
+    digest = _calyx_recipe_hash(recipe)
+    if digest != fruit.get('planning_calyx_recipe_sha256'):
+        raise ValueError('Static calyx planning recipe hash differs')
+    bound = _calyx_recipe_bound(recipe)
+    if fruit.get('planning_broadphase_radius_m', -1) < bound:
+        raise ValueError('Static calyx search sphere does not enclose its planning surface')
+    if repository is None:
+        raise ValueError('Static calyx refinement requires a mesh repository')
+    geometry = repository.register_generated_recipe(digest, lambda: calyx_collider(
+        detailed_calyx_mesh(SimpleNamespace(axes=recipe['axes'], half_extents=recipe['half_extents']),
+                            units_per_metre=recipe['units_per_metre'])))
+    return {'geometry': geometry,
+            'pose': {'xyz_m': list(fruit['center_world_m']), 'quaternion_xyzw': [0, 0, 0, 1]}}
+
+
 def build_harvest_plants(config: dict | None = None, *, collision_screen=False) -> dict:
     """Return sibling SDF models, OBJ texts and a traceable harvest inventory.
 
@@ -566,7 +628,9 @@ def build_harvest_plants(config: dict | None = None, *, collision_screen=False) 
                 static_ids.append(identifier)
                 if c['explicit_targets_allow_partial']:
                     nearby_fruits.append({'id': identifier, 'center_world_m': list(center),
-                                          'radius_m': max(calyx.half_extents) / UNITS_PER_METRE})
+                                          'radius_m': max(calyx.half_extents) / UNITS_PER_METRE,
+                                          **(static_calyx_clearance_recipe(calyx)
+                                             if c['refine_static_calyx_clearance'] else {})})
                 if not collision_screen:
                     used_texture_presets.add(preset)
                     static_calyx_batches.setdefault(preset, []).append((detailed_calyx_mesh(calyx), _sub(center, origin)))
@@ -668,6 +732,12 @@ def build_harvest_plants(config: dict | None = None, *, collision_screen=False) 
             "source_units_per_metre": c["source_units_per_metre"], "output_units": "metres",
             **({"source_catalogs": source_catalogs, "morphology_mode": "admitted_source_catalog"} if imported else {}),
             "parameter_status": "engineering_heuristic", "human_validation": "pending",
+            **({'static_calyx_clearance': {
+                'representation': 'lazy_closed_rendered_v8_surface',
+                'scope': 'planning_only_native_static_calyces_remain_visual_only',
+                'broadphase': 'conservative_sphere_including_OBJ_rounding',
+                'threshold_modified': False,
+                'obstacle_recipe_count': len(nearby_fruits)}} if c['refine_static_calyx_clearance'] else {}),
             "plant_collision_geometry": {
                 "representation": c["collision_representation"],
                 "source_primitive_count": sum(report["rigid_primitive_count"] for report in reports),
