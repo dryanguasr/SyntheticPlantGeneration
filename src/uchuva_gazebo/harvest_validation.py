@@ -91,10 +91,27 @@ def sphere_in_bin(position, radius, bin_spec):
                for p, lo, hi in zip(position, lower, upper))
 
 
+def _mesh_in_bin(vertices, pose, base, bin_spec):
+    """Project the complete collision shape once into the moving basket frame."""
+    center = local_point(pose[:3], base)
+    basis = (rotate_vector(base[3:], rotate_vector(pose[3:], axis), True)
+             for axis in ((1, 0, 0), (0, 1, 0), (0, 0, 1)))
+    (xx, xy, xz), (yx, yy, yz), (zx, zy, zz) = basis
+    xmin, ymin, zmin = (limit - .004 - value
+                       for limit, value in zip(bin_spec['inner_min_m'], center))
+    xmax, ymax, zmax = (limit + .004 - value
+                       for limit, value in zip(bin_spec['inner_max_m'], center))
+    return all(xmin <= xx*x + yx*y + zx*z <= xmax and
+               ymin <= xy*x + yy*y + zy*z <= ymax and
+               zmin <= xz*x + yz*y + zz*z <= zmax
+               for x, y, z in vertices)
+
+
 def deposited_interval(samples, fruit_id, radius, bin_spec,
                        min_duration=.7, max_speed=.035, *, mesh_vertices=None):
     """Require consecutive released samples, geometric containment and low speed."""
     first = None
+    first_confirmed = None
     previous = None
     best = 0.0
     for sample in samples:
@@ -112,9 +129,7 @@ def deposited_interval(samples, fruit_id, radius, bin_spec,
         if valid and mesh_vertices is not None:
             pose = _pose(fruit['pose'], 'released fruit pose')
             base = sample['robot_pose'] if in_base else [0, 0, 0, 0, 0, 0, 1]
-            lo, hi = bin_spec['inner_min_m'], bin_spec['inner_max_m']
-            valid = all(all(a-.004 <= v <= b+.004 for v,a,b in zip(
-                local_point(world_point(point, pose), base), lo, hi)) for point in mesh_vertices)
+            valid = _mesh_in_bin(mesh_vertices, pose, base, bin_spec)
         elif valid:
             valid = sphere_in_bin(position, radius, bin_spec)
         if previous is not None:
@@ -125,6 +140,8 @@ def deposited_interval(samples, fruit_id, radius, bin_spec,
         if valid:
             first = t if first is None else first
             best = max(best, t - first)
+            if first_confirmed is None and t - first >= min_duration:
+                first_confirmed = t
         else:
             first = None
         previous = current
@@ -133,6 +150,7 @@ def deposited_interval(samples, fruit_id, radius, bin_spec,
     tail = previous[0] - first if first is not None and previous is not None else 0.0
     return {"passed": tail >= min_duration, "settled_duration_s": tail,
             "longest_settled_duration_s": best,
+            "first_confirmed_deposit_sim_s": first_confirmed,
             "required_duration_s": min_duration, "max_speed_m_s": max_speed}
 
 

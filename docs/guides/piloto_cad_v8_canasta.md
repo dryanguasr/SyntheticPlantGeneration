@@ -88,3 +88,27 @@ describe la comparación RGB independiente. Las coordenadas de corte provienen
 del simulador. El depósito se evalúa con la pose y geometría nativas del fruto
 en el marco móvil de la canasta. La revisión física y los resultados simulados
 quedan registrados por escenario y perfil.
+
+## Toma continua con movimiento prescrito
+
+El perfil de vídeo conserva las plantas y las mallas V8 del paquete verificado.
+Las cinco fases son acercamiento del carro, acercamiento de la pinza, corte,
+separación y depósito. El avance, las ruedas, el brazo y la mordaza siguen
+trayectorias acotadas. El plugin de cosecha comprueba las guardas con poses
+observadas y mantiene una sola restricción para sostener el fruto hasta la suelta.
+La gravedad, la canasta, el suelo y el contacto entre frutos siguen activos.
+La suspensión queda en la postura CAD y se omite la respuesta de contacto entre
+el robot guiado y el cultivo. Los resultados corresponden a esta demostración
+cinemática y se registran aparte del ensayo de actuación por fuerzas.
+
+Usar un archivo de rutas que se refiera al hash del manifiesto de origen. Cada
+objetivo conserva el identificador y eje de corte del paquete. La secuencia fija
+un punto de suelta por encima del fondo y con el calyx libre dentro de la apertura.
+El contador se genera a partir de la liberación aceptada y de las poses nativas
+de los frutos que permanecen dentro al final.
+
+```sh
+bash scripts/build_harvest_plugin.sh outputs/cad_v8_demo_plugins
+python3 scripts/prepare_cad_v8_demo_take.py <paquete> <rutas> <toma> --physics-step .004 --fps 12
+python3 scripts/run_cad_v8_demo_capture.py <toma> --source-package <paquete> --plugin-dir outputs/cad_v8_demo_plugins --output <grabación>
+```

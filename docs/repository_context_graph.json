@@ -2975,7 +2975,7 @@
       "id": "entrypoint.harvest_pilot",
       "type": "entrypoint",
       "label": "Piloto de uchuva desmontable con carro 4WD y brazo de cinco GDL",
-      "summary": "Piloto rigido con corte y retencion ideales por plugin Harmonic. Los perfiles historicos conviven con una demostracion CAD de mordaza prismatica, canasta movil y seleccion de objetivos en los arboles V8 congelados. La auditoria separa el resultado observado, el diagnostico RGB y la visibilidad de instancia del simulador. Las pruebas y las aproximaciones se identifican por escenario y perfil.",
+      "summary": "Piloto rigido con corte y retencion ideales por plugin Harmonic. Los perfiles historicos conviven con una demostracion CAD de mordaza prismatica, canasta movil y seleccion de objetivos en los arboles V8 congelados. La toma continua usa movimiento prescrito y comprueba corte, suelta y deposito con fisica nativa para los frutos. La auditoria separa el resultado observado, el diagnostico RGB y la visibilidad de instancia del simulador.",
       "paths": [
         "src/uchuva_gazebo/harvest_plants.py",
         "src/uchuva_gazebo/harvest_visuals.py",
@@ -2995,6 +2995,10 @@
         "scripts/run_harvest_pilot.py",
         "scripts/audit_harvest_pilot.py",
         "scripts/prepare_cad_v8_demo_robot.py",
+        "scripts/prepare_cad_v8_demo_take.py",
+        "scripts/run_cad_v8_demo_capture.py",
+        "gazebo/harvest_system/HarvestDemoPlaybackSystem.cc",
+        "gazebo/harvest_system/HarvestDemoCameraSystem.cc",
         "scripts/prepare_cad_v8_experiment.py",
         "scripts/screen_cad_v8_demo.py",
         "scripts/probe_harvest_jaw_guard.py",
@@ -3021,6 +3025,14 @@
         "tests/test_harvest_perception.py"
       ],
       "evidence": [
+        {
+          "path": "scripts/prepare_cad_v8_demo_take.py",
+          "locator": "class Take:"
+        },
+        {
+          "path": "scripts/run_cad_v8_demo_capture.py",
+          "locator": "def deposit_evidence("
+        },
         {
           "path": "src/uchuva_gazebo/harvest_plants.py",
           "locator": "def build_harvest_plants"
