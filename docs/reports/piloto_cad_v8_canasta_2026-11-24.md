@@ -118,6 +118,29 @@ trayectoria hasta la apertura de la pinza sobre la canasta. Véanse
 `cad_v8_stationary_trial_exact_held_refined_01.json`. Ambas comprobaciones
 usan la geometría V8 original y conservan los 4 mm.
 
+Gazebo confirmó corte y retención de ese fruto en el ensayo de 0,5 ms. Una
+inversión de muñeca durante la prueba negativa alcanzó **0,334616 rad/s**
+frente al límite de **0,330 rad/s**. El banco aislado con referencia de pitch
+reducida y paso de 0,5 ms alcanzó 0,407703 rad/s. El banco con los controles
+originales y paso de 0,2 ms alcanzó 0,342333 rad/s. Los dos bancos quedan
+registrados como `FAIL` en `cad_v8_wrist_pitch_rate_probe_01/` y
+`cad_v8_wrist_integrator_probe_02/`.
+
+El resultado de corte llegó a 25,821 s simulados y el de liberación a 57,860 s.
+La malla del capacho permaneció estable dentro del volumen de la canasta
+durante los últimos 3,5 s observados. El ensayo aislado confirmó **un fruto
+depositado**, con el chasis estacionado. El tiempo de ejecución se agotó
+durante la recogida del brazo. La toma nativa contiene 635 cuadros. La
+telemetría, el MP4 original y
+la verificación independiente están en `cad_v8_stationary_trial_native_step_01/`.
+
+El paquete `cad_v8_wrist_field_candidate_09/` reúne los nueve frutos fijados,
+tres por arbusto. Sus trayectorias de brazo y los enlaces de chasis se
+contrastaron geométricamente y el comprobador nativo de SDF aceptó el mundo.
+El manifiesto conserva el filtro de 19 geometrías, los hashes de las pruebas
+de cada arbusto y sus posiciones V8 originales. La misión dinámica de nueve
+permaneció pendiente de admisión con carga y de velocidad de muñeca.
+
 Las dos ediciones de `admitted_cut_static_video_01/` muestran tres de las posturas
 en los mismos 93 cuadros RGB nativos. La edición anotada marca veinte
 intersecciones geométricas de las piezas exentas. Se conservaron los 31 cuadros
