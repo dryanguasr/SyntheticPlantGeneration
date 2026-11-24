@@ -31,13 +31,19 @@ def main():
     names=('protocol.json','robot_resolved.json','profile_source.json','poses.jsonl','joints.jsonl',
            'link_poses.jsonl','commands.jsonl','native.log','provenance.json','world.sdf','runner_source.py')
     evidence={name:sha(source/name) for name in names}
-    implementation=[ROOT/'scripts/probe_cad_mobility.py',Path(__file__),*sorted((ROOT/'src/uchuva_gazebo').glob('*.py'))]
-    implementation_hashes={p.relative_to(ROOT).as_posix():sha(p) for p in implementation}
+    # Import the captured implementation, not a live checkout which another
+    # task may legitimately edit while mesh admission/auditing is in progress.
+    implementation=[ROOT/'scripts/probe_cad_mobility.py',Path(__file__),*sorted((ROOT/'src').rglob('*.py')),
+                    *sorted((ROOT/'configs/robots').glob('*.json'))]
+    implementation_hashes={};snapshot=output/'source_snapshot'
     for path in implementation:
-        destination=output/'source_snapshot'/path.relative_to(ROOT)
-        destination.parent.mkdir(parents=True,exist_ok=True);destination.write_bytes(path.read_bytes())
-    sys.path.insert(0,str(ROOT/'src'))
-    spec=importlib.util.spec_from_file_location('mobility_audit_runtime',ROOT/'scripts/probe_cad_mobility.py')
+        content=path.read_bytes();digest=hashlib.sha256(content).hexdigest()
+        destination=snapshot/path.relative_to(ROOT)
+        destination.parent.mkdir(parents=True,exist_ok=True);destination.write_bytes(content)
+        if sha(path)!=digest:raise ValueError('Implementation changed while taking its snapshot: '+str(path))
+        implementation_hashes[path.relative_to(ROOT).as_posix()]=digest
+    sys.path.insert(0,str(snapshot/'src'))
+    spec=importlib.util.spec_from_file_location('mobility_audit_runtime',snapshot/'scripts/probe_cad_mobility.py')
     probe=importlib.util.module_from_spec(spec);spec.loader.exec_module(probe)
     from uchuva_gazebo.robot_mesh_geometry import MeshRepository
     from uchuva_gazebo.robot_spec import resolve_robot_profile,verify_robot_assets
@@ -68,8 +74,15 @@ def main():
     expected=probe.protocol(config['start_xyzyaw'][2],config['dt_s'],config.get('experiment','full'))
     for key in ('acceptance','criteria','phases','duration_s','dt_s','start_xyzyaw','ground_contact'):
         if config[key]!=expected[key]:raise ValueError('Frozen mobility acceptance contract differs: '+key)
-    if config.get('experiment')=='integrated_arm' and config.get('arm_targets_rad')!=probe.arm_phase_targets(robot,expected):
+    if config.get('experiment') in ('integrated_arm','payload_arm','payload_sequential') and config.get('arm_targets_rad')!=probe.arm_phase_targets(robot,expected):
         raise ValueError('Frozen integrated arm targets differ from the resolved profile and protocol')
+    if config.get('experiment') in ('payload_arm','payload_startup','payload_sequential'):
+        if config.get('jaw_acceptance')!=expected['jaw_acceptance'] or config.get('jaw_targets_m')!=probe.jaw_phase_targets(robot,expected):
+            raise ValueError('Frozen prismatic jaw SI limits/targets differ from the preregistered protocol')
+    if config.get('experiment')=='payload_startup':
+        native_rate=native_world.findtext("world/model/plugin[@name='uchuva::RobotTelemetrySystem']/publish_rate")
+        if config.get('robot_telemetry_publish_rate_hz')!=10000 or float(native_rate or 0)!=10000:
+            raise ValueError('Startup diagnostic must record every100us native joint response')
     errors=[];native_code=None;native_code_source=None
     if (source/'native_completion.json').is_file():
         completion=read(source/'native_completion.json')
@@ -89,10 +102,13 @@ def main():
     result=probe.evaluate(robot,config,poses,joints,errors,native_code,link_poses=links,mesh_repository=repo,
                           force_control=rows(source/'force_control.jsonl') if ramped else (),commands=rows(source/'commands.jsonl'))
     if any(sha(source/name)!=digest for name,digest in evidence.items()):raise ValueError('Raw observation changed during audit')
-    if any(sha(ROOT/name)!=digest for name,digest in implementation_hashes.items()):raise ValueError('Implementation changed during audit')
+    if any(sha(snapshot/name)!=digest for name,digest in implementation_hashes.items()):raise ValueError('Frozen implementation changed during audit')
+    concurrent_changes={name:{'snapshot_sha256':digest,'current_sha256':sha(ROOT/name) if (ROOT/name).is_file() else None}
+        for name,digest in implementation_hashes.items() if not (ROOT/name).is_file() or sha(ROOT/name)!=digest}
     result.update(postprocessing_status='COMPLETED',native_exit_code=native_code,native_exit_code_source=native_code_source,
         native_rerun=False,acceptance_criteria_unchanged=True,evidence_files_sha256=evidence,
         implementation_files_sha256=implementation_hashes,source_snapshot='source_snapshot',elapsed_seconds=time.monotonic()-started,
+        implementation_import_root='source_snapshot',concurrent_checkout_changes_not_imported=concurrent_changes,
         scope='Independent re-audit of the same native observations and frozen protocol. Unknown native return code prevents a global PASS.')
     (output/'result.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
     print(json.dumps({'status':result['status'],'elapsed_seconds':result['elapsed_seconds'],

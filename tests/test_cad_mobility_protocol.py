@@ -13,6 +13,65 @@ probe=importlib.util.module_from_spec(spec);spec.loader.exec_module(probe)
 
 
 class MobilityProtocolTests(unittest.TestCase):
+    def test_sequential_payload_only_changes_order_and_never_moves_jaw_with_arm(self):
+        concurrent=probe.protocol(.296218,.0001,'payload_arm')
+        sequential=probe.protocol(.296218,.0001,'payload_sequential')
+        for key in ('acceptance','jaw_acceptance','ground_contact','start_xyzyaw','dt_s'):
+            self.assertEqual(concurrent[key],sequential[key])
+        self.assertEqual(sequential['duration_s'],16)
+        self.assertTrue(all(p['end_s']-p['start_s']==2 for p in sequential['phases']))
+        for key,value in concurrent['criteria'].items():
+            if key!='minimum_observed_span_s':self.assertEqual(value,sequential['criteria'][key])
+        arms=[p for p in sequential['phases'] if 'arm_offset_rad' in p]
+        self.assertEqual([p['arm_offset_rad'] for p in arms],[.08,-.08,0.])
+        self.assertTrue(all(not p['jaw_open'] for p in arms))
+        self.assertTrue(sequential['phases'][2]['jaw_open'])
+        self.assertFalse(sequential['phases'][3]['jaw_open'])
+        self.assertTrue(sequential['phases'][-1]['jaw_open'])
+
+    def test_payload_startup_keeps_limits_and_only_observes_impact(self):
+        full=probe.protocol(.298218,.0001,'payload_arm');short=probe.protocol(.298218,.0001,'payload_startup')
+        for key in ('acceptance','jaw_acceptance','ground_contact','start_xyzyaw','dt_s'):
+            self.assertEqual(full[key],short[key])
+        self.assertEqual(short['duration_s'],.1)
+        self.assertEqual(short['robot_telemetry_publish_rate_hz'],10000)
+        self.assertTrue(all(p['linear_m_s']==p['angular_rad_s']==0 and not p['jaw_open'] for p in short['phases']))
+        self.assertTrue(all('arm_offset_rad' not in p for p in short['phases']))
+
+    def test_payload_arm_reuses_strict_arm_and_physics_contract_without_drive_claim(self):
+        integrated=probe.protocol(.298218,.0001,'integrated_arm')
+        short=probe.protocol(.298218,.0001,'payload_arm')
+        self.assertEqual(short['duration_s'],10)
+        self.assertEqual([{k:v for k,v in p.items() if k!='jaw_open'} for p in short['phases']],integrated['phases'][:5])
+        self.assertEqual(short['acceptance'],integrated['acceptance'])
+        self.assertEqual(short['ground_contact'],integrated['ground_contact'])
+        self.assertEqual(short['criteria']['arm_target_error_rad'],.01)
+        self.assertEqual(short['criteria']['arm_settled_velocity_rad_s'],.01)
+        self.assertEqual(short['acceptance']['joint_velocity_tolerance_rad_s'],.03)
+        self.assertTrue(all(p['linear_m_s']==p['angular_rad_s']==0 for p in short['phases']))
+        self.assertIn('cannot validate drive',short['schedule_revision'])
+        robot=resolve_robot_profile('proxy_v1')
+        self.assertTrue(probe.arm_sequence_checks(robot,short,[],[]))
+        self.assertTrue(all(not row['passed'] for row in probe.arm_sequence_checks(robot,short,[],[])))
+
+    def test_payload_jaw_has_si_limits_and_requires_open_closed_native_excursions(self):
+        config=probe.protocol(.3,.0001,'payload_arm')
+        robot=SimpleNamespace(joints=[{'name':'jaw','type':'prismatic','limits':{'lower':0.,'upper':.006,'velocity':.005,'effort':2.}}],
+            data={'control':{'gripper':{'jaw':{}}},'parameters':{'demo_jaw_open_position_m':.006}})
+        targets=probe.jaw_phase_targets(robot,config);rows=[]
+        for phase in config['phases']:
+            for i in range(20):
+                rows.append({'sim_time':phase['end_s']-.2+i*.01,'joints':[{'name':'jaw','position':targets[phase['name']]['jaw'],
+                    'velocity':0.,'max_abs_velocity_window':0.,'force_command':.1,'max_abs_force_command_window':.1,
+                    'position_available':True,'velocity_available':True,'force_command_available':True}]})
+        force=[{'joint_name':'jaw','joint_type':'prismatic','position_unit':'m','velocity_unit':'m/s','force_unit':'N'}]
+        self.assertTrue(all(c['passed'] for c in probe.jaw_sequence_checks(robot,config,rows,force)))
+        for field,value in (('position',0.),('max_abs_velocity_window',.005501),('force_command',2.01)):
+            altered=deepcopy(rows);altered[30]['joints'][0][field]=value
+            self.assertFalse(all(c['passed'] for c in probe.jaw_sequence_checks(robot,config,altered,force)))
+        force[0]['position_unit']='rad'
+        self.assertFalse(all(c['passed'] for c in probe.jaw_sequence_checks(robot,config,rows,force)))
+
     def test_fixed_gripper_guard_includes_passive_descendants_but_not_suspension(self):
         # Structural fixture deliberately avoids a gripper naming prefix.
         joints=[{'name':'arm','parent':'base','child':'wrist','group':'arm','type':'revolute'},

@@ -462,6 +462,7 @@ class NativePilot:
     def move_joints(self, target, expected_tool=None):
         target = list(target)
         names = self.manifest['robot']['arm_joint_names']
+        demonstration = bool(self.manifest.get('robot_task', {}).get('demo_fixture'))
         state = self.wait(lambda s: all(name in self.joints for name in names)
                           and self.joint_time is not None and abs(s['sim_time'] - self.joint_time) < .3,
                           simulation_timeout=3)
@@ -496,7 +497,10 @@ class NativePilot:
             nonlocal stable_since
             t = current['sim_time']
             valid = t >= started + duration and self.joint_time is not None and abs(t - self.joint_time) < .3
-            valid = valid and all(abs(self.joints.get(name, math.inf) - q) <= .035 for name, q in zip(names, target))
+            error_limit = .01 if demonstration else .035
+            valid = valid and all(abs(self.joints.get(name, math.inf) - q) <= error_limit for name, q in zip(names, target))
+            if valid and demonstration:
+                valid = self.arm_is_stationary(t)
             if expected_tool is not None:
                 motion_pose = self._motion_pose(current)
                 valid = valid and distance(motion_pose[:3], expected_tool) <= .006
@@ -507,7 +511,7 @@ class NativePilot:
                     error = math.acos(max(-1, min(1, sum(a*b for a,b in zip(expected_direction, actual_direction)))))
                     valid = valid and error <= self.config.task['orientation_tolerance_rad']
             stable_since = (t if stable_since is None else stable_since) if valid else None
-            return stable_since is not None and t - stable_since >= .4
+            return stable_since is not None and t - stable_since >= (.5 if demonstration else .4)
 
         # The proximal force PID has a P/I time scale of 120/8 = 15 s.
         # With the arm extended over the bin, the first native run was still
@@ -517,6 +521,17 @@ class NativePilot:
 
     def move_tool(self, world_target):
         self.move_joints(self._solve_world_target(world_target, self.snapshot()), expected_tool=world_target)
+
+    def arm_is_stationary(self, sim_time):
+        with self.condition:
+            native = self.robot_observation
+        if not native or abs(sim_time - native['measured_after_step_time']) > .1:
+            return False
+        names = set(self.manifest['robot']['arm_joint_names'])
+        joints = [joint for joint in native['joints'] if joint['name'] in names]
+        return len(joints) == len(names) and all(joint['velocity_available'] and
+            joint['max_abs_velocity_window'] is not None and
+            max(abs(joint['velocity']), joint['max_abs_velocity_window']) <= .01 for joint in joints)
 
     def carry(self):
         if getattr(self, 'resolved_robot', None):
@@ -713,6 +728,7 @@ class CadV8Pilot(NativePilot):
     def move_jaw(self, opened):
         label = 'open' if opened else 'closed'
         target = self.jaw[f'{label}_position_m']
+        stable_since = None
 
         def send(state):
             message = self.Double()
@@ -723,8 +739,14 @@ class CadV8Pilot(NativePilot):
                 'phase': self.phase, 'sim_time': state['sim_time'], 'requested_position_m': target})
             self.send_base(0, 0)
 
-        self.wait(lambda state: state.get('jaw_guard', {}).get(f'{label}_ready') is True,
-                  simulation_timeout=12, action=send)
+        def settled(state):
+            nonlocal stable_since
+            stamp = state['sim_time']
+            ready = state.get('jaw_guard', {}).get(f'{label}_ready') is True and self.arm_is_stationary(stamp)
+            stable_since = (stamp if stable_since is None else stable_since) if ready else None
+            return stable_since is not None and stamp-stable_since >= .5
+
+        self.wait(settled, simulation_timeout=12, action=send)
 
     def confirm_visible(self, fruit):
         from harvest_perception_capture import NativePerceptionRecorder

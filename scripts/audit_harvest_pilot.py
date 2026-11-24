@@ -148,18 +148,31 @@ def _audit(package, run):
         report['checks'] += audit_demonstration_gates(run, commands, events, metadata['target_ids'], manifest)
     if 'robot_spec_sha256' in manifest:
         from uchuva_gazebo.robot_validation import evaluate_robot_telemetry
-        report['checks'] += evaluate_robot_telemetry(manifest, read_jsonl(run / 'robot_telemetry.jsonl'), samples, events)
+        native_joints = read_jsonl(run/'robot_telemetry.jsonl')
+        report['checks'] += evaluate_robot_telemetry(manifest, native_joints, samples, events)
+        if fixture:
+            jaw = fixture['gripper']
+            observed = [joint for row in native_joints for joint in row['joints'] if joint['name'] == jaw['joint']]
+            speed = [joint.get('max_abs_velocity_window') for joint in observed]
+            force = [joint.get('max_abs_force_command_window') for joint in observed]
+            finite = lambda values: bool(values) and all(type(x) in (int, float) and math.isfinite(x) and x >= 0 for x in values)
+            speed_max = max(speed) if finite(speed) else None
+            force_max = max(force) if finite(force) else None
+            report['checks'].append({'name': 'prismatic_jaw_observed_peak_limits_si',
+                'passed': (speed_max is not None and force_max is not None and
+                           speed_max <= jaw['maximum_observed_speed_m_s'] and force_max <= jaw['effort_limit_n']+1e-8),
+                'maximum_speed_m_s': speed_max, 'maximum_force_n': force_max})
         from uchuva_gazebo.robot_control_validation import evaluate_base_drive_control
         report['checks'] += evaluate_base_drive_control(manifest, commands, samples)
         if manifest['robot']['topics'].get('position_force_states'):
             from uchuva_gazebo.robot_control_validation import evaluate_position_force_control
             report['checks'] += evaluate_position_force_control(manifest,
-                read_jsonl(run/'force_control.jsonl'), read_jsonl(run/'robot_telemetry.jsonl'), samples)
+                read_jsonl(run/'force_control.jsonl'), native_joints, samples)
             report['robot_control_validation_source_sha256'] = sha256_file(REPO / 'src/uchuva_gazebo/robot_control_validation.py')
         if manifest['robot_config'].get('closures') or manifest['robot_config'].get('gear_couplings'):
             from uchuva_gazebo.robot_validation import evaluate_native_mechanisms
             report['checks'] += evaluate_native_mechanisms(manifest,
-                read_jsonl(run/'robot_telemetry.jsonl'), read_jsonl(run/'robot_poses.jsonl'), samples)
+                native_joints, read_jsonl(run/'robot_poses.jsonl'), samples)
         report['checks'].append({'name': 'run_effective_robot_frozen', 'passed':
             metadata.get('robot_effective_sha256') == sha256_file(run / 'robot_effective.json')
             == manifest['files_sha256'][manifest['robot_effective_file']]})

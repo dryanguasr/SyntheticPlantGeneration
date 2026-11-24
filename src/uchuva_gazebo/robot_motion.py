@@ -164,32 +164,34 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
         return {'robot_clearance_m': gap, 'limiting_robot_pair': pair, 'first_failure_only': True,
                 'scope': scope, 'tcp_world_m': tcp['xyz_m'], 'robot_spec_sha256': config.robot.sha256}
 
-    for index, (first, first_half, _) in enumerate(boxes):
-        for second_index in range(index+1, len(boxes)):
-            second, second_half, _ = boxes[second_index]
-            pair = tuple(sorted((first['link'], second['link'])))
-            if first['link'] == second['link'] or pair in exclusions:
-                continue
-            if first_half is None or second_half is None:
-                a, b = bounds[index], bounds[second_index]
-                lower_bound = math.sqrt(sum(max(a[0][i]-b[1][i], b[0][i]-a[1][i], 0)**2
-                                            for i in range(3)))
-                if lower_bound >= minimum:
+    def self_clearance():
+        gap_min, names = report_cap, None
+        for index, (first, first_half, _) in enumerate(boxes):
+            for second_index in range(index+1, len(boxes)):
+                second, second_half, _ = boxes[second_index]
+                pair = tuple(sorted((first['link'], second['link'])))
+                if first['link'] == second['link'] or pair in exclusions:
                     continue
-                gap = repository.shape_distance(first, second, limit=minimum)
-            else:
-                gap = box_separation(first, first_half, second, second_half)
-            if gap < minimum:
-                minimum, limiting = gap, [first['link']+'/'+first['name'], second['link']+'/'+second['name']]
-                if reject_on_first_failure:
-                    return rejected(gap, limiting, 'self')
-    self_minimum,self_limiting=minimum,limiting
+                if first_half is None or second_half is None:
+                    a, b = bounds[index], bounds[second_index]
+                    lower_bound = math.sqrt(sum(max(a[0][i]-b[1][i], b[0][i]-a[1][i], 0)**2 for i in range(3)))
+                    if lower_bound >= gap_min:
+                        continue
+                    gap = repository.shape_distance(first, second, limit=gap_min)
+                else:
+                    gap = box_separation(first, first_half, second, second_half)
+                if gap < gap_min:
+                    gap_min, names = gap, [first['link']+'/'+first['name'], second['link']+'/'+second['name']]
+                    if reject_on_first_failure:
+                        return gap_min, names
+        return gap_min, names
+
     # Report the environment independently of internal mechanical interfaces.
     # The authoritative total remains their minimum: this adds diagnostics,
     # never an exemption or permission to accept internal contact.
-    minimum,limiting=report_cap,None
-    matching_blades = set(config.task.get('demo_fixture', {}).get('ideal_cut_blade_shapes', []))
-    active_cut = config.task.get('active_cut_target')
+    task = getattr(config, 'task', {})
+    matching_blades = set(task.get('demo_fixture', {}).get('ideal_cut_blade_shapes', []))
+    active_cut = task.get('active_cut_target')
     for index, (shape, half, inverse) in enumerate(boxes):
         name = shape['link']+'/'+shape['name']
         center = shape['pose']['xyz_m']
@@ -248,6 +250,9 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 if reject_on_first_failure:
                     return rejected(gap, limiting, 'ground')
     environment_minimum,environment_limiting=minimum,limiting
+    self_minimum, self_limiting = self_clearance()
+    if reject_on_first_failure and self_minimum < report_cap:
+        return rejected(self_minimum, self_limiting, 'self')
     if self_minimum<=minimum:
         minimum,limiting=self_minimum,self_limiting
     if held is not None:

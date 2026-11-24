@@ -80,7 +80,7 @@ def protocol(start_height, max_step_size=.001, experiment='full'):
             {'name':'stop_after_turn','start_s':4.5,'end_s':6,'linear_m_s':0,'angular_rad_s':0}]
         config['criteria']['minimum_observed_span_s']=5.8
         config['schedule_revision']='Only schedule/coverage duration changed for isolation; the turn lasts3s and all physical thresholds stay identical. Full15s test still required.'
-    elif experiment=='integrated_arm':
+    elif experiment in ('integrated_arm','payload_arm','payload_startup','payload_sequential'):
         config['experiment']='integrated_arm'
         config['scope']='Integrated base/arm diagnostic with the gripper physically fixed at CAD q0; no gripper or harvest validation'
         config['duration_s']=21
@@ -95,6 +95,40 @@ def protocol(start_height, max_step_size=.001, experiment='full'):
              'arm_offset_rad':offset}
             for name,start,offset in (('arm_positive',4,.08),('arm_negative',6,-.08),('arm_return',8,0.))]+moving
         config['schedule_revision']='Adds three2s arm excursions before the unchanged straight/stop/turn/stop sequence. Arm error and settled velocity use strict .01rad/.01rad/s diagnostic limits; original static .035rad criterion remains separate.'
+        if experiment in ('payload_arm','payload_startup','payload_sequential'):
+            config['experiment']='payload_arm'
+            config['scope']='Short native arm reversal and prismatic jaw cycle with the complete payload profile, gravity, ground and suspension. No drive, contact-grip or harvest admission.'
+            config['duration_s']=10
+            config['criteria']['minimum_observed_span_s']=9.8
+            config['phases']=config['phases'][:5]
+            for phase in config['phases']:
+                phase['jaw_open']=phase['name'] in ('static','arm_return')
+            config['jaw_acceptance']={'position_tolerance_m':.0002,'settled_velocity_m_s':.001,
+                'tail_s':.2,'velocity_tolerance_m_s':.0005,'effort_tolerance_N':1e-6,
+                'declared_velocity_limit_m_s':.005,'maximum_force_N':2.}
+            config['schedule_revision']='First10s of the integrated arm protocol, unchanged .08rad excursions and .01rad/.01rad/s settled thresholds. Physical wrist limit .3rad/s plus existing .03rad/s observation tolerance remains .330rad/s. Omits mobility phases and cannot validate drive.'
+            if experiment=='payload_sequential':
+                config['experiment']='payload_sequential'
+                config['duration_s']=16
+                config['criteria']['minimum_observed_span_s']=15.8
+                config['scope']='One causal sequential payload commissioning test: jaw open/close while arm holds, then arm +/- .08rad/home with jaw closed, then reopen. No drive, contact-grip or harvest admission.'
+                config['phases']=[
+                    {'name':name,'start_s':start,'end_s':start+2,'linear_m_s':0.,'angular_rad_s':0.,
+                     'jaw_open':opened,**({'arm_offset_rad':offset} if offset is not None else {})}
+                    for name,start,opened,offset in (
+                        ('settle',0,False,None),('static',2,False,None),
+                        ('jaw_open',4,True,None),('jaw_close',6,False,None),
+                        ('arm_positive',8,False,.08),('arm_negative',10,False,-.08),
+                        ('arm_return',12,False,0.),('jaw_reopen',14,True,None))]
+                config['schedule_revision']='Only sequencing changes from the concurrent payload test: all phases remain2s, arm settled tail.5s/.01rad/.01rad/s and jaw SI thresholds are unchanged. Open/close occurs before arm motion; final reopening occurs after arm return. The concurrent10s FAIL remains separate.'
+            if experiment=='payload_startup':
+                config['experiment']='payload_startup'
+                config['scope']='Causal startup impact diagnostic only; unchanged full payload CAD, initial height, gravity and contact. Cannot validate commanded jaw travel, arm reversal or mobility.'
+                config['duration_s']=.1
+                config['criteria']['minimum_observed_span_s']=.08
+                config['phases']=[{'name':'static','start_s':0.,'end_s':.1,'linear_m_s':0.,'angular_rad_s':0.,'jaw_open':False}]
+                config['robot_telemetry_publish_rate_hz']=10000
+                config['schedule_revision']='Records the first100ms and every100us native response with all targets held at their initial coordinates. Only duration/observation density change; .0055m/s jaw and .330rad/s wrist gates are identical to payload_arm. Requires a subsequent full10s test.'
     elif experiment!='full':raise ValueError('Unknown commissioning experiment')
     return config
 
@@ -144,9 +178,69 @@ def require_fixed_gripper_diagnostic(robot):
         raise ValueError('Integrated diagnostic requires every tool-subtree joint fixed, including passive joints: '+', '.join(moving))
 
 
+def jaw_phase_targets(robot,config):
+    """One explicitly declared demonstration slider; never infer a CAD linkage."""
+    if config.get('experiment') not in ('payload_arm','payload_startup','payload_sequential'):return {}
+    joints=[j for j in robot.joints if j['name'] in robot.data['control'].get('gripper',{})]
+    if len(joints)!=1 or joints[0]['type']!='prismatic':
+        raise ValueError('Payload jaw protocol requires one controlled prismatic jaw')
+    joint=joints[0];limits=joint['limits'];name=joint['name'];criteria=config['jaw_acceptance']
+    opened=robot.data['parameters'].get('demo_jaw_open_position_m')
+    if (limits['lower']!=0 or opened!=limits['upper'] or
+        limits['velocity']!=criteria['declared_velocity_limit_m_s'] or
+        limits['effort']!=criteria['maximum_force_N']):
+        raise ValueError('Payload jaw geometry or declared physical limits differ from its protocol')
+    return {phase['name']:{name:opened if phase['jaw_open'] else 0.} for phase in config['phases']}
+
+
+def jaw_sequence_checks(robot,config,joints,force_control):
+    if config.get('experiment') not in ('payload_arm','payload_startup','payload_sequential'):return []
+    targets=jaw_phase_targets(robot,config);criteria=config['jaw_acceptance']
+    name=next(iter(next(iter(targets.values()))));errors=[];rows=[]
+    for row in joints:
+        found=[j for j in row['joints'] if j['name']==name]
+        if len(found)!=1:errors.append('Missing native prismatic jaw');continue
+        observed=found[0]
+        keys=('position','velocity','max_abs_velocity_window','force_command','max_abs_force_command_window')
+        if any(type(observed.get(k)) not in (int,float) or not math.isfinite(observed[k]) for k in keys):
+            errors.append('Nonfinite native prismatic observation');continue
+        if not all(observed.get(k) for k in ('position_available','velocity_available','force_command_available')):
+            errors.append('Unavailable native prismatic observation');continue
+        rows.append((row['sim_time'],observed))
+    maximum_speed=max((max(abs(j['velocity']),j['max_abs_velocity_window']) for _,j in rows),default=math.inf)
+    maximum_force=max((max(abs(j['force_command']),j['max_abs_force_command_window']) for _,j in rows),default=math.inf)
+    maximum_violation=max((max(0.,-j['position'],j['position']-robot.data['parameters']['demo_jaw_open_position_m']) for _,j in rows),default=math.inf)
+    unit_rows=[r for r in force_control if r.get('joint_name')==name]
+    if not unit_rows or any(r.get('joint_type')!='prismatic' or r.get('position_unit')!='m' or
+                           r.get('velocity_unit')!='m/s' or r.get('force_unit')!='N' for r in unit_rows):
+        errors.append('Missing explicit prismatic SI controller units')
+    checks=[{'name':'prismatic_jaw_native_limits','passed':not errors and
+             maximum_speed<=criteria['declared_velocity_limit_m_s']+criteria['velocity_tolerance_m_s'] and
+             maximum_force<=criteria['maximum_force_N']+criteria['effort_tolerance_N'] and
+             maximum_violation<=criteria['position_tolerance_m'],
+             'maximum_speed_m_s':maximum_speed if math.isfinite(maximum_speed) else None,
+             'maximum_force_N':maximum_force if math.isfinite(maximum_force) else None,
+             'maximum_travel_violation_m':maximum_violation if math.isfinite(maximum_violation) else None,'errors':errors}]
+    if config.get('experiment')=='payload_startup':return checks
+    for phase in config['phases']:
+        if phase['name']=='settle':continue
+        start,end=phase['end_s']-criteria['tail_s'],phase['end_s']
+        tail=[(t,j) for t,j in rows if start<=t<end];times=[t for t,_ in tail]
+        gap=max([times[0]-start,end-times[-1],*[b-a for a,b in zip(times,times[1:])]]) if times else math.inf
+        error=max((abs(j['position']-targets[phase['name']][name]) for _,j in tail),default=math.inf)
+        velocity=max((max(abs(j['velocity']),j['max_abs_velocity_window']) for _,j in tail),default=math.inf)
+        checks.append({'name':phase['name']+'_jaw_observed','passed':bool(tail) and gap<=config['acceptance']['max_telemetry_gap_s'] and
+                       error<=criteria['position_tolerance_m'] and velocity<=criteria['settled_velocity_m_s'],
+                       'target_position_m':targets[phase['name']][name],
+                       'maximum_target_error_m':error if math.isfinite(error) else None,
+                       'maximum_settled_velocity_m_s':velocity if math.isfinite(velocity) else None,
+                       'maximum_observation_gap_s':gap if math.isfinite(gap) else None,'samples':len(tail)})
+    return checks
+
+
 def arm_sequence_checks(robot, config, joints, poses):
     """Observed positive/negative/return motion, with strict settled tail checks."""
-    if config.get('experiment')!='integrated_arm':return []
+    if config.get('experiment') not in ('integrated_arm','payload_arm','payload_sequential'):return []
     limits=config['criteria'];targets=arm_phase_targets(robot,config);checks=[]
     names=set(robot.joint_names)
     for phase in config['phases']:
@@ -226,6 +320,12 @@ def world(robot, config):
     contact=node(surface,'contact')
     node(contact,'collide_bitmask',65535)
     model=resolved_robot_model(robot,config['start_xyzyaw'])
+    if config.get('robot_telemetry_publish_rate_hz'):
+        observer=model.find("plugin[@name='uchuva::RobotTelemetrySystem']")
+        if observer is None:raise ValueError('Missing native observer for startup diagnostic')
+        rate=observer.find('publish_rate')
+        if rate is None:rate=node(observer,'publish_rate')
+        rate.text=str(config['robot_telemetry_publish_rate_hz'])
     publisher=node(model,'plugin',filename='gz-sim-pose-publisher-system',name='gz::sim::systems::PosePublisher')
     for key,value in (('publish_link_pose','false'),('publish_model_pose','true'),('publish_nested_model_pose','false'),
         ('publish_visual_pose','false'),('publish_collision_pose','false'),('use_pose_vector_msg','true'),
@@ -300,6 +400,7 @@ def evaluate(robot, config, poses, joints, errors, native_code, *, link_poses=()
     arm_error=max((abs(j['position']-home[j['name']]) for row in joints if static_phase['start_s']<=row['sim_time']<=static_phase['end_s'] for j in row['joints'] if j['name'] in home and j['position_available']),default=math.inf)
     check('static_arm_holds_declared_posture',arm_error<=limits['maximum_static_arm_error_rad'],maximum_error_rad=arm_error if math.isfinite(arm_error) else None)
     checks+=arm_sequence_checks(robot,config,joints,poses)
+    checks+=jaw_sequence_checks(robot,config,joints,force_control)
     for phase in ('straight','turn'):
         if not any(p['name']==phase for p in config['phases']):continue
         rows=[p for p in poses if p['phase']==phase]
@@ -396,7 +497,7 @@ def main():
                         help='Explicit physics integration step; acceptance thresholds and phase durations stay unchanged')
     parser.add_argument('--wall-timeout',type=float,default=180,
                         help='Computational wall-clock budget, independent of simulated duration and acceptance tolerances')
-    parser.add_argument('--experiment',choices=('full','turn_only','integrated_arm'),default='full',
+    parser.add_argument('--experiment',choices=('full','turn_only','integrated_arm','payload_arm','payload_startup','payload_sequential'),default='full',
                         help='The short causal turn experiment never substitutes full15s mobility admission')
     args=parser.parse_args()
     if not math.isfinite(args.start_height) or args.start_height<=0:
@@ -428,7 +529,9 @@ def main():
     config=protocol(args.start_height,args.max_step_size,args.experiment)
     if args.experiment=='integrated_arm':
         require_fixed_gripper_diagnostic(robot)
+    if args.experiment in ('integrated_arm','payload_arm','payload_sequential'):
         config['arm_targets_rad']=arm_phase_targets(robot,config)
+    if args.experiment in ('payload_arm','payload_startup','payload_sequential'):config['jaw_targets_m']=jaw_phase_targets(robot,config)
     config['wall_timeout_s']=args.wall_timeout
     if data.get('physics'):
         config['physics']=data['physics']
@@ -487,8 +590,10 @@ def main():
     node_=Node(); poses=[]; joints=[]; commands=[]; link_poses=[]; force_control=[]; errors=[]; lock=threading.Lock()
     wheel_publishers={name:node_.advertise(data['namespace']+'/drive/'+name+'/cmd_vel',Double) for name in drive['joints']}
     arm_publishers={name:node_.advertise(topic,Double) for name,topic in contract['topics']['joint_commands'].items()}
+    jaw_publishers={name:node_.advertise(topic,Double) for name,topic in contract['topics'].get('gripper_commands',{}).items()} if args.experiment in ('payload_arm','payload_startup','payload_sequential') else {}
     drive_controller=DriveReferenceController(drive)
     arm_references={name:0. for name in arm_publishers}
+    jaw_references={name:0. for name in jaw_publishers}
     def link_pose_callback(message):
         try:
             stamps=set();links={}
@@ -551,10 +656,16 @@ def main():
                 target=config.get('arm_targets_rad',{}).get(phase['name'],data['arm_home_positions'])[name]
                 arm_references[name]+=max(-rate*dt,min(rate*dt,target-arm_references[name]))
                 msg=Double(); msg.data=arm_references[name]; publisher.publish(msg)
+            for name,publisher in jaw_publishers.items():
+                rate=data['control']['gripper'][name]['command_velocity']
+                target=config['jaw_targets_m'][phase['name']][name]
+                jaw_references[name]+=max(-rate*dt,min(rate*dt,target-jaw_references[name]))
+                msg=Double();msg.data=jaw_references[name];publisher.publish(msg)
             with lock:
                 joints.append(row)
                 commands.append({'sim_time':stamp,'phase':phase['name'],'linear_m_s':drive_record['linear_m_s'],'angular_rad_s':drive_record['angular_rad_s'],
                                  'wheel_velocity_references_rad_s':wheel_refs,'arm_positions_rad':dict(arm_references),
+                                 'jaw_positions_m':dict(jaw_references),
                                  'drive_reference':drive_record})
         except Exception as error:
             errors.append(str(error))

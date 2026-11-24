@@ -66,6 +66,19 @@ class MeshMotionClearanceTests(unittest.TestCase):
             self.assertAlmostEqual(result['robot_clearance_m'], .01)
             self.assertEqual(result['limiting_robot_pair'][1], 'branch')
 
+    def test_first_failure_keeps_the_same_threshold_with_tuple_shapes(self):
+        with tempfile.TemporaryDirectory() as root:
+            config = self.fixture(root)
+            shapes, tcp = config.world_shapes([], [])
+            config.world_shapes = lambda values, base: (tuple(shapes), tcp)
+            fruit = {'id': 'nearby_fruit', 'center_world_m': [0, 0, 4.2], 'radius_m': .197}
+            for obstacles, expected in (([fruit], False), ([], True)):
+                result = resolved_world_clearance([], [], [], obstacles, None, config,
+                    report_cap=.004, reject_on_first_failure=True)
+                self.assertEqual(result['robot_clearance_m'] >= .004, expected)
+            self.assertTrue(resolved_world_clearance([], [], [], [fruit], None, config,
+                report_cap=.004, reject_on_first_failure=True)['first_failure_only'])
+
 
 if __name__ == '__main__':
     unittest.main()
