@@ -3050,6 +3050,26 @@
           "locator": "def plan_harvest_motion"
         }
       ]
+    },
+    {
+      "id": "artifact.editorial_pilot_results_20261124",
+      "type": "artifact",
+      "label": "Resultados experimentales para edición",
+      "summary": "Índice de resultados de detección, segmentación, generación y percepción robótica. Incluye informes de noviembre y tablas agregadas por semilla y grupo.",
+      "paths": [
+        "docs/reports/indice_resultados_experimentales.md",
+        "docs/reports/resultados_segmentacion_privada_2026-11-24.md",
+        "docs/reports/resultados_pilotos_deteccion_y_generacion_2026-11-24.md",
+        "docs/reports/datos_segmentacion_2026-11-24/metricas_por_semilla.csv",
+        "docs/reports/datos_segmentacion_2026-11-24/metricas_por_estrato.csv",
+        "docs/reports/datos_segmentacion_2026-11-24/exposiciones_por_semilla.csv"
+      ],
+      "evidence": [
+        {
+          "path": "docs/reports/indice_resultados_experimentales.md",
+          "locator": "# Resultados experimentales para edición"
+        }
+      ]
     }
   ],
   "edges": [

@@ -5,7 +5,7 @@
 
 **Python · Blender · Gazebo · computer vision · evaluación reproducible**
 
-[Arquitectura](docs/README.md) · [Resultados](docs/reports/aumento_clasico_v2_confirmatory_2026-08-28.md) · [Guías](docs/guides/) · [Documentación técnica íntegra](README_TECHNICAL.md)
+[Arquitectura](docs/README.md) · [Resultados](docs/reports/indice_resultados_experimentales.md) · [Guías](docs/guides/) · [Documentación técnica íntegra](README_TECHNICAL.md)
 
 </div>
 
