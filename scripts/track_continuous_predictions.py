@@ -24,11 +24,18 @@ def main():
     p.add_argument('--flow-device',choices=['cpu','cuda'],default='cpu')
     p.add_argument('--resume-observations',type=Path)
     p.add_argument('--resume-flow-switch-frame',type=int,default=None)
+    p.add_argument('--public-fused-poses',type=Path)
     a=p.parse_args();a.output.mkdir(parents=True,exist_ok=False);begin=time.perf_counter()
     calibration=json.loads((a.public/'calibration.json').read_text());K=calibration['K']
     # This whitelist is publicly declared, not inferred from truth masks.
     allowed=set(calibration['target_marker_ids']);rig={r['id']:r for r in calibration['rig'] if r['id'] in allowed}
+    fused={}
+    if a.public_fused_poses:
+        if a.resume_observations:raise ValueError('Pose ablation cannot reuse historical pose prefix')
+        from uchuva_gazebo.public_pose_stream import load_public_pose_stream
+        fused=load_public_pose_stream(a.public_fused_poses,rig)
     frames=json.loads((a.public/'frames.json').read_text())
+    if a.public_fused_poses and any(f['stamp_ns'] not in fused for f in frames):raise ValueError('Missing fused timestamp')
     cache_config=json.loads((a.cache/'configuration.json').read_text())
     if cache_config['frames_sha256']!=sha(a.public/'frames.json'):raise ValueError('Cache frame mismatch')
     if not json.loads((a.cache/'completion.json').read_text())['completed']:raise ValueError('Incomplete inference cache')
@@ -100,6 +107,7 @@ def main():
                 # Preserve previously emitted poses and detections; RGB marker
                 # replay above restores temporal pose history without truth.
                 poses=prefix[count]['marker_poses'];decoded=prefix[count]['decoded_marker_ids']
+            if a.public_fused_poses:poses=fused[stamp]
             for d in detections:
                 tid=d['track_id'];d.setdefault('appearance',appearance(image,d['box_xyxy_px']).tolist())
                 descriptors[tid].append(d['appearance']);classes[tid][d['class_id']]+=1;stamps[tid].append(stamp)
@@ -163,8 +171,10 @@ def main():
     write(a.output/'reconciliation.json',decisions)
     write(a.output/'tracking_rejections.json',tracker.rejections);write(a.output/'pose_rejections.json',rejections)
     write(a.output/'provenance.json',dict(protocol=a.protocol,cache_configuration_sha256=sha(a.cache/'configuration.json'),
-        calibration_sha256=sha(a.public/'calibration.json'),inputs=['RGB','timestamps','public camera and marker calibration'],
+        calibration_sha256=sha(a.public/'calibration.json'),inputs=['RGB','timestamps','public camera and marker calibration']+(['public pose stream (see hash and source)'] if a.public_fused_poses else []),
         ground_truth_inputs=False,processed_frames=count,seconds=time.perf_counter()-begin,
+        public_fused_poses_sha256=sha(a.public_fused_poses) if a.public_fused_poses else None,
+        pose_ablation='External public pose stream; fixed detections and tracker; source cadence must be controlled' if a.public_fused_poses else None,
         mask_overlap_device=a.mask_overlap_device,cuda_overlap_calls=getattr(overlap_backend,'calls',0),
         cuda_overlap_pairs=getattr(overlap_backend,'pairs',0),
         flow_device=a.flow_device,cuda_flow_calls=getattr(flow_backend,'calls',0),

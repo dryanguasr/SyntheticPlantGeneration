@@ -259,6 +259,18 @@ def prepare_plants(seed, scene_id, attempt, instances, folder, *, plant_contract
     return plants, records
 
 
+def _snapshot_file_path(path):
+    """Use pathlib streams on Windows paths beyond the legacy 260 characters."""
+    path = Path(path)
+    if os.name != "nt":
+        return path
+    absolute = str(path.resolve())
+    if not absolute.startswith("\\\\?\\"):
+        absolute = ("\\\\?\\UNC\\" + absolute[2:] if absolute.startswith("\\\\")
+                    else "\\\\?\\" + absolute)
+    return Path(absolute)
+
+
 def source_snapshot(root, profiles_file):
     """Fail closed on resume with changed reviewed profiles, code or input data."""
     contract_path = root/"banks/plant_contract.json"
@@ -282,7 +294,7 @@ def source_snapshot(root, profiles_file):
         paths.append(Path(path))
     require(sha(assets["manifest"]) == assets["manifest_sha256"], "Changed texture asset manifest")
     paths.append(Path(assets["manifest"]))
-    signature = dict(version=VERSION, files={str(p.resolve()): sha(p) for p in paths},
+    signature = dict(version=VERSION, files={str(p.resolve()): sha(_snapshot_file_path(p)) for p in paths},
         plant_contract_sha256=sha(contract_path),
         policy=dict(scenes=SCENES, plants_per_scene=PLANTS_PER_SCENE, cameras_per_scene=CAMERAS_PER_SCENE,
                     morphology_attempts_per_scene=MAX_MORPHOLOGY_ATTEMPTS, maximum_selected=MAX_VIEWS,
@@ -299,13 +311,16 @@ def source_snapshot(root, profiles_file):
         try:
             relative = source.resolve().relative_to(REPO)
         except ValueError:
-            relative = Path("external") / (sha(source)[:12] + "_" + source.name)
-        target = root/"banks/source_snapshot"/relative
-        if target.exists():
-            require(sha(target) == sha(source), "Snapshot differs: " + str(target))
-        else:
+            relative = Path("external") / (sha(_snapshot_file_path(source))[:12] + "_" + source.name)
+        target = _snapshot_file_path(root/"banks/source_snapshot"/relative)
+        if not target.exists():
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source, target)
+            # Freeze bytes, not filesystem metadata. Windows CopyFile2 can
+            # reject long worktree paths that pathlib streams can read/write.
+            with _snapshot_file_path(source).open("rb") as reader, target.open("xb") as writer:
+                shutil.copyfileobj(reader, writer, length=1024*1024)
+        require(sha(target) == signature["files"][str(source.resolve())],
+                "Snapshot differs: " + str(target))
     return signature
 
 

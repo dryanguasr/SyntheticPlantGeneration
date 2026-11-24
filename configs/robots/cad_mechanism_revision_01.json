@@ -1,0 +1,32 @@
+{
+  "schema_version": "cad-mechanism-revision/1.0",
+  "revision_id": "cad_mechanism_revision_01",
+  "status": "estimado",
+  "scope": "CAD-derived articulated topology and mass with explicit estimated finite joint dynamics; no hardware calibration. Saved CAD geometry and every physical occurrence retained.",
+  "suspension": {
+    "stiffness_n_m": 1500,
+    "damping_ns_m": 25,
+    "spring_reference_m": 0,
+    "slider_travel_m": [-0.03, 0.03],
+    "slider_velocity_m_s": 1,
+    "pivot_limits_rad": [-0.4, 0.4],
+    "pivot_velocity_rad_s": 2,
+    "pivot_damping_nms_rad": 0.002,
+    "passive_effort_bound": 1000,
+    "provenance": "Same estimated k/c/travel as native suspension topology probe, now with real aggregated CAD mass. Zero preload is an uncalibrated starting hypothesis, not equilibrium proof.",
+    "grouping": "Main Body/Adjust Nut/coil on upper; Second Body/Bolt/Nut/Cap on lower, based on native coincident axes and axial reference placements. The source saved shock assembly is rigid and cannot itself prove dynamic travel.",
+    "coil_geometry": "Unchanged rigid CAD reference on upper; spring force law belongs to prismatic joint. Mesh deformation is not represented."
+  },
+  "gripper": {
+    "joint_limits_rad": [-0.4, 0.4],
+    "velocity_rad_s": 1,
+    "effort_nm": 0.02,
+    "p_gain": 0.2,
+    "d_gain": 0.01,
+    "passive_damping_nms_rad": 0.002,
+    "provenance": "Estimated finite-drive topology probe values, with real CAD leaf mass; holding/grasping force and range require subsequent native assessment."
+  },
+  "acceptance_changes": [],
+  "plant_changes": [],
+  "hardware_validated": false
+}

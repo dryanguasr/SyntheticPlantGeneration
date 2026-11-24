@@ -1,0 +1,12 @@
+# Herramientas editoriales; mantener separadas del entorno de entrenamiento.
+# Python 3.12.14, versiones comprobadas el 2026-11-24.
+# El motor LaTeX y Poppler son ejecutables independientes de pip.
+matplotlib==3.11.2
+bibtexparser==2.1.0
+numpy==2.3.5
+pandas==3.0.1
+Pillow==13.0.0
+pypdf==6.21.4
+pdfplumber==0.11.9
+pypdfium2==5.13.0
+reportlab==4.4.9

@@ -1,0 +1,55 @@
+# Python y entornos
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+ENV/
+
+# ROS 2 / colcon
+build/
+install/
+log/
+.colcon/
+
+# Registros y temporales
+*.log
+*.tmp
+*.swp
+*~
+
+# Entornos y credenciales
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.*
+
+# Datos, grabaciones y pesos: definir política antes de incorporarlos
+datasets/
+data/raw/
+*.bag
+*.db3
+*.mcap
+*.svo
+*.svo2
+*.mp4
+*.avi
+*.pt
+*.pth
+*.onnx
+*.engine
+*.weights
+
+# Windows y editores
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.vs/
+.idea/
+.vscode/

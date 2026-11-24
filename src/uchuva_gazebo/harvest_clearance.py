@@ -178,6 +178,13 @@ def rigid_cylinders(bundle, mesh_root=None):
     return result
 
 
+def planned_crop_obstacles(bundle, mesh_root=None):
+    """Retain virtual terminal pedicels in planning even in the ideal cutter zone."""
+    return rigid_cylinders(bundle, mesh_root) + [
+        {**fruit['ideal_contact_zone'], 'id': fruit['id']+':ideal_cut_contact', 'ideal_cut_target': fruit['id']}
+        for fruit in bundle['fruits'] if 'ideal_contact_zone' in fruit]
+
+
 def _arm_boxes(joints, base, config):
     c = config
     landmarks = link_origins(joints, c)
@@ -230,6 +237,9 @@ class _CylinderIndex(list):
 
 def _world_clearance(joints, base, cylinders, fruit_specs, held, config, report_cap=0.5):
     """Distances beyond report_cap are censored, retaining a valid lower bound."""
+    if hasattr(config, 'world_shapes'):
+        from .robot_motion import resolved_world_clearance
+        return resolved_world_clearance(joints, base, cylinders, fruit_specs, held, config, report_cap)
     boxes, world = _arm_boxes(joints, base, config)
     robot_min, held_min, held_robot_min = report_cap, report_cap, report_cap
     limiting_robot = limiting_held = limiting_held_robot = None
@@ -290,7 +300,7 @@ def _world_clearance(joints, base, cylinders, fruit_specs, held, config, report_
 
 
 def audit_joint_segment(start, end, base, cylinders, fruit_specs, *, held=None,
-                        config=None, samples=81, clearance_m=.004, stop_on_failure=False):
+                        config=None, samples=81, clearance_m=.004, stop_on_failure=False, report_cap=.5):
     """Sample the commanded straight interpolation in joint space, fail closed."""
     if type(samples) is not int or samples < 2:
         raise ValueError("At least two samples are required")
@@ -299,6 +309,18 @@ def audit_joint_segment(start, end, base, cylinders, fruit_specs, *, held=None,
     # Expand it by the distance reporting cap, then discard whole distant
     # plants once per segment instead of repeating that broad phase per sample.
     held_extra = (math.dist(held["center_world_m"], held["cut_point_world_m"]) + held["radius_m"]) if held else 0.0
+    if hasattr(c, 'world_shapes'):
+        # No proxy-size broad phase may prune collisions of a different robot.
+        near_cylinders = cylinders if isinstance(cylinders, _CylinderIndex) else _CylinderIndex(cylinders)
+        limits = c.joint_limits
+    else:
+        near_cylinders = _legacy_near_cylinders(c, base, cylinders, held_extra)
+        limits = JOINT_LIMITS
+    return _audit_samples(start, end, base, near_cylinders, cylinders, fruit_specs,
+                          held, c, samples, clearance_m, stop_on_failure, limits, report_cap)
+
+
+def _legacy_near_cylinders(c, base, cylinders, held_extra):
     reach = c.upper_arm_m + c.forearm_m + c.tool_length_m + max(.06, held_extra)
     chassis_bound = math.hypot(c.body_length_m / 2, c.body_width_m / 2)
     wheel_bound = math.hypot(c.wheelbase_m / 2 + c.wheel_radius_m,
@@ -308,28 +330,57 @@ def audit_joint_segment(start, end, base, cylinders, fruit_specs, *, held=None,
                       if all(min(obstacle["start"][i], obstacle["end"][i]) - obstacle["radius"] <= base[i] + extent
                              and max(obstacle["start"][i], obstacle["end"][i]) + obstacle["radius"] >= base[i] - extent
                              for i in (0, 1))]
-    near_cylinders = _CylinderIndex(near_cylinders)
+    return _CylinderIndex(near_cylinders)
+
+
+def _audit_samples(start, end, base, near_cylinders, cylinders, fruit_specs,
+                   held, c, samples, clearance_m, stop_on_failure, limits, report_cap=.5):
+    if len(start) != len(limits) or len(end) != len(limits):
+        raise ValueError('Joint segment does not match the robot joint limits')
     # Bound articulation increments as well as the minimum sample count.
     count = max(samples, math.ceil(max(abs(a - b) for a, b in zip(start, end)) / .004) + 1)
     result = {"passed": True, "samples": 0, "requested_samples": count,
-              "minimum_robot_clearance_m": .5, "minimum_held_clearance_m": .5 if held else None,
-              "minimum_held_robot_clearance_m": .5 if held else None,
+              "minimum_robot_clearance_m": report_cap, "minimum_held_clearance_m": report_cap if held else None,
+              "minimum_held_robot_clearance_m": report_cap if held else None,
               "minimum_joint_margin_rad": math.inf, "maximum_tcp_sample_step_m": 0.0,
-              "clearance_threshold_m": clearance_m, "distance_report_cap_m": .5,
+              "clearance_threshold_m": clearance_m, "distance_report_cap_m": report_cap,
               "broad_phase_cylinders": len(near_cylinders), "source_cylinders": len(cylinders)}
     previous_tcp = None
+    early_resolved_failure = (hasattr(c, 'world_shapes') and stop_on_failure and
+                              report_cap == clearance_m)
     for index in range(count):
         t = index / (count - 1)
         joints = [(1 - t) * a + t * b for a, b in zip(start, end)]
-        margin = min(min(value - limits[0], limits[1] - value) for value, limits in zip(joints, JOINT_LIMITS))
+        margin = min(min(value - bound[0], bound[1] - value) for value, bound in zip(joints, limits))
         result["minimum_joint_margin_rad"] = min(result["minimum_joint_margin_rad"], margin)
-        state = _world_clearance(joints, base, near_cylinders, fruit_specs, held, c)
+        if early_resolved_failure:
+            from .robot_motion import resolved_world_clearance
+            state = resolved_world_clearance(joints, base, near_cylinders, fruit_specs, held, c,
+                report_cap=report_cap, reject_on_first_failure=True)
+        else:
+            state = _world_clearance(joints, base, near_cylinders, fruit_specs, held, c, report_cap=report_cap)
         result["samples"] += 1
+        partial = state.get('first_failure_only', False)
+        if partial:
+            if not early_resolved_failure or not state['robot_clearance_m'] < clearance_m:
+                raise ValueError('Partial clearance requires a proven failure below the exact threshold')
+            result['first_failure_only'] = True
+            result['first_failure_scope'] = state['scope']
+            result['unobserved_fields_at_failure'] = []
         for source, target, detail in (
             ("robot_clearance_m", "minimum_robot_clearance_m", "limiting_robot_pair"),
             ("held_clearance_m", "minimum_held_clearance_m", "limiting_held_obstacle"),
             ("held_robot_clearance_m", "minimum_held_robot_clearance_m", "limiting_held_robot_link"),
         ):
+            if partial and source not in state:
+                if held:
+                    result['unobserved_fields_at_failure'].append(source)
+                    # No positive clearance claim for a check that never ran.
+                    # If earlier samples ran, keep their measured minimum and
+                    # identify the missing observation at the failure sample.
+                    if index == 0:
+                        result[target] = None
+                continue
             if state[source] is not None and state[source] < result[target]:
                 result[target] = state[source]
                 result[detail] = state[detail]
@@ -337,7 +388,7 @@ def audit_joint_segment(start, end, base, cylinders, fruit_specs, *, held=None,
         if previous_tcp is not None:
             result["maximum_tcp_sample_step_m"] = max(result["maximum_tcp_sample_step_m"], math.dist(previous_tcp, state["tcp_world_m"]))
         previous_tcp = state["tcp_world_m"]
-        if margin < .025 or any(state[key] is not None and state[key] < clearance_m for key in ("robot_clearance_m", "held_clearance_m", "held_robot_clearance_m")):
+        if margin < .025 or partial or any(state[key] is not None and state[key] < clearance_m for key in ("robot_clearance_m", "held_clearance_m", "held_robot_clearance_m")):
             result["passed"] = False
             if stop_on_failure:
                 break
@@ -353,8 +404,17 @@ def plan_harvest_motion(bundle, robot_config=None, *, samples_per_segment=81,
     depend on a lucky harvest order. ``targets`` is keyed by reproductive ID.
     Base travel and deposit are separate runtime stages, outside this local
     joint-path screen. No plant, fruit or robot geometry is changed.
+    Resolved profiles use their explicit base height, common carry joints and
+    optional candidate base poses; legacy Cartesian carry applies to proxy.
     """
     c = robot_config or HarvesterConfig()
+    if hasattr(c, 'world_shapes'):
+        from .robot_harvest_planning import plan_resolved_harvest
+        result = plan_resolved_harvest(bundle, c, samples=samples_per_segment,
+            clearance_m=clearance_m, pickup_standoff_m=pickup_standoff_m)
+        if not result['audit']['passed']:
+            raise ValueError(f"No safe resolved approach/extraction: {result}")
+        return result
     if not math.isfinite(clearance_m) or clearance_m <= 0:
         raise ValueError("clearance_m must be positive and finite")
     if not math.isfinite(pickup_standoff_m) or pickup_standoff_m <= .12:
@@ -368,10 +428,12 @@ def plan_harvest_motion(bundle, robot_config=None, *, samples_per_segment=81,
         raise ValueError("Motion screening requires nonempty unique fruit identities")
     targets = {}
     for fruit in fruit_specs:
+        c = robot_config or HarvesterConfig()
         cut = fruit["cut_point_world_m"]
         base = [cut[0] - pickup_standoff_m, cut[1], 0.0, 0.0]
         local_points = {"carry": list(carry), "preapproach": [pickup_standoff_m - .10, 0.0, cut[2] + .10], "cut": [pickup_standoff_m, 0.0, cut[2]]}
         joints = {name: list(inverse_kinematics(point, config=c)) for name, point in local_points.items()}
+        held_fruit = fruit
         approach = []
         for a, b in (("carry", "preapproach"), ("preapproach", "cut")):
             result = audit_joint_segment(joints[a], joints[b], base, cylinders, fruit_specs, config=c, samples=samples_per_segment, clearance_m=clearance_m)
@@ -389,7 +451,7 @@ def plan_harvest_motion(bundle, robot_config=None, *, samples_per_segment=81,
                 continue
             segments = []
             for a, b, start, end in (("cut", "extraction_0", joints["cut"], candidate), ("extraction_0", "carry", candidate, joints["carry"])):
-                result = audit_joint_segment(start, end, base, cylinders, fruit_specs, held=fruit, config=c, samples=samples_per_segment, clearance_m=clearance_m, stop_on_failure=True)
+                result = audit_joint_segment(start, end, base, cylinders, fruit_specs, held=held_fruit, config=c, samples=samples_per_segment, clearance_m=clearance_m, stop_on_failure=True)
                 result.update({"from": a, "to": b, "held": True})
                 segments.append(result)
                 if not result["passed"]:
@@ -414,7 +476,7 @@ def plan_harvest_motion(bundle, robot_config=None, *, samples_per_segment=81,
                       "minimum_held_clearance_m": min(item["minimum_held_clearance_m"] for item in extraction),
                       "minimum_held_robot_clearance_m": min(item["minimum_held_robot_clearance_m"] for item in extraction)},
         }
-    return {"targets": targets, "audit": {
+    report = {"targets": targets, "audit": {
         "schema_version": VERSION, "passed": True, "target_count": len(targets),
         "rigid_cylinder_count": len(cylinders), "clearance_threshold_m": clearance_m,
         "carry_tcp_base_m": carry, "pickup_standoff_m": pickup_standoff_m,
@@ -425,3 +487,4 @@ def plan_harvest_motion(bundle, robot_config=None, *, samples_per_segment=81,
                         "Leaves and unselected fruit visual meshes are not colliders",
                         "Base travel, bin contact and robot self-contact require native validation",
                         "Proxy robot collision dimensions only; replace this adapter with the final robot"]}}
+    return report

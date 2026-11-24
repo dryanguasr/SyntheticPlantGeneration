@@ -1,4 +1,9 @@
-"""Public relative-motion contract; no simulator/world pose is accepted."""
+"""Public relative-motion contract; no simulator/world pose is accepted.
+
+Translation is the new camera origin expressed in the previous camera.
+Rotation vector maps new camera coordinates into the previous camera.
+Covariance order is translation (metres), then rotation (radians).
+"""
 from dataclasses import dataclass
 import numpy as np
 

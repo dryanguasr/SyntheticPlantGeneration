@@ -1,0 +1,73 @@
+{
+  "schema_version": "cad-integration-revision/1.0",
+  "revision_id": "cad_integration_revision_01",
+  "status": "PENDING_GRIPPER_DAMPING_AND_CAD_ENVELOPE",
+  "scope": "Experimental common CAD configuration; no native validation or harvest eligibility is inherited from component fixtures.",
+  "profiles": {
+    "mechanism_base": {
+      "path": "outputs/real_harvester_validation/mechanisms_candidate_09/profile.json",
+      "robot_spec_sha256": "b0cc851a43b92aae5377fd241acfea5005b03dd902f1c082a053801ccf376d33"
+    },
+    "cad_revision": {
+      "path": "outputs/real_harvester_validation/cad_part_revision_candidate_02/profile.json",
+      "asset_root": "outputs/real_harvester_validation/cad_part_revision_candidate_02/assets",
+      "robot_spec_sha256": "e2e267c6a68a579e829c172a79d9b7e0415570dff1b1ef5549c3c04ed95de9fc",
+      "operational_envelope_status": "PENDING; revised L1 sampled minimum 0.1277118 mm does not meet the preregistered 0.200 mm CAD design reserve. No reserve PASS."
+    },
+    "drive_reference": {
+      "path": "outputs/real_harvester_validation/drive_candidate_04/profile.json",
+      "robot_spec_sha256": "544d4fa81176adb0c523b0e9ffc4acb3402302f0e130bad14b2e9b70a5e00f79"
+    }
+  },
+  "drive_revisions": [
+    {
+      "path": "configs/robots/cad_drive_revision_03.json",
+      "sha256": "c10abe4b44f6ff462c3921c72c07ec5cb5590a38fa8f22e07051ff1eef3d670e"
+    },
+    {
+      "path": "configs/robots/cad_drive_revision_04.json",
+      "sha256": "a9e2be3f5a8638f3f8060e8266320881de68080aef606d3dd52d17b6d47599e2"
+    }
+  ],
+  "drive_parameters": {
+    "wheel_effort_limit_nm": 6.5,
+    "wheel_velocity_p_gain": 30.0,
+    "wheel_velocity_i_gain": 4.0,
+    "wheel_integral_effort_limit_nm": 5.5
+  },
+  "collision_detector": "bullet",
+  "collision_conformance": [
+    {
+      "path": "outputs/real_harvester_validation/dynamic_concave_bullet_01/summary.json",
+      "sha256": "f0e3c73167672a773e56fd2944560863af4ff22121771c794dfa8f0afbef06b3",
+      "expected_cases": 9
+    },
+    {
+      "path": "outputs/real_harvester_validation/mesh_masks_bullet_01/summary.json",
+      "sha256": "2958c4c5ba090b92b7a3bb21112a659a401102aa1787f6acd120258f70a3b10b",
+      "expected_cases": 6
+    }
+  ],
+  "position_control": {
+    "reference_mode": "ramped_position",
+    "groups": ["arm", "gripper"],
+    "gripper_command_velocity_rad_s": 0.2,
+    "velocity_evidence": {
+      "path": "configs/robots/cad_mechanism_revision_05.json",
+      "sha256": "8c03d3b93f85346d658ac7c6afac6b126ac3b4d6d91e2d8e3c5ee91ada064daf"
+    },
+    "provenance": "Estimated reference ramp, using finite motor forces. Existing arm velocity bounds/gains remain unchanged. Gripper 0.2 rad/s comes from revision05; it is not measured hardware speed or evidence of integrated stability."
+  },
+  "gear_coupling": {
+    "name": "gripper_gear_pair",
+    "stiffness_nm_rad": 100,
+    "damping_nms_rad": null,
+    "selection_status": "PENDING",
+    "selection_evidence": null,
+    "provenance": "C=0.012 is only a candidate being investigated. No value is selected or treated as passing until the isolated evidence and root integration decision are supplied."
+  },
+  "native_harvest_eligible": false,
+  "acceptance_changes": [],
+  "collision_exclusion_changes": [],
+  "plant_changes": []
+}

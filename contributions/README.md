@@ -24,3 +24,19 @@ carpeta.
 Cada contribución mantiene su autoría y sus términos propios. Antes de
 redistribuirla, publicarla o incorporarla al código MIT vigente debe verificarse
 la autorización correspondiente y documentarse la decisión en su carpeta.
+
+## PhysalisHarvest — banco de Diego
+
+El snapshot íntegro en [`physalisharvest/`](physalisharvest/) conserva 107
+archivos del corte `114ce5690e7bf024d57ce2c815b7f3afd1d82e38`, rama
+`fix/2wd-bench-scripts`, del [repositorio de Diego](https://github.com/amayadiegoalejandro05/PhysalisHarvest).
+Incluye los bancos ROS 2, firmware ESP32/DRV8833, herramientas y pruebas.
+La centralización fue solicitada por el responsable de este repositorio el
+24 de noviembre de 2026; se conservan los términos originales y el estado
+«Licencia pendiente de decisión institucional», sin atribuirle MIT.
+
+La [procedencia y hashes](physalisharvest.provenance.json) están fuera del
+snapshot. Verificarlo con `python scripts/verify_physalisharvest_snapshot.py`
+desde la raíz. La [guía de integración](../docs/guides/integracion_physalisharvest.md)
+define cómo usar los paquetes directamente, sin mantener una copia adicional.
+La arquitectura botánica y el modelo canónico del robot permanecen en `src/`.

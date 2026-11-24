@@ -1,0 +1,29 @@
+{
+  "schema_version": "cad-arm-control-revision/1.0",
+  "revision_id": "cad_control_revision_01",
+  "status": "estimado",
+  "scope": "Finite-force simulation commissioning hypothesis; not measured hardware gains, torque, or continuous rating",
+  "base_robot_spec_sha256": "7e7c18dd668261695229af9eaba905c1aa7377405796c7d835fd830aa669cb50",
+  "derivation": {
+    "source": "scripts/analyze_robot_arm_dynamics.py applied to immutable robot_package_02",
+    "gravity_nm_at_cad_zero": [0, 7.120179702363207, 2.108818088297077, 0.21666091138840327, 0.0017207490722865096],
+    "sampled_gravity_maxima_nm": [0, 7.250482072008946, 2.2391204579428177, 0.21668016632244202, 0.003649556365591311],
+    "sampling": "243 lower/zero/upper postures in unchanged commissioning limits; finite samples do not prove a continuous bound",
+    "locked_joint_inertias_kg_m2": [0.35148065371157494, 0.30850201277841205, 0.06341859526559004, 0.002310047471063225, 0.000051297262757992685],
+    "gain_selection": "Per-joint PD. P limits nominal gravity sag to approximately 0/0.0048/0.0045/0.0037/0.0025 rad at sampled loads. D decreases with inertia; the old roll D=1 gives dt*D/I=19.49 at 1 ms, whereas D=.012 gives .234. Coupling and saturation require native verification, not a scalar stability claim.",
+    "capacity_selection": "Shoulder12/codo4/pitch.5/roll.05 Nm provide finite margin over the sampled gravity loads; yaw retains3 Nm. These are simulated available output efforts. The original3 Nm shoulder ceiling is below the7.12 Nm static CAD load and cannot hold q0.",
+    "hardware_caveat": "No stall torque has been promoted to continuous torque. Thermal, current, transmission, battery, motor and servo performance remain unvalidated."
+  },
+  "arm": {
+    "arm_yaw_joint": {"p_gain": 200, "i_gain": 0, "d_gain": 15, "effort_limit_nm": 3},
+    "arm_shoulder_joint": {"p_gain": 1500, "i_gain": 0, "d_gain": 20, "effort_limit_nm": 12},
+    "arm_elbow_joint": {"p_gain": 500, "i_gain": 0, "d_gain": 4, "effort_limit_nm": 4},
+    "wrist_pitch_joint": {"p_gain": 60, "i_gain": 0, "d_gain": 0.25, "effort_limit_nm": 0.5},
+    "wrist_roll_joint": {"p_gain": 1.5, "i_gain": 0, "d_gain": 0.012, "effort_limit_nm": 0.05}
+  },
+  "acceptance_changes": [],
+  "geometry_changes": [],
+  "contact_changes": [],
+  "joint_limit_changes": [],
+  "joint_velocity_writers": false
+}

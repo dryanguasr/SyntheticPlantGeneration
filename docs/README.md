@@ -17,9 +17,22 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Guías operativas
 
+- [Integración centralizada con PhysalisHarvest](guides/integracion_physalisharvest.md)
+  y [matriz de compatibilidad y pruebas](reports/conciliacion_cosechador_physalisharvest_2026-11-24.md).
+  [Correcciones de la revisión del PR 1](reports/correcciones_revision_pr1_2026-11-24.md).
+
+- [Robot cosechador paramétrico](guides/robot_cosechador_parametrico.md) y
+  [exportación nativa de Inventor](guides/exportacion_cad_inventor_robot.md).
+- [Informe del cosechador CAD](reports/robot_cosechador_parametrico_2026-11-23.md):
+  modelo extraído, pruebas nativas, fallos y aceptación pendiente.
+- [Mecanismos cerrados CAD](guides/mecanismos_cerrados_cad_gazebo.md) e
+  [interferencias y continuación de pruebas](reports/robot_cosechador_mecanismos_2026-11-23.md).
 - [Generador actual y contrato Gazebo](guides/generador_actual_y_contrato_gazebo.md).
 - [Piloto de uchuvas desmontables](guides/piloto_cosecha_desmontable.md) y
   [ciclos auditados en Gazebo Harmonic](reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md).
+- [Piloto CAD V8 con canasta a bordo](guides/piloto_cad_v8_canasta.md) y
+  [percepción diagnóstica de cosecha](guides/percepcion_cosecha_diagnostica.md).
+  [Resultados del piloto CAD V8](reports/piloto_cad_v8_canasta_2026-11-24.md).
 - [Auditoría ciega de segmentación](guides/auditoria_ciega_segmentacion.md) y
   [manual para estudiantes](guides/manual_estudiantes_revision_cruzada.pdf).
 - [Video del DJI Neo en Android y PC](guides/video_dron_pc_rtmp.md): recepción
@@ -37,6 +50,8 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Gobernanza y evidencia
 
+- [Integración de todos los avances locales (24-11-2026)](reports/integracion_avances_locales_2026-11-24.md):
+  conciliación de los frentes, regresiones y conservación del trabajo original.
 - [Auditoría independiente de generación sintética y Gazebo (25-10-2026)](reports/auditoria_generacion_sintetica_2026-10-25.md):
   defectos reproducidos de morfología, validación y procedencia; límites de la
   exportación física, prioridades para estudiantes y piloto flexible secundario.

@@ -1,0 +1,34 @@
+{
+  "schema_version": "cad-drive-revision/1.0",
+  "revision_id": "cad_drive_revision_01",
+  "status": "estimado",
+  "scope": "Force-controlled commissioning hypothesis; not measured motor or gearbox capability",
+  "base_robot_spec_sha256": "7e7c18dd668261695229af9eaba905c1aa7377405796c7d835fd830aa669cb50",
+  "source_facts": {
+    "cad_mass_kg": 18.24987866,
+    "wheelbase_m": 0.6211563866857641,
+    "track_m": 0.6165500000000085,
+    "tire_radius_m": 0.11,
+    "gravity_m_s2": 9.81,
+    "diagnostic_friction_mu": 0.6,
+    "friction_status": "estimated environment input, unchanged from mobility01",
+    "geometry_source": "configs/robots/cad_base_mapping.json and robot_package_02 CAD mass inventory",
+    "failed_native_evidence": "outputs/real_harvester_validation/cad_mobility_01"
+  },
+  "derivation": {
+    "assumptions": "Quasistatic four fixed-axis wheels on a horizontal plane; equal commanded output torque; Coulomb lateral scrub. This is a sizing approximation, not an identified tire model.",
+    "lateral_scrub_yaw_torque_formula": "mu * mass_kg * gravity * wheelbase_m / 2",
+    "equal_wheel_output_torque_formula": "mu * mass_kg * gravity * wheelbase_m * tire_radius_m / (4 * track_m)",
+    "approximate_wheel_output_torque_nm": 2.976,
+    "gain_selection": "P=12 Nm/(rad/s) gives about 3.7 Nm at the original yaw reference and minimum mean wheel speed needed for the frozen 0.25-rad turn criterion; clamp4 provides a finite margin over the estimated 2.98-Nm scrub requirement.",
+    "hardware_caveat": "No datasheet continuous torque, current, temperature or drivetrain efficiency has been verified; 4 Nm is a simulation hypothesis, not an assertion about installed actuators."
+  },
+  "candidate_parameters": {
+    "wheel_effort_limit_nm": 4.0,
+    "wheel_velocity_p_gain": 12.0
+  },
+  "contact_changes": [],
+  "acceptance_changes": [],
+  "joint_velocity_writers": false,
+  "primary_controller_reference": "https://gazebosim.org/api/sim/8/jointcontrollers.html"
+}

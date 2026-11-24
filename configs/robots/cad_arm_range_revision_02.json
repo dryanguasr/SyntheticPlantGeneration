@@ -1,0 +1,42 @@
+{
+  "schema_version": "cad-arm-range-revision/1.0",
+  "revision_id": "cad_arm_range_revision_02_final_geometry_base",
+  "base_robot_spec_sha256": "e4922413e73ece4532127813da4d0fdd269a1a9e000a80dbad19d0aa67511bcc",
+  "status": "user_reported_approximate",
+  "user_statement": "Tentativamente, todos 180° aprox",
+  "source": "User response about rotating base, shoulder, elbow and both wrist joints, project conversation 2026-11-23",
+  "observation_register": {
+    "path": "docs/references/real_harvester_prototype_observations_2026-11-23.json",
+    "sha256": "41a8ef35c829876015a06474cad71e26474954923aefe68e4871d41f3727356d",
+    "field": "arm_travel_observation"
+  },
+  "original_total_travel": 180,
+  "original_unit": "degree",
+  "total_travel_rad": 3.141592653589793,
+  "interpretation": "180 degrees TOTAL travel for each of the five arm joints, not plus/minus 180 degrees.",
+  "joint_names": [
+    "arm_yaw_joint",
+    "arm_shoulder_joint",
+    "arm_elbow_joint",
+    "wrist_pitch_joint",
+    "wrist_roll_joint"
+  ],
+  "candidate_limits_rad": [
+    -1.5707963267948966,
+    1.5707963267948966
+  ],
+  "centering_status": "engineering_heuristic_unconfirmed",
+  "centering_assumption": "Exploratory symmetric interval about the unchanged CAD zero posture. User has not confirmed that the physical 180-degree stroke is centered on CAD zero.",
+  "update_class": "model_regeneration",
+  "scope": "Pure exploratory profile revision and preflight; not measured hardware stops, calibration, collision clearance or native acceptance.",
+  "unchanged": [
+    "CAD geometry and zero offsets",
+    "joint axes and frames",
+    "mass and inertia",
+    "gripper stroke and all passive joints",
+    "motor gains and effort/velocity limits",
+    "physics step and collision detector",
+    "acceptance tolerances",
+    "frozen V8 plants and targets"
+  ]
+}

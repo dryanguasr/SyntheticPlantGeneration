@@ -1,0 +1,36 @@
+{
+  "schema_version": "cad-drive-revision/1.0",
+  "revision_id": "cad_drive_revision_02",
+  "status": "estimado",
+  "scope": "Bounded force PI commissioning hypothesis, not verified hardware capacity",
+  "base_robot_spec_sha256": "7e7c18dd668261695229af9eaba905c1aa7377405796c7d835fd830aa669cb50",
+  "source_facts": {
+    "cad_mass_kg": 18.24987866,
+    "wheelbase_m": 0.6211563866857641,
+    "track_m": 0.6165500000000085,
+    "tire_radius_m": 0.11,
+    "gravity_m_s2": 9.81,
+    "diagnostic_friction_mu": 0.6,
+    "friction_status": "estimated diagnostic input, unchanged",
+    "geometry_source": "configs/robots/cad_base_mapping.json and robot_package_02",
+    "failed_native_evidence": "outputs/real_harvester_validation/cad_mobility_drive_02/result.json",
+    "previous_turn_angle_rad": 0.22524754607066033,
+    "frozen_required_turn_angle_rad": 0.25
+  },
+  "derivation": {
+    "equal_wheel_output_torque_formula": "mu * mass_kg * gravity * wheelbase_m * tire_radius_m / (4 * track_m)",
+    "approximate_wheel_output_torque_nm": 2.9760867459947353,
+    "gain_selection": "Keep P12 and4Nm total clamp. Add I4 with an integral-output clamp of +/-1Nm to compensate persistent velocity error under lateral Coulomb load; PI integral time is3s, comparable to the unchanged turn interval. This is a documented controller revision, not a tolerance change.",
+    "hardware_caveat": "4Nm remains an estimated simulation hypothesis; continuous motor torque, thermal capacity, gearbox efficiency and actual tire friction are not validated."
+  },
+  "candidate_parameters": {
+    "wheel_effort_limit_nm": 4.0,
+    "wheel_velocity_p_gain": 12.0,
+    "wheel_velocity_i_gain": 4.0,
+    "wheel_integral_effort_limit_nm": 1.0
+  },
+  "contact_changes": [],
+  "acceptance_changes": [],
+  "joint_velocity_writers": false,
+  "primary_controller_reference": "https://gazebosim.org/api/sim/8/jointcontrollers.html"
+}

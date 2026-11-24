@@ -1,0 +1,767 @@
+{
+  "schema_version": "physalisharvest-snapshot/1.0",
+  "repository": "https://github.com/amayadiegoalejandro05/PhysalisHarvest",
+  "upstream_branch": "fix/2wd-bench-scripts",
+  "upstream_commit": "114ce5690e7bf024d57ce2c815b7f3afd1d82e38",
+  "upstream_main_commit": "0c423be793ba2145674da0a49ab7e46d8bf1f119",
+  "snapshot_path": "contributions/physalisharvest",
+  "author": "Diego Alejandro Amaya Celis y colaboradores indicados en los archivos originales",
+  "integration_authorization": "Solicitud del responsable del repositorio principal en esta sesión, 2026-11-24.",
+  "license_status": "Licencia pendiente de decisión institucional; no se atribuye MIT al snapshot.",
+  "license_evidence": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/package.xml",
+  "preservation": "Snapshot íntegro de archivos rastreados; historial y términos originales consultables en el SHA de origen. No modifica el repositorio de Diego.",
+  "hash_policy": "SHA-256 de bytes originales con CRLF normalizado a LF sólo en UTF-8 sin NUL; binarios exactos. git_blob_sha1 conserva la identidad original.",
+  "runtime_status": "No se ejecutaron ROS 2, cámara, serial, firmware ni motores al importar.",
+  "external_assets": "Astra/OpenNI, calibración, CAD y resultados locales no incluidos automáticamente.",
+  "files": [
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "05fdc93ff46ea836707b216128044ac0d1ed4edc",
+      "sha256": "567f4e047f80d98249c1691a29efaba7cc427dc67bf0fb28c491e073f071f359",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "git_mode": "100644",
+      "git_blob_sha1": "fa0915773caffb664203e50a53bca78e29583d99",
+      "sha256": "8fac782b419146b1bd630559150e75d72226479caf21e34a533bdd20645bb91f",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": ".github/workflows/ros-gate.yml",
+      "git_mode": "100644",
+      "git_blob_sha1": "9450b168c4b9b5234453d5887a5688f65b1321cb",
+      "sha256": "8122f6d63efad66ac09736504483d77fb6dd5680c55ae6b6e358e6f73e4cb951",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": ".gitignore",
+      "git_mode": "100644",
+      "git_blob_sha1": "1606ef950c4235d698c2328689603154edb620ca",
+      "sha256": "91762cc16881b4ea4c8960f4e2974dcc09001f40357174f4ad96188a644e8496",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "AGENTS.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "f777a3bf60980089ebf41ff935ccdb15ae09e361",
+      "sha256": "ca277ebc525957259a16d52d5ba4a276e0fe1af5d3db1aaca6a92b015f34e8d4",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "5ae804a57488bcf3fe215911c20dac59503b1fcf",
+      "sha256": "b9d53d241760c74d6566ea74cfbf0966dff89363c51eb27eba5a270926efc67d",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "f0ffa57f2f6114b5290d14eaed09c86944bd123f",
+      "sha256": "b6b7e3cb766dc21e4e36d241a1b2fda647d4af6d6b1fe682688cd7b7b015df53",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/AI_USAGE.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "b5d1f28a19d2819abe6cccb0f75e39798e695f0d",
+      "sha256": "cf9fb8fc7c0c0406253fa59147f3c188b014838de34472f39c1e1b49f387aa8c",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/ai_usage.json",
+      "git_mode": "100644",
+      "git_blob_sha1": "71da92accee9865dc8db7015542d8773b8d8a632",
+      "sha256": "55163c4dfd438e7c5be25e988a0a0d9445ea6863afb005fd8dcd854f92a7a2cc",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/arquitectura/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "61fe83c830eef46f143b063c839abff395dc1d19",
+      "sha256": "d56eb878fafebd78710a6169efdbad6196033dced33b247e9a691bb88eb01039",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/entorno-reproducible.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "89ec30dd76841b5a684da69aa8640705384c68e8",
+      "sha256": "1f4669b6bf2b43d00c4f4efd8ec174189ad29228cc4cc9dbcd2add33cf34e584",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/integracion/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "f93296013b75dcd8d3e84dcb0c8b45180422c1fc",
+      "sha256": "62a1f6244a6db9d0ea4a7f57ed1ee11ca8da2cae4a30794b34b98e50cd87c5ad",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/interfaces/bench-2wd-drv8833.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "b1bd786ec604bdbe21f3b0d36fd87e46a49bf295",
+      "sha256": "6f9b52183b08b8a5a184dd2a7a79d68a44d56014cb7d0628e65f62d9722e62a9",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/interfaces/contratos-ros2.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "54d5f8a1e70c1d642153022f0a62c105acb7e6c1",
+      "sha256": "764cb2aa8578ab68558b887ee5ec708c645a512eacfb0f96e0946685bd85a345",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/interfaces/propuesta-integracion-ros2.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "71960d2664ceebc47eff7b56688062b705e5efa5",
+      "sha256": "9caab97a34af1ab2120b8249587a6d022e233f463207d23fe5b126b6ac840788",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/pruebas/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "48d07fe09bdf7907f0dc87ed924de12fdc14aa19",
+      "sha256": "accd72d8a4ee24bfc9f97a605eee1655ee2fab88fa16169a71a43676e0566526",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/pruebas/ci.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "767ba152fb52b8a443464859a03c7b1b3cd3bb98",
+      "sha256": "826dd2460aa76b4bac02a027168f6bbad7e7ef3dd28b9e6fc3f699bc9a453a76",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "docs/pruebas/verificacion-local.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "8ec1a07d37f935152aef4798eec4bd127eb11b35",
+      "sha256": "78c7a1e0ff9dfb326470230484538a8258179e67d5688d0f02fb21c4fbcfd1f5",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/.gitkeep",
+      "git_mode": "100644",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "bde6fcdf3615426fa7fdb78e73cf54a4748e7df9",
+      "sha256": "c5403ebc468f94e959c7a8d1fe663e623a3080b242ea53ed6381fd66f794b37e",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/drv8833_ros/drv8833_ros.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "c47a952950b5941df448ee5ce0a1768808ba28e6",
+      "sha256": "ebc71050b7aacaebee148a64a2d086dcd104e4778dc12109936e7cb5dfd91984",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/drv8833_ros/test/Arduino.h",
+      "git_mode": "100644",
+      "git_blob_sha1": "fba82025c8e6e71ce97900dd4f64b9faaed45852",
+      "sha256": "6a674e206fa46234f61fe3e4f836144b8639ed1281378b26952b6f69cb69031a",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/drv8833_ros/test/firmware_mock.cpp",
+      "git_mode": "100644",
+      "git_blob_sha1": "6e65db93936e858de2295dba876c7148afe5f24b",
+      "sha256": "c5cfa956fbfb1a0e44ac756bd3c888b055cf1337e5686c75211e619a08dd95d7",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/astra-resultados.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "1f3b3d68b5e750d8e7bad100ab7ebc7ef31f42e4",
+      "sha256": "5429c6c174dded4bd4a5a7d282d826a45f765bc46dda2210135e04ba29a4c0d6",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/astra-ros-esp32-resultado.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "617410333454d3ba80c9ae816226156465372f5a",
+      "sha256": "20cbf5d50e12c34a32c02bdf1d9968a2dc16d4d050f48b2c776eb691a0ed695f",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-both-full-arranque.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "189e26861000ff4a17c81c7e2fe659f77dfdf326",
+      "sha256": "25edbd3ee792f738442a9ee1b5e2038c6e3736ccf15d998a3533c379933b9365",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-both-full-ensayo.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "6fb0a92605b22455e8f9eb539c9e69423384a646",
+      "sha256": "ca64a6f3b5d185c860a573b1cb179df5fff9149f9931a77c3fab3825543bd5af",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-derecho-100-sin-carga.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "397887f1f9e8b111de3cb9f505cd73c05622a616",
+      "sha256": "136a98d869ec293669f6a45c50f4d872fa8b36674e05534af695c3dbdc133251",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-gpio-resultado.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "bd256fe1f29a860c01aea1ff32bf85e0a9fd6fcb",
+      "sha256": "d3629e34288e01e31599d61e9016a1a874a3c2a940a848cdb85c55aa32ef9ef3",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-pulso-izquierdo-2.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "800e609d6625edf9928f730c9cd2b2513015adfd",
+      "sha256": "81e3029bef61b8151c690ab5d2a552b8bbe73e0c2c986d8d391b6756c79091db",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-pulso-izquierdo.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "923a309d546edc6bc9ba4c030240228e023244c1",
+      "sha256": "64fc246abf018f2d88a8347ce76e629d2fcaaeb0209a15570739b2c8ba100c2d",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-pulso-medicion-corriente.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "800e609d6625edf9928f730c9cd2b2513015adfd",
+      "sha256": "81e3029bef61b8151c690ab5d2a552b8bbe73e0c2c986d8d391b6756c79091db",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-pwm-10khz-derecho-potencia.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "cff57fa40ce54f0c5a9ec971076adc0ac51143e8",
+      "sha256": "d3e6da9cfeab5f08de37a30d4a9251c774d8631889deef4e79bbb49716dede31",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-pwm-10khz-izquierdo-potencia.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "d52903bd2cbea0635ba205663c2cc6645c8a5ff0",
+      "sha256": "6e90d02f775d428fb5eb8e21462a2a6791eaaa49d5229ce538ddc9ee50f980eb",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-pwm-10khz-sin-potencia.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "ec3112bc15b992bd08fcfa558656580aba590dd5",
+      "sha256": "403f8a7a9d97e9a6ce2fa5783ab3b609c3708c60e66df1b58d56d8bdacf589bc",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-pwm-10khz-verificado.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "5edafb8235d295730993fe9fa8337ec339c6ade5",
+      "sha256": "03fe4921bb5593d2f95ef34bc18c1959c9d5f8d0a638fc3d6231b5f81ee80c22",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-pwm-derecho-medicion-vm-repeticion.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "3a1a81efe50a280462016b1c56c362006efad105",
+      "sha256": "9e72001185cad0b1613da241f38d14f8ac9d2744605e8473224f25b1357eb163",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/evidence/motor-secuencia-seca.txt",
+      "git_mode": "100644",
+      "git_blob_sha1": "1acdbc4818ab357ea323948d11d84cc501c117d0",
+      "sha256": "3709684b3349d74487289a26364ddf456d4e4b9957e417784021146c8a5e68aa",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/motor_both_full/motor_both_full.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "1db6b173b3b9c9d6c73194a26143297966fe173d",
+      "sha256": "15191829bdc7aa8f9b757693234c67ce4fb98835851bf79bff5e6d24f5a2b3f2",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/motor_gpio_check/motor_gpio_check.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "ac2d9d65d3248629a9714cb411b5890f280d675f",
+      "sha256": "2b96f24f2e9072cb897f86ba0b9058055e983fc66a287926fe3d18f53a7f8e4c",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/motor_pulse_check/motor_pulse_check.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "28d27d02fa58ab7073ee07f0cd78d6f4df5d1d04",
+      "sha256": "10f4f54f2a0d52b38d2c70a5f3f100f0a0a58b3b9b2603d55ddf4c0e5f6fef2d",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/motor_pulse_check_2/motor_pulse_check_2.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "dccd9d0a8c87ce0e6e792c0adc2b66aa188fa880",
+      "sha256": "618e90e19bf066100c391c858a2f17fd654ddd48c91ebb6287e15484fd841b0a",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/motor_pwm_10khz/motor_pwm_10khz.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "c29765bd34acd922fc12c1afadb8ca7b8bb171fd",
+      "sha256": "35d08ce16cfcc1a202e22b8838738157569f754065e8129985a172ad0d06f981",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/motor_pwm_10khz_right/motor_pwm_10khz_right.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "de240783c7b523437ec13796718e6e1703c3c458",
+      "sha256": "7213b4f6b3d9fbe443ba53d11396b5577e8fee74b3c09593ec53e7e32286aab8",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/motor_right_no_load/motor_right_no_load.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "abc612c0c5b781018f25fef4c976df1dee53909d",
+      "sha256": "6046d9146bc713128c753b0ef3791e9875af85e310e370a6fd824dd5e3a516b0",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/motor_sequence_dry/motor_sequence_dry.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "69e20de1e3a9651a3345265d7121ece3690e9bb8",
+      "sha256": "0797703ab71e039475b59a73db8c8d1d1be5afb0e390013f45554aea462ded4b",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/assets/physalisharvest-2wd.png",
+      "git_mode": "100644",
+      "git_blob_sha1": "73ec553f07311314a6e6e99fb69d1391afd720ae",
+      "sha256": "cd1a0a8cbf2611814dc77ff8c375f6a2d4170c513b34d3831b8f83d986c609e5",
+      "comparison": "binary_exact"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/camera_sequence_dry.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "ac643750c82b6bb8764451c9d676b1622a917146",
+      "sha256": "9693130b9c42c8c83c893b95c39afee416dc531fe67ff02123bb3fbb7239057d",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/camera_xyz_bench.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "4fa3e21d21d74966db14d1a5d23a5cf47aeedf96",
+      "sha256": "c8b17b434ec781018fb8f50651bb4c6332abe3af8e3f2306cb7ab5a35744f702",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/consola_2wd.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "82f3792a1a972f595d73046a566b2ce0a0ad1281",
+      "sha256": "da2d69daa2e908cd36296f14d0cd70c1a128d8eac04df810937570b6f748bf6d",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/drv8833_ros_usb.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "fb65991fd70e5d515e4ca8f837bb3ad06a25093f",
+      "sha256": "359d8a0d2a51bc87dac31f8e23af9b7af6bce270791b5c083f03f92ea8647a52",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/motor_both_full_serial.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "4306d5353a4ccc7ff6d1a68af836b78dec561a7d",
+      "sha256": "be9b54897e082107235291c848cc799d2dfa42c8ce64524ed555bb5c27fa5ce8",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/motor_pulse_serial.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "221fe5d86e3518e95d089098f9a472aa0cb331dc",
+      "sha256": "0c512a08830f7bd33302694c697936d6946da791b32e7a811471755fd8563950",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/motor_pulse_serial_2.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "e5a72696ad4862770eee827bab7f108467deeca7",
+      "sha256": "cfab071e50106050124d670a82ea3b4f5b0fda2b9736029f30d694b389564ab6",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/motor_pwm_10khz_bench.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "da29c77d978fb5309149e392a30a5a3fba71d7ef",
+      "sha256": "3c53c83d8edc4d93ac72ab17dc36f18555b24a64684a1da4a9edbe0dad6ef5a3",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/motor_pwm_10khz_right_bench.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "c479658afc219e1d634b74e06e17486cfb539519",
+      "sha256": "20cc2d8988fad7d135a0059c1752745a041692603a746ced58d6b2c24504d654",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/motor_right_no_load_bench.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "b403347e78a016e16df581bed0b3fdc4a085d904",
+      "sha256": "86bf414cf2f33eec89d28d51b37dacadfb66da224e1d12653076c9b1cacf2842",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/reproducir_drv8833.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "d7332e392ff4ce087f369288c26632a44906f206",
+      "sha256": "0e96aa5ec834fffa8a1730f759d8c5db5354e908aa038b373424648f1c6e2148",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/ros_xyz_bench.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "29fc65cc62209243371ac6c9dd3df581fda35a81",
+      "sha256": "4706c9e8b75957b6f805243b61c17eec9a94c28604a435119d047675898c6732",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/test/test_drv8833_bridge.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "4ecf04b6bda82f070c8371946041fbdfeb4342e7",
+      "sha256": "7b60ae6ba60f5991ff3464e4b296fdea78b36c8dd8c980ae40afd48eab86d86a",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/tools/wsl_clock.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "ed5641add6cec383570e779e39e2d687059739c6",
+      "sha256": "21e2f053b243ef24da67420389b45f8c005bf7fdf16bfeba859685e371172e22",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "firmware/bench_2wd/xyz_echo/xyz_echo.ino",
+      "git_mode": "100644",
+      "git_blob_sha1": "09c5601eb52898eeff349f414f723c99f4ee74ab",
+      "sha256": "0a6e0d2359ba487e28edf252ecbc29943a3eefffec183828a727eea61df0fc9f",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "hardware/brazo/.gitkeep",
+      "git_mode": "100644",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "hardware/locomocion/.gitkeep",
+      "git_mode": "100644",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_brazo/AGENTS.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "cff95a5aae2d10d5a9ccf5227dcbfeaf578c57b7",
+      "sha256": "45aaf43825d25b3f02e043b2f9412600aa9b45ce15fa54f4d2b95f28edb02098",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_brazo/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "c26ae10b6216469b07f4fa4281d1eda678d19090",
+      "sha256": "3ef7dcb7ce4bdae23b77a8f33be97890f3ef478866c08a0fa2293bb6c2d8938d",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_interfaces/AGENTS.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "d500eb40dc66efebc46444e1836d8f8c5cc1f43b",
+      "sha256": "ce06d8135a2b9cb957e7e106a4631a76703e35311af967a6210ff7fb3c38e84a",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_interfaces/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "0803da390fe3cb40c7cc326d4f53613deffb9231",
+      "sha256": "79f8eb7e15a50b42c8ffc631817b728fad9c6c1f259d5a4b376550de4db3a819",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/AGENTS.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "b0e72572bd2124f9483e574555b5d558d01d9461",
+      "sha256": "984be168cc0f2be899fc3f628c7a184c227b655ce746c54aa86faced7f18e537",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "8330fa3f3757a56fdf163d99c4b02a23ac5966e9",
+      "sha256": "573533ead30eaf4c63711bea4d0ea69257ed18cbdfa1799a6c542b242e485544",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/AGENTS.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "95f101000ffee683b238de78934ae7ee8b47ec9e",
+      "sha256": "bff6fef482bf39e26f56768789e6585b70e8d7f94a37928ad1238861fdb749a6",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "0b89421313d180c3273675ee716c853473cc0d4e",
+      "sha256": "f64acfb68827287de5436d28593cd9e39945126065a78aaaa2d230a85c526e92",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/astra_aruco.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "6ac1d58f77a88fc1edda51d77613f179d2b6a93e",
+      "sha256": "510f123b2db73f77df1e5a17aea31ede4af0625503e4a1140fdf71b8c5cadc9e",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/astra_click.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "7c0d07eb5064b80bd76a840e3c4f2e27efe24a3c",
+      "sha256": "c43d9c49c8ee2dc4170341c6e0f20904054583d30dee64a0d9fe39db61f6e232",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/bench_2wd/__init__.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "5ba9c7d91afb238ffeb7aba1eb6edcfabdaef822",
+      "sha256": "87af70a918867a358b33f4f5363517bf0f065a100a68cf58661e80a6fdf46641",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/bench_2wd/receiver.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "dd4779c3ab6979fcc93f18b6a2214dd99dbd3b90",
+      "sha256": "249f0b1d3b390eafc3bb79a6c323fe72609884d0076a1cbc34633d21dc9cd520",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/bench_2wd/smoke_test.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "c3c53796fcd56b7d060eda29de72f2220e8fa103",
+      "sha256": "7ecff2800cc748d78f3639f20de681e835ca5d6ed1d9f42d35b4ecfabfc6def7",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/marcadores_aruco/aruco_4x4_50_id_00.png",
+      "git_mode": "100644",
+      "git_blob_sha1": "3015c6250f1ddb12082cdde0902187ab3822febb",
+      "sha256": "153c577de0c5e93eef4e5fc6adf44def06b17aaf56390c6b0933c5ef1a44d635",
+      "comparison": "binary_exact"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/marcadores_aruco/aruco_4x4_50_id_01.png",
+      "git_mode": "100644",
+      "git_blob_sha1": "a441b9818651a7160327bd835ea68e845cf94d93",
+      "sha256": "4013d031099b038056ad76455015bc47720335008410c926ecd4e730a6f3ea82",
+      "comparison": "binary_exact"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/marcadores_aruco/aruco_4x4_50_id_02.png",
+      "git_mode": "100644",
+      "git_blob_sha1": "b3cfce790be03497b3234825ed2dfc22f5c9b52a",
+      "sha256": "cf5c74cf7ab16a5e88c56ccd9c26ed1f20d45f602c165c0825843b1c284499db",
+      "comparison": "binary_exact"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/package.xml",
+      "git_mode": "100644",
+      "git_blob_sha1": "3654537aad8be9cecc6ab834af17838bc5c12f6f",
+      "sha256": "ffc770b11eaf02719f4e1bfd5805e9844db4ce6f0aa0f31de0fe85d8c67fd059",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/resource/bench_2wd",
+      "git_mode": "100644",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/setup.cfg",
+      "git_mode": "100644",
+      "git_blob_sha1": "d31d33f1936fc3cb0cfa3eeaff43ab319ef304d7",
+      "sha256": "fb755a1264b0abc876211a824abfb95bbd468227a3ddc4c90247496f902580ba",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/setup.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "02577adbadd6b4c85b28e999a076fba4d106ac2c",
+      "sha256": "ae3705e3d0a6f8d0e57277fbf1cf74a1319815218a11f45943d4b1e189e1e14e",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd/test/test_transport.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "fbc3147256a7ddb7592bb317492cbdb2f0b58612",
+      "sha256": "7ca26585988b5af3e7643a64e7da3718e6e0328e57a59e4f1124fafd9bf7abb5",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "f627a0e8d5c4fd4428eec4304ca49993c7bad920",
+      "sha256": "2fd714f75fc1afd1dad117e021fd37a6f1d3d88c4c1310f2edab8bb69f15ed30",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/bench_2wd_drv8833/__init__.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "f24cbba2a13fbc666c134432ed0a6703468855f7",
+      "sha256": "df060280865de734b94eb500de2a297ad4a55247ae403be5a3c41eeda0d816ec",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/bench_2wd_drv8833/aruco_source.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "1f0c0456242ff7b1eab33635484ec7106e34a5c7",
+      "sha256": "8167d896064df3a4343fc3237d929df7c40856844700feca09b0564d62b32d79",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/bench_2wd_drv8833/controller.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "02ae3e1da325c30a9d94593b2943a566b5331408",
+      "sha256": "e449085e257f060c7785d82a7cd3683be62edc5c308c547e1f318cdf9e46f24f",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/bench_2wd_drv8833/monitor.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "4d4b35952a4ee9c6b1a5ced555af2ece50f4c920",
+      "sha256": "e0bc7c89358b4c9442b56011833218ee6358190090db286fbc2c2cf78a8f2d55",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/bench_2wd_drv8833/session.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "e27892432edb7ade3fdcd56493b95cc874231151",
+      "sha256": "b71f4bc13d869f583ddba8cc966293839ee256208ae6a606fae3da2c3a952bb7",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/package.xml",
+      "git_mode": "100644",
+      "git_blob_sha1": "7496f428c078ed75871dbe1636cf5e5fb89b63ad",
+      "sha256": "a9f81500e8deac7215d2da39f79ae2bde1b61bd56937c8a94a2d238c9e38e1d4",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/resource/bench_2wd_drv8833",
+      "git_mode": "100644",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/setup.cfg",
+      "git_mode": "100644",
+      "git_blob_sha1": "2b233eeb20e263447a7f2a7ac2a77288e24ca912",
+      "sha256": "202f1955d4ba3e1f684f170c8e21b385893e07426a0c2e260863c863de2f05f7",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/setup.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "93d2258433568cd7d3145cf287c16d47c9e13321",
+      "sha256": "a2692a0e41b34087847c378bddefe884e835ad63c79968479dbfbdbe029bf206",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_locomocion/bench_2wd_drv8833/test/test_ros.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "5f86150a60e7ce68c0324c0ad76ec8a00d9e7b5c",
+      "sha256": "c1defc5c32351eecacc1ad4a0674ad3807eb2a070223e8200521d73fe4ad46db",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_percepcion_decision/AGENTS.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "66dd476996d736e5901af8fee80bf705cc52d292",
+      "sha256": "d63a34a88a2732019409fe93582e5fd9f221ba7e071fee1c08cb37beae59c486",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "ros2_ws/src/robot_percepcion_decision/README.md",
+      "git_mode": "100644",
+      "git_blob_sha1": "eb0e58d07514b219c921ce82a4b361a2b2aae5a2",
+      "sha256": "17c08de67db886475a4d0407ea89ce990f87ba5976890694cb0159b01087c2c0",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "scripts/check_common.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "ee0c6b6461cad77cf3c620200f0e92e92382192a",
+      "sha256": "7b3f0b9c25526be500da03fe938aecf339abfad56192595102a7cce63e9689a8",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "scripts/check_git_context.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "afcb4579bb2b747b18438ce09b5faa316c648ec2",
+      "sha256": "db0a1844855127a51b4428bdd634fbd24d5de94eba89ffd3461a0f5e8658123d",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "scripts/check_repository.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "3f6b89f3f5310dde471cbd5870f10349028bfd10",
+      "sha256": "d1e68d492a78217aa91e21c2b1175dc71f5764cc75940c5815a22b65b4c6582c",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "scripts/probe_ros_test_gate.sh",
+      "git_mode": "100644",
+      "git_blob_sha1": "ac6099bb1218454cda2b919d0bb9f270055e42fb",
+      "sha256": "901b7220ef4a29b3a519030dfa4c09e5e0babebb34a117e530abf2c0329cd2ac",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "scripts/report_ros_packages.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "e4fc6eac63931e8f2c25d663c7d186171ab2ce62",
+      "sha256": "24db5baae794070af377fd66be85a5bc682ec2a66ea64034b62e0cc873fa66f1",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "scripts/run_ros_tests.sh",
+      "git_mode": "100644",
+      "git_blob_sha1": "ae4589ce5910a1751fc334fdf4c00224d0c576b3",
+      "sha256": "e7650c35e94a8d683043bc0fb729e71e8fb737b69f4fd7adabc0222376506e87",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "simulacion/gazebo/.gitkeep",
+      "git_mode": "100644",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "simulacion/modelos/.gitkeep",
+      "git_mode": "100644",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "comparison": "utf8_lf"
+    },
+    {
+      "path": "tests/test_verificadores.py",
+      "git_mode": "100644",
+      "git_blob_sha1": "3e6387662f1d4a6a35a54a9f8c25019aade4774a",
+      "sha256": "34d91527443a7b4ef5a837964a8f2a3ee379fb07fb8581dec61e82abb9efd353",
+      "comparison": "utf8_lf"
+    }
+  ]
+}

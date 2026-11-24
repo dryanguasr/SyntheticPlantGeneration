@@ -11,16 +11,19 @@
 // Each fruit has at most one parent constraint. Physics creates new joints
 // before removing old ones, so transfer must span separate simulation steps.
 
+#include "JawStateGuard.hh"
 #include <gz/common/Console.hh>
 #include <gz/math/Pose3.hh>
 #include <gz/math/Vector3.hh>
 #include <gz/msgs/stringmsg.pb.h>
 #include <gz/plugin/Register.hh>
 #include <gz/sim/EntityComponentManager.hh>
+#include <gz/sim/Joint.hh>
 #include <gz/sim/Model.hh>
 #include <gz/sim/System.hh>
 #include <gz/sim/Util.hh>
 #include <gz/sim/components/DetachableJoint.hh>
+#include <gz/sim/components/JointType.hh>
 #include <gz/sim/components/Model.hh>
 #include <gz/sim/components/Name.hh>
 #include <gz/sim/components/ParentEntity.hh>
@@ -136,6 +139,7 @@ struct Fruit
   std::string parentModel;
   std::string parentLink;
   gz::math::Vector3d cutPoint;
+  gz::math::Vector3d cutAxis;
   Entity modelEntity{kNull};
   Entity linkEntity{kNull};
   Entity plantLinkEntity{kNull};
@@ -173,6 +177,15 @@ class HarvestSystem : public gz::sim::System,
     auto config = _sdf->Clone();
     this->robotName = config->Get<std::string>("robot_model", "harvester").first;
     this->toolName = config->Get<std::string>("tool_link", "tool_link").first;
+    this->tcpLocal = config->Get<gz::math::Pose3d>("tcp_pose", gz::math::Pose3d::Zero).first;
+    this->cutLocal = config->Get<gz::math::Pose3d>("cut_pose", gz::math::Pose3d::Zero).first;
+    this->graspLocal = config->Get<gz::math::Pose3d>("grasp_pose", gz::math::Pose3d::Zero).first;
+    this->stateSchema = config->HasElement("tcp_pose") ? 2 : 1;
+    this->orientationGuard = config->HasElement("cut_axis_tolerance");
+    this->cutAxisTolerance = config->Get<double>("cut_axis_tolerance", 0).first;
+    this->toolCutAxis = config->Get<gz::math::Vector3d>(
+        "tool_cut_axis", gz::math::Vector3d::UnitX).first;
+    this->cutAxisBidirectional = config->Get<bool>("cut_axis_bidirectional", false).first;
     const auto commandTopic = config->Get<std::string>(
         "command_topic", "/harvest/command").first;
     const auto stateTopic = config->Get<std::string>(
@@ -195,6 +208,34 @@ class HarvestSystem : public gz::sim::System,
       this->Fail("plugin_must_be_attached_to_world");
     if (!this->statePub || !this->eventPub || !subscribed)
       this->Fail("invalid_transport_topics");
+    if (config->HasElement("jaw_guard"))
+    {
+      auto jaw = config->GetElement("jaw_guard");
+      try
+      {
+        for (const auto *name : {"joint_name", "joint_type", "open_position",
+              "closed_position", "position_tolerance", "max_speed", "stable_time"})
+          if (!jaw->HasElement(name)) throw std::invalid_argument("Missing jaw guard field");
+        this->jawName = jaw->Get<std::string>("joint_name");
+        if (this->jawName.empty() || jaw->Get<std::string>("joint_type") != "prismatic")
+          throw std::invalid_argument("Jaw guard requires named prismatic joint");
+        this->jawGuard = std::make_unique<JawStateGuard>(JawGuardParameters{
+            jaw->Get<double>("open_position"), jaw->Get<double>("closed_position"),
+            jaw->Get<double>("position_tolerance"), jaw->Get<double>("max_speed"),
+            jaw->Get<double>("stable_time")});
+      }
+      catch (const std::exception &_error)
+      {
+        this->Fail(std::string("invalid_jaw_guard:") + _error.what());
+      }
+    }
+    if (!Finite(this->tcpLocal) || !Finite(this->cutLocal) || !Finite(this->graspLocal))
+      this->Fail("nonfinite_interaction_frame");
+    if (this->orientationGuard && (!std::isfinite(this->cutAxisTolerance) ||
+        this->cutAxisTolerance <= 0 || this->cutAxisTolerance > 3.141592653589793 ||
+        !std::isfinite(this->toolCutAxis.Length()) ||
+        std::abs(this->toolCutAxis.Length() - 1.0) > 1e-6))
+      this->Fail("invalid_cut_orientation_configuration");
     for (const auto value : {this->cutTolerance, this->captureRadius,
           this->maxRelativeSpeed, this->stableTime, this->startupTimeout,
           this->attachmentTolerance})
@@ -224,6 +265,21 @@ class HarvestSystem : public gz::sim::System,
       fruit.parentModel = entry->Get<std::string>("parent_model");
       fruit.parentLink = entry->Get<std::string>("parent_link");
       fruit.cutPoint = entry->Get<gz::math::Vector3d>("cut_point");
+      if (this->orientationGuard)
+      {
+        if (!entry->HasElement("cut_axis"))
+        {
+          this->Fail("missing_fruit_cut_axis");
+          return;
+        }
+        fruit.cutAxis = entry->Get<gz::math::Vector3d>("cut_axis");
+        if (!std::isfinite(fruit.cutAxis.Length()) ||
+            std::abs(fruit.cutAxis.Length() - 1.0) > 1e-6)
+        {
+          this->Fail("invalid_fruit_cut_axis");
+          return;
+        }
+      }
       if (fruit.id.empty() || fruit.id.find_first_of(" \t\r\n") != std::string::npos ||
           fruit.model.empty() || fruit.link.empty() || fruit.parentModel.empty() ||
           fruit.parentLink.empty() || !std::isfinite(fruit.cutPoint.X()) ||
@@ -249,6 +305,7 @@ class HarvestSystem : public gz::sim::System,
       gz::sim::EntityComponentManager &_ecm) override
   {
     this->simTime = Seconds(_info.simTime);
+    this->currentIteration = _info.iterations;
     if (!this->error.empty())
     {
       this->RejectQueued("system_error:" + this->error);
@@ -281,7 +338,7 @@ class HarvestSystem : public gz::sim::System,
         if (!_ecm.HasEntity(fruit.removingJoint))
         {
           fruit.removingJoint = kNull;
-          const auto reason = this->Guard(fruit, _ecm);
+          const auto reason = this->ActionGuard(fruit, _ecm, false);
           if (reason.empty())
           {
             this->Attach(fruit, this->tool, _ecm, _info.iterations);
@@ -330,9 +387,22 @@ class HarvestSystem : public gz::sim::System,
       const gz::sim::EntityComponentManager &_ecm) override
   {
     this->simTime = Seconds(_info.simTime);
+    this->currentIteration = _info.iterations;
     if (this->initialized && this->error.empty() && this->EntitiesValid(_ecm))
     {
-      this->toolPose = gz::sim::worldPose(this->tool, _ecm);
+      if (this->jawGuard && !_info.paused)
+      {
+        const auto position = gz::sim::Joint(this->jaw).Position(_ecm);
+        const auto velocity = gz::sim::Joint(this->jaw).Velocity(_ecm);
+        this->jawGuard->Observe(
+            position && position->size() == 1 ? (*position)[0] : kUnknown,
+            velocity && velocity->size() == 1 ? (*velocity)[0] : kUnknown,
+            this->simTime, _info.iterations);
+      }
+      const auto linkPose = gz::sim::worldPose(this->tool, _ecm);
+      this->toolPose = linkPose * this->tcpLocal;
+      this->cutPose = linkPose * this->cutLocal;
+      this->graspPose = linkPose * this->graspLocal;
       this->robotPose = gz::sim::worldPose(this->robot, _ecm);
       if (!Finite(this->toolPose) || !Finite(this->robotPose))
         this->Fail("nonfinite_robot_pose");
@@ -440,6 +510,20 @@ class HarvestSystem : public gz::sim::System,
     if (this->robot == kNull) return false;
     this->tool = gz::sim::Model(this->robot).LinkByName(_ecm, this->toolName);
     if (this->tool == kNull) return false;
+    if (this->jawGuard)
+    {
+      this->waitingFor = "jaw_joint:" + this->jawName;
+      this->jaw = gz::sim::Model(this->robot).JointByName(_ecm, this->jawName);
+      if (this->jaw == kNull) return false;
+      const auto *type = _ecm.Component<gz::sim::components::JointType>(this->jaw);
+      if (!type || type->Data() != sdf::JointType::PRISMATIC)
+      {
+        this->Fail("jaw_guard_joint_must_be_prismatic");
+        return false;
+      }
+      gz::sim::Joint(this->jaw).EnablePositionCheck(_ecm);
+      gz::sim::Joint(this->jaw).EnableVelocityCheck(_ecm);
+    }
     // Resolve ALL names before creating any constraint: partial configuration
     // must not be mistaken for a usable world.
     for (auto &fruit : this->fruits)
@@ -480,6 +564,7 @@ class HarvestSystem : public gz::sim::System,
   private: bool EntitiesValid(const gz::sim::EntityComponentManager &_ecm) const
   {
     if (!_ecm.HasEntity(this->robot) || !_ecm.HasEntity(this->tool)) return false;
+    if (this->jawGuard && !_ecm.HasEntity(this->jaw)) return false;
     for (const auto &fruit : this->fruits)
     {
       if (!_ecm.HasEntity(fruit.modelEntity) || !_ecm.HasEntity(fruit.linkEntity) ||
@@ -519,18 +604,66 @@ class HarvestSystem : public gz::sim::System,
   private: std::string Guard(const Fruit &_fruit,
       const gz::sim::EntityComponentManager &_ecm) const
   {
-    const auto toolPoseNow = gz::sim::worldPose(this->tool, _ecm);
+    const auto linkPoseNow = gz::sim::worldPose(this->tool, _ecm);
+    const auto cutPoseNow = linkPoseNow * this->cutLocal;
+    const auto graspPoseNow = linkPoseNow * this->graspLocal;
     const auto fruitPoseNow = gz::sim::worldPose(_fruit.linkEntity, _ecm);
-    if (!Finite(toolPoseNow) || !Finite(fruitPoseNow)) return "nonfinite_pose";
+    if (!Finite(cutPoseNow) || !Finite(graspPoseNow) || !Finite(fruitPoseNow))
+      return "nonfinite_pose";
     const auto cut = fruitPoseNow.Pos() +
         fruitPoseNow.Rot().RotateVector(_fruit.cutPoint);
-    if ((cut - toolPoseNow.Pos()).Length() > this->cutTolerance)
+    if ((cut - cutPoseNow.Pos()).Length() > this->cutTolerance)
       return "cut_point_out_of_range";
-    if ((fruitPoseNow.Pos() - toolPoseNow.Pos()).Length() > this->captureRadius)
+    if ((fruitPoseNow.Pos() - graspPoseNow.Pos()).Length() > this->captureRadius)
       return "fruit_outside_capture_radius";
+    if (this->orientationGuard && this->CutAxisError(_fruit, cutPoseNow, fruitPoseNow) >
+        this->cutAxisTolerance)
+      return "cut_orientation_out_of_range";
     if (!std::isfinite(_fruit.relativeSpeed)) return "relative_speed_unknown";
     if (_fruit.relativeSpeed > this->maxRelativeSpeed) return "relative_speed_too_high";
     return "";
+  }
+
+  private: double CutAxisError(const Fruit &_fruit,
+      const gz::math::Pose3d &_cut, const gz::math::Pose3d &_fruitPose) const
+  {
+    const auto target = _fruitPose.Rot().RotateVector(_fruit.cutAxis);
+    const auto actual = _cut.Rot().RotateVector(this->toolCutAxis);
+    double dot = target.Dot(actual);
+    if (this->cutAxisBidirectional) dot = std::abs(dot);
+    return std::acos(std::clamp(dot, -1.0, 1.0));
+  }
+
+  private: std::string ActionGuard(const Fruit &_fruit,
+      const gz::sim::EntityComponentManager &_ecm, bool _open) const
+  {
+    // Distance/orientation diagnostics retain priority over jaw readiness.
+    const auto geometry = this->Guard(_fruit, _ecm);
+    if (!geometry.empty()) return geometry;
+    return this->jawGuard ? this->jawGuard->Reason(_open, this->currentIteration) : "";
+  }
+
+  private: std::string JawState() const
+  {
+    if (!this->jawGuard) return "{\"enabled\":false}";
+    const auto &g = *this->jawGuard;
+    const auto &p = g.parameters;
+    return "{\"enabled\":true,\"joint_name\":" + Quote(this->jawName) +
+        ",\"joint_type\":\"prismatic\",\"position_m\":" + Number(g.position) +
+        ",\"velocity_m_s\":" + Number(g.velocity) +
+        ",\"measured_after_step_time\":" + Number(g.time) +
+        ",\"observation_iteration\":" + std::to_string(g.iteration) +
+        ",\"available\":" + (g.Fresh(this->currentIteration) ? "true" : "false") +
+        ",\"open_ready\":" + (g.Reason(true, this->currentIteration).empty() ? "true" : "false") +
+        ",\"closed_ready\":" + (g.Reason(false, this->currentIteration).empty() ? "true" : "false") +
+        ",\"open_stable_seconds\":" + Number(g.StableSeconds(true)) +
+        ",\"closed_stable_seconds\":" + Number(g.StableSeconds(false)) +
+        ",\"open_position_m\":" + Number(p.openPosition) +
+        ",\"closed_position_m\":" + Number(p.closedPosition) +
+        ",\"position_tolerance_m\":" + Number(p.positionTolerance) +
+        ",\"max_speed_m_s\":" + Number(p.maxSpeed) +
+        ",\"required_stable_time_s\":" + Number(p.stableTime) +
+        ",\"retention_semantics\":\"ideal_fixed_constraint_not_contact_force\"}";
   }
 
   private: bool Busy(const std::string &_except = "") const
@@ -596,7 +729,7 @@ class HarvestSystem : public gz::sim::System,
         this->Event(id, action, false, "tool_busy");
       else
       {
-        const auto reason = this->Guard(fruit, _ecm);
+        const auto reason = this->ActionGuard(fruit, _ecm, true);
         if (!reason.empty()) this->Event(id, action, false, reason);
         else
         {
@@ -616,7 +749,7 @@ class HarvestSystem : public gz::sim::System,
         this->Event(id, action, false, "plant_constraint_missing");
       else
       {
-        const auto reason = this->Guard(fruit, _ecm);
+        const auto reason = this->ActionGuard(fruit, _ecm, false);
         if (!reason.empty()) this->Event(id, action, false, reason);
         else if (!std::isfinite(fruit.stableSince) ||
             this->simTime - fruit.stableSince < this->stableTime)
@@ -635,6 +768,9 @@ class HarvestSystem : public gz::sim::System,
         this->Event(id, action, false, "state_must_be_HELD");
       else if (fruit.joint == kNull || !_ecm.HasEntity(fruit.joint))
         this->Event(id, action, false, "tool_constraint_missing");
+      else if (this->jawGuard &&
+          !this->jawGuard->Reason(true, this->currentIteration).empty())
+        this->Event(id, action, false, this->jawGuard->Reason(true, this->currentIteration));
       else
       {
         this->RemoveAttachment(fruit, _ecm);
@@ -684,7 +820,7 @@ class HarvestSystem : public gz::sim::System,
         ",\"sim_time\":" + Number(this->simTime) + ",\"id\":" + Quote(_id) +
         ",\"action\":" + Quote(_action) + ",\"phase\":" + Quote(_phase) +
         ",\"accepted\":" + (_accepted ? "true" : "false") +
-        ",\"reason\":" + Quote(_reason) + "}");
+        ",\"reason\":" + Quote(_reason) + ",\"jaw_guard\":" + this->JawState() + "}");
     if (this->eventPub) this->eventPub.Publish(message);
     this->dirty = true;
   }
@@ -706,7 +842,7 @@ class HarvestSystem : public gz::sim::System,
   {
     const bool available = this->initialized && this->EntitiesValid(_ecm);
     std::ostringstream out;
-    out << "{\"schema_version\":1,\"sim_time\":" << Number(this->simTime)
+    out << "{\"schema_version\":" << this->stateSchema << ",\"sim_time\":" << Number(this->simTime)
         << ",\"ready\":" << (this->ready ? "true" : "false")
         << ",\"status\":" << Quote(!this->error.empty() ? "error" :
                                   this->ready ? "ready" : "initializing")
@@ -714,8 +850,12 @@ class HarvestSystem : public gz::sim::System,
         << ",\"waiting_for\":" << Quote(this->waitingFor)
         << ",\"mechanism\":\"idealized_cut_and_fixed_retention\""
         << ",\"constraint_evidence\":\"ecm_and_pose_residual_not_force_validation\""
+        << ",\"orientation_guard_enabled\":" << (this->orientationGuard ? "true" : "false")
+        << ",\"jaw_guard\":" << this->JawState()
         << ",\"last_event_seq\":" << this->eventSeq
         << ",\"tool_pose\":" << (available ? Pose(this->toolPose) : "null")
+        << ",\"cut_pose\":" << (available ? Pose(this->cutPose) : "null")
+        << ",\"grasp_pose\":" << (available ? Pose(this->graspPose) : "null")
         << ",\"robot_pose\":" << (available ? Pose(this->robotPose) : "null")
         << ",\"fruits\":[";
     bool first = true;
@@ -727,7 +867,10 @@ class HarvestSystem : public gz::sim::System,
       out << "{\"id\":" << Quote(fruit.id)
           << ",\"state\":" << Quote(Name(fruit.state))
           << ",\"position\":" << (observed ? Vector(fruit.observedPose.Pos()) : "null")
+          << ",\"pose\":" << (observed ? Pose(fruit.observedPose) : "null")
           << ",\"cut_position\":" << (observed ? Vector(fruit.observedCut) : "null")
+          << ",\"cut_axis_error_rad\":" << (observed && this->orientationGuard ?
+              Number(this->CutAxisError(fruit, this->cutPose, fruit.observedPose)) : "null")
           << ",\"relative_speed\":" << Number(fruit.relativeSpeed)
           << ",\"stable_seconds\":" << Number(std::isfinite(fruit.stableSince) ?
                                              this->simTime - fruit.stableSince : 0)
@@ -760,7 +903,17 @@ class HarvestSystem : public gz::sim::System,
   private: Entity world{kNull};
   private: Entity robot{kNull};
   private: Entity tool{kNull};
+  private: Entity jaw{kNull};
+  private: std::string jawName;
+  private: std::unique_ptr<JawStateGuard> jawGuard;
+  private: std::uint64_t currentIteration{0};
   private: gz::math::Pose3d toolPose;
+  private: gz::math::Pose3d cutPose, graspPose;
+  private: gz::math::Pose3d tcpLocal, cutLocal, graspLocal;
+  private: int stateSchema{1};
+  private: bool orientationGuard{false}, cutAxisBidirectional{false};
+  private: double cutAxisTolerance{0};
+  private: gz::math::Vector3d toolCutAxis{gz::math::Vector3d::UnitX};
   private: gz::math::Pose3d robotPose;
   private: double cutTolerance{0.02};
   private: double captureRadius{0.12};

@@ -155,6 +155,8 @@ def forward_kinematics(joints: Sequence[float], config: HarvesterConfig | None =
     Orientation is Rz(yaw) Ry(-(shoulder+elbow+wrist_pitch)) Rx(wrist_roll).
     The returned Euler representation need not use the principal pitch range.
     """
+    if hasattr(config, 'fk'):
+        return config.fk(joints)
     values = check_joint_limits(joints)
     return {"position_m": link_origins(values, config)["tool"],
             "rpy_rad": [values[4], -sum(values[1:4]), values[0]]}
@@ -170,6 +172,8 @@ def inverse_kinematics(target_xyz: Sequence[float], pitch: float = 0.0,
     joint-limit violations and the underdetermined base-yaw axis raise
     ValueError. This solver is not a collision or trajectory planner.
     """
+    if hasattr(config, 'solve'):
+        return config.solve(target_xyz, pitch=pitch, roll=roll)
     c = config or HarvesterConfig()
     x, y, z = _finite(target_xyz, 3, "target_xyz")
     pitch, roll = _finite((pitch, roll), 2, "tool orientation")

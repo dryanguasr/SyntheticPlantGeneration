@@ -31,6 +31,182 @@
   },
   "nodes": [
     {
+      "id": "module.parametric_harvester",
+      "type": "module",
+      "label": "Robot paramétrico con procedencia CAD y observación física",
+      "summary": "Descripción JSON canónica resuelta e inmutable para SDF, FK/IK, control, colisiones y auditoría. Conserva el proxy histórico y el CAD diagnóstico reducido. Candidatos articulados con cierres nativos, engranajes pasivos, mallas cóncavas y control por esfuerzo con referencia limitada por paso; la auditoría contrasta observadores independientes. Las revisiones locales CAD preservan originales y recalculan inercia por pieza; las pruebas aisladas no admiten automáticamente el robot completo ni cosecha. La carrera corta aproximada comunicada por el usuario conserva su incertidumbre. Sin calibración del prototipo. Revisión PR1: IK/FK/colisiones comparten auxiliares observados; la API rechaza obstáculos y separaciones inválidas; cierre y apertura de la mordaza incluyen posiciones intermedias sin certificar continuidad. El contrato del cosechador rechaza brazos no revolutos antes de emitir campos en radianes.",
+      "paths": [
+        "src/uchuva_gazebo/robot.py",
+        "src/uchuva_gazebo/robot_spec.py",
+        "src/uchuva_gazebo/robot_kinematics.py",
+        "src/uchuva_gazebo/robot_sdf.py",
+        "src/uchuva_gazebo/robot_motion.py",
+        "src/uchuva_gazebo/robot_validation.py",
+        "src/uchuva_gazebo/robot_control_validation.py",
+        "src/uchuva_gazebo/robot_drive_control.py",
+        "src/uchuva_gazebo/robot_mechanism_validation.py",
+        "src/uchuva_gazebo/robot_collision_filters.py",
+        "src/uchuva_gazebo/robot_crop_collision_policy.py",
+        "src/uchuva_gazebo/robot_mesh_geometry.py",
+        "src/uchuva_gazebo/robot_harvest_planning.py",
+        "src/uchuva_gazebo/closed_loops.py",
+        "src/uchuva_gazebo/cad_collision_refinement.py",
+        "configs/robots/robot_spec.schema.json",
+        "configs/robots/proxy_v1.json",
+        "configs/robots/cad_arm_mapping.json",
+        "configs/robots/cad_base_mapping.json",
+        "configs/robots/cad_diagnostic_assumptions.json",
+        "configs/robots/cad_control_revision_01.json",
+        "configs/robots/cad_drive_revision_02.json",
+        "configs/robots/cad_drive_revision_03.json",
+        "configs/robots/cad_drive_revision_04.json",
+        "configs/robots/cad_mechanism_revision_04.json",
+        "configs/robots/cad_mechanism_revision_05.json",
+        "configs/robots/cad_integration_revision_01.json",
+        "configs/robots/cad_l1_clearance_revision_01.json",
+        "configs/robots/cad_l1_clearance_revision_03.json",
+        "configs/robots/cad_arm_range_revision_01.json",
+        "configs/robots/cad_arm_range_revision_02.json",
+        "configs/robots/cad_base_feedback_revision_01.json",
+        "configs/robots/cad_integration_revision_03.json",
+        "configs/robots/cad_v8_acceptance_lock.json",
+        "scripts/prepare_robot_model.py",
+        "scripts/prepare_cad_robot.py",
+        "scripts/cad_mechanisms.py",
+        "scripts/prepare_cad_control_revision.py",
+        "scripts/prepare_cad_drive_revision.py",
+        "scripts/prepare_cad_base_feedback.py",
+        "scripts/compose_cad_robot_candidate.py",
+        "scripts/apply_cad_part_revision.py",
+        "scripts/create_cad_l1_clearance_revision.ps1",
+        "scripts/admit_cad_gripper_envelope.py",
+        "scripts/prepare_cad_arm_range_revision.py",
+        "scripts/preflight_cad_v8_reach.py",
+        "scripts/audit_cad_v8_static_candidates.py",
+        "scripts/bound_cad_v8_cut_clearance.py",
+        "scripts/analyze_cad_blade_edges.py",
+        "scripts/prepare_cad_dynamics_causal.py",
+        "scripts/probe_native_gear_backend.py",
+        "scripts/group_cad_collision_meshes.py",
+        "scripts/benchmark_cad_collision_grouping.py",
+        "scripts/analyze_robot_arm_dynamics.py",
+        "scripts/analyze_cad_gripper_coupling.py",
+        "scripts/analyze_cad_gripper_tree.py",
+        "scripts/audit_cad_gripper_diagnostic.py",
+        "scripts/analyze_cad_gripper_range.py",
+        "scripts/audit_cad_robot_self_clearance.py",
+        "scripts/audit_inventor_interference.ps1",
+        "scripts/render_cad_interference_section.py",
+        "scripts/summarize_gripper_brep_envelope.py",
+        "scripts/probe_cad_native_loops.py",
+        "scripts/probe_cad_gripper_gears.py",
+        "scripts/probe_cad_gripper_contact.py",
+        "scripts/audit_cad_gripper_contact.py",
+        "scripts/diagnose_cad_pedicel_contact.py",
+        "scripts/replay_bullet_pedicel_contacts.cc",
+        "scripts/replay_pedicel_other_backends.cc",
+        "scripts/partition_cad_pad_mesh.py",
+        "scripts/probe_cad_gripper_contacts.py",
+        "scripts/probe_dynamic_concave_mesh.py",
+        "scripts/probe_mesh_collision_masks.py",
+        "scripts/prepare_cad_collision_assets.py",
+        "scripts/verify_cad_v8_acceptance.py",
+        "scripts/harvest_gripper_control.py",
+        "scripts/harvest_native_video.py",
+        "scripts/generate_inventor_standards.ps1",
+        "scripts/audit_cad_meshes.py",
+        "scripts/probe_robot_parameters.py",
+        "scripts/probe_robot_kinematics.py",
+        "scripts/probe_robot_interaction_frames.py",
+        "scripts/probe_cad_mobility.py",
+        "scripts/prepare_cad_fixed_gripper_diagnostic.py",
+        "scripts/cad_v8_function_demo.py",
+        "scripts/audit_cad_mobility.py",
+        "scripts/probe_cad_suspension_loop.py",
+        "scripts/probe_cad_gripper_loop.py",
+        "scripts/capture_cad_v8_inspection.py",
+        "scripts/repair_inventor_mesh_winding.py",
+        "scripts/export_inventor_robot.ps1",
+        "scripts/inventor_reference_resolver.cs",
+        "scripts/prepare_cad_inspection.py",
+        "scripts/probe_robot_actuation.py",
+        "scripts/probe_robot_self_collision.py",
+        "gazebo/harvest_system/RobotTelemetrySystem.cc",
+        "gazebo/harvest_system/ClosedLoopSystem.cc",
+        "gazebo/harvest_system/GearCouplingSystem.cc",
+        "gazebo/harvest_system/JointPositionForceSystem.cc",
+        "gazebo/harvest_system/PositionForceController.hh",
+        "gazebo/harvest_system/ObservationSchedule.hh",
+        "gazebo/harvest_system/tests/ObservationScheduleTest.cc",
+        "gazebo/harvest_system/tests/PositionForceControllerTest.cc",
+        "tests/test_robot_spec.py",
+        "tests/test_robot_kinematics.py",
+        "tests/test_robot_integration.py",
+        "tests/test_robot_control_validation.py",
+        "tests/test_robot_drive_control.py",
+        "tests/test_robot_motion_mesh_clearance.py",
+        "tests/test_robot_closed_contract.py",
+        "tests/test_robot_arm_dynamics.py",
+        "tests/test_robot_harvest_planning.py",
+        "tests/test_robot_mechanism_validation.py",
+        "tests/test_robot_native_mechanism_observation.py",
+        "tests/test_robot_mesh_geometry.py",
+        "tests/test_harvest_gripper_control.py",
+        "tests/test_cad_mechanisms.py",
+        "tests/test_cad_drive_revision.py",
+        "tests/test_cad_mobility_protocol.py",
+        "tests/test_fixed_gripper_diagnostic.py",
+        "tests/test_cad_part_revision.py",
+        "tests/test_cad_gripper_causal_tools.py",
+        "tests/test_cad_arm_range_revision.py",
+        "tests/test_cad_collision_grouping.py",
+        "tests/test_cad_causal_tools.py",
+        "tests/test_cad_pad_partition.py",
+        "tests/test_cad_v8_preflight.py",
+        "tests/test_closed_loop_adapter.py",
+        "tests/test_cad_inspection.py",
+        "tests/test_cad_robot_builder.py",
+        "tests/test_robot_public_api.py",
+        "docs/guides/robot_cosechador_parametrico.md",
+        "docs/guides/mecanismos_cerrados_cad_gazebo.md",
+        "docs/guides/exportacion_cad_inventor_robot.md",
+        "docs/references/real_harvester_sources_2026-11-23.json",
+        "docs/references/real_harvester_cad_inventory_2026-11-23.json",
+        "docs/references/real_harvester_prototype_observations_2026-11-23.json",
+        "docs/reports/robot_cosechador_parametrico_2026-11-23.md",
+        "docs/reports/robot_cosechador_mecanismos_2026-11-23.md",
+        "tests/test_robot_task_regressions.py",
+        "tests/test_jaw_motion_clearance.py",
+        "docs/reports/correcciones_revision_pr1_2026-11-24.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/robot_spec.py",
+          "locator": "class ResolvedRobot"
+        },
+        {
+          "path": "src/uchuva_gazebo/robot_kinematics.py",
+          "locator": "def forward_kinematics"
+        },
+        {
+          "path": "gazebo/harvest_system/RobotTelemetrySystem.cc",
+          "locator": "class RobotTelemetrySystem"
+        },
+        {
+          "path": "gazebo/harvest_system/JointPositionForceSystem.cc",
+          "locator": "class JointPositionForceSystem"
+        },
+        {
+          "path": "scripts/export_inventor_robot.ps1",
+          "locator": "SkipAllUnresolvedFiles"
+        },
+        {
+          "path": "src/uchuva_gazebo/robot_harvest_planning.py",
+          "locator": "def audit_jaw_transition("
+        }
+      ]
+    },
+    {
       "id": "entrypoint.marker_localization_pilot",
       "type": "entrypoint",
       "label": "Piloto RGB de localizacion 3D respecto a ArUco",
@@ -68,7 +244,7 @@
     {
       "id": "entrypoint.segmentation_cycles_attempt",
       "type": "entrypoint",
-      "label": "Intento de tres ciclos de segmentación por capacho",
+      "label": "Intento de tres ciclos de segmentaciÃƒÂ³n por capacho",
       "summary": "Tres ciclos de segmentacion sintetica y evaluacion final Gazebo completados; cuarto experimento de ROI RGB heuristica y recortes superpuestos completado. Ganador original congelado antes del final. Mayor recall con recortes a costa de latencia; sin transferencia real demostrada. Rama de deteccion con cajas y localizador aprendido pendientes.",
       "paths": [
         "src/uchuva_lsystem/segmentation_cycles.py",
@@ -112,7 +288,16 @@
         "src/uchuva_gazebo/roi_tiling.py",
         "tests/test_roi_tiling.py",
         "docs/reports/cierre_campana_segmentacion_2026-10-04.md",
-        "tests/test_segmentation_predictor_isolation.py"
+        "tests/test_segmentation_predictor_isolation.py",
+        "scripts/render_v142_field_pilot.py",
+        "scripts/export_v142_field_pilot.py",
+        "scripts/v142_visible_contact_repair.py",
+        "scripts/evaluate_field_pilot.py",
+        "scripts/diagnose_field_overfit.py",
+        "scripts/recover_field_patch_memory.py",
+        "scripts/field_roi_patch_pilot.py",
+        "scripts/continue_field_pilot_v184.py",
+        "tests/test_field_roi_patch_pilot.py"
       ],
       "evidence": [
         {
@@ -133,7 +318,7 @@
       "id": "entrypoint.calyx_appearance_pilot",
       "type": "entrypoint",
       "label": "Piloto visual de tres apariencias de capacho",
-      "summary": "Diez capturas exploratorias sobre una planta v4: materiales y luz revisables, sin dataset ni entrenamiento. Categorías por apariencia del capacho; correspondencia visual pendiente de revisión humana.",
+      "summary": "Diez capturas exploratorias sobre una planta v4: materiales y luz revisables, sin dataset ni entrenamiento. CategorÃƒÂ­as por apariencia del capacho; correspondencia visual pendiente de revisiÃƒÂ³n humana.",
       "paths": [
         "scripts/render_appearance_pilot.py",
         "scripts/report_appearance_pilot.py",
@@ -154,7 +339,7 @@
       "id": "entrypoint.bouquet_row_flight",
       "type": "entrypoint",
       "label": "Vuelo cercano por doce caras y texturas Gazebo",
-      "summary": "Exporta UV y mapas PBR existentes, audita mallas completas, prepara pasadas con Neo dinámico y compara el detector congelado en vistas RGB/máscaras emparejadas. Sin reentrenamiento ni afirmación de transferencia real.",
+      "summary": "Exporta UV y mapas PBR existentes, audita mallas completas, prepara pasadas con Neo dinÃƒÂ¡mico y compara el detector congelado en vistas RGB/mÃƒÂ¡scaras emparejadas. Sin reentrenamiento ni afirmaciÃƒÂ³n de transferencia real.",
       "paths": [
         "scripts/audit_bouquet_rows.py",
         "scripts/prepare_bouquet_flight.py",
@@ -184,7 +369,7 @@
       "id": "entrypoint.bouquet_crowns",
       "type": "entrypoint",
       "label": "Tutorado abierto y altura v4",
-      "summary": "Pose morfológica reproducible de apertura ascendente; conserva órganos de v3, compara mallas con escala métrica y registra contactos pendientes. No simula tensión de cuerdas.",
+      "summary": "Pose morfolÃƒÂ³gica reproducible de apertura ascendente; conserva ÃƒÂ³rganos de v3, compara mallas con escala mÃƒÂ©trica y registra contactos pendientes. No simula tensiÃƒÂ³n de cuerdas.",
       "paths": [
         "src/uchuva_lsystem/bouquet.py",
         "scripts/prepare_bouquet_crowns.py",
@@ -203,7 +388,7 @@
       "id": "entrypoint.dense_individual_crowns",
       "type": "entrypoint",
       "label": "Copas individuales frondosas v3",
-      "summary": "Regenera ramificación vegetativa sin densificar la plantación, compara cobertura foliar con cámaras fijas y exporta capachos individuales a Gazebo. Contactos hoja/hoja tolerados se separan de conflictos pendientes; no certifica botánica ni interacción física.",
+      "summary": "Regenera ramificaciÃƒÂ³n vegetativa sin densificar la plantaciÃƒÂ³n, compara cobertura foliar con cÃƒÂ¡maras fijas y exporta capachos individuales a Gazebo. Contactos hoja/hoja tolerados se separan de conflictos pendientes; no certifica botÃƒÂ¡nica ni interacciÃƒÂ³n fÃƒÂ­sica.",
       "paths": [
         "scripts/prepare_dense_crowns.py",
         "scripts/review_dense_crowns.py",
@@ -231,8 +416,8 @@
     {
       "id": "entrypoint.reconstruction_pilot",
       "type": "entrypoint",
-      "label": "Piloto local de reconstrucción real",
-      "summary": "Piloto local con inspección trazable, selección por movimiento, COLMAP SfM/MVS, parches de referencia y superficie Poisson con soporte geométrico y textura fotográfica. Incluye comparación de densidad, paquete Blender y pruebas reales RGB/contacto en Gazebo. Escala desconocida y reconstrucción parcial; no redefine el modelo botánico.",
+      "label": "Piloto local de reconstrucciÃƒÂ³n real",
+      "summary": "Piloto local con inspecciÃƒÂ³n trazable, selecciÃƒÂ³n por movimiento, COLMAP SfM/MVS, parches de referencia y superficie Poisson con soporte geomÃƒÂ©trico y textura fotogrÃƒÂ¡fica. Incluye comparaciÃƒÂ³n de densidad, paquete Blender y pruebas reales RGB/contacto en Gazebo. Escala desconocida y reconstrucciÃƒÂ³n parcial; no redefine el modelo botÃƒÂ¡nico.",
       "paths": [
         "src/uchuva_reconstruction/__init__.py",
         "src/uchuva_reconstruction/frames.py",
@@ -285,7 +470,7 @@
       "id": "entrypoint.low_flight_report",
       "type": "entrypoint",
       "label": "Videos y reporte del piloto de vuelo bajo",
-      "summary": "Presentación posterior de detecciones y posiciones por marcador; reporte español y mapas planares separados. Ensayo exploratorio completado con baja cobertura de detección y sin reconstrucciones 3D válidas; no es validación en videos reales. Los videos derivados no se reutilizan como observaciones.",
+      "summary": "PresentaciÃƒÂ³n posterior de detecciones y posiciones por marcador; reporte espaÃƒÂ±ol y mapas planares separados. Ensayo exploratorio completado con baja cobertura de detecciÃƒÂ³n y sin reconstrucciones 3D vÃƒÂ¡lidas; no es validaciÃƒÂ³n en videos reales. Los videos derivados no se reutilizan como observaciones.",
       "paths": [
         "scripts/render_low_flight_video.py",
         "scripts/report_low_flight.py",
@@ -307,7 +492,7 @@
       "id": "module.low_flight_validation",
       "type": "subsystem",
       "label": "Control lateral y canal exclusivo del evaluador",
-      "summary": "Corrección lateral independiente de la longitud del pasillo; límites conservadores de separación y transformaciones ópticas probadas. El evaluador procesa máscaras sin exponer identidades al estimador RGB. Catálogos de materiales individuales con verificación de equivalencia geométrica y visual.",
+      "summary": "CorrecciÃƒÂ³n lateral independiente de la longitud del pasillo; lÃƒÂ­mites conservadores de separaciÃƒÂ³n y transformaciones ÃƒÂ³pticas probadas. El evaluador procesa mÃƒÂ¡scaras sin exponer identidades al estimador RGB. CatÃƒÂ¡logos de materiales individuales con verificaciÃƒÂ³n de equivalencia geomÃƒÂ©trica y visual.",
       "paths": [
         "src/uchuva_gazebo/low_flight_control.py",
         "src/uchuva_gazebo/evaluation.py",
@@ -328,8 +513,8 @@
     {
       "id": "entrypoint.low_flight_pilot",
       "type": "entrypoint",
-      "label": "Piloto de vuelo bajo con instancias y evaluación separada",
-      "summary": "Recupera capachos individuales originales, audita separación continua conservadora, captura RGB y máscaras Gazebo sincronizadas y congela el ensayo tras diez segundos técnicos. Estimador RGB con IPPE y multivista por marcador; verdad solo en evaluador. Sin validación de desempeño real.",
+      "label": "Piloto de vuelo bajo con instancias y evaluaciÃƒÂ³n separada",
+      "summary": "Recupera capachos individuales originales, audita separaciÃƒÂ³n continua conservadora, captura RGB y mÃƒÂ¡scaras Gazebo sincronizadas y congela el ensayo tras diez segundos tÃƒÂ©cnicos. Estimador RGB con IPPE y multivista por marcador; verdad solo en evaluador. Sin validaciÃƒÂ³n de desempeÃƒÂ±o real.",
       "paths": [
         "scripts/prepare_low_flight.py",
         "scripts/audit_low_flight_clearance.py",
@@ -357,8 +542,8 @@
     {
       "id": "module.neo_approx",
       "type": "subsystem",
-      "label": "Neo aproximado con dinámica de cuatro rotores",
-      "summary": "Envolvente y masa DJI; malla opcional y física separadas. Ganancias de velocidad escaladas por masa, transformación completa mundo-cuerpo y rampas. Parámetros heurísticos; no reproduce firmware DJI.",
+      "label": "Neo aproximado con dinÃƒÂ¡mica de cuatro rotores",
+      "summary": "Envolvente y masa DJI; malla opcional y fÃƒÂ­sica separadas. Ganancias de velocidad escaladas por masa, transformaciÃƒÂ³n completa mundo-cuerpo y rampas. ParÃƒÂ¡metros heurÃƒÂ­sticos; no reproduce firmware DJI.",
       "paths": [
         "src/uchuva_gazebo/neo.py",
         "src/uchuva_gazebo/flight_control.py",
@@ -374,8 +559,8 @@
     {
       "id": "entrypoint.neo_flight",
       "type": "entrypoint",
-      "label": "Vuelo físico por seis hileras y video Gazebo",
-      "summary": "LOD del cultivo y malla original del Neo basada en fotos, importada vía GLB/OBJ. Control con odometría ideal, métricas de actitud y videos de tiempo simulado; importador conserva atribución. No valida contactos con plantas ni dinámica DJI.",
+      "label": "Vuelo fÃƒÂ­sico por seis hileras y video Gazebo",
+      "summary": "LOD del cultivo y malla original del Neo basada en fotos, importada vÃƒÂ­a GLB/OBJ. Control con odometrÃƒÂ­a ideal, mÃƒÂ©tricas de actitud y videos de tiempo simulado; importador conserva atribuciÃƒÂ³n. No valida contactos con plantas ni dinÃƒÂ¡mica DJI.",
       "paths": [
         "scripts/simplify_gazebo_field.py",
         "scripts/batch_gazebo_field.py",
@@ -398,8 +583,8 @@
     {
       "id": "entrypoint.gazebo_field",
       "type": "entrypoint",
-      "label": "Campo estático Gazebo con uchuvas y ArUcos",
-      "summary": "Interpreta JSON morfológico mediante Blender para mallas métricas; SDF puro con suelo, tutorado, 72 ArUcos y cámaras. Sin plántulas contextuales ni control de vuelo o cosecha validado.",
+      "label": "Campo estÃƒÂ¡tico Gazebo con uchuvas y ArUcos",
+      "summary": "Interpreta JSON morfolÃƒÂ³gico mediante Blender para mallas mÃƒÂ©tricas; SDF puro con suelo, tutorado, 72 ArUcos y cÃƒÂ¡maras. Sin plÃƒÂ¡ntulas contextuales ni control de vuelo o cosecha validado.",
       "paths": [
         "src/uchuva_gazebo/field.py",
         "scripts/export_gazebo_field.py",
@@ -444,8 +629,8 @@
     {
       "id": "entrypoint.sparse_overhead_pilot",
       "type": "entrypoint",
-      "label": "Piloto disperso 6x6 con ArUco y anotación dual",
-      "summary": "Cuatro escenas morfológicas de copas densas, 48 vistas por ambas caras, 72 ArUco con reverso opaco por escena y clases sintéticas agrupadas por el usuario. Las capturas usan una copia de geometría agrupada sin fusionar capachos. Cajas y COCO RLE comparten instancias. La madurez real sigue sin validación; no entrena ni evalúa el test histórico.",
+      "label": "Piloto disperso 6x6 con ArUco y anotaciÃƒÂ³n dual",
+      "summary": "Cuatro escenas morfolÃƒÂ³gicas de copas densas, 48 vistas por ambas caras, 72 ArUco con reverso opaco por escena y clases sintÃƒÂ©ticas agrupadas por el usuario. Las capturas usan una copia de geometrÃƒÂ­a agrupada sin fusionar capachos. Cajas y COCO RLE comparten instancias. La madurez real sigue sin validaciÃƒÂ³n; no entrena ni evalÃƒÂºa el test histÃƒÂ³rico.",
       "paths": [
         "src/uchuva_lsystem/sparse_pilot.py",
         "scripts/prepare_sparse_pilot.py",
@@ -482,8 +667,8 @@
     {
       "id": "entrypoint.new_real_dataset",
       "type": "entrypoint",
-      "label": "Curación de nuevas capturas reales sin etiquetas",
-      "summary": "Inventario inmutable, extracción por tiempo de decodificador, propuestas de grupos completos y reservas perceptuales; entrega provisional hasta revisión humana de grupos y escalas. Independiente de Blender y del histórico. Reducción de frames por correspondencias geométricas directas con representantes conservados, sin cuotas temporales fijas.",
+      "label": "CuraciÃƒÂ³n de nuevas capturas reales sin etiquetas",
+      "summary": "Inventario inmutable, extracciÃƒÂ³n por tiempo de decodificador, propuestas de grupos completos y reservas perceptuales; entrega provisional hasta revisiÃƒÂ³n humana de grupos y escalas. Independiente de Blender y del histÃƒÂ³rico. ReducciÃƒÂ³n de frames por correspondencias geomÃƒÂ©tricas directas con representantes conservados, sin cuotas temporales fijas.",
       "paths": [
         "src/uchuva_dataset_curation.py",
         "scripts/prepare_new_real_dataset.py",
@@ -1518,8 +1703,8 @@
     {
       "id": "entrypoint.calibrate_composition_schedule",
       "type": "entrypoint",
-      "label": "Calibrar mezcla de cámaras",
-      "summary": "CLI puro que estima rendimiento por cámara y busca una mezcla determinista contra train real.",
+      "label": "Calibrar mezcla de cÃƒÂ¡maras",
+      "summary": "CLI puro que estima rendimiento por cÃƒÂ¡mara y busca una mezcla determinista contra train real.",
       "paths": [
         "scripts/calibrate_composition_schedule.py"
       ],
@@ -1534,7 +1719,7 @@
       "id": "entrypoint.analyze_detection_errors",
       "type": "entrypoint",
       "label": "Diagnosticar errores del detector",
-      "summary": "CLI secuencial y reanudable que compara checkpoints baseline e híbridos solo sobre validación real.",
+      "summary": "CLI secuencial y reanudable que compara checkpoints baseline e hÃƒÂ­bridos solo sobre validaciÃƒÂ³n real.",
       "paths": [
         "scripts/analyze_detection_errors.py"
       ],
@@ -1548,8 +1733,8 @@
     {
       "id": "entrypoint.audit_literature_cohorts",
       "type": "entrypoint",
-      "label": "Auditar cohortes fenológicas",
-      "summary": "CLI puro que verifica el contrato morfológico y fenológico sobre múltiples semillas sin Blender.",
+      "label": "Auditar cohortes fenolÃƒÂ³gicas",
+      "summary": "CLI puro que verifica el contrato morfolÃƒÂ³gico y fenolÃƒÂ³gico sobre mÃƒÂºltiples semillas sin Blender.",
       "paths": [
         "scripts/audit_literature_cohort_morphologies.py"
       ],
@@ -1564,7 +1749,7 @@
       "id": "entrypoint.generate_virtual_fidelity_pairs",
       "type": "entrypoint",
       "label": "Generar pares de fidelidad v1/v2",
-      "summary": "CLI Blender para comparar rutas morfológicas con semilla, cámara, iluminación y exposición pareadas.",
+      "summary": "CLI Blender para comparar rutas morfolÃƒÂ³gicas con semilla, cÃƒÂ¡mara, iluminaciÃƒÂ³n y exposiciÃƒÂ³n pareadas.",
       "paths": [
         "scripts/generate_virtual_fidelity_pairs.py"
       ],
@@ -1579,7 +1764,7 @@
       "id": "entrypoint.audit_virtual_fidelity_pilot",
       "type": "entrypoint",
       "label": "Auditar piloto de fidelidad v2",
-      "summary": "CLI puro que aplica los umbrales fijos de integridad, composición, contexto, luminancia y revisión visual.",
+      "summary": "CLI puro que aplica los umbrales fijos de integridad, composiciÃƒÂ³n, contexto, luminancia y revisiÃƒÂ³n visual.",
       "paths": [
         "scripts/audit_virtual_fidelity_pilot.py"
       ],
@@ -1594,7 +1779,7 @@
       "id": "entrypoint.create_dataset_sample_sheet",
       "type": "entrypoint",
       "label": "Crear muestra visual del dataset",
-      "summary": "CLI puro que produce una lámina determinista con cajas para revisión humana del piloto.",
+      "summary": "CLI puro que produce una lÃƒÂ¡mina determinista con cajas para revisiÃƒÂ³n humana del piloto.",
       "paths": [
         "scripts/create_dataset_sample_sheet.py"
       ],
@@ -1736,8 +1921,8 @@
     {
       "id": "artifact.composition_calibration",
       "type": "artifact",
-      "label": "Calibración de composición",
-      "summary": "JSON reproducible con objetivo train, rendimiento por cámara, hashes y mezcla recomendada.",
+      "label": "CalibraciÃƒÂ³n de composiciÃƒÂ³n",
+      "summary": "JSON reproducible con objetivo train, rendimiento por cÃƒÂ¡mara, hashes y mezcla recomendada.",
       "paths": [
         "src/uchuva_lsystem/composition_calibration.py",
         "scripts/calibrate_composition_schedule.py"
@@ -1752,8 +1937,8 @@
     {
       "id": "artifact.detection_diagnostic",
       "type": "artifact",
-      "label": "Diagnóstico multisemilla del detector",
-      "summary": "JSON, CSV y Markdown de TP, FP, FN y localización sobre validación real aislada.",
+      "label": "DiagnÃƒÂ³stico multisemilla del detector",
+      "summary": "JSON, CSV y Markdown de TP, FP, FN y localizaciÃƒÂ³n sobre validaciÃƒÂ³n real aislada.",
       "paths": [
         "src/uchuva_lsystem/detection_diagnostics.py",
         "scripts/analyze_detection_errors.py"
@@ -1768,8 +1953,8 @@
     {
       "id": "artifact.virtual_fidelity_pilot_audit",
       "type": "artifact",
-      "label": "Auditoría del piloto v2",
-      "summary": "JSON y Markdown que bloquean el escalado si falla cualquier criterio automático o visual acordado.",
+      "label": "AuditorÃƒÂ­a del piloto v2",
+      "summary": "JSON y Markdown que bloquean el escalado si falla cualquier criterio automÃƒÂ¡tico o visual acordado.",
       "paths": [
         "scripts/audit_virtual_fidelity_pilot.py",
         "docs/reports/mejoras_virtuales_prioritarias_2026-08-14.md"
@@ -2297,7 +2482,7 @@
       "id": "test.light_competition",
       "type": "test",
       "label": "Pruebas de competencia luminica y vegetacion",
-      "summary": "Comprueba campo compartido, estratos, tutorado, serializacion y mezcla de vegetacion acompañante.",
+      "summary": "Comprueba campo compartido, estratos, tutorado, serializacion y mezcla de vegetacion acompaÃƒÂ±ante.",
       "paths": [
         "tests/test_light_competition.py"
       ],
@@ -2644,7 +2829,58 @@
         "docs/references/video_continuo_20261008.json",
         "scripts/activate_background_audit_revision.py",
         "scripts/render_exterior_inset_field.py",
-        "scripts/compose_continuous_exterior_inset.py"
+        "scripts/compose_continuous_exterior_inset.py",
+        "scripts/prepare_integral_diagnosis.py",
+        "scripts/prepare_integral_fixtures.py",
+        "scripts/audit_integral_identity.py",
+        "scripts/evaluate_integral_screening.py",
+        "src/uchuva_lsystem/basal_architecture.py",
+        "src/uchuva_gazebo/motion_observations.py",
+        "src/uchuva_gazebo/marker_motion_fusion.py",
+        "scripts/simulate_integral_motion.py",
+        "scripts/replay_integral_pose_fusion.py",
+        "scripts/evaluate_integral_pose.py",
+        "scripts/render_integral_structure.py",
+        "scripts/prepare_integral_sequence.py",
+        "scripts/prepare_integral_sequence_evaluation.py",
+        "scripts/prepare_integral_pose_control.py",
+        "src/uchuva_gazebo/public_pose_stream.py",
+        "tests/test_public_pose_stream.py",
+        "scripts/summarize_integral_sequence.py",
+        "tests/test_integral_comparison.py",
+        "src/uchuva_lsystem/scaffold_budget.py",
+        "tests/test_scaffold_budget.py",
+        "src/uchuva_lsystem/balanced_basal_pilot.py",
+        "scripts/render_balanced_basal_examples.py",
+        "tests/test_balanced_basal_pilot.py",
+        "src/uchuva_lsystem/ascending_basal_pilot.py",
+        "scripts/render_ascending_basal_review.py",
+        "tests/test_ascending_basal_pilot.py",
+        "src/uchuva_lsystem/curved_basal_pilot.py",
+        "tests/test_curved_basal_pilot.py",
+        "scripts/diagnose_basal_balance.py",
+        "scripts/plot_basal_balance.py",
+        "tests/test_marker_motion_fusion.py",
+        "tests/test_basal_architecture.py",
+        "tests/test_motion_observations.py",
+        "docs/reports/mejora_integral_2026-10-14.md",
+        "src/uchuva_lsystem/hierarchical_basal_pilot.py",
+        "scripts/render_hierarchical_basal_review.py",
+        "tests/test_hierarchical_basal_pilot.py",
+        "src/uchuva_lsystem/canopy_preference_pilot.py",
+        "src/uchuva_lsystem/matte_organ_review.py",
+        "tests/test_canopy_preference_pilot.py",
+        "src/uchuva_lsystem/foliage_reference_pilot.py",
+        "scripts/render_foliage_reference.py",
+        "tests/test_foliage_reference_pilot.py",
+        "scripts/check_review_leaf_mesh.py",
+        "src/uchuva_lsystem/organ_frames.py",
+        "tests/test_organ_frames.py",
+        "scripts/audit_refinement_contacts.py",
+        "scripts/audit_refinement_mesh.py",
+        "scripts/evaluate_annotation_smoke.py",
+        "scripts/capture_static_gazebo_pairs.py",
+        "tests/test_mesh_attachment_topology.py"
       ],
       "evidence": [
         {
@@ -2821,7 +3057,7 @@
       "id": "entrypoint.harvest_pilot",
       "type": "entrypoint",
       "label": "Piloto de uchuva desmontable con carro 4WD y brazo de cinco GDL",
-      "summary": "Piloto rigido con robot modular, corte y retencion ideal por plugin Harmonic y auditor de evidencia. Conserva el perfil historico de seis frutos y permite arboles v8 admitidos mediante catalogos de poses, unidades explicitas, visuales detallados y colisiones prismaticas conservadoras agrupadas. Compilacion, contacto y cosecha nativos se documentan por configuracion y experimento, separados de las pruebas puras; sin percepcion autonoma ni fisica medida.",
+      "summary": "Piloto rigido con corte y retencion ideales por plugin Harmonic. Los perfiles historicos conviven con una demostracion CAD de mordaza prismatica, canasta movil y seleccion de objetivos en los arboles V8 congelados. La toma continua admite movimiento prescrito con codo arriba y holgura verificada durante todo el barrido. La auditoria separa la comprobacion de las poses nativas, el deposito fisico de los frutos y la evidencia de percepcion.",
       "paths": [
         "src/uchuva_gazebo/harvest_plants.py",
         "src/uchuva_gazebo/harvest_visuals.py",
@@ -2840,6 +3076,21 @@
         "scripts/build_harvest_plugin.sh",
         "scripts/run_harvest_pilot.py",
         "scripts/audit_harvest_pilot.py",
+        "scripts/prepare_cad_v8_demo_robot.py",
+        "scripts/prepare_cad_v8_demo_take.py",
+        "scripts/run_cad_v8_demo_capture.py",
+        "scripts/audit_cad_v8_demo_arm.py",
+        "src/uchuva_gazebo/elbow_up_clearance.py",
+        "tests/test_robot_elbow_up_clearance.py",
+        "gazebo/harvest_system/HarvestDemoPlaybackSystem.cc",
+        "gazebo/harvest_system/HarvestDemoCameraSystem.cc",
+        "scripts/prepare_cad_v8_experiment.py",
+        "scripts/screen_cad_v8_demo.py",
+        "scripts/probe_harvest_jaw_guard.py",
+        "scripts/harvest_rgb_tournament.py",
+        "src/uchuva_gazebo/harvest_basket.py",
+        "src/uchuva_gazebo/harvest_perception.py",
+        "gazebo/harvest_system/JawStateGuard.hh",
         "tests/test_harvest_plants.py",
         "tests/test_harvest_visuals.py",
         "tests/test_harvest_collision_mesh.py",
@@ -2847,13 +3098,30 @@
         "tests/test_harvest_pilot.py",
         "tests/test_harvest_validation.py",
         "docs/guides/piloto_cosecha_desmontable.md",
+        "docs/guides/piloto_cad_v8_canasta.md",
+        "docs/guides/percepcion_cosecha_diagnostica.md",
+        "docs/reports/piloto_cad_v8_canasta_2026-11-24.md",
         "docs/reports/piloto_cosecha_desmontable_2026-10-30.md",
         "docs/reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md",
         "src/uchuva_gazebo/harvest_clearance.py",
         "tests/test_harvest_clearance.py",
-        "tests/test_harvest_runtime_contract.py"
+        "tests/test_harvest_runtime_contract.py",
+        "tests/test_harvest_onboard.py",
+        "tests/test_harvest_perception.py"
       ],
       "evidence": [
+        {
+          "path": "scripts/prepare_cad_v8_demo_take.py",
+          "locator": "class Take:"
+        },
+        {
+          "path": "src/uchuva_gazebo/elbow_up_clearance.py",
+          "locator": "class ElbowUpClearance:"
+        },
+        {
+          "path": "scripts/run_cad_v8_demo_capture.py",
+          "locator": "def deposit_evidence("
+        },
         {
           "path": "src/uchuva_gazebo/harvest_plants.py",
           "locator": "def build_harvest_plants"
@@ -2903,9 +3171,1043 @@
           "locator": "# Resultados experimentales para edición"
         }
       ]
+    },
+    {
+      "id": "module.physalisharvest_integration",
+      "type": "module",
+      "label": "Conciliación del cosechador y PhysalisHarvest",
+      "summary": "Contrato puro derivado de RobotSpec y observaciones ópticas ArUco con reloj explícito. Snapshot externo íntegro y atribuido, sin autoridad botánica ni relicenciamiento MIT. Banco físico 2WD separado del robot digital. TF, adaptación de control, puente y misión física pendientes; pruebas de software no equivalen a cosecha autónoma. Lanzador canónico externo al snapshot: compilar y consultar nodos originales comparte install configurable bajo outputs; dry-run no inicia procesos y ejecución exige instalación existente. No abre cámara/serie ni arma implícitamente.",
+      "paths": [
+        "src/uchuva_gazebo/physalisharvest.py",
+        "scripts/check_physalisharvest_integration.py",
+        "scripts/verify_physalisharvest_snapshot.py",
+        "tests/test_physalisharvest.py",
+        "contributions/physalisharvest.provenance.json",
+        "docs/guides/integracion_physalisharvest.md",
+        "docs/reports/conciliacion_cosechador_physalisharvest_2026-11-24.md",
+        "src/uchuva_gazebo/physalisharvest_launch.py",
+        "scripts/physalisharvest_ros.py",
+        "tests/test_physalisharvest_launch.py",
+        "docs/reports/correcciones_revision_pr1_2026-11-24.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/physalisharvest.py",
+          "locator": "def normalize_astra_point("
+        },
+        {
+          "path": "src/uchuva_gazebo/physalisharvest.py",
+          "locator": "def build_integration_plan("
+        },
+        {
+          "path": "docs/reports/conciliacion_cosechador_physalisharvest_2026-11-24.md",
+          "locator": "## Arquitectura conciliada"
+        },
+        {
+          "path": "src/uchuva_gazebo/physalisharvest_launch.py",
+          "locator": "def create_launch_plan("
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.third_candidate_space_admission",
+      "type": "entrypoint",
+      "label": "Admisión reproductiva escasa desde la gramática y revisión de una candidata",
+      "summary": "Tercera candidata2026102602 con admisión física estática:3a0cruces,1122hojas y405de408frutos;3unidades completas omitidas en la gramática(0.735%),sin perder hojas,ejes,nodos ni dimensiones retenidas.77fuentes/tests y10inputs congelados;5969objetos retenidos con coordenadas y caras orientadas canónicas idénticas,incluidos frutos ocultos. Suelo1mm válido,405capachos con orientación y unión válidas,sin errores morfológicos;234proximidades y excepción hoja-hoja explícitas. Plan mínimo dependiente de la anatomía/evidencia y postura anterior;no garantiza nuevas semillas ni modela aborto medido.9pruebas puras nuevas,14regresiones nodales,2fixturesBlender más reconstrucción integral. Sin más candidatas ni entrenamiento;revisión visual humana pendiente.",
+      "paths": [
+        "src/uchuva_lsystem/reproductive_space.py",
+        "scripts/prepare_third_candidate_space_review.py",
+        "scripts/audit_third_candidate_space_review.py",
+        "scripts/launch_third_space_review.py",
+        "scripts/report_third_candidate_space_review.py",
+        "tests/test_reproductive_space.py",
+        "tests/blender_reproductive_space_probe.py",
+        "docs/guides/controlador_repulsion_nodal.md",
+        "docs/reports/tercera_candidata_admision_reproductiva_2026-10-28.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/reproductive_space.py",
+          "locator": "def make_admission_plan("
+        },
+        {
+          "path": "src/uchuva_lsystem/reproductive_space.py",
+          "locator": "def validate_admission("
+        },
+        {
+          "path": "src/uchuva_lsystem/grammar.py",
+          "locator": "reproductive_space_plan"
+        },
+        {
+          "path": "scripts/audit_third_candidate_space_review.py",
+          "locator": "assert passed, result"
+        },
+        {
+          "path": "tests/blender_reproductive_space_probe.py",
+          "locator": "test_reindexing_and_polygon_cycle_but_not_move_or_winding"
+        },
+        {
+          "path": "docs/guides/controlador_repulsion_nodal.md",
+          "locator": "## Admisión reproductiva escasa y explícita"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.nodal_automation_review",
+      "type": "entrypoint",
+      "label": "Controlador acotado de corrección nodal y verificación de nuevas semillas",
+      "summary": "Búsqueda independiente cerrada al alcanzar cinco horas efectivas: cero arbustos nuevos admitidos; 16 intentos con continuaciones y parciales, sin entrenamiento. Tercera candidata de16 a3 cruces, aún rechazada. Controlador con reloj que excluye suspensión, watchdog propio, búsqueda nodal de dos/cuatro entrenudos y ventanas anteriores al contacto; descenso antes de ascenso, anatomía y dimensiones protegidas. Fuentes actuales y revisiones preservadas. Dos regresiones históricas válidas excluidas del objetivo. Cero cruces, suelo1mm, orientación y anatomía exigidos; excepción hoja-hoja y proximidades explícitas. Galería distingue rechazos/parciales; revisión visual humana pendiente.17pruebas puras y7Blender; diez errores previos del grafo sin nuevos.",
+      "paths": [
+        "src/uchuva_lsystem/nodal_automation.py",
+        "src/uchuva_lsystem/blender_nodal_local_repair.py",
+        "scripts/run_nodal_automation.py",
+        "scripts/worker_nodal_automation.py",
+        "tests/test_nodal_automation.py",
+        "tests/blender_nodal_local_automation_probe.py",
+        "docs/guides/controlador_repulsion_nodal.md",
+        "scripts/report_nodal_automation.py",
+        "docs/reports/correccion_nodal_automatizada_2026-10-27.md",
+        "src/uchuva_lsystem/nodal_constraint_search.py",
+        "tests/test_nodal_constraint_search.py",
+        "src/uchuva_lsystem/nodal_chain_candidates.py",
+        "tests/test_nodal_chain_candidates.py",
+        "tests/blender_nodal_four_node_probe.py"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/nodal_automation.py",
+          "locator": "def stop_reason("
+        },
+        {
+          "path": "src/uchuva_lsystem/nodal_automation.py",
+          "locator": "def unique_admissions("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_nodal_local_repair.py",
+          "locator": "def repair_local_nodal_contacts("
+        },
+        {
+          "path": "scripts/worker_nodal_automation.py",
+          "locator": "A worse provisional perturbation never replaces the best fully audited tree."
+        },
+        {
+          "path": "tests/blender_nodal_local_automation_probe.py",
+          "locator": "test_cached_commit_replays_all_organs_and_stems"
+        },
+        {
+          "path": "docs/guides/controlador_repulsion_nodal.md",
+          "locator": "## Admisión, imágenes y límites"
+        },
+        {
+          "path": "scripts/report_nodal_automation.py",
+          "locator": "def summarize(root):"
+        },
+        {
+          "path": "src/uchuva_lsystem/nodal_constraint_search.py",
+          "locator": "def solve_ordered_domains("
+        },
+        {
+          "path": "src/uchuva_lsystem/nodal_chain_candidates.py",
+          "locator": "def four_node_candidates("
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.nodal_growth_review",
+      "type": "entrypoint",
+      "label": "Repulsión nodal con anatomía protegida y revisión física independiente",
+      "summary": "Ruta experimental v8 derivada de v7: inserciones de abajo hacia arriba, descenso antes de ascenso, direcciones efectivas serializadas y geometría/proxies compartidos. Conserva órganos, dimensiones nominales y clases. Dos realizaciones reconstruidas admitidas con0cruces,suelo1mm y604capachos comprobados;762/909hojas y274/330frutos conservados, cámaras originales fijas. Tercera candidata no admitida, evidencia preservada. Articulación/contraflexión local de dos entrenudos conserva sus longitudes; restauración gravitatoria sólo reduce inclinación de dos capachos, no los gira lateralmente. Movilidad numérica explícita no medida; techo de búsqueda de pedicelo hasta180grados con motivo/hash, excursiones efectivas máximas74.81/114.48. Rutas históricas incompatibles fallan sin podar.137pruebas puras+15Blender y10errores previos de grafo sin nuevos. Revisión visual humana pendiente, sin nuevo entrenamiento.",
+      "paths": [
+        "src/uchuva_lsystem/nodal_repulsion.py",
+        "src/uchuva_lsystem/blender_nodal_branch_repair.py",
+        "src/uchuva_lsystem/blender_nodal_cooperative.py",
+        "scripts/prepare_nodal_review.py",
+        "scripts/repair_nodal_growth.py",
+        "scripts/render_nodal_review.py",
+        "scripts/review_local_nodal_joint.py",
+        "scripts/report_nodal_review.py",
+        "tests/test_nodal_repulsion.py",
+        "tests/blender_nodal_repulsion_probe.py",
+        "docs/guides/repulsion_nodal_uchuva.md",
+        "docs/reports/revision_repulsion_nodal_2026-10-27.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/parameters.py",
+          "locator": "trained_trellis_nodal_repulsion_v8"
+        },
+        {
+          "path": "src/uchuva_lsystem/grammar.py",
+          "locator": "resolve_nodal_repulsion(plant"
+        },
+        {
+          "path": "src/uchuva_lsystem/nodal_repulsion.py",
+          "locator": "def resolve_nodal_repulsion("
+        },
+        {
+          "path": "src/uchuva_lsystem/nodal_repulsion.py",
+          "locator": "def revise_pedicel_mobility("
+        },
+        {
+          "path": "src/uchuva_lsystem/nodal_repulsion.py",
+          "locator": "def counterbend_candidates("
+        },
+        {
+          "path": "src/uchuva_lsystem/nodal_repulsion.py",
+          "locator": "def restore_calyx_toward_gravity("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_nodal_branch_repair.py",
+          "locator": "def repair_nodal_branches("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_nodal_cooperative.py",
+          "locator": "def repair_components("
+        },
+        {
+          "path": "tests/blender_nodal_repulsion_probe.py",
+          "locator": "test_updated_scene_matches_independent_rebuild_without_organ_loss"
+        },
+        {
+          "path": "scripts/render_nodal_review.py",
+          "locator": "INDEPENDENT_AUDIT"
+        },
+        {
+          "path": "docs/reports/revision_repulsion_nodal_2026-10-27.md",
+          "locator": "## Resultados de la revisión física"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.appearance_factorial_pilot",
+      "type": "entrypoint",
+      "label": "Piloto factorial de luz y materiales con planta independiente del encuadre",
+      "summary": "Cierre parcial27/10:factorial sintetico bloqueado,0vistas admitidas tras5intentos/10arboles con423-1261intersecciones,9.20hactivas de generacion. Se completaron2screenings2000 y6controles reales4000,tres semillas por receta,fuentes/datos/pasos/exposicion verificados. APmacro de desarrollo19.14conclasica vs19.17sin,diferencia media-0.03pp sin ganancia consistente;test historicamente consultado,6grupos desiguales y bootstrap condicionado. Sin efectosL/T/LT identificables ni repeticion aplicable. Planta v7,carga architecture_driven,eje colgante heuristico0-25grados y marcos/proxies corregidos;no se reducen organos ni relajan cruces/suelo. Intentos,fuentes,pesos,curvas,predicciones e informe preservados. No promocion de modelos.",
+      "paths": [
+        "src/uchuva_lsystem/appearance_profiles.py",
+        "src/uchuva_lsystem/blender_appearance.py",
+        "src/uchuva_lsystem/appearance_legacy_materials.py",
+        "src/uchuva_lsystem/geometry_contracts.py",
+        "src/uchuva_lsystem/organ_frames.py",
+        "scripts/prepare_appearance_pilot.py",
+        "scripts/render_appearance_calibration.py",
+        "scripts/run_appearance_calibration.py",
+        "scripts/report_appearance_calibration.py",
+        "scripts/report_appearance_pose_check.py",
+        "scripts/report_appearance_crown_check.py",
+        "scripts/report_appearance_contact_check.py",
+        "scripts/repair_appearance_structure.py",
+        "src/uchuva_lsystem/axis_pose_repair.py",
+        "src/uchuva_lsystem/blender_pose_repair_v2.py",
+        "tests/test_axis_pose_repair.py",
+        "tests/test_audit_lower_crown.py",
+        "tests/test_audit_pose_repair_v2.py",
+        "tests/blender_hidden_cleanup_probe.py",
+        "tests/blender_plant_ground_clearance_probe.py",
+        "docs/reports/revision_contactos_y_ramas_bajas_2026-10-26.md",
+        "src/uchuva_lsystem/appearance_diversity.py",
+        "src/uchuva_lsystem/blender_bank_repair.py",
+        "scripts/execute_appearance_pilot.py",
+        "scripts/report_appearance_bank.py",
+        "tests/test_appearance_diversity.py",
+        "tests/blender_appearance_diversity_probe.py",
+        "docs/reports/piloto_apariencia_factorial_2026-10-26.md",
+        "scripts/render_appearance_live_preview.py",
+        "docs/reports/diagnostico_preliminar_banco_apariencia_2026-10-26.md",
+        "scripts/render_appearance_bank.py",
+        "scripts/appearance_campaign.py",
+        "scripts/train_appearance_arm.py",
+        "scripts/run_appearance_campaign.py",
+        "scripts/evaluate_appearance_campaign.py",
+        "tests/test_audit_morphology.py",
+        "tests/test_audit_bush_morphology.py",
+        "tests/test_audit_broad_crown.py",
+        "tests/blender_hidden_envelope_probe.py",
+        "tests/test_audit_validation_geometry.py",
+        "tests/test_appearance_profiles.py",
+        "tests/test_appearance_bank.py",
+        "tests/test_appearance_campaign.py",
+        "docs/guides/piloto_apariencia_factorial.md",
+        "docs/reports/calibracion_apariencia_2026-10-26.md",
+        "docs/reports/calibracion_apariencia_ronda_02_2026-10-26.md",
+        "docs/reports/revision_copa_ramificada_2026-10-26.md",
+        "src/uchuva_lsystem/reproductive_orientation.py",
+        "src/uchuva_lsystem/blender_reproductive_orientation.py",
+        "tests/test_reproductive_orientation.py",
+        "tests/blender_pose_repair_v2_probe.py",
+        "docs/reports/revision_capachos_colgantes_2026-10-27.md",
+        "scripts/complete_appearance_real_controls.py",
+        "tests/test_appearance_real_controls.py"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/parameters.py",
+          "locator": "trained_trellis_audit_v2"
+        },
+        {
+          "path": "src/uchuva_lsystem/parameters.py",
+          "locator": "def _audit_broad_crown_parameters("
+        },
+        {
+          "path": "src/uchuva_lsystem/parameters.py",
+          "locator": "trained_trellis_lower_crown_audit_v6"
+        },
+        {
+          "path": "src/uchuva_lsystem/axis_pose_repair.py",
+          "locator": "def repair_axis_poses("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_pose_repair_v2.py",
+          "locator": "def repair_size_preserving_poses("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_environment.py",
+          "locator": "def audit_plant_ground_clearance("
+        },
+        {
+          "path": "src/uchuva_lsystem/organ_frames.py",
+          "locator": "def local_cone_leaf_direction("
+        },
+        {
+          "path": "tests/test_audit_broad_crown.py",
+          "locator": "class BroadCrownContracts"
+        },
+        {
+          "path": "docs/reports/revision_copa_ramificada_2026-10-26.md",
+          "locator": "## Hipótesis v5 implementada"
+        },
+        {
+          "path": "src/uchuva_lsystem/grammar.py",
+          "locator": "def record_reproductive_counts("
+        },
+        {
+          "path": "src/uchuva_lsystem/validation.py",
+          "locator": "def validate_morphology_tree("
+        },
+        {
+          "path": "scripts/render_appearance_bank.py",
+          "locator": "def labels_from_mask("
+        },
+        {
+          "path": "scripts/appearance_campaign.py",
+          "locator": "def verify_review("
+        },
+        {
+          "path": "scripts/train_appearance_arm.py",
+          "locator": "class AppearanceTrainer"
+        },
+        {
+          "path": "docs/reports/calibracion_apariencia_2026-10-26.md",
+          "locator": "## Evidencia visual ejecutada"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.geometry_augmentation_pilot",
+      "type": "entrypoint",
+      "label": "Piloto de aumentacion con encuadres comparables",
+      "summary": "Campana finalizada el 26 de octubre: 24 screenings y 39 evaluaciones finales (18 mezclas, 18 controles reales y tres repeticiones), con pasos, semillas, hashes y secuencias emparejadas verificados. Mezcla seleccionada por validacion 461+115 con clasica: AP de desarrollo 20,81 por ciento, +2,34 puntos frente a real con clasica en tres semillas. Frente a repeticion +0,88 puntos, negativo en dos semillas: aporte especifico del contenido sintetico no confirmado. Madura retrocede pese a la ganancia macro. Banco autorizado pese a desajuste geometrico, cuatro plantas y solo seis grupos de test historicamente consultado; sin afirmacion de transferencia externa ni promocion. Cierres incompletos y fuentes congeladas preservados.",
+      "paths": [
+        "scripts/augmentation_pilot.py",
+        "scripts/prepare_augmentation_renders.py",
+        "scripts/audit_augmentation_renders.py",
+        "scripts/render_and_train_augmentation.py",
+        "scripts/run_augmentation_campaign.py",
+        "scripts/train_augmentation_arm.py",
+        "scripts/evaluate_augmentation_campaign.py",
+        "scripts/report_augmentation_campaign.py",
+        "scripts/run_synthetic_exploratory_extension.py",
+        "scripts/evaluate_synthetic_extension.py",
+        "scripts/resume_augmentation_confirmation.py",
+        "scripts/complete_augmentation_evaluation.py",
+        "tests/test_augmentation_pilot.py",
+        "docs/guides/piloto_aumentacion_geometrica.md",
+        "docs/reports/piloto_aumentacion_sintetica_exploratoria_2026-10-22.md",
+        "docs/reports/diagnostico_transferencia_sintetica_2026-10-23.md",
+        "docs/reports/auditoria_generacion_sintetica_2026-10-25.md",
+        "docs/reports/revision_auditoria_para_siguiente_piloto_2026-10-26.md",
+        "docs/reports/piloto_aumentacion_geometrica_2026-10-22.md"
+      ],
+      "evidence": [
+        {
+          "path": "scripts/augmentation_pilot.py",
+          "locator": "def gate("
+        },
+        {
+          "path": "scripts/train_augmentation_arm.py",
+          "locator": "class StepTrainer"
+        },
+        {
+          "path": "scripts/run_augmentation_campaign.py",
+          "locator": "def prepare_matrix"
+        },
+        {
+          "path": "docs/reports/revision_auditoria_para_siguiente_piloto_2026-10-26.md",
+          "locator": "Corrección de interpretación: carga por planta y objetos por imagen"
+        }
+      ]
+    },
+    {
+      "id": "module.leaf_surface",
+      "type": "subsystem",
+      "label": "Superficie foliar suave",
+      "summary": "Control optativo de arco transversal amplio separado de microtextura; conserva raiz y nervio central.",
+      "paths": [
+        "src/uchuva_lsystem/leaf_surface.py"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/leaf_surface.py",
+          "locator": "def broad_leaf_surface"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.optimized_spatial_capture",
+      "type": "entrypoint",
+      "label": "Captura optimizada de plantas admitidas y benchmark emparejado",
+      "summary": "Captura nueva con árboles históricos intactos: buffers completos de coordenadas/conectividad y hash histórico, registro/luces reutilizados, journal por vista, máscaras por arrays opcionales. Cycles persistente y escena Workbench con todos los objetos compartidos. Condiciones independientes y balance luz/profundidad. Benchmark reabre un archivo común y exige anotaciones/cámara/luz/geometría exactas; RGB informa diferencias y equivalencia numérica de ingeniería, sin declarar identidad bit a bit. Guardas de frutos internos ocultos se actualizan como el auditor de suelo sin cambiar visibilidad de render. Se preservan fallos, reinicio de servicio y controles; se repiten referencia/preparación al cambiar rendimiento del equipo. Sin campaña masiva ni entrenamiento. Cierre30/10: tres vistas con2547anotaciones exactas; RGB difiere como máximo1/255 en64–73píxeles, comparable al control de repetición. Referencia y preparación repetidas:110.3→58.2s/captura,1.89x. Proyección de856restantes18.6h efectivas con preparación de7.28min/escena; no1000generadas ni entrenamiento. Once pruebas puras;110fuentes históricas sin cambios. La proyección es de ingeniería, no intervalo de confianza.",
+      "paths": [
+        "scripts/render_spatial_dataset_optimized.py",
+        "scripts/benchmark_spatial_capture.py",
+        "scripts/report_capture_benchmark.py",
+        "src/uchuva_lsystem/blender_capture_optimized.py",
+        "src/uchuva_lsystem/capture_plan.py",
+        "tests/test_capture_optimization.py",
+        "src/uchuva_lsystem/mask_arrays.py",
+        "scripts/run_capture_benchmark.py",
+        "scripts/audit_saved_capture_scene.py",
+        "src/uchuva_lsystem/blender_capture_dual_scene.py",
+        "src/uchuva_lsystem/capture_conditions.py",
+        "scripts/render_spatial_dataset_persistent.py",
+        "scripts/benchmark_capture_dual_scene.py",
+        "scripts/run_dual_scene_benchmark.py",
+        "scripts/run_matched_capture_benchmark.py",
+        "scripts/summarize_capture_optimization.py",
+        "docs/reports/optimizacion_captura_2026-10-29.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/blender_capture_optimized.py",
+          "locator": "def binary_geometry_digest("
+        },
+        {
+          "path": "src/uchuva_lsystem/capture_plan.py",
+          "locator": "class CaptureJournal:"
+        },
+        {
+          "path": "scripts/report_capture_benchmark.py",
+          "locator": "def summarize("
+        },
+        {
+          "path": "tests/test_capture_optimization.py",
+          "locator": "test_bulk_guard_detects_in_place_vertex_edit"
+        },
+        {
+          "path": "src/uchuva_lsystem/mask_arrays.py",
+          "locator": "def quantize_stats("
+        },
+        {
+          "path": "scripts/audit_saved_capture_scene.py",
+          "locator": "def audit("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_capture_dual_scene.py",
+          "locator": "class DualSceneCaptureSession("
+        },
+        {
+          "path": "src/uchuva_lsystem/capture_conditions.py",
+          "locator": "def balanced_condition_for_view("
+        },
+        {
+          "path": "scripts/run_matched_capture_benchmark.py",
+          "locator": "def run("
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.optimized_dataset_completion",
+      "type": "entrypoint",
+      "label": "Completar 1000 vistas preservando plantas admitidas",
+      "summary": "Continuación independiente y limitada por cantidad:144 heredadas intactas más856 nuevas. Un trabajador por escena, checkpoint reanudable, cierre geométrico obligatorio, locks nativos y auditoría de píxeles/clase/YOLO. Veinte árboles intactos, variación luz/profundidad y tutorado, presupuestos históricos preservados. Sin entrenamiento; cierre exige revisión humana de muestras. Revisión de cielos: azul despejado, bruma ligera y cubierto, luz acorde y balance por profundidad; atmósfera procedural sobre paisaje conservado, sin cambios de plantas. Regresión Blender comprueba cielo superior/paisaje inferior y geometría. Revisión futura: máscara de horizonte alineada y paisaje decontaminado eliminan blanco residual; distancias continuas con70%entre referencias cerca-medio y30%medio-lejos, independientes de árboles/cielos. No se reescriben capturas históricas; pares de diagnóstico no cuentan.",
+      "paths": [
+        "scripts/complete_optimized_dataset.py",
+        "scripts/render_dataset_completion.py",
+        "scripts/report_dataset_completion.py",
+        "src/uchuva_lsystem/dataset_completion.py",
+        "tests/test_dataset_completion.py",
+        "docs/guides/completar_dataset_optimizado.md",
+        "docs/reports/completar_dataset_1000_2026-10-30.md",
+        "src/uchuva_lsystem/capture_skies.py",
+        "src/uchuva_lsystem/blender_capture_skies.py",
+        "tests/test_capture_skies.py",
+        "scripts/check_capture_sky_background.py",
+        "scripts/report_capture_skies.py",
+        "src/uchuva_lsystem/continuous_capture_distance.py",
+        "src/uchuva_lsystem/horizon_matte.py",
+        "scripts/prepare_capture_horizon_assets.py",
+        "scripts/preview_capture_revision.py",
+        "tests/test_capture_distance_horizon.py"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/dataset_completion.py",
+          "locator": "def new_rows("
+        },
+        {
+          "path": "scripts/complete_optimized_dataset.py",
+          "locator": "def run("
+        },
+        {
+          "path": "scripts/render_dataset_completion.py",
+          "locator": "capture_complete.json"
+        },
+        {
+          "path": "scripts/report_dataset_completion.py",
+          "locator": "def audit_pixels("
+        },
+        {
+          "path": "tests/test_dataset_completion.py",
+          "locator": "test_only_closed_physically_admitted_views_count"
+        },
+        {
+          "path": "src/uchuva_lsystem/capture_skies.py",
+          "locator": "def sky_condition_for_view("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_capture_skies.py",
+          "locator": "class CaptureSkyBackground:"
+        },
+        {
+          "path": "scripts/check_capture_sky_background.py",
+          "locator": "Lower landscape changed"
+        },
+        {
+          "path": "src/uchuva_lsystem/continuous_capture_distance.py",
+          "locator": "def sample_capture_distance("
+        },
+        {
+          "path": "src/uchuva_lsystem/horizon_matte.py",
+          "locator": "def separate_panorama("
+        },
+        {
+          "path": "scripts/preview_capture_revision.py",
+          "locator": "annotations_exact=True"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.dataset_diversity_review",
+      "type": "entrypoint",
+      "label": "Pausa y revisión descriptiva al umbral500",
+      "summary": "Guarda de pausa impide reanudar sin decisión. Primeras500 congeladas cronológicamente de503 preservadas. Análisis train-only de cobertura estructural/cámara, pHash, tamaños/densidad, clases y brillo; listas46/115 revisadas excluyen una captura casi negra sin borrar datos. La diversidad visual no demuestra eficacia ni independencia; se recomienda un piloto pequeño antes de ampliar a1000.",
+      "paths": [
+        "scripts/assess_dataset_diversity.py",
+        "scripts/review_diversity_candidates.py",
+        "scripts/summarize_diversity_structure.py",
+        "scripts/complete_optimized_dataset.py",
+        "tests/test_dataset_review_pause.py",
+        "docs/reports/diversidad_banco_500_2026-10-30.md"
+      ],
+      "evidence": [
+        {
+          "path": "scripts/complete_optimized_dataset.py",
+          "locator": "def review_pause_active("
+        },
+        {
+          "path": "scripts/assess_dataset_diversity.py",
+          "locator": "def hash_review("
+        },
+        {
+          "path": "scripts/review_diversity_candidates.py",
+          "locator": "shared_min_side_sensitivities"
+        },
+        {
+          "path": "scripts/summarize_diversity_structure.py",
+          "locator": "unique_visible_reproductive_ids"
+        },
+        {
+          "path": "tests/test_dataset_review_pause.py",
+          "locator": "test_active_review_pause_prevents_prepare_and_process_launch"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.reviewed115_augmentation_pilot",
+      "type": "entrypoint",
+      "label": "Piloto revisado115 con controles de repeticion emparejados",
+      "summary": "Piloto115 completado y revisado: seis corridas4000 pasos, tres semillas; AP macro de desarrollo18.83 real+clasica frente20.89 sintetica+clasica, delta+2.07pp positivo3/3. Madura+3.76pp; Sobremadura-0.76pp en3/3. Pares de slots/repeticion, LR, aumentacion, hashes y48000 exposiciones verificados. Seis pesos congelados antes del test historicamente consultado; bootstrap condicionado no confirmatorio. Veinte plantas reutilizadas y seis grupos desiguales. Generacion503 vistas permanece pausada, sin ampliacion ni promocion automatica.",
+      "paths": [
+        "scripts/reviewed_augmentation_pilot.py",
+        "scripts/train_reviewed_augmentation.py",
+        "scripts/evaluate_reviewed_augmentation.py",
+        "tests/test_reviewed_augmentation_pilot.py",
+        "docs/reports/piloto_115_corregidas_2026-10-31.md"
+      ],
+      "evidence": [
+        {
+          "path": "scripts/reviewed_augmentation_pilot.py",
+          "locator": "def generation_paused():"
+        },
+        {
+          "path": "scripts/train_reviewed_augmentation.py",
+          "locator": "AppearanceTrainer.control=config['real_only']"
+        },
+        {
+          "path": "scripts/evaluate_reviewed_augmentation.py",
+          "locator": "design=checked_groups("
+        },
+        {
+          "path": "tests/test_reviewed_augmentation_pilot.py",
+          "locator": "def test_native_threshold_is_strict_side_and_relative_area("
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.sobremadura_error_diagnosis",
+      "type": "entrypoint",
+      "label": "Diagnostico post hoc de errores Sobremadura",
+      "summary": "Predicciones congeladas de seis modelos: TP Sobre41->47 y FP139->178 al umbral comun; confusion Sobre->Pintona38->60 sobre174 apariciones de58 cajas, no independientes. Exposicion98.59% sintetica dentro de Sobre, reconstruida y cotejada; apariencia/escala y fronteras de clase son hipotesis no causales. Bootstrap de clase[-3.69,+4.74]pp incluye cero y fuerte sensibilidad a grupos. Ejemplos comparados con candidatos bajo umbral explicitados. Generacion pausada; sin inferencia nueva ni reentrenamiento.",
+      "paths": [
+        "scripts/diagnose_sobremadura_pilot.py",
+        "scripts/plot_sobremadura_diagnosis.py",
+        "tests/test_sobremadura_diagnosis.py",
+        "docs/reports/diagnostico_sobremadura_piloto_115_2026-10-31.md"
+      ],
+      "evidence": [
+        {
+          "path": "scripts/diagnose_sobremadura_pilot.py",
+          "locator": "def error_type("
+        },
+        {
+          "path": "scripts/diagnose_sobremadura_pilot.py",
+          "locator": "def native_class_exposure("
+        },
+        {
+          "path": "scripts/plot_sobremadura_diagnosis.py",
+          "locator": "state='admitida'"
+        },
+        {
+          "path": "tests/test_sobremadura_diagnosis.py",
+          "locator": "def test_low_confidence_and_wrong_class_are_not_called_missing_geometry("
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.calyx_deterioration_visual_pilot",
+      "type": "entrypoint",
+      "label": "Piloto opt-in de deterioro visible del capacho",
+      "summary": "Estado puro determinista y superficies/forma interpretadas en Blender sobre copias: control Madura, Sobre pajiza valida y tres grados de deterioro; variante oscura proximal y variante decolorada. Parametros heurísticos basados en observacion del usuario; no simula reabsorcion ni madurez interna. Cuatro vistas de organos aislados, no plantas admitidas; fruto interior y contactos completos pendientes. Preserva503 vistas/20 arboles y fuentes historicas, banco pausado y sin entrenamiento.",
+      "paths": [
+        "src/uchuva_lsystem/calyx_deterioration.py",
+        "src/uchuva_lsystem/blender_calyx_deterioration.py",
+        "scripts/prepare_calyx_deterioration_pilot.py",
+        "scripts/render_calyx_deterioration_pilot.py",
+        "scripts/report_calyx_deterioration_pilot.py",
+        "tests/test_calyx_deterioration.py",
+        "docs/reports/piloto_deterioro_capachos_2026-10-31.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/calyx_deterioration.py",
+          "locator": "class CalyxDeterioration:"
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_calyx_deterioration.py",
+          "locator": "def apply_shell_state("
+        },
+        {
+          "path": "tests/test_calyx_deterioration.py",
+          "locator": "def test_deterioration_is_not_always_black("
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.train_calyx_darkness",
+      "type": "entrypoint",
+      "label": "Cuantificacion train-only de oscuridad visible del capacho",
+      "summary": "Cribado exploratorio de363 Sobre/170fotos y197controles mismafoto. L*25/35/45 en elipse central y GrabCut aproximado; oscuridad no equivale a pigmentacion/lesion. RevisionCodex de30casos detecta tejido omitido y hojas incluidas; no son masksGT. Cobertura amplia existe, distribucion no exclusiva de Sobre. Un ejemplo proximal orientado visualmente; nunca asumir arriba=proximal en todas las cajas. Fuentes/datos originales intactos; banco pausado y sin entrenamiento.",
+      "paths": [
+        "scripts/quantify_calyx_dark_regions.py",
+        "scripts/report_calyx_dark_regions.py",
+        "tests/test_calyx_dark_regions.py",
+        "docs/reports/cuantificacion_oscuridad_capachos_train_2026-10-31.md"
+      ],
+      "evidence": [
+        {
+          "path": "scripts/quantify_calyx_dark_regions.py",
+          "locator": "def darkness_metrics("
+        },
+        {
+          "path": "scripts/report_calyx_dark_regions.py",
+          "locator": "no_anatomical_orientation_assumed_for_population"
+        },
+        {
+          "path": "tests/test_calyx_dark_regions.py",
+          "locator": "def test_uniform_dark_is_not_lost_by_relative_threshold("
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.calyx_darkening_approval",
+      "type": "entrypoint",
+      "label": "Muestras para aprobar oscurecimiento y contraccion del capacho",
+      "summary": "Plan puro e interprete de superficie sobre copias, con formas aisladas para revisar contraccion. No establece reabsorcion fisiologica ni compatibilidad con fruto interior. Preserva banco pausado, plantas y etiquetas; sin entrenamiento ni extension automatica. Revision irregular-mottling/2 reemplaza bandas por parches 3D progresivos, conserva venacion/ventanas claras y geometria de secado. Sin evidencia fotografica suficiente para opacidad intrinseca total; contribucion difusa transmitida heuristica, sin huecos alpha.",
+      "paths": [
+        "src/uchuva_lsystem/calyx_darkening_review.py",
+        "src/uchuva_lsystem/blender_calyx_darkening_review.py",
+        "scripts/prepare_calyx_approval_samples.py",
+        "scripts/render_calyx_approval_samples.py",
+        "scripts/report_calyx_approval_samples.py",
+        "tests/test_calyx_darkening_review.py",
+        "docs/reports/muestras_sobremaduras_oscuras_2026-10-31.md",
+        "src/uchuva_lsystem/calyx_mottling.py",
+        "src/uchuva_lsystem/blender_calyx_mottling.py",
+        "scripts/prepare_calyx_mottling_review.py",
+        "scripts/render_calyx_mottling_review.py",
+        "scripts/report_calyx_mottling_review.py",
+        "tests/test_calyx_mottling.py"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/calyx_darkening_review.py",
+          "locator": "class DarkeningPlan:"
+        },
+        {
+          "path": "scripts/render_calyx_approval_samples.py",
+          "locator": "def context(out):"
+        },
+        {
+          "path": "scripts/render_calyx_approval_samples.py",
+          "locator": "def organs(out):"
+        },
+        {
+          "path": "src/uchuva_lsystem/calyx_mottling.py",
+          "locator": "class MottlingPlan:"
+        },
+        {
+          "path": "tests/test_calyx_mottling.py",
+          "locator": "def test_patch_field_varies_around_same_height("
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.calyx_vein_spread_review",
+      "type": "entrypoint",
+      "label": "Revision de pigmentacion originada en venas del capacho",
+      "summary": "Propagacion UV desde la mascara venosa original: inicio proximal temprano, red vascular anterior al halo y avance distal. Tasas heuristicas segun observacion del usuario; preserva estados de secado, fuentes, banco pausado y etiquetas. No certifica reabsorcion fisiologica ni fruto interior.",
+      "paths": [
+        "src/uchuva_lsystem/calyx_vein_spread.py",
+        "src/uchuva_lsystem/blender_calyx_vein_spread.py",
+        "scripts/prepare_calyx_vein_review.py",
+        "scripts/render_calyx_vein_review.py",
+        "scripts/report_calyx_vein_review.py",
+        "tests/test_calyx_vein_spread.py",
+        "docs/reports/pigmentacion_desde_venas_2026-11-11.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/calyx_vein_spread.py",
+          "locator": "class VeinSpreadPlan:"
+        },
+        {
+          "path": "src/uchuva_lsystem/calyx_vein_spread.py",
+          "locator": "def arrival_field("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_calyx_vein_spread.py",
+          "locator": "registered_vein_arrival_rgb"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.calyx_diffusion_texture_review",
+      "type": "entrypoint",
+      "label": "Comparacion real y texturas de capacho por reaccion-difusion",
+      "summary": "Revision train-only 8Madura/8Sobre detecta concordancia parcial del shader previo, tono ocre y reticula artificial; nuevo entramado sin filas recortadas y albedo/normal coherentes, activacion proximal y pigmento irreversible guiados por venas. Herramienta visual heuristica, sin calibracion fisiologica ni ampliacion del banco. Conserva fuentes, arboles y pausa. Revision del interprete conserva las ganancias de albedo originales para no confundir el cambio de textura con un cambio del perfil cromatico. Refinamiento opt-in de contraste primario Madura, pigmento intervascular y atenuacion de reticula secundaria en Sobre, con microrelieve seco por grado y las mismas formas/auditorias. Revision opt-in de secado gris: compensa el sesgo cromatico del perfil en tejido ya pigmentado y agrega rugosidad optica, sin cambiar el solver proximal/venoso, formas ni alfa; piloto y banco pausados. Tanda de aprobacion separada: dos escenas admitidas y cuatro vistas con mayoria azul, luces variadas y minoria de Sobre; asignaciones locales coherentes con etiquetas nuevas, mascaras/geometria originales preservadas, banco/piloto pausados. Correccion opt-in de dominante azul comun en suelo/capachos: carta gris confirma exceso cromatico ambiental. Mezcla de radiancia hacia luminancia para rayos no-camera, con cielo visible/sol/mapas/geometria conservados; aproximacion visual explicita, no atmosfera radiometricamente validada. Cuatro vistas emparejadas, banco/piloto pausados.",
+      "paths": [
+        "src/uchuva_lsystem/calyx_diffusion_texture.py",
+        "src/uchuva_lsystem/blender_calyx_diffusion_texture.py",
+        "scripts/prepare_calyx_diffusion_review.py",
+        "scripts/render_calyx_diffusion_review.py",
+        "scripts/report_calyx_diffusion_review.py",
+        "tests/test_calyx_diffusion_texture.py",
+        "docs/reports/comparacion_real_y_difusion_capachos_2026-11-11.md",
+        "docs/references/calyx_rule_diffusion_20261111.json",
+        "src/uchuva_lsystem/blender_calyx_diffusion_profile.py",
+        "scripts/prepare_calyx_diffusion_profile_review.py",
+        "scripts/render_calyx_diffusion_profile_review.py",
+        "src/uchuva_lsystem/calyx_dry_refinement.py",
+        "src/uchuva_lsystem/blender_calyx_dry_refinement.py",
+        "scripts/prepare_calyx_dry_refinement.py",
+        "scripts/render_calyx_dry_refinement.py",
+        "tests/test_calyx_dry_refinement.py",
+        "docs/reports/refinamiento_venas_y_secado_2026-11-11.md",
+        "src/uchuva_lsystem/calyx_ash_drying.py",
+        "src/uchuva_lsystem/blender_calyx_ash_drying.py",
+        "scripts/prepare_calyx_ash_drying.py",
+        "scripts/render_calyx_ash_drying.py",
+        "tests/test_calyx_ash_drying.py",
+        "docs/reports/aspereza_gris_sobremaduras_2026-11-11.md",
+        "scripts/report_calyx_ash_drying.py",
+        "src/uchuva_lsystem/blue_sky_sample_review.py",
+        "scripts/prepare_blue_sky_samples.py",
+        "scripts/render_blue_sky_samples.py",
+        "tests/test_blue_sky_sample_review.py",
+        "docs/reports/muestras_cielo_azul_sobremaduras_2026-11-11.md",
+        "scripts/report_blue_sky_samples.py",
+        "src/uchuva_lsystem/daylight_balance.py",
+        "src/uchuva_lsystem/blender_daylight_balance.py",
+        "scripts/check_daylight_cast.py",
+        "scripts/prepare_daylight_balanced_samples.py",
+        "scripts/render_daylight_balanced_samples.py",
+        "scripts/report_daylight_balanced_samples.py",
+        "tests/test_daylight_balance.py",
+        "docs/reports/correccion_dominante_azul_suelo_capachos_2026-11-11.md"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/calyx_diffusion_texture.py",
+          "locator": "def simulate("
+        },
+        {
+          "path": "src/uchuva_lsystem/calyx_diffusion_texture.py",
+          "locator": "def vein_graph("
+        },
+        {
+          "path": "tests/test_calyx_diffusion_texture.py",
+          "locator": "def test_no_source_no_spontaneous_pigment("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_calyx_diffusion_profile.py",
+          "locator": "frozen_profile_albedo_gain"
+        },
+        {
+          "path": "src/uchuva_lsystem/calyx_dry_refinement.py",
+          "locator": "def color_surface("
+        },
+        {
+          "path": "tests/test_calyx_dry_refinement.py",
+          "locator": "def test_late_reticulation_softens_as_pigment_enters_intervenal_tissue("
+        },
+        {
+          "path": "src/uchuva_lsystem/calyx_ash_drying.py",
+          "locator": "def grey_drying("
+        },
+        {
+          "path": "tests/test_calyx_ash_drying.py",
+          "locator": "def test_unchanged_pigment_source_solver_and_shape_states("
+        },
+        {
+          "path": "src/uchuva_lsystem/blue_sky_sample_review.py",
+          "locator": "def sparse_assignments("
+        },
+        {
+          "path": "scripts/render_blue_sky_samples.py",
+          "locator": "assert sha(annotation['path'])==original['mask_sha256']"
+        },
+        {
+          "path": "src/uchuva_lsystem/daylight_balance.py",
+          "locator": "def radiance_balance("
+        },
+        {
+          "path": "src/uchuva_lsystem/blender_daylight_balance.py",
+          "locator": "class DaylightRadianceBalance:"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.daylight115_augmentation_pilot",
+      "type": "entrypoint",
+      "label": "Piloto acotado de115 RGB nuevos con secado gris y cielos variados",
+      "summary": "Cierre tecnico:115 RGB nuevos auditados, 20 arboles y geometria intactos;69 cielos despejados,29 con bruma y17 cubiertos. Siete controles de mascara nativa exacta y auditoria pixel de115 pares. Seis corridas nuevas de4000 actualizaciones, tres semillas emparejadas; seis pesos congelados antes del test de desarrollo. Macro18.83 a19.70 por ciento (+0.87pp, intervalo descriptivo por grupos incluye cero); Sobremadura11.87 a9.32 (-2.54pp de media, tres deltas negativos). Curvas y errores revisados, exposiciones completas y de checkpoints reconstruidas; gran brecha de escala/densidad. Efecto conjunto de banco, no ablacion ni madurez agronomica validada. Generacion historica pausada, sin ampliacion automatica ni promocion. Revision tecnica completada; decision humana de ampliacion pendiente.",
+      "paths": [
+        "src/uchuva_lsystem/daylight_115_bank.py",
+        "scripts/prepare_daylight_115_bank.py",
+        "scripts/run_daylight_115_bank.py",
+        "scripts/render_daylight_115_bank.py",
+        "scripts/report_daylight_115_bank.py",
+        "scripts/daylight_augmentation_pilot.py",
+        "scripts/train_daylight_augmentation.py",
+        "scripts/evaluate_daylight_augmentation.py",
+        "tests/test_daylight_115_bank.py",
+        "tests/test_daylight_augmentation_pilot.py",
+        "docs/guides/piloto_115_cielos_secado.md",
+        "docs/reports/piloto_115_cielos_secado_2026-11-12.md",
+        "scripts/diagnose_daylight_pilot.py",
+        "scripts/report_daylight_exposure.py",
+        "scripts/audit_cached_synthetic_bias.py",
+        "tests/test_sobremadura_diagnosis.py"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/daylight_115_bank.py",
+          "locator": "def exact_mask_cache_gate("
+        },
+        {
+          "path": "scripts/daylight_augmentation_pilot.py",
+          "locator": "def generation_paused("
+        },
+        {
+          "path": "scripts/render_daylight_115_bank.py",
+          "locator": "assert sha(native['path'])==last_original['mask_sha256']"
+        },
+        {
+          "path": "scripts/report_daylight_exposure.py",
+          "locator": "result=audit.exposure_audit(inputs,manifest,plan,root)"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.sobremadura_four_model_gallery",
+      "type": "entrypoint",
+      "label": "Diagnostico Sobre y galeria de cuatro familias desde caches",
+      "summary": "Revision de94 fotos reales de desarrollo,28 con58 etiquetas Sobre, tres semillas. Pareja reciente clasica/hibrida y referencias historicas sin aumentacion y real+sintetica sin clasica; dosis389S historica y115S nueva distintas, no ablacion de cuatro tratamientos. Verifica doce pesos/caches y misma verdad original. Distingue etiqueta ausente, prediccion ausente y candidato sin caja proxima; conserva clases competidoras. Evidencia reciente: TP41 a35, FP139 a121, confusion por objetivo a Pintona38 a57; escala14px sintetica frente100.51real y90.23por ciento de apariciones Sobre sinteticas, sin atribuir gradientes ni causalidad. Sin inferencia, entrenamiento, cambio de etiquetas o renders; generacion pausada. JS probado por contrato en Node y tres laminas estaticas inspeccionadas; navegador automatizado bloqueo file URLs, no se declara revision visual de interfaz.",
+      "paths": [
+        "scripts/build_sobremadura_four_model_gallery.py",
+        "scripts/diagnose_sobremadura_texture_transfer.py",
+        "scripts/render_four_model_review_panels.py",
+        "scripts/assets/sobremadura_gallery.html",
+        "scripts/assets/sobremadura_gallery.js",
+        "scripts/assets/sobremadura_gallery.css",
+        "scripts/test_sobremadura_gallery_runtime.cjs",
+        "tests/test_four_model_gallery.py",
+        "docs/reports/diagnostico_sobremadura_y_galeria_2026-11-13.md"
+      ],
+      "evidence": [
+        {
+          "path": "scripts/build_sobremadura_four_model_gallery.py",
+          "locator": "def same_truth("
+        },
+        {
+          "path": "scripts/build_sobremadura_four_model_gallery.py",
+          "locator": "def presence_status("
+        },
+        {
+          "path": "scripts/build_sobremadura_four_model_gallery.py",
+          "locator": "def candidate_regions("
+        },
+        {
+          "path": "scripts/diagnose_sobremadura_texture_transfer.py",
+          "locator": "counts_are_not_gradient_weights=True"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.sobremadura_label_visual_triage",
+      "type": "entrypoint",
+      "label": "Cribado visual de sospechas de etiquetas Sobre sin adjudicacion",
+      "summary": "94 fotos reales y144 regiones propuestas por caches revisadas;17 candidatos documentados:6 Pintona,6 Madura y5 regiones sin caja. Siete discrepancias de clase prioritarias y cinco ambiguas; identidad de organo y clase pendientes en omisiones. U2 parece hoja y se excluye como evidencia; U4/U5 pueden repetir el mismo organo. Las propuestas no son verdad terreno ni errores confirmados. Galerias PNG y fichas con GT original/contexto/recorte limpio, sin depender del HTML. Fuentes congeladas y pausa verificadas; sin cambiar etiquetas, inferencia, entrenamiento ni renders.",
+      "paths": [
+        "scripts/prepare_sobremadura_label_review.py",
+        "scripts/render_suspected_label_cases.py",
+        "scripts/finalize_suspected_label_review.py",
+        "docs/reports/sospechas_etiquetas_sobremadura_2026-11-13.md"
+      ],
+      "evidence": [
+        {
+          "path": "scripts/prepare_sobremadura_label_review.py",
+          "locator": "Read-only visual triage, not an automatic label adjudicator."
+        },
+        {
+          "path": "scripts/render_suspected_label_cases.py",
+          "locator": "CASES=["
+        },
+        {
+          "path": "scripts/finalize_suspected_label_review.py",
+          "locator": "confirmed_label_errors=None"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.blind_segmentation_audit",
+      "type": "entrypoint",
+      "label": "Auditoria manual ciega de segmentacion con lupa y referencia cromatica",
+      "summary": "App nativa para50 imagenes train,30 aleatorias y20 dificiles. Primera segmentacion manual inmutable antes de revelar propuestas y originales; adjudicacion en revisiones separadas. Mascaras RLE nativas conservan partes y huecos; cajas solo derivadas. Propuestas RGB GrabCut aproximadas guiadas por detectores existentes, no modelo de segmentacion validado ni prueba de generalizacion. Lupa siempre abierta superior derecha amplia RGB sin overlays; siete colores solo de capacho pegados bajo la ROI, grado y clase empirica debajo. Medianas de parches circulares de Norma.webp con hashes y coordenadas; muestreo de fruto conservado solo como procedencia. Agrupacion visual historica0-1verde/2-4pintona/5madura/6sobre, sin asignacion automatica ni nueva clase. Revision de UI conserva datos, propuestas y borradores. SAM local opcional con clics positivos/negativos, vista previa y aceptacion explicita; clase humana y procedencia de pesos/clics. Nodos permiten mover/insertar/eliminar y deshacer; se conservan en borradores ligados por hash a la mascara. Insercion no altera pixeles; mover/eliminar aplica delta local con minimo3vertices y rechazo de autocruces, sin convertir automaticamente RLE ni revelar propuestas. Lienzo ampliado con desplegables de imagen, instancia y clase en la barra superior e inspector independiente. Inicio maximizado, pantalla completa con F11, barras que distribuyen controles por filas y lupa compacta segun el espacio disponible. Nombre o identificador de quien etiqueta en dialogo inicial editable desde Perfil. Notas plegables en la esquina inferior derecha. Parametros de la herramienta activa y dialogos de ayuda por herramienta. Foto encajada al abrir con zoom manual conservado y acciones de guardado reservadas. Filtro de teclado distingue NumLock Win32 de Alt X11, con regresion y comprobacion de S en demostracion aislada. Barra inferior reservada muestra ayuda contextual y modos con teclas; Enter/guardar dependen del modo, atajos protegidos en campos de texto y vistas de solo lectura. Ronda cruzada separada genera seis lotes ciegos con parejas equilibradas y conserva 50 propuestas congeladas. Entregas inmutables por revisor e importacion deduplicada. Coordinacion compara solo tras dos entregas, registra resoluciones por separado e informa concordancia por dificultad y uso de SAM. Primera anotacion asistida se distingue de manual sin modelo; generacion y entrenamiento pausados, auditoria humana pendiente. Manual PDF incluido en cada lote. Distribucion verificada por lista explicita: ZIP comun de la aplicacion y seis ZIP individuales sin propuestas ni entregas humanas.",
+      "paths": [
+        "src/uchuva_annotation_audit/store.py",
+        "src/uchuva_annotation_audit/masks.py",
+        "src/uchuva_annotation_audit/reference_loupe.py",
+        "src/uchuva_annotation_audit/assistance.py",
+        "src/uchuva_annotation_audit/ui_theme.py",
+        "scripts/annotation_audit_app.py",
+        "scripts/cross_review_app.py",
+        "scripts/prepare_cross_review.py",
+        "scripts/run_private_mask_ladder.py",
+        "docs/guides/piloto_privado_mascaras.md",
+        "scripts/abrir_revision_cruzada.cmd",
+        "src/uchuva_annotation_audit/cross_review.py",
+        "tests/test_cross_review.py",
+        "scripts/abrir_auditoria_segmentacion.cmd",
+        "scripts/prepare_blind_annotation_pilot.py",
+        "scripts/prepare_blind_segmentation.py",
+        "scripts/seal_blind_segmentation_pilot.py",
+        "scripts/refresh_annotation_audit_ui.py",
+        "tests/test_blind_annotation_audit.py",
+        "tests/test_annotation_reference_loupe.py",
+        "tests/test_annotation_assistance.py",
+        "tests/test_annotation_context_commands.py",
+        "docs/references/annotation_assistance_model.json",
+        "docs/guides/auditoria_ciega_segmentacion.md",
+        "docs/guides/manual_estudiantes_revision_cruzada.pdf",
+        "docs/references/annotation_norma_palette.json"
+      ],
+      "evidence": [
+        {
+          "path": "src/uchuva_annotation_audit/store.py",
+          "locator": "Guarda primero la anotación manual ciega"
+        },
+        {
+          "path": "src/uchuva_annotation_audit/reference_loupe.py",
+          "locator": "def magnified_patch("
+        },
+        {
+          "path": "scripts/refresh_annotation_audit_ui.py",
+          "locator": "assert updated['files']==old['files']"
+        }
+      ]
+    },
+    {
+      "id": "entrypoint.private_mask_synthetic_pilot",
+      "type": "entrypoint",
+      "label": "Piloto privado de segmentación con dosis sintéticas y fotogramas",
+      "summary": "Compara dosis de 0, 120, 240 y 600 exposiciones sintéticas de 8.000 más una variante de encuadre a dosis 240, con tres semillas y 4.000 pasos por corrida. Reutiliza 461 RGB reales con máscaras privadas y 115 vistas sintéticas auditadas. Conserva la primera exposición real y usa un manifiesto sustituible de anotaciones por identidad RGB. Una auditoría independiente admite fotogramas sólo con novedad, trazabilidad y cobertura de grupos. Validación fija de 88 fotos y evaluación exploratoria de 94 fotos históricas después de sellar los pesos. Artefactos separados de la revisión estudiantil.",
+      "paths": [
+        "scripts/run_private_synthetic_masks.py",
+        "scripts/train_private_synthetic_masks.py",
+        "scripts/evaluate_private_synthetic_masks.py",
+        "scripts/prepare_private_synthetic_bank.py",
+        "scripts/audit_private_video_frames.py",
+        "docs/guides/piloto_privado_sintetico_mascaras.md"
+      ],
+      "evidence": [
+        {
+          "path": "scripts/run_private_synthetic_masks.py",
+          "locator": "def bind_real_labels("
+        },
+        {
+          "path": "scripts/train_private_synthetic_masks.py",
+          "locator": "def preflight("
+        },
+        {
+          "path": "scripts/evaluate_private_synthetic_masks.py",
+          "locator": "def control_threshold("
+        }
+      ]
     }
   ],
   "edges": [
+    {
+      "source": "entrypoint.harvest_pilot",
+      "relation": "depends_on",
+      "target": "module.parametric_harvester",
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/harvest_pilot.py",
+          "locator": "robot_spec_sha256"
+        }
+      ]
+    },
     {
       "source": "entrypoint.bouquet_row_flight",
       "relation": "depends_on",
@@ -5829,6 +7131,347 @@
         {
           "path": "src/uchuva_gazebo/harvest_plants.py",
           "locator": "pedicel_id"
+        }
+      ]
+    },
+    {
+      "source": "module.physalisharvest_integration",
+      "target": "module.parametric_harvester",
+      "relation": "depends_on",
+      "evidence": [
+        {
+          "path": "src/uchuva_gazebo/physalisharvest.py",
+          "locator": "from .robot import robot_contract"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.nodal_growth_review",
+      "relation": "depends_on",
+      "target": "module.grammar",
+      "evidence": [
+        {
+          "path": "scripts/prepare_nodal_review.py",
+          "locator": "from uchuva_lsystem.grammar import generate_morphology_tree"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.nodal_growth_review",
+      "relation": "depends_on",
+      "target": "module.blender_geometry",
+      "evidence": [
+        {
+          "path": "scripts/render_nodal_review.py",
+          "locator": "audit_scene_mesh_collisions"
+        }
+      ]
+    },
+    {
+      "source": "module.grammar",
+      "relation": "produces",
+      "target": "artifact.morphology_tree",
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/grammar.py",
+          "locator": "return plant"
+        }
+      ]
+    },
+    {
+      "source": "artifact.human_validation_suite",
+      "relation": "must_preserve",
+      "target": "constraint.closed_calyx_hidden_fruit",
+      "evidence": [
+        {
+          "path": "docs/guides/protocolo_validacion_humana.md",
+          "locator": "fruto continúa oculto"
+        }
+      ]
+    },
+    {
+      "source": "decision.hybrid_evaluation_protocol",
+      "relation": "configures",
+      "target": "module.hybrid_experiments",
+      "evidence": [
+        {
+          "path": "docs/governance/decisiones_tecnicas.md",
+          "locator": "## 2026-07-31 - Protocolo de mezcla natural y sintética"
+        }
+      ]
+    },
+    {
+      "source": "decision.hybrid_evaluation_protocol",
+      "relation": "configures",
+      "target": "module.hybrid_training",
+      "evidence": [
+        {
+          "path": "docs/governance/decisiones_tecnicas.md",
+          "locator": "El criterio de éxito es igualar o superar el baseline natural"
+        }
+      ]
+    },
+    {
+      "source": "decision.hybrid_evaluation_protocol",
+      "relation": "configures",
+      "target": "module.hybrid_study",
+      "evidence": [
+        {
+          "path": "docs/governance/decisiones_tecnicas.md",
+          "locator": "## 2026-08-11 - Estudio híbrido multisemilla con evaluación real sellada"
+        }
+      ]
+    },
+    {
+      "source": "decision.hybrid_evaluation_protocol",
+      "relation": "configures",
+      "target": "module.photometric_calibration",
+      "evidence": [
+        {
+          "path": "docs/governance/decisiones_tecnicas.md",
+          "locator": "La calibración visual y"
+        }
+      ]
+    },
+    {
+      "source": "decision.spatial_calibration_checkpoint_interpolation",
+      "relation": "must_preserve",
+      "target": "constraint.original_dataset_immutable",
+      "evidence": [
+        {
+          "path": "docs/governance/decisiones_tecnicas.md",
+          "locator": "ajuste usa únicamente `train+val` naturales"
+        }
+      ]
+    },
+    {
+      "source": "module.blender_geometry",
+      "relation": "depends_on",
+      "target": "module.leaf_surface",
+      "evidence": [
+        {
+          "path": "src/uchuva_lsystem/blender_geometry.py",
+          "locator": "broad_leaf_surface"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.nodal_automation_review",
+      "target": "entrypoint.nodal_growth_review",
+      "relation": "extends_with_bounded_automatic_review",
+      "evidence": [
+        {
+          "path": "docs/guides/controlador_repulsion_nodal.md",
+          "locator": "Mantiene el contrato morfológico"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.third_candidate_space_admission",
+      "target": "entrypoint.nodal_automation_review",
+      "relation": "extends_with_explicit_sparse_generation_admission",
+      "evidence": [
+        {
+          "path": "docs/guides/controlador_repulsion_nodal.md",
+          "locator": "reproductive_space_plan"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.spatial_plant_pool_8h",
+      "target": "entrypoint.third_candidate_space_admission",
+      "relation": "extends_with_automatic_dual_strict_loss_guards",
+      "evidence": [
+        {
+          "path": "docs/guides/plantas_admision_espacial_8h.md",
+          "locator": "Cada presupuesto"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.spatial_dataset_handoff",
+      "target": "entrypoint.spatial_plant_pool_8h",
+      "relation": "conditionally_consumes20admitted_plants_with_same_budget",
+      "evidence": [
+        {
+          "path": "docs/guides/plantas_admision_espacial_8h.md",
+          "locator": "El supervisor aplica el límite global"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.optimized_spatial_capture",
+      "target": "entrypoint.spatial_dataset_handoff",
+      "relation": "reuses_admitted_scene_recipe",
+      "evidence": [
+        {
+          "path": "scripts/render_spatial_dataset_optimized.py",
+          "locator": "legacy.build_scene("
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.optimized_dataset_completion",
+      "target": "entrypoint.optimized_spatial_capture",
+      "relation": "uses_quality_checked_capture_without_new_morphology",
+      "evidence": [
+        {
+          "path": "scripts/render_dataset_completion.py",
+          "locator": "with DualSceneCaptureSession("
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.dataset_diversity_review",
+      "target": "entrypoint.optimized_dataset_completion",
+      "relation": "pauses_and_descriptively_reviews_before_extension_or_training",
+      "evidence": [
+        {
+          "path": "docs/guides/completar_dataset_optimizado.md",
+          "locator": "## Pausa para revisión de diversidad"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.reviewed115_augmentation_pilot",
+      "target": "entrypoint.dataset_diversity_review",
+      "relation": "trains_authorized_reviewed_subset_without_releasing_generation_pause",
+      "evidence": [
+        {
+          "path": "docs/guides/completar_dataset_optimizado.md",
+          "locator": "## Piloto autorizado con 115 corregidas"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.sobremadura_error_diagnosis",
+      "target": "entrypoint.reviewed115_augmentation_pilot",
+      "relation": "diagnoses_cached_paired_class_errors_without_new_training",
+      "evidence": [
+        {
+          "path": "docs/reports/diagnostico_sobremadura_piloto_115_2026-10-31.md",
+          "locator": "## Qué cambia por semilla"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.calyx_deterioration_visual_pilot",
+      "target": "entrypoint.sobremadura_error_diagnosis",
+      "relation": "proposes_visual_coverage_hypothesis_without_relabeling_or_training",
+      "evidence": [
+        {
+          "path": "docs/reports/piloto_deterioro_capachos_2026-10-31.md",
+          "locator": "## Observación y representación"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.train_calyx_darkness",
+      "target": "entrypoint.calyx_deterioration_visual_pilot",
+      "relation": "constrains_visible_darkness_hypotheses_without_class_exclusivity_or_physiological_inference",
+      "evidence": [
+        {
+          "path": "docs/reports/cuantificacion_oscuridad_capachos_train_2026-10-31.md",
+          "locator": "## Consecuencia para el generador"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.calyx_darkening_approval",
+      "target": "entrypoint.train_calyx_darkness",
+      "relation": "proposes_enriched_visual_examples_without_fitting_class_exclusive_darkness",
+      "evidence": [
+        {
+          "path": "docs/reports/muestras_sobremaduras_oscuras_2026-10-31.md",
+          "locator": "## Propósito y límites"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.calyx_vein_spread_review",
+      "target": "entrypoint.calyx_darkening_approval",
+      "relation": "replaces_unregistered_spots_with_vein_origin_growth_preserving_review_pause",
+      "evidence": [
+        {
+          "path": "docs/reports/pigmentacion_desde_venas_2026-11-11.md",
+          "locator": "## Observación del usuario y alcance"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.calyx_diffusion_texture_review",
+      "target": "entrypoint.calyx_vein_spread_review",
+      "relation": "self_audits_real_pattern_consistency_and_bakes_coherent_diffusion_textures_without_training",
+      "evidence": [
+        {
+          "path": "docs/reports/comparacion_real_y_difusion_capachos_2026-11-11.md",
+          "locator": "## Juicio sobre la tanda anterior"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.daylight115_augmentation_pilot",
+      "target": "entrypoint.reviewed115_augmentation_pilot",
+      "relation": "reuses",
+      "evidence": [
+        {
+          "path": "scripts/daylight_augmentation_pilot.py",
+          "locator": "from reviewed_augmentation_pilot import configurations,completed"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.sobremadura_four_model_gallery",
+      "target": "entrypoint.daylight115_augmentation_pilot",
+      "relation": "diagnoses",
+      "evidence": [
+        {
+          "path": "scripts/diagnose_sobremadura_texture_transfer.py",
+          "locator": "CURRENT=REPO/'outputs/daylight_augmentation_115_20261112/pilot'"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.sobremadura_label_visual_triage",
+      "target": "entrypoint.sobremadura_four_model_gallery",
+      "relation": "reviews",
+      "evidence": [
+        {
+          "path": "scripts/prepare_sobremadura_label_review.py",
+          "locator": "GALLERY=REPO/'outputs/sobremadura_four_models_20261113'"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.blind_segmentation_audit",
+      "target": "entrypoint.sobremadura_label_visual_triage",
+      "relation": "follows",
+      "evidence": [
+        {
+          "path": "docs/guides/auditoria_ciega_segmentacion.md",
+          "locator": "Las propuestas son máscaras **provisionales**"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.private_mask_synthetic_pilot",
+      "target": "entrypoint.blind_segmentation_audit",
+      "relation": "reuses",
+      "evidence": [
+        {
+          "path": "scripts/run_private_synthetic_masks.py",
+          "locator": "historical = read(LADDER / 'phases/461/manifest.json')"
+        }
+      ]
+    },
+    {
+      "source": "entrypoint.private_mask_synthetic_pilot",
+      "target": "entrypoint.daylight115_augmentation_pilot",
+      "relation": "reuses",
+      "evidence": [
+        {
+          "path": "scripts/prepare_private_synthetic_bank.py",
+          "locator": "outputs/daylight_augmentation_115_20261112/bank"
         }
       ]
     }

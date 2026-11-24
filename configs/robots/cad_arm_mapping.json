@@ -1,0 +1,700 @@
+{
+  "schema_version": "cad-arm-mapping/1.0",
+  "status": "provisional_mapping_for_review",
+  "occurrence_name_aliases": {
+    "ISO 10642:1997 M4x16:1": "ISO 10642 M4x16:1"
+  },
+  "occurrence_alias_evidence": "Content Center 1997 equivalent changes occurrence display name at root occurrence 0037; original root IAM SHA and placement retained. Original member identity is not asserted.",
+  "source_document_path": "arm/Ensamble brazo v2.iam",
+  "source_document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+  "source_inventory_snapshot_sha256": "2c63c24bb68c0ea7dbb952cd1f6d685fa014bdc0b29b751102d4478c9370d916",
+  "source_inventory_snapshot": "outputs/cad_arm_mapping_evidence_01/inventory_snapshot.json",
+  "source_inventory_status": "partial_export",
+  "coordinate_convention": {
+    "units": "metres/radians",
+    "frame": "arm CAD root document",
+    "matrix": "row-major 4x4, column vectors, parent_T_child; SI translation at indices 3,7,11",
+    "cad_vertical_axis": [
+      0,
+      1,
+      0
+    ],
+    "cad_to_chassis_mount": "pending; must be a separate explicit rigid transform, never silently reinterpret CAD Y as Gazebo Z",
+    "q_zero": "Current CAD occurrence transforms; encoder offsets/signs remain pending."
+  },
+  "group_names": [
+    "base_mount",
+    "yaw",
+    "upper_arm",
+    "forearm",
+    "wrist_pitch",
+    "wrist_roll"
+  ],
+  "top_level_occurrence_groups": {
+    "Subensamble base:1": "base_mount",
+    "RDS3235:1": "base_mount",
+    "JF-0530B:1": "base_mount",
+    "Freno de J1:1": "base_mount",
+    "Soporte encoder:1": "base_mount",
+    "Rodamiento:7": "base_mount",
+    "Wheel_gear v2:1": "yaw",
+    "Subensamble hombro:1": "yaw",
+    "Rodamiento:1": "yaw",
+    "Rodamiento:2": "yaw",
+    "Servomotor alto torque ASME:1": "yaw",
+    "ISO 10642 M4x16:1": "yaw",
+    "Eje 17 mm:1": "upper_arm",
+    "Eslabon HC V1:1": "upper_arm",
+    "Servomotor alto torque ASME:2": "upper_arm",
+    "Rodamiento:3": "upper_arm",
+    "Rodamiento:4": "upper_arm",
+    "Transmisión de correas síncronas:1": "upper_arm",
+    "Conexión de chaveta:1": "upper_arm",
+    "Conexión de chaveta:2": "upper_arm",
+    "Eje 10 mm:1": "forearm",
+    "Eslabon CM V1:1": "forearm",
+    "TD-8135MG Servo v5:1": "forearm",
+    "Soporte encoder 2:1": "forearm",
+    "Rodamiento:5": "forearm",
+    "Rodamiento:6": "forearm",
+    "Conexión de chaveta:3": "forearm",
+    "Conexión de chaveta:4": "forearm",
+    "Wheel_gear v2:2": "wrist_pitch",
+    "Wheel v1:1": "wrist_pitch",
+    "Eje 8 mm 2:1": "wrist_pitch",
+    "Eslabon MA V1:1": "wrist_pitch",
+    "TD-8135MG Servo v5:2": "wrist_pitch",
+    "Tapa eslabon MA:1": "wrist_pitch",
+    "Engranaje recto1:1": "wrist_pitch",
+    "Conexión de chaveta:5": "wrist_pitch",
+    "Conexión de chaveta:6": "wrist_pitch",
+    "Rodamiento:8": "wrist_pitch",
+    "horn plastico:1": "wrist_roll",
+    "Gripper ensamble:1": "wrist_roll"
+  },
+  "top_level_occurrence_count": 40,
+  "nested_assignment_overrides": [
+    {
+      "occurrence_path": [
+        "Subensamble hombro:1",
+        "Engranaje de eje paralelo:1"
+      ],
+      "group": "base_mount",
+      "status": "estimado",
+      "reason": "Auxiliary encoder gear axis is fixed at CAD x=-0.060m, coaxial with fixed base/encoder support. Freeze its CAD visual phase until transmission is represented; do not rotate its center with yaw.",
+      "unmodelled_motion": "Gear rotation about its own fixed axis; no actuator or reflected inertia claim.",
+      "evidence": [
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:112",
+          "occurrence_one": "Rodamiento:7",
+          "occurrence_two": "Subensamble hombro:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:114",
+          "occurrence_one": "Subensamble hombro:1",
+          "occurrence_two": "Subensamble base:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:115",
+          "occurrence_one": "Soporte encoder:1",
+          "occurrence_two": "Subensamble base:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:116",
+          "occurrence_one": "Soporte encoder:1",
+          "occurrence_two": "Subensamble base:1"
+        }
+      ]
+    },
+    {
+      "occurrence_path": [
+        "Transmisión de correas síncronas:1",
+        "Polea síncrona2:1"
+      ],
+      "group": "forearm",
+      "status": "derivado_de_CAD",
+      "reason": "Output pulley is coaxial with Eje 10 mm; input pulley/belt stay attached to the upper-arm carrier for first rigid-body interpretation.",
+      "evidence": [
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:62",
+          "occurrence_one": "Transmisión de correas síncronas:1",
+          "occurrence_two": "Servomotor alto torque ASME:2"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:63",
+          "occurrence_one": "Transmisión de correas síncronas:1",
+          "occurrence_two": "Eje 10 mm:1"
+        }
+      ]
+    }
+  ],
+  "assignment_policy": {
+    "scope": "All 40 top-level occurrences are assigned; expand assembly leaves and apply nested overrides before mass/mesh aggregation.",
+    "evidence": "Coincident shaft/bearing axes, housing attachments, keys and CAD assembly transforms; not Inventor grounded/flexible flags.",
+    "status": "estimado for rigid grouping; joint-line geometry is separately CAD-derived",
+    "bearing_policy": "Whole bearing occurrence assigned to housing carrier. Inner/outer race inertia split is unresolved.",
+    "belt_policy": "Belt and input pulley visual phase frozen relative to upper_arm. No flexible belt, actuator gear ratio or reflected rotor inertia inferred.",
+    "encoder_gear_policy": "Auxiliary encoder gears retain reference visual phase on their carriers; no mechanical transmission fidelity claimed.",
+    "servo_policy": "Purchased servo CAD treated as housing occurrence; output-shaft detail may remain in housing mesh. Dynamic rotor inertia is not inferred.",
+    "missing_occurrences": [
+      {
+        "occurrence": "ISO 10642 M4x16:1",
+        "group": "yaw",
+        "status": "external_or_unavailable"
+      }
+    ],
+    "coverage_requirement": "Do not drop unresolved parts silently or assign assembly mass in addition to leaf masses."
+  },
+  "joints": [
+    {
+      "name": "arm_yaw",
+      "parent_group": "base_mount",
+      "child_group": "yaw",
+      "type": "revolute",
+      "point_root_m": [
+        0,
+        0,
+        0
+      ],
+      "axis_root": [
+        0,
+        1,
+        0
+      ],
+      "geometry_status": "derivado_de_CAD",
+      "positive_sign": "Right-hand rule around axis_root; relation to encoder sign is pending.",
+      "reference_position_rad": 0,
+      "reference_definition": "The exported CAD assembly pose, not hardware encoder zero.",
+      "evidence": [
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:1",
+          "occurrence_one": "Wheel_gear v2:1",
+          "occurrence_two": "RDS3235:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:6",
+          "occurrence_one": "Wheel_gear v2:1",
+          "occurrence_two": "Subensamble hombro:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:7",
+          "occurrence_one": "Wheel_gear v2:1",
+          "occurrence_two": "Subensamble hombro:1"
+        }
+      ],
+      "provisional_limits": {
+        "lower_rad": -0.2617993877991494,
+        "upper_rad": 0.2617993877991494,
+        "status": "estimado",
+        "source": "Engineering commissioning window around the CAD reference, 2026-11-23.",
+        "method": "Deliberately bounded +/-15 degrees for initial model diagnostics; not measured mechanical stops or a collision-free guarantee.",
+        "hardware_limits_status": "pendiente"
+      }
+    },
+    {
+      "name": "arm_shoulder",
+      "parent_group": "yaw",
+      "child_group": "upper_arm",
+      "type": "revolute",
+      "point_root_m": [
+        0.007091619610647771,
+        0.14106157801545116,
+        -0.02653446221920715
+      ],
+      "axis_root": [
+        0.966091907643472,
+        1.0367407493512843e-16,
+        0.25819842367024165
+      ],
+      "geometry_status": "derivado_de_CAD",
+      "positive_sign": "Right-hand rule around axis_root; relation to encoder sign is pending.",
+      "reference_position_rad": 0,
+      "reference_definition": "The exported CAD assembly pose, not hardware encoder zero.",
+      "evidence": [
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:12",
+          "occurrence_one": "Eje 17 mm:1",
+          "occurrence_two": "Subensamble hombro:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:14",
+          "occurrence_one": "Servomotor alto torque ASME:1",
+          "occurrence_two": "Eje 17 mm:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:61",
+          "occurrence_one": "Eslabon HC V1:1",
+          "occurrence_two": "Eje 17 mm:1"
+        }
+      ],
+      "provisional_limits": {
+        "lower_rad": -0.2617993877991494,
+        "upper_rad": 0.2617993877991494,
+        "status": "estimado",
+        "source": "Engineering commissioning window around the CAD reference, 2026-11-23.",
+        "method": "Deliberately bounded +/-15 degrees for initial model diagnostics; not measured mechanical stops or a collision-free guarantee.",
+        "hardware_limits_status": "pendiente"
+      }
+    },
+    {
+      "name": "arm_elbow",
+      "parent_group": "upper_arm",
+      "child_group": "forearm",
+      "type": "revolute",
+      "point_root_m": [
+        0.07905835734417409,
+        0.11438669417230508,
+        -0.295809858852373
+      ],
+      "axis_root": [
+        0.966091907643472,
+        1.0367407493512843e-16,
+        0.25819842367024165
+      ],
+      "geometry_status": "derivado_de_CAD",
+      "positive_sign": "Right-hand rule around axis_root; relation to encoder sign is pending.",
+      "reference_position_rad": 0,
+      "reference_definition": "The exported CAD assembly pose, not hardware encoder zero.",
+      "evidence": [
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:57",
+          "occurrence_one": "Servomotor alto torque ASME:2",
+          "occurrence_two": "Eje 10 mm:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:60",
+          "occurrence_one": "Eje 10 mm:1",
+          "occurrence_two": "Eslabon HC V1:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:63",
+          "occurrence_one": "Transmisión de correas síncronas:1",
+          "occurrence_two": "Eje 10 mm:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:64",
+          "occurrence_one": "Eslabon CM V1:1",
+          "occurrence_two": "Eje 10 mm:1"
+        }
+      ],
+      "provisional_limits": {
+        "lower_rad": -0.2617993877991494,
+        "upper_rad": 0.2617993877991494,
+        "status": "estimado",
+        "source": "Engineering commissioning window around the CAD reference, 2026-11-23.",
+        "method": "Deliberately bounded +/-15 degrees for initial model diagnostics; not measured mechanical stops or a collision-free guarantee.",
+        "hardware_limits_status": "pendiente"
+      }
+    },
+    {
+      "name": "wrist_pitch",
+      "parent_group": "forearm",
+      "child_group": "wrist_pitch",
+      "type": "revolute",
+      "point_root_m": [
+        0.14129316649186696,
+        0.2104665660350272,
+        -0.5292525911298962
+      ],
+      "axis_root": [
+        0.966091907643472,
+        1.0367407493512843e-16,
+        0.25819842367024165
+      ],
+      "geometry_status": "derivado_de_CAD",
+      "positive_sign": "Right-hand rule around axis_root; relation to encoder sign is pending.",
+      "reference_position_rad": 0,
+      "reference_definition": "The exported CAD assembly pose, not hardware encoder zero.",
+      "evidence": [
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:70",
+          "occurrence_one": "Wheel v1:1",
+          "occurrence_two": "TD-8135MG Servo v5:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:76",
+          "occurrence_one": "Eje 8 mm 2:1",
+          "occurrence_two": "Eslabon CM V1:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:82",
+          "occurrence_one": "Eslabon MA V1:1",
+          "occurrence_two": "Eslabon CM V1:1"
+        }
+      ],
+      "provisional_limits": {
+        "lower_rad": -0.2617993877991494,
+        "upper_rad": 0.2617993877991494,
+        "status": "estimado",
+        "source": "Engineering commissioning window around the CAD reference, 2026-11-23.",
+        "method": "Deliberately bounded +/-15 degrees for initial model diagnostics; not measured mechanical stops or a collision-free guarantee.",
+        "hardware_limits_status": "pendiente"
+      }
+    },
+    {
+      "name": "wrist_roll",
+      "parent_group": "wrist_pitch",
+      "child_group": "wrist_roll",
+      "type": "revolute",
+      "point_root_m": [
+        0.16645876336909662,
+        0.22068207930924022,
+        -0.6234138146901222
+      ],
+      "axis_root": [
+        0.25679180486966974,
+        0.10423993136951021,
+        -0.9608288118389547
+      ],
+      "geometry_status": "derivado_de_CAD",
+      "positive_sign": "Right-hand rule around axis_root; relation to encoder sign is pending.",
+      "reference_position_rad": 0,
+      "reference_definition": "The exported CAD assembly pose, not hardware encoder zero.",
+      "evidence": [
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:88",
+          "occurrence_one": "horn plastico:1",
+          "occurrence_two": "TD-8135MG Servo v5:2"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:127",
+          "occurrence_one": "TD-8135MG Servo v5:2",
+          "occurrence_two": "Gripper ensamble:1"
+        },
+        {
+          "document": "arm/Ensamble brazo v2.iam",
+          "document_sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+          "relation_name": "Coincidencia:128",
+          "occurrence_one": "Gripper ensamble:1",
+          "occurrence_two": "horn plastico:1"
+        }
+      ],
+      "provisional_limits": {
+        "lower_rad": -0.2617993877991494,
+        "upper_rad": 0.2617993877991494,
+        "status": "estimado",
+        "source": "Engineering commissioning window around the CAD reference, 2026-11-23.",
+        "method": "Deliberately bounded +/-15 degrees for initial model diagnostics; not measured mechanical stops or a collision-free guarantee.",
+        "hardware_limits_status": "pendiente"
+      }
+    }
+  ],
+  "derived_geometry_checks": {
+    "shoulder_elbow_axis_distance_m": 0.28000000000000047,
+    "elbow_wrist_axis_distance_m": 0.2600000000000043,
+    "wrist_axes_dot": -1.9862185162334266e-14,
+    "wrist_roll_axis_distance_to_pitch_origin_m": 0.0,
+    "pitch_origin_to_gripper_mount_along_roll_m": 0.0980000000000088,
+    "interpretation": "J2/J3/J4 parallel; J4 transverse pitch followed by longitudinal J5 roll. Axis points can differ along their own line without changing kinematics."
+  },
+  "frames": {
+    "gripper_assembly_reference": {
+      "status": "derivado_de_CAD",
+      "parent_occurrence": "Gripper ensamble:1",
+      "matrix_root_row_major": [
+        0.9548238028993834,
+        0.14956428172707464,
+        -0.25679180486966724,
+        0.17994033312475427,
+        -0.18121397408451145,
+        0.9779036416255817,
+        -0.10423993136950951,
+        0.2261546757061395,
+        0.23552707065909606,
+        0.1460650311569748,
+        0.9608288118389516,
+        -0.6738573273116674,
+        0,
+        0,
+        0,
+        1
+      ],
+      "pose_root": {
+        "xyz_m": [
+          0.17994033312475427,
+          0.2261546757061395,
+          -0.6738573273116674
+        ],
+        "quaternion_xyzw": [
+          0.06342584141114442,
+          -0.12475077844170328,
+          -0.08381731222424635,
+          0.9866048165760092
+        ]
+      },
+      "method": "Occurrence.transform_root_m; no calibration or task-frame inference."
+    },
+    "cut_point": {
+      "status": "estimado",
+      "geometry_status": "derivado_de_CAD",
+      "parent_occurrence": "Gripper ensamble:1",
+      "pose_gripper": {
+        "xyz_m": [
+          0.000889929324584988,
+          0.001999999999999998,
+          -0.01931529614629758
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "pose_root": {
+        "xyz_m": [
+          0.18604919714922022,
+          0.22996264050450008,
+          -0.6919142878490049
+        ],
+        "quaternion_xyzw": [
+          0.06342584141114442,
+          -0.12475077844170328,
+          -0.08381731222424635,
+          0.9866048165760092
+        ]
+      },
+      "method": "Midpoint of transformed document-local AABB centers of the listed occurrences. Orientation inherited from gripper document.",
+      "source_occurrences": [
+        "Cuchilla:1",
+        "Cuchilla:2"
+      ],
+      "functional_calibration": "pendiente; geometric center is not a measured cut/contact point",
+      "valid_configuration": "CAD reference gripper pose only; recompute when jaw linkage moves"
+    },
+    "grasp_center": {
+      "status": "estimado",
+      "geometry_status": "derivado_de_CAD",
+      "parent_occurrence": "Gripper ensamble:1",
+      "pose_gripper": {
+        "xyz_m": [
+          0.0008899659494892075,
+          -0.0010000000000000009,
+          -0.019320297673920364
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "pose_root": {
+        "xyz_m": [
+          0.18560182362567468,
+          0.22702944430157504,
+          -0.6923572799281625
+        ],
+        "quaternion_xyzw": [
+          0.06342584141114442,
+          -0.12475077844170328,
+          -0.08381731222424635,
+          0.9866048165760092
+        ]
+      },
+      "method": "Midpoint of transformed document-local AABB centers of the listed occurrences. Orientation inherited from gripper document.",
+      "source_occurrences": [
+        "gomas:1",
+        "gomas:2"
+      ],
+      "functional_calibration": "pendiente; geometric center is not a measured cut/contact point",
+      "valid_configuration": "CAD reference gripper pose only; recompute when jaw linkage moves"
+    },
+    "tcp": {
+      "status": "estimado",
+      "geometry_status": "derivado_de_CAD",
+      "parent_occurrence": "Gripper ensamble:1",
+      "pose_gripper": {
+        "xyz_m": [
+          0.0008899659494892075,
+          -0.0010000000000000009,
+          -0.019320297673920364
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "pose_root": {
+        "xyz_m": [
+          0.18560182362567468,
+          0.22702944430157504,
+          -0.6923572799281625
+        ],
+        "quaternion_xyzw": [
+          0.06342584141114442,
+          -0.12475077844170328,
+          -0.08381731222424635,
+          0.9866048165760092
+        ]
+      },
+      "method": "Midpoint of transformed document-local AABB centers of the listed occurrences. Orientation inherited from gripper document.",
+      "source_occurrences": [
+        "gomas:1",
+        "gomas:2"
+      ],
+      "functional_calibration": "pendiente; geometric center is not a measured cut/contact point",
+      "valid_configuration": "CAD reference gripper pose only; recompute when jaw linkage moves"
+    }
+  },
+  "task_axis_candidate": {
+    "frame": "gripper_assembly_reference",
+    "axis": [
+      0,
+      1,
+      0
+    ],
+    "status": "estimado",
+    "method": "Normal to the CAD blade planes, a provisional pedicel direction through their cutting plane; requires functional calibration.",
+    "warning": "The longitudinal gripper Z axis coincides with J5 roll and cannot observe that roll as a direction-only IK target."
+  },
+  "gripper": {
+    "status": "closed_chain_requires_explicit_adapter",
+    "initial_representation": "CAD reference pose frozen as part of wrist_roll; this is not simulated grasp closure.",
+    "root_occurrence": "Gripper ensamble:1",
+    "document_path": "gripper/Gripper ensamble.iam",
+    "document_sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+    "subgroups": {
+      "housing": [
+        "Gripper y engranaje:1",
+        "Gripper 1:1",
+        "TowerPro_MG946R:1",
+        "Rodamiento:1"
+      ],
+      "input_gear": [
+        "Wheel_gear v2:1",
+        "Engranaje recto1:1"
+      ],
+      "output_gear": [
+        "Engranaje recto2:1"
+      ],
+      "jaw_left": [
+        "Eslabon L:2",
+        "Cuchilla:1",
+        "Mordaza blanda:1",
+        "gomas:1"
+      ],
+      "jaw_right": [
+        "Eslabon L:1",
+        "Cuchilla:2",
+        "Mordaza blanda:2",
+        "gomas:2"
+      ],
+      "left_coupler": [
+        "Eslabon 1:2"
+      ],
+      "right_coupler": [
+        "Eslabon 1:1"
+      ]
+    },
+    "evidence": [
+      {
+        "document": "gripper/Gripper ensamble.iam",
+        "document_sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+        "relation_name": "Rotación:1",
+        "occurrence_one": "Engranaje recto2:1",
+        "occurrence_two": "Engranaje recto1:1"
+      },
+      {
+        "document": "gripper/Gripper ensamble.iam",
+        "document_sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+        "relation_name": "Coincidencia:9",
+        "occurrence_one": "Eslabon 1:2",
+        "occurrence_two": "Gripper y engranaje:1"
+      },
+      {
+        "document": "gripper/Gripper ensamble.iam",
+        "document_sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+        "relation_name": "Coincidencia:10",
+        "occurrence_one": "Eslabon 1:1",
+        "occurrence_two": "Gripper y engranaje:1"
+      },
+      {
+        "document": "gripper/Gripper ensamble.iam",
+        "document_sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+        "relation_name": "Coincidencia:13",
+        "occurrence_one": "Eslabon L:2",
+        "occurrence_two": "Eslabon 1:2"
+      },
+      {
+        "document": "gripper/Gripper ensamble.iam",
+        "document_sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+        "relation_name": "Coincidencia:15",
+        "occurrence_one": "Eslabon L:1",
+        "occurrence_two": "Eslabon 1:1"
+      },
+      {
+        "document": "gripper/Gripper ensamble.iam",
+        "document_sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+        "relation_name": "Coincidencia:22",
+        "occurrence_one": "Engranaje recto2:1",
+        "occurrence_two": "Eslabon L:1"
+      },
+      {
+        "document": "gripper/Gripper ensamble.iam",
+        "document_sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+        "relation_name": "Coincidencia:23",
+        "occurrence_one": "Eslabon L:2",
+        "occurrence_two": "Engranaje recto1:1"
+      }
+    ],
+    "unresolved": [
+      "gear ratio and phase mapping",
+      "closed-loop joint adapter and limits",
+      "jaw aperture calibration",
+      "contact and cutting edges calibration",
+      "force transmission to fruit"
+    ]
+  },
+  "limitations": [
+    "This file is mapping evidence, not a RobotSpec complete profile or a native validation result.",
+    "No hardware effort, velocity, actuator ratios, encoder calibration or mechanical stops are inferred from part names.",
+    "Mass tensors from CAD require sign/order convention verification and documented leaf aggregation.",
+    "Fixed CAD assembly constraints and grounded flags constrain a drawing pose; they do not imply a real robot has zero movable DOF.",
+    "Auxiliary gear/belt phase and gripper linkage require the explicit approximations above; no closed-chain fidelity claimed."
+  ]
+}

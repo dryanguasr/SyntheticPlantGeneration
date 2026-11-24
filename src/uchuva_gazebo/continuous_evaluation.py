@@ -2,6 +2,18 @@
 import numpy as np
 
 
+def packed_mask_iou_matrix(packed, shape, codes, instances, batch_size=16):
+    """Same mask IoUs, with bounded unpacked storage instead of all proposals."""
+    if batch_size < 1:
+        raise ValueError('Positive batch size required')
+    h,w=map(int,shape)
+    result=np.zeros((len(packed),len(instances)),float)
+    for start in range(0,len(packed),batch_size):
+        masks=np.unpackbits(packed[start:start+batch_size],axis=1,count=h*w).reshape(-1,h,w).view(np.bool_)
+        result[start:start+len(masks)]=mask_iou_matrix(masks,codes,instances)
+    return result
+
+
 def mask_iou_matrix(masks,codes,instances):
     result=np.zeros((len(masks),len(instances)),float)
     areas=[int(mask.sum()) for mask in masks]

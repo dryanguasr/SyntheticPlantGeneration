@@ -3,15 +3,24 @@
 # SyntheticPlantGeneration
 ### Morfología procedural de uchuva, visión artificial y simulación robótica
 
-**Python · Blender · Gazebo · computer vision · evaluación reproducible**
+**Python · Blender · Gazebo · percepción · evaluación reproducible**
 
-[Arquitectura](docs/README.md) · [Resultados](docs/reports/indice_resultados_experimentales.md) · [Guías](docs/guides/) · [Documentación técnica íntegra](README_TECHNICAL.md)
+[Arquitectura](docs/README.md) · [Resultados](docs/reports/indice_resultados_experimentales.md) · [Guías](docs/guides/) · [Documentación técnica](README_TECHNICAL.md)
 
 </div>
 
-## ¿Qué problema aborda?
+## Propósito y estado
 
-¿Puede una representación **morfológica trazable** de *Physalis peruviana* producir datos y escenarios útiles para percepción robótica? El proyecto separa la estructura de la planta de los motores que la visualizan: **Blender para generación de imágenes y anotaciones; Gazebo para escenarios de interacción y percepción**.
+Plataforma de investigación sobre **uchuva (*Physalis peruviana*)**, datos
+sintéticos y percepción para robótica agrícola. La estructura botánica se
+representa como una morfología serializable; Blender y Gazebo la interpretan
+para generar imágenes, anotaciones y escenarios de interacción.
+
+**Corte documental: 24 de noviembre de 2026.** El repositorio reúne los avances
+de generación, aumentación, segmentación, revisión de máscaras, localización y
+modelo digital del cosechador. Los informes conservan resultados negativos y
+pendientes. La transferencia al cultivo real, la madurez del fruto oculto y la
+cosecha autónoma con percepción desplegable siguen sin demostrarse.
 
 ```text
 Parámetros y reglas morfológicas
@@ -21,44 +30,88 @@ Parámetros y reglas morfológicas
            ┌───┴────────┐
            ▼            ▼
         Blender       Gazebo
-    imágenes / ML    escena / robot
+ imágenes / máscaras  escena / robot
 ```
 
-## Tres frentes, un mismo núcleo
+## Tres frentes y sus componentes
 
-| Frente | Ruta | Estado verificado o pendiente |
+| Frente | Código principal | Alcance documentado |
 | --- | --- | --- |
-| Morfología procedural | [`src/uchuva_lsystem/`](src/uchuva_lsystem/) | Pipeline implementado; fidelidad botánica y transferencia por validar |
-| Aumentación de datos | [`src/uchuva_classical_augmentation/`](src/uchuva_classical_augmentation/) | Baselines y protocolo confirmatorio reproducible |
-| Interpretación robótica | [`src/uchuva_gazebo/`](src/uchuva_gazebo/) | Escenas de percepción y piloto de cosecha desmontable con ciclos auditados en un escenario rígido de Gazebo y posiciones conocidas |
+| Morfología y generación sintética | [`src/uchuva_lsystem/`](src/uchuva_lsystem/) | Plantas nodales, escenas de cultivo, anotaciones, apariencia y validación geométrica |
+| Aumentación y percepción | [`src/uchuva_classical_augmentation/`](src/uchuva_classical_augmentation/), [`src/uchuva_annotation_audit/`](src/uchuva_annotation_audit/) | Baselines, pilotos de detección y máscaras, aplicación de revisión y protocolos humanos |
+| Simulación e interacción robótica | [`src/uchuva_gazebo/`](src/uchuva_gazebo/) | Captura, seguimiento, localización ArUco, robot paramétrico y demostraciones de cosecha |
 
-## Hallazgo experimental que conviene conocer
+La [documentación técnica](README_TECHNICAL.md) incluye también reconstrucción
+desde vídeo real, Android, equipo, citación y organización del código.
 
-La campaña confirmatoria de aumentación clásica v2 reunió **40 corridas válidas**. Algunas recetas mejoraron mAP50–95, pero ninguna superó **todos los criterios operacionales predeclarados**; no se promovió una nueva receta. La separación `train/val/test`, los fallos de ejecución detectados y la limitación de un test histórico previamente consultado están documentados.
+## Resultados que orientan la lectura
 
-[Leer el resultado negativo y sus métricas](docs/reports/aumento_clasico_v2_confirmatory_2026-08-28.md) · [Auditoría científica](docs/reports/auditoria_cientifica_blender_2026-09-08.md).
+- **Aumentación clásica v2:** 40 corridas confirmatorias válidas; ninguna receta
+  superó todos los criterios operativos predeclarados. No se promovió una
+  receta. [Cierre y controles](docs/reports/aumento_clasico_v2_confirmatory_2026-08-28.md).
+- **Generación espacial:** veinte plantas admitidas; primer corte de 144 pares
+  completos y continuación pausada con 503 vistas frente a la meta de 1.000.
+  Las vistas repetidas no son plantas biológicamente independientes.
+  [Generación y pilotos de detección](docs/reports/resultados_pilotos_deteccion_y_generacion_2026-11-24.md).
+- **Segmentación de noviembre:** dos estudios de 18 corridas cada uno. El brazo
+  de 240 exposiciones sintéticas mejoró 1,42 puntos de AP macro de máscaras en
+  desarrollo histórico frente a su control real. Las referencias de entrenamiento
+  son máscaras provisionales revisadas por el asistente; la adjudicación humana
+  y la evaluación externa siguen pendientes.
+  [Resultados, dosis y límites](docs/reports/resultados_segmentacion_privada_2026-11-24.md).
+- **Cosechador V8:** se observaron nueve depósitos en una toma continua con
+  movimiento prescrito. La respuesta de contacto del brazo, chasis y cultivo se
+  omitió; la caída de los frutos liberados y sus contactos con la canasta sí se
+  simularon. La admisión por fuerzas sigue pendiente y el diagnóstico RGB
+  conservó 0/6 coincidencias. [Evidencia y condiciones](docs/reports/piloto_cad_v8_canasta_2026-11-24.md).
 
-## Explorar el proyecto
+AP de cajas, AP de máscaras, seguimiento y errores métricos 3D corresponden a
+protocolos distintos. Pintona, Madura y Sobremadura describen **apariencia del
+capacho**, no madurez agronómica demostrada del fruto interno. El
+[índice experimental](docs/reports/indice_resultados_experimentales.md) distingue
+campañas cerradas, exploratorias y bloqueadas.
 
-```bash
-# En un entorno con Python y dependencias configuradas
-PYTHONPATH=src python scripts/generate_morphology_tree.py --seed 1
+## Modelo digital y PhysalisHarvest
+
+`RobotSpec` es la descripción canónica del robot; SDF, cinemática, límites y
+validación consumen ese mismo modelo. El aporte de Diego de
+[PhysalisHarvest](https://github.com/amayadiegoalejandro05/PhysalisHarvest)
+se preserva en `contributions/physalisharvest/`, con procedencia y términos
+originales. Un adaptador puro valida observaciones ópticas ArUco y una entrada
+ROS usa una instalación común fuera del snapshot.
+
+[Guía de integración](docs/guides/integracion_physalisharvest.md) ·
+[Compatibilidad y verificaciones](docs/reports/conciliacion_cosechador_physalisharvest_2026-11-24.md).
+TF calibrada, sincronización, puente de control/odometría e integración física
+siguen pendientes; recibir una coordenada no confirma movimiento ni llegada.
+
+## Explorar y reproducir
+
+Desde la raíz, con un intérprete Python disponible:
+
+```powershell
+python scripts/generate_morphology_tree.py --seed 1
+python scripts/validate_repository_context_graph.py
 ```
 
-Los flujos de Blender, Gazebo y evaluación ML requieren dependencias y activos específicos. Ver [scripts](scripts/README.md), [generación de escenas](docs/guides/campo_gazebo.md) y [guía de revisión de resultados](docs/guides/revision_resultados_aumento_clasico_v2.md).
+El núcleo morfológico no requiere Blender ni Gazebo. Los flujos de render,
+visión, entrenamiento y simulación tienen entornos y activos específicos;
+consultar las guías antes de iniciar una campaña.
 
-## Guías y evidencias por flujo
+- **Cultivo y banco de imágenes:** [generador y contrato Gazebo](docs/guides/generador_actual_y_contrato_gazebo.md), [continuación optimizada del dataset](docs/guides/completar_dataset_optimizado.md).
+- **Máscaras y revisión humana:** [piloto de máscaras](docs/guides/piloto_privado_mascaras.md), [sintéticas y fotogramas](docs/guides/piloto_privado_sintetico_mascaras.md), [revisión cruzada](docs/guides/auditoria_ciega_segmentacion.md) y [manual para estudiantes](docs/guides/manual_estudiantes_revision_cruzada.pdf).
+- **Robot y simulación:** [modelo paramétrico](docs/guides/robot_cosechador_parametrico.md), [demostración V8](docs/guides/piloto_cad_v8_canasta.md) y [piloto de cosecha histórico](docs/guides/piloto_cosecha_desmontable.md).
+- **Otros consumidores:** [reconstrucción desde vídeo](docs/guides/reconstruccion_piloto.md), [Android y ArUco](docs/guides/aplicacion_movil_aruco.md).
 
-- **Generación espacial de uchuva.** [Generador y contrato de exportación a Gazebo](docs/guides/generador_actual_y_contrato_gazebo.md) y [resultados de la campaña de admisión espacial](docs/reports/plantas_admision_espacial_8h_2026-10-29.md).
-- **Cosecha robótica simulada.** [Guía del piloto de cosecha desmontable](docs/guides/piloto_cosecha_desmontable.md) y [validación en Gazebo Harmonic](docs/reports/piloto_cosecha_desmontable_validacion_gazebo_2026-10-31.md).
-- **Revisión cruzada de máscaras.** [Aplicación y protocolo de revisión](docs/guides/auditoria_ciega_segmentacion.md) y [manual ilustrado para estudiantes](docs/guides/manual_estudiantes_revision_cruzada.pdf).
-- **Auditoría histórica.** [Revisión independiente del generador y de Gazebo sobre la versión `74b43d2`](docs/reports/auditoria_generacion_sintetica_2026-10-25.md).
+## Procedencia y alcance
 
-## Alcance honesto
+Los informes, código y tablas agregadas del proyecto se versionan. Datasets,
+máscaras individuales, pesos, renders, vídeos, borradores y artículos
+bibliográficos descargados permanecen fuera de Git. Un test consultado durante
+desarrollo no recupera independencia al cambiarle el nombre.
 
-- La morfología es una **hipótesis de modelado**, no una planta real medida exhaustivamente.
-- La ejecución en Blender/Gazebo no implica validación de un cosechador físico.
-- Los resultados negativos y los cambios de decisión se preservan como evidencia.
-- Datasets, pesos, artículos y contribuciones de terceros **conservan sus licencias y autorías**; la [licencia del repositorio](LICENSE) no las reemplaza.
+El código original usa la [licencia MIT](LICENSE); las contribuciones, modelos,
+datos y artículos conservan sus términos. La licencia institucional del aporte
+PhysalisHarvest continúa pendiente y no se sustituye por MIT.
 
-[Documentación técnica detallada anterior](README_TECHNICAL.md) · [Referencias y atribución](docs/references/README.md) · [Contribuciones externas](contributions/README.md).
+[Equipo y citación](README_TECHNICAL.md#equipo-y-citación) · [Detalle técnico](README_TECHNICAL.md) · [Referencias](docs/references/README.md) · [Contribuciones](contributions/README.md) · [Scripts](scripts/README.md)

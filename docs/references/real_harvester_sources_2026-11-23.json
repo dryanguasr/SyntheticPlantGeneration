@@ -1,0 +1,68 @@
+{
+  "schema_version": "harvester-source-inventory/1.0",
+  "inventory_date": "2026-11-23",
+  "selected_reference": "cad_nominal",
+  "repository_start_commit": "3306372ee214a862384fac2e5f5f69f2960d41a5",
+  "private_originals_committed": false,
+  "source_assemblies": [
+    {
+      "component": "arm",
+      "drive_file_id": "1Qy3_kLWIZ0hSJLddBlE25TP6avxGXZ4U",
+      "url": "https://drive.google.com/file/d/1Qy3_kLWIZ0hSJLddBlE25TP6avxGXZ4U/view",
+      "relative_copy_path": "arm/Ensamble brazo v2.iam",
+      "revision": "0ByjJLQjuyJjqcDBYVGJSVzNEanJNZG8rN0I5SzhGQzBZOXBFPQ",
+      "modified_utc": "2026-11-17T04:00:54.547Z",
+      "evidence_kind": "designed_CAD_not_confirmed_hardware",
+      "sha256": "67126d55151f6f345010e73040644601b99a30d6cc46f668af8cc498f525c0c2",
+      "size_bytes": 6054912
+    },
+    {
+      "component": "base",
+      "drive_file_id": "1WVctcq_IOK2vthGAUvoUUGfEuSq8fgDo",
+      "url": "https://drive.google.com/file/d/1WVctcq_IOK2vthGAUvoUUGfEuSq8fgDo/view",
+      "relative_copy_path": "base/Locomoción armada V3.iam",
+      "revision": "0ByjJLQjuyJjqV1VXSCtHTWNweTVMdUU1aGU0WWNMK0F0aXpFPQ",
+      "modified_utc": "2026-11-17T07:34:30.260Z",
+      "evidence_kind": "designed_CAD_not_confirmed_hardware",
+      "sha256": "b824439ce0c17cca6f8b78ec9ee6d8e8f819d1c102b31440ce9043c2633ea021",
+      "size_bytes": 2291200
+    },
+    {
+      "component": "gripper",
+      "drive_file_id": "1kGQGqC2UG15xVco9oCVBQpgwIZ7ejh-a",
+      "url": "https://drive.google.com/file/d/1kGQGqC2UG15xVco9oCVBQpgwIZ7ejh-a/view",
+      "relative_copy_path": "gripper/Gripper ensamble.iam",
+      "revision": "0ByjJLQjuyJjqbWlFSzJWdFlnV1pkcEdvMWlrVzIveHZ3NmVFPQ",
+      "modified_utc": "2026-11-17T02:01:04.271Z",
+      "evidence_kind": "designed_CAD_not_confirmed_hardware",
+      "sha256": "6604f53243198e6066e9d3086a679041c79378ffa6db9cf3551847a2c7fe4bfb",
+      "size_bytes": 1032192
+    }
+  ],
+  "additional_sources": [
+    {
+      "title": "Anteproyecto de manipulación recibido 2026-11-13",
+      "url": "https://drive.google.com/file/d/1cHY3GZoJPYA95bhqGIrRX9vSvcseQVWk/view",
+      "use": "Documented actuator candidates; not proof of installation or measured dynamics."
+    },
+    {
+      "title": "Anteproyecto de locomoción recibido 2026-11-12",
+      "url": "https://drive.google.com/file/d/1ZeJkUmC_CjbP-wUovDSh5ufEq3N3B8hq/view",
+      "use": "Reports constructed chassis and acquired batteries; integrated assembly and electrical wiring not accredited."
+    },
+    {
+      "title": "Eslabon CM V1 analysis 2026-11-07",
+      "url": "https://drive.google.com/file/d/1HaXwo5pJWuRv7o6XxaX3CgJEfbIc1R2L/view",
+      "use": "CAD/FEA material and nominal mass, not a measured printed part."
+    }
+  ],
+  "excluded_as_primary": [
+    {
+      "name": "Locomocion armada V2.stp",
+      "url": "https://drive.google.com/file/d/12YxhAyzk-RgDpIhWGYKxtj8LBHFBnZDZ/view",
+      "reason": "Earlier assembly; not substituted for V3."
+    }
+  ],
+  "local_private_inventory": "outputs/real_harvester_cad/drive_inventory.json",
+  "current_cad_downloads": 162
+}

@@ -94,6 +94,41 @@ def callback_fixture():
 
 
 class HarvestRuntimeContractTests(unittest.TestCase):
+    def test_base_command_keeps_reference_time_when_state_changes_during_publish(self):
+        pilot=callback_fixture()
+        pilot.resolved_robot=object()
+        pilot.manifest['robot']['drive']={
+            'left_joints':['left'], 'right_joints':['right'],
+            'joint_signs':{'left':1,'right':1},
+            'joints':{name:{'command_velocity':8} for name in ('left','right')},
+            'wheel_radius_m':.11, 'wheel_separation_m':.61655,
+            'max_linear_velocity':.15, 'max_angular_velocity':.3,
+            'max_linear_acceleration':.2, 'max_angular_acceleration':.4}
+        pilot.state=artificial_sample(1.)
+        pilot.Double=SimpleNamespace
+        def publish(_message):
+            pilot.state=artificial_sample(1.01)
+        pilot.drive_publishers={name:SimpleNamespace(publish=publish) for name in ('left','right')}
+        pilot.send_base(0,.2)
+        record=json.loads(pilot.streams['commands'].getvalue())
+        self.assertEqual(pilot.state['sim_time'],1.01)
+        self.assertEqual(record['sim_time'],1.)
+        self.assertEqual(record['sim_time'],record['drive_reference']['sim_time'])
+
+    def test_deposit_uses_controlled_cut_frame_instead_of_offset_tcp(self):
+        pilot = NativePilot.__new__(NativePilot)
+        pilot.resolved_robot = object()
+        pilot.config = SimpleNamespace(frame='cut_point')
+        state = {'tool_pose': [1, 2, 3, 0, 0, 0, 1],
+                 'cut_pose': [1.2, 2.1, 3, 0, 0, 0, 1],
+                 'fruits': [{'id': 'target', 'position': [1.23, 2.05, 2.98]}]}
+        corrected = pilot._deposit_correction([4, 5, 6], state, 'target')
+        self.assertAlmostEqual(corrected[0], 3.97)
+        self.assertAlmostEqual(corrected[1], 5.05)
+        self.assertEqual(corrected[2], 6)
+        pilot.resolved_robot = None
+        self.assertAlmostEqual(pilot._deposit_correction([4, 5, 6], state, 'target')[0], 3.77)
+
     def test_world_goal_tracks_observed_base_drift_with_bounded_joint_commands(self):
         pilot = callback_fixture()
         pilot.config = HarvesterConfig()
