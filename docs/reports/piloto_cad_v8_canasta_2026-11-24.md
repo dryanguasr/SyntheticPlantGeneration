@@ -153,3 +153,40 @@ La [guía de operación](../guides/piloto_cad_v8_canasta.md) reúne los pasos de
 preparación, la criba, los ensayos y el auditor. El control y los contactos
 registrados son resultados de simulación. El montaje, la masa de la carga y
 el funcionamiento de la pinza física requieren evidencia del prototipo.
+
+## Toma continua con depósitos bajos
+
+La toma usa los tres V8 inmóviles y comienza con el carro a 1,78 m del
+primer arbusto y a 0,91 m de su primera parada. El primer capacho está a
+0,474 m del suelo.
+El movimiento guiado sigue cinco fases por fruto. El corte conserva sus
+guardas nativas y los objetivos se preseleccionan por identificador V8. Los
+desplazamientos entre paradas de un mismo arbusto bajaron en conjunto de
+11,47 m a 2,06 m respecto a las salidas repetidas al pasillo.
+
+Gazebo aceptó los nueve cortes y liberaciones. Se observaron los nueve
+capachos completos dentro de la canasta al final del desplazamiento,
+**3 + 3 + 3** a 561,992 s de simulación. Las poses nativas anteriores a
+cada liberación dieron una separación de 104,2–109,5 mm entre la parte
+inferior del capacho y el fondo. La velocidad del capacho con respecto a
+la canasta fue cero a la precisión observada en esas muestras. La
+caída por gravedad y los contactos entre frutos y canasta se simularon.
+
+Se omitió la respuesta de contacto en el brazo, el chasis y las mallas
+estáticas del cultivo, con la canasta activa. El barrido registró
+intersecciones geométricas del brazo. También hubo un contacto nativo
+entre capachos durante el transporte a t226,464 s. En esa muestra el
+simulador registró 0,416 rad/s de pitch y 0,588 rad/s de roll. Las velocidades
+de muñeca estimadas por diferencia de posiciones en muestras de 52 ms
+se mantuvieron cerca de la referencia de 0,30 rad/s. La toma verifica el
+resultado de cosecha con movimiento prescrito y deja la admisión por
+fuerzas pendiente.
+
+El paquete está en `cad_v8_continuous_take_package_02/`, con la ruta de
+entrada en `cad_v8_simple_native_candidate_shortbase_01.json`. Los eventos,
+la telemetría y el RGB de origen están en `cad_v8_continuous_take_native_01/`.
+La edición con contador y la compacta están en
+`cad_v8_continuous_take_editions_01/`. Ambas incluyen 6.745 fotogramas
+en el mismo orden y se verificaron por decodificación completa. Duran
+562,083 s y 265,548 s, respectivamente. Se conservaron estos archivos
+locales fuera de Git. La regresión de cosecha en WSL pasó 100 pruebas.

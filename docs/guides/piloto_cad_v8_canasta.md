@@ -103,12 +103,16 @@ cinemática y se registran aparte del ensayo de actuación por fuerzas.
 
 Usar un archivo de rutas que se refiera al hash del manifiesto de origen. Cada
 objetivo conserva el identificador y eje de corte del paquete. La secuencia fija
-un punto de suelta por encima del fondo y con el calyx libre dentro de la apertura.
+un punto de suelta por encima del fondo y con el capacho libre dentro de la apertura.
 El contador se genera a partir de la liberación aceptada y de las poses nativas
 de los frutos que permanecen dentro al final.
 
 ```sh
 bash scripts/build_harvest_plugin.sh outputs/cad_v8_demo_plugins
 python3 scripts/prepare_cad_v8_demo_take.py <paquete> <rutas> <toma> --physics-step .004 --fps 12
-python3 scripts/run_cad_v8_demo_capture.py <toma> --source-package <paquete> --plugin-dir outputs/cad_v8_demo_plugins --output <grabación>
+python3 scripts/run_cad_v8_demo_capture.py <toma> --source-package <paquete> --plugin-dir outputs/cad_v8_demo_plugins --output <grabación> --compact
 ```
+
+La edición compacta acorta los intervalos de desplazamiento y conserva los
+fotogramas en orden. Los intervalos cercanos al corte y la suelta se reproducen
+a velocidad original.

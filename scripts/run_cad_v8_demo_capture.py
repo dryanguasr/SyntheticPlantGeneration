@@ -300,18 +300,18 @@ def export_hud(output, audit):
               '[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, '
               'OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, '
               'Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n'
-              'Style: Counter,DejaVu Sans,23,&H00F4F4F4,&H00F4F4F4,&H500A1821,&H500A1821,-1,0,0,0,100,100,0,0,3,6,0,2,36,36,29,1\n\n'
+              'Style: Counter,DejaVu Sans,23,&H00F4F4F4,&H00F4F4F4,&H500A1821,&H500A1821,-1,0,0,0,100,100,0,0,3,6,0,9,36,36,29,1\n\n'
               '[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n')
     with subtitle.open('w', encoding='utf-8') as stream:
         stream.write(header)
         for start, end, counts in intervals:
-            by_plant = '  /  '.join(f'{counts[f"plant_{index:03d}"]}/3' for index in range(3))
+            by_plant = '  ·  '.join(f'{counts[f"plant_{index:03d}"]}/3' for index in range(3))
             text = f'Canasta  {sum(counts.values())}/9     ·     Arbustos  {by_plant}'
             stream.write(f'Dialogue: 0,{caption_time(start)},{caption_time(end)},Counter,,0,0,0,,{text}\n')
     video = output / 'cosecha_v8.mp4'
     subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', 'native_mission.mp4',
                     '-vf', 'ass=deposit_hud.ass', '-an', '-c:v', 'libx264', '-preset', 'veryfast',
-                    '-crf', '19', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', video.name],
+                    '-crf', '19', '-pix_fmt', 'yuv420p', '-threads', '4', '-movflags', '+faststart', video.name],
                    cwd=output, check=True)
     subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-xerror', '-i', str(video),
                     '-f', 'null', '-'], check=True)
@@ -361,7 +361,7 @@ def export_compact(package, output, audit):
     subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', 'native_mission.mp4',
                     '-vf', 'ass=deposit_hud.ass,' + timestamps, '-fps_mode', 'passthrough',
                     '-enc_time_base', '1:1200', '-an', '-c:v', 'libx264', '-preset', 'veryfast',
-                    '-crf', '19', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', video.name],
+                    '-crf', '19', '-pix_fmt', 'yuv420p', '-threads', '4', '-movflags', '+faststart', video.name],
                    cwd=output, check=True)
     metadata = subprocess.run(['ffprobe', '-v', 'error', '-show_entries',
                                'stream=nb_frames:format=duration', '-of', 'json', str(video)],
