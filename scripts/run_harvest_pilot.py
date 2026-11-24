@@ -696,6 +696,160 @@ class NativePilot:
         self.hold(.5)
 
 
+class CadV8Pilot(NativePilot):
+    """Run the short-stroke demonstration using a moving basket and native gates."""
+
+    def __init__(self, *args, asset_root, **kwargs):
+        super().__init__(*args, asset_root=asset_root, **kwargs)
+        from uchuva_gazebo.harvest_basket import load_fruit_vertices
+        self.fixture = self.manifest['robot_task']['demo_fixture']
+        self.jaw = self.fixture['gripper']
+        topic = self.manifest['robot']['topics']['gripper_commands'][self.jaw['joint']]
+        self.jaw_publisher = self.node.advertise(topic, self.Double)
+        if not self.jaw_publisher:
+            raise RuntimeError('Cannot advertise the single prismatic jaw command')
+        self.mesh_vertices = load_fruit_vertices(self.manifest, asset_root)
+
+    def move_jaw(self, opened):
+        label = 'open' if opened else 'closed'
+        target = self.jaw[f'{label}_position_m']
+
+        def send(state):
+            message = self.Double()
+            message.data = target
+            if not self.jaw_publisher.publish(message):
+                raise RuntimeError('Native jaw command was not published')
+            self._line('commands', {'kind': 'prismatic_jaw_position', 'joint': self.jaw['joint'],
+                'phase': self.phase, 'sim_time': state['sim_time'], 'requested_position_m': target})
+            self.send_base(0, 0)
+
+        self.wait(lambda state: state.get('jaw_guard', {}).get(f'{label}_ready') is True,
+                  simulation_timeout=12, action=send)
+
+    def confirm_visible(self, fruit):
+        from harvest_perception_capture import NativePerceptionRecorder
+        from uchuva_gazebo.harvest_perception import target_gate
+
+        mode = self.fixture['perception_mode']
+        if mode != 'gazebo_instance_visibility':
+            raise ValueError('This runtime requires a live RGB inference provider for learned mode')
+        observer = self.manifest['perception_observers'][fruit['plant_id']]
+        start = round(self.snapshot()['sim_time'] * 1e9)
+        directory = self.output / 'perception' / fruit['id'].replace(':', '_')
+        recording = NativePerceptionRecorder(directory, observer, maximum_pairs=3, minimum_stamp_ns=start)
+        match = None
+
+        def confirmed(state):
+            nonlocal match
+            with recording.lock:
+                rows = recording.private_rows.copy()
+                if recording.errors:
+                    raise RuntimeError('Native camera pairing failed: ' + recording.errors[0])
+            if len(rows) < 3:
+                return False
+            now = round(state['sim_time'] * 1e9)
+            if rows[-1]['stamp_ns'] > now:
+                return False
+            gates = [target_gate(None, row, mode=mode, now_ns=now,
+                        maximum_age_ns=1_000_000_000, minimum_visible_pixels=16, minimum_box_iou=.5)
+                     for row in rows]
+            if not all(any(t['id'] == fruit['id'] and t['eligible'] for t in gate['targets']) for gate in gates):
+                raise RuntimeError('Target failed native camera visibility: ' + fruit['id'])
+            match = gates[-1]
+            return True
+
+        try:
+            state = self.wait(confirmed, simulation_timeout=4, wall_timeout=180,
+                              action=lambda _: self.send_base(0, 0))
+        finally:
+            recording.close()
+        self._line('commands', {'kind': 'perception_confirmation', 'id': fruit['id'],
+            'phase': self.phase, 'sim_time': state['sim_time'], 'mode': mode,
+            'capture_directory': directory.relative_to(self.output).as_posix(), 'gate': match})
+
+    def settled_in_basket(self, fruit):
+        with self.condition:
+            recent = self.samples[-100:]
+        return deposited_interval(recent, fruit['id'], fruit['radius_m'], self.manifest['bin'],
+                                  mesh_vertices=self.mesh_vertices.get(fruit['id']))['passed']
+
+    def run(self, target_ids, mode):
+        self.wait(lambda s: s.get('ready') is True, simulation_timeout=8, wall_timeout=180)
+        self.set_phase('baseline')
+        self.hold(2.5)
+        identifier = target_ids[0]
+        self.set_phase('negative_unknown')
+        self.command('arm', 'unknown_fruit', False, 'unknown_fruit')
+        self.set_phase('negative_far')
+        self.command('arm', identifier, False, 'cut_point_out_of_range')
+        self.command('cut', identifier, False, 'state_must_be_ARMED')
+        if mode == 'smoke':
+            self.set_phase('finished')
+            self.hold(.7)
+            return
+
+        plans = {row['id']: row for row in self.manifest['mission']['targets']}
+        fruits = {row['id']: row for row in self.manifest['fruits']}
+        for identifier in target_ids:
+            fruit, plan = fruits[identifier], plans[identifier]
+            self.set_phase('drive_pickup', identifier)
+            for waypoint in plan['base_route']:
+                self.drive_to(*waypoint)
+            self.set_phase('camera_detection', identifier)
+            self.confirm_visible(fruit)
+            self.target_direction_world = plan['cut_axis_world']
+            self.config = self.config.for_direction(self.target_direction_world)
+            q = plan['nominal_joints_rad']
+            self.set_phase('gripper_open', identifier)
+            self.move_jaw(True)
+            self.set_phase('preapproach', identifier)
+            self.move_joints(q['preapproach'])
+            self.set_phase('approach_cut', identifier)
+            self.move_joints(q['cut'], expected_tool=fruit['cut_point_world_m'])
+            self.wait_cut_ready(identifier)
+            self.command('arm', identifier)
+            self.set_phase('negative_armed_far', identifier)
+            self.move_joints(q['preapproach'])
+            self.command('cut', identifier, False, 'cut_point_out_of_range')
+            self.set_phase('cut', identifier)
+            self.move_joints(q['cut'], expected_tool=fruit['cut_point_world_m'])
+            self.move_jaw(False)
+            self.wait_cut_ready(identifier)
+            self.wait(lambda s: fruit_map(s)[identifier].get('stable_seconds', 0) >= .22,
+                      simulation_timeout=4, action=lambda _: self.send_base(0, 0))
+            self.command('cut', identifier)
+            self.wait(lambda s: s['ready'] and fruit_map(s)[identifier]['state'] == 'HELD', simulation_timeout=4)
+            self.set_phase('negative_repeat', identifier)
+            self.command('cut', identifier, False, 'state_must_be_ARMED')
+            self.set_phase('retract', identifier)
+            for waypoint in plan['withdrawal_sequence']:
+                self.move_joints(q[waypoint])
+            self.carry()
+            self.set_phase('deposit_position', identifier)
+            self.move_joints(plan['deposit_joints'])
+            self.move_jaw(True)
+            self.set_phase('release', identifier)
+            state = self.snapshot()
+            position = local_point(fruit_map(state)[identifier]['position'], state['robot_pose'])
+            lo, hi = self.manifest['bin']['inner_min_m'], self.manifest['bin']['inner_max_m']
+            radius = fruit['radius_m']
+            if not (all(a+radius <= value <= b-radius for value,a,b in zip(position[:2], lo[:2], hi[:2]))
+                    and position[2] >= hi[2]+radius):
+                raise RuntimeError('Measured release point is outside the basket aperture')
+            self.command('release', identifier)
+            self.set_phase('settle_in_bin', identifier)
+            self.wait(lambda _: self.settled_in_basket(fruit), simulation_timeout=8, wall_timeout=300,
+                      action=lambda _: self.send_base(0, 0))
+            self.set_phase('stow_after_deposit', identifier)
+            self.carry()
+            self.move_jaw(False)
+        self.set_phase('verify_retention_after_drive')
+        for waypoint in plans[target_ids[-1]]['after_deposit_route']:
+            self.drive_to(*waypoint)
+        self.set_phase('finished')
+        self.hold(1.)
+
+
 def parser_for_run():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('package', type=Path)
@@ -707,6 +861,7 @@ def parser_for_run():
     parser.add_argument('--gui', action='store_true', help='Also open a GUI on this isolated transport partition')
     parser.add_argument('--gui-config', type=Path, help='Optional Gazebo GUI configuration for visual inspection')
     parser.add_argument('--record-video', action='store_true', help='Record the prepared native RGB observer using simulation time')
+    parser.add_argument('--single-cycle-audit', type=Path, help='Passing first-fruit audit of this package, required for a nine-fruit CAD run')
     return parser
 
 
@@ -725,6 +880,17 @@ def main(argv=None):
         require_native_harvest_adapter(resolve_robot_profile(manifest['robot_config']), manifest.get('robot_task'))
     if not 1 <= args.max_targets <= len(manifest['mission']['targets']) or not math.isfinite(args.wall_timeout) or args.wall_timeout <= 0:
         parser.error('Invalid target count or wall timeout')
+    if manifest.get('robot_task', {}).get('demo_fixture') and args.mode == 'harvest' and args.max_targets == 9:
+        if args.single_cycle_audit is None:
+            parser.error('The nine-fruit CAD mission requires a passing single-cycle audit')
+        source = strict_json_loads(args.single_cycle_audit.read_text(encoding='utf-8'))
+        expected = manifest['mission']['targets'][0]['id']
+        if (source.get('passed') is not True or source.get('status') != 'PASS' or
+                source.get('mode') != 'harvest' or source.get('audited_target_ids') != [expected] or
+                source.get('deposited_fruit_ids') != [expected] or
+                source.get('manifest_sha256') != sha256_file(package/'manifest.json') or
+                source.get('robot_spec_sha256') != manifest['robot_spec_sha256']):
+            parser.error('The single-cycle audit must verify deposit and belong to this exact robot and fixture')
     output = args.output or package / 'runs' / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + f'-{os.getpid()}')
     output = output.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -809,7 +975,8 @@ def main(argv=None):
                 metadata['gui_command'] = gui_command
                 write_json(output / 'run.json', metadata)
                 gui = subprocess.Popen(gui_command, stdout=gui_log, stderr=subprocess.STDOUT, cwd=package)
-            pilot = NativePilot(manifest, output, server, streams, args.wall_timeout, asset_root=package)
+            pilot_class = CadV8Pilot if manifest.get('robot_task', {}).get('demo_fixture') else NativePilot
+            pilot = pilot_class(manifest, output, server, streams, args.wall_timeout, asset_root=package)
             pilot.run(target_ids, args.mode)
         except KeyboardInterrupt:
             failure = 'operator_interrupted'

@@ -22,15 +22,16 @@ def source_metadata():
         'harvest_pilot.py', 'harvest_plants.py', 'harvest_visuals.py', 'harvest_collision_mesh.py',
         'harvest_clearance.py', 'harvester_robot.py', 'harvest_validation.py',
         'robot_spec.py', 'robot_kinematics.py', 'robot_sdf.py', 'robot_motion.py', 'robot_validation.py',
-        'robot_collision_filters.py', 'robot_harvest_planning.py', 'robot_mesh_geometry.py',
+        'robot_collision_filters.py', 'robot_harvest_planning.py', 'robot_mesh_geometry.py', 'harvest_basket.py', 'harvest_perception.py',
         'robot_mechanism_validation.py', 'robot_control_validation.py', 'robot_drive_control.py')]
     paths += [REPO / 'src/uchuva_lsystem' / filename for filename in (
         'grammar.py', 'parameters.py', 'morphology.py', 'collisions.py', 'scene.py', 'blender_geometry.py', 'texture_assets.py')]
     paths += [REPO / 'scripts' / filename for filename in (
         'prepare_harvest_pilot.py', 'export_admitted_harvest_sources.py', 'screen_admitted_harvest_targets.py',
-        'harvest_native_video.py', 'run_neo_flight.py', 'harvest_gripper_control.py')]
+        'harvest_native_video.py', 'run_neo_flight.py', 'harvest_gripper_control.py',
+        'prepare_cad_v8_experiment.py', 'screen_cad_v8_demo.py', 'harvest_perception_capture.py')]
     paths += [REPO / 'gazebo/harvest_system' / name for name in ('HarvestSystem.cc', 'RobotTelemetrySystem.cc',
-        'ClosedLoopSystem.cc', 'GearCouplingSystem.cc', 'JointPositionForceSystem.cc', 'PositionForceController.hh', 'ObservationSchedule.hh', 'CMakeLists.txt')]
+        'ClosedLoopSystem.cc', 'GearCouplingSystem.cc', 'JointPositionForceSystem.cc', 'PositionForceController.hh', 'ObservationSchedule.hh', 'JawStateGuard.hh', 'CMakeLists.txt')]
     paths += [REPO / 'configs/robots/robot_spec.schema.json']
     return {'git_commit': git('rev-parse', 'HEAD'), 'git_branch': git('branch', '--show-current'),
             'working_tree_dirty': bool(git('status', '--porcelain')),

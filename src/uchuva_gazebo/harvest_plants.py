@@ -60,6 +60,9 @@ DEFAULT_PLANT_CONFIG = {
     "proxy_catalog_files": [],
     "source_units_per_metre": UNITS_PER_METRE,
     "target_ids": [],
+    "explicit_targets_allow_partial": False,
+    "fruit_collision_representation": "conservative_calyx_bounding_sphere",
+    "ideal_cut_segment_m": 0.0,
     "collision_representation": "analytic_cylinders",
 }
 
@@ -91,6 +94,11 @@ def _config(config):
     c.update(deepcopy(config))
     if c["collision_representation"] not in {"analytic_cylinders", "batched_conservative_prisms"}:
         raise ValueError("Unsupported plant collision representation")
+    if c['fruit_collision_representation'] not in {'conservative_calyx_bounding_sphere', 'closed_v8_calyx_mesh'}:
+        raise ValueError('Unsupported fruit collision representation')
+    c['ideal_cut_segment_m'] = _finite(c['ideal_cut_segment_m'], 'ideal cut segment length')
+    if not 0 <= c['ideal_cut_segment_m'] <= .008 or (c['ideal_cut_segment_m'] and not c['explicit_targets_allow_partial']):
+        raise ValueError('The explicitly targeted fixture can reserve at most 8 mm for ideal cutting')
     if not c["seeds"] or len(c["seeds"]) > 6:
         raise ValueError("The small pilot requires one to six plant seeds")
     if any(type(seed) is not int for seed in c["seeds"]):
@@ -109,7 +117,12 @@ def _config(config):
         raise ValueError("Reproductive count bounds must be ordered and at most 30")
     if c["max_dynamic_fruits_per_plant"] > c["reproductive_units_max"]:
         raise ValueError("Dynamic fruit count exceeds the morphology budget")
-    if c["target_ids"] and (len(c["target_ids"]) != len(c["seeds"]) * c["max_dynamic_fruits_per_plant"] or len(set(c["target_ids"])) != len(c["target_ids"]) or not all(isinstance(value, str) for value in c["target_ids"])):
+    partial = c['explicit_targets_allow_partial']
+    if type(partial) is not bool or (partial and not c['target_ids']):
+        raise ValueError('Partial target fixtures require explicit identities')
+    if c["target_ids"] and (not all(isinstance(value, str) for value in c["target_ids"]) or
+            len(set(c["target_ids"])) != len(c["target_ids"]) or
+            (not partial and len(c["target_ids"]) != len(c["seeds"]) * c["max_dynamic_fruits_per_plant"])):
         raise ValueError("Explicit target IDs must be unique and match the requested fruit count")
     imported = bool(c["morphology_files"])
     if bool(c["proxy_catalog_files"]) != imported:
@@ -396,12 +409,29 @@ def _candidate_clearance(calyx, pedicel, proxies, config, obstacles=None):
     return best[0], best[1], cut
 
 
-def build_harvest_plants(config: dict | None = None) -> dict:
+def calyx_collider(calyx_mesh):
+    """Weld the render mesh's UV seam without moving its V8 surface."""
+    from .robot_mesh_geometry import TriangleMesh, parse_collision_obj
+
+    vertices, faces, normals, normal_faces = parse_collision_obj(calyx_mesh)
+    unique = {}
+    indices = [unique.setdefault(point, len(unique)) for point in vertices]
+    welded = [tuple(indices[index] for index in face) for face in faces]
+    TriangleMesh(list(unique), welded)
+    return (''.join('v ' + ' '.join(map(str, point)) + '\n' for point in unique)
+            + ''.join('vn ' + ' '.join(map(str, normal)) + '\n' for normal in normals)
+            + ''.join('f ' + ' '.join(f'{v+1}//{n+1}' for v, n in zip(face, face_normals)) + '\n'
+                      for face, face_normals in zip(welded, normal_faces)))
+
+
+def build_harvest_plants(config: dict | None = None, *, collision_screen=False) -> dict:
     """Return sibling SDF models, OBJ texts and a traceable harvest inventory.
 
     Keys: ``models`` (Element objects), ``meshes`` (relative URI -> OBJ text),
     ``fruits`` (runtime contract), ``plants`` (source morphology and audit), and
     ``provenance``. Write every ``meshes`` key under the generated SDF directory.
+    Collision screening can skip static render meshes. SDF collision bytes,
+    selected fruit geometry and unselected obstacle envelopes stay identical.
     No directory is created and no simulation is run here.
     """
     c = _config(config or {})
@@ -451,7 +481,10 @@ def build_harvest_plants(config: dict | None = None) -> dict:
             else:
                 choices.append((center[0] - origin[0], -center[2], identifier, cut, record))
         choices.sort()
-        requested = c["max_dynamic_fruits_per_plant"]
+        requested = (sum(identifier.startswith(instance.plant_id + ':') for identifier in c['target_ids'])
+                     if c['explicit_targets_allow_partial'] else c['max_dynamic_fruits_per_plant'])
+        if requested > c['max_dynamic_fruits_per_plant']:
+            raise ValueError(f'{instance.plant_id}: too many requested targets')
         picked = [item for item in choices if item[2] in c["target_ids"]] if c["target_ids"] else choices[:requested]
         if len(picked) != requested:
             raise ValueError(f"{instance.plant_id}: only {len(choices)} clear left-facing targets for {requested} requested; rejected={rejected}")
@@ -459,7 +492,10 @@ def build_harvest_plants(config: dict | None = None) -> dict:
             selected[identifier] = {"cut": cut, "clearance": record}
         audit_by_plant[instance.plant_id] = {"candidate_count": len(choices) + len(rejected), "eligible_count": len(choices), "selected_ids": [item[2] for item in picked], "rejected_candidates": rejected, "unselected_eligible_ids": [item[2] for item in choices if item not in picked]}
 
-    models, meshes, inventory, reports = [], {}, [], []
+    if c['target_ids'] and set(c['target_ids']) != set(selected):
+        raise ValueError('Unknown or ineligible explicit target identities')
+
+    models, meshes, inventory, reports, nearby_fruits = [], {}, [], [], []
     used_texture_presets = set()
     for instance in instances:
         name, origin = instance.plant_id, _metres(instance.position)
@@ -475,12 +511,24 @@ def build_harvest_plants(config: dict | None = None) -> dict:
             if proxy.kind not in {"stem", "petiole", "pedicel"}:
                 continue
             start, end = _metres(proxy.start), _metres(proxy.end)
+            selected_cut = None
             if proxy.kind == "pedicel" and proxy.attachment_id in selected:
-                end = selected[proxy.attachment_id]["cut"]
+                selected_cut = selected[proxy.attachment_id]
+                end = selected_cut['cut']
             start, end = _sub(start, origin), _sub(end, origin)
             radius = proxy.radius / UNITS_PER_METRE
             stem_segments.append((start, end, radius))
             if proxy.kind in {"stem", "pedicel"}:
+                if selected_cut and c['ideal_cut_segment_m']:
+                    full_length = math.dist(start, end)
+                    if full_length <= c['ideal_cut_segment_m']:
+                        raise ValueError(f'{proxy.attachment_id}: no proximal support outside the ideal cut zone')
+                    boundary = _lerp(start, end, 1-c['ideal_cut_segment_m']/full_length)
+                    selected_cut['ideal_contact_zone'] = {
+                        'start': [p+v for p,v in zip(boundary, origin)],
+                        'end': [p+v for p,v in zip(end, origin)],
+                        'radius': radius * collision_radius_factor}
+                    end = boundary
                 collision_primitives.append(dict(id=f"rigid_{index}", source_proxy_id=proxy.proxy_id,
                                                  start=list(start), end=list(end), radius=radius))
                 if not batched_collisions:
@@ -493,12 +541,12 @@ def build_harvest_plants(config: dict | None = None) -> dict:
             shape = element(element(collision, "geometry"), "mesh")
             element(shape, "uri", uri)
             element(shape, "scale", "1 1 1")
-        if stem_segments:
+        if stem_segments and not collision_screen:
             uri = f"meshes/{name}_stems.obj"
             meshes[uri] = cylinder_batch_mesh(stem_segments)
             _mesh_visual(link, "stems_visual", uri, (0, 0, 0), (0.25, 0.34, 0.08, 1.0))
         leaves = [p for p in own if p.kind == "leaf"]
-        if leaves:
+        if leaves and not collision_screen:
             uri = f"meshes/{name}_leaves.obj"
             leaf_shapes = {f"{name}:{node.leaf.id}": node.leaf.shape
                            for axis in walk_axes(plant.axes) for node in axis.nodes if node.leaf is not None}
@@ -513,13 +561,18 @@ def build_harvest_plants(config: dict | None = None) -> dict:
                 continue
             unit = units[identifier]
             center = _metres(calyx.center)
-            calyx_mesh = detailed_calyx_mesh(calyx)
             preset = plant_texture_preset("calyx", unit.calyx.state, variant=1)
-            used_texture_presets.add(preset)
             if identifier not in selected:
                 static_ids.append(identifier)
-                static_calyx_batches.setdefault(preset, []).append((calyx_mesh, _sub(center, origin)))
+                if c['explicit_targets_allow_partial']:
+                    nearby_fruits.append({'id': identifier, 'center_world_m': list(center),
+                                          'radius_m': max(calyx.half_extents) / UNITS_PER_METRE})
+                if not collision_screen:
+                    used_texture_presets.add(preset)
+                    static_calyx_batches.setdefault(preset, []).append((detailed_calyx_mesh(calyx), _sub(center, origin)))
                 continue
+            calyx_mesh = detailed_calyx_mesh(calyx)
+            used_texture_presets.add(preset)
             uri = f"meshes/{_identifier(identifier)}_calyx.obj"
             meshes[uri] = calyx_mesh
             fruit_name = f"fruit_{_identifier(identifier)}"
@@ -538,7 +591,17 @@ def build_harvest_plants(config: dict | None = None) -> dict:
                 element(inertia, axis, f"{moment:.12g}")
             for axis in ("ixy", "ixz", "iyz"):
                 element(inertia, axis, 0)
-            collision = _sphere(fruit_link, "harvest_collision", (0, 0, 0), radius, collision=True)
+            collider = None
+            if c['fruit_collision_representation'] == 'closed_v8_calyx_mesh':
+                collision_uri = f'meshes/{_identifier(identifier)}_collider.obj'
+                contents = calyx_collider(calyx_mesh)
+                meshes[collision_uri] = contents
+                collider = {'type': 'mesh', 'uri': collision_uri, 'scale': [1, 1, 1],
+                            'sha256': hashlib.sha256(contents.encode()).hexdigest()}
+                collision = element(fruit_link, 'collision', name='harvest_collision')
+                element(element(element(collision, 'geometry'), 'mesh'), 'uri', collision_uri)
+            else:
+                collision = _sphere(fruit_link, "harvest_collision", (0, 0, 0), radius, collision=True)
             ode = element(element(element(collision, "surface"), "friction"), "ode")
             element(ode, "mu", 0.5)
             element(ode, "mu2", 0.5)
@@ -559,9 +622,13 @@ def build_harvest_plants(config: dict | None = None) -> dict:
                 "cut_point_local_m": list(local_cut),
                 "pedicel_start_world_m": list(_metres(pedicel.start)),
                 "pedicel_end_world_m": list(_metres(pedicel.end)),
+                **({"pedicel_radius_m": pedicel.radius / UNITS_PER_METRE} if c['explicit_targets_allow_partial'] else {}),
+                **({'ideal_contact_zone': selected[identifier]['ideal_contact_zone']}
+                   if 'ideal_contact_zone' in selected[identifier] else {}),
                 "cut_fraction": c["cut_fraction"], "radius_m": radius, "mass_kg": mass,
                 "inertia_diagonal_kg_m2": [moment, moment, moment],
-                "collision_representation": "conservative_calyx_bounding_sphere",
+                "collision_representation": c['fruit_collision_representation'],
+                **({'collision_geometry': collider} if collider else {}),
                 "physics_parameter_status": "engineering_heuristic",
                 "initial_state": "attached_to_plant_pending_runtime_initialization",
                 "minimum_initial_clearance_m": selected[identifier]["clearance"]["minimum_clearance_m"],
@@ -593,6 +660,7 @@ def build_harvest_plants(config: dict | None = None) -> dict:
         })
     return {
         "models": models, "meshes": meshes, "fruits": inventory, "plants": reports,
+        "static_fruit_obstacles": nearby_fruits,
         "texture_assets": {uri: str(Path(__file__).resolve().parents[2] / path)
                            for uri, path in texture_asset_paths(used_texture_presets).items()},
         "provenance": {

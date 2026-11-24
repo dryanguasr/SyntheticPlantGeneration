@@ -114,6 +114,43 @@ def plan_targets(plant_bundle, config, robot_config):
     else:
         carry = list(inverse_kinematics(config["carry_tcp_base_m"], config=robot_config))
         carry_point = config['carry_tcp_base_m']
+    fixture = robot_config.task.get('demo_fixture') if resolved else None
+    if fixture:
+        from .harvest_clearance import planned_crop_obstacles
+        from .robot_harvest_planning import audited_drive_route, plan_resolved_harvest
+        screened = plan_resolved_harvest(plant_bundle, robot_config,
+            clearance_m=fixture['motion_clearance_m'], pickup_standoff_m=config['pickup_standoff_m'])
+        plans = []
+        aisle = config['aisle_x_m']
+        initial = config['robot_start_xyzyaw']
+        previous = [initial[0], initial[1], initial[3]]
+        cylinders = planned_crop_obstacles(plant_bundle)
+        fruits = plant_bundle['fruits'] + plant_bundle.get('static_fruit_obstacles', [])
+        for identifier in config['plants']['target_ids']:
+            row = screened['targets'][identifier]
+            if not row['audit']['passed']:
+                raise ValueError(f'No admitted CAD motion for {identifier}')
+            x, y, _, yaw = row['pickup_base_pose']
+            station = [x, y, yaw]
+            outbound = [[aisle, previous[1], math.pi], [aisle, y, 0.], station]
+            route = [[aisle, y, math.pi]]
+            if abs(aisle-x) < .15:
+                route.append([aisle, y+.20, 0.])
+            audits = [audited_drive_route(s, waypoints, robot_config, cylinders, fruits, fixture['motion_clearance_m'])
+                      for s, waypoints in ((previous, outbound), (station, route))]
+            if not all(value['passed'] for value in audits):
+                raise ValueError(f'No stowed base route for {identifier}: {audits}')
+            plans.append({'id': identifier, 'pickup_base_xyyaw': [x, y, yaw],
+                          'tool_waypoints_world_m': row['tcp_waypoints_world_m'],
+                          'nominal_joints_rad': row['joint_waypoints'],
+                          'withdrawal_sequence': [n for n in row['sequence'] if n.startswith('extraction_')],
+                          'deposit_joints': row['deposit_joints'], 'sampled_clearance': row['audit'],
+                          'base_route': outbound, 'after_deposit_route': route, 'base_route_audit': audits,
+                          'cut_axis_world': row['cut_axis_world']})
+            previous = station
+        return {'targets': plans, 'carry_joints_rad': carry, 'carry_tcp_base_m': carry_point,
+                'aisle_x_m': config['aisle_x_m'], 'sampled_motion_audit': screened['audit'],
+                'target_source': 'native_camera_gate_and_privileged_simulation_cut_coordinates'}
     deposit_base = config["deposit_base_xyyaw"]
     release = [*config["bin_center_xy_m"], config["deposit_tool_height_m"]]
     deposit_pose = _pose(deposit_base[0], deposit_base[1], yaw=deposit_base[2])
@@ -166,20 +203,35 @@ def _bridge_yaml(contract, interaction, world_name):
                      for ros, gz, rt, gt, direction in entries) + '\n'
 
 
+def _jaw_guard(parent, specification):
+    guard = e(parent, 'jaw_guard')
+    for tag, key in (('joint_name', 'joint'), ('open_position', 'open_position_m'),
+                     ('closed_position', 'closed_position_m'), ('position_tolerance', 'position_tolerance_m'),
+                     ('max_speed', 'maximum_speed_m_s'), ('stable_time', 'stable_time_s')):
+        e(guard, tag, specification[key])
+    e(guard, 'joint_type', 'prismatic')
+    return guard
+
+
 def build_pilot(config):
     """Return SDF + deterministic serializable inputs; no native success claim."""
     c = deepcopy(config)
     if c.get('schema_version') != VERSION or not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', c.get('world_name', '')):
         raise ValueError('Invalid pilot schema or world name')
     resolved_robot = None
+    fixture = None
     robot_assets, robot_asset_hashes = {}, {}
     if 'robot_profile' in c:
         from .robot_spec import resolve_robot_profile
         from .robot_motion import ResolvedMotionConfig
-        from .robot_sdf import resolved_robot_contract
+        from .robot_sdf import resolved_robot_contract, require_native_harvest_adapter
+        from .harvest_basket import validated_demonstration
         if c.get('robot'):
             raise ValueError('Use robot_overrides for a resolved profile; legacy robot fields cannot be mixed with it')
         resolved_robot = resolve_robot_profile(c['robot_profile'], c.get('robot_overrides'))
+        if 'demo_fixture' in c.get('robot_task', {}):
+            require_native_harvest_adapter(resolved_robot, c['robot_task'])
+            fixture = validated_demonstration(resolved_robot, c['robot_task'])
         robot_config = ResolvedMotionConfig(resolved_robot, c.get('robot_task'), asset_root=c.get('robot_asset_root'))
         contract = resolved_robot_contract(resolved_robot)
         mesh_uris = [v['geometry']['uri'] for link in resolved_robot.links
@@ -200,6 +252,11 @@ def build_pilot(config):
                                                   'bin_center_xy_m', 'deposit_base_xyyaw') for v in c[key]):
         raise ValueError('Non-finite scene parameters')
     plants = build_harvest_plants(c['plants'])
+    if fixture:
+        for fruit in plants['fruits']:
+            if 'collision_geometry' in fruit:
+                geometry = fruit['collision_geometry']
+                robot_config.mesh_repository.register_generated_obj(geometry, plants['meshes'][geometry['uri']])
     plan = plan_targets(plants, c, robot_config)
     root = ET.Element('sdf', version='1.9')
     world = e(root, 'world', name=c['world_name'])
@@ -248,7 +305,14 @@ def build_pilot(config):
     else:
         from .robot_sdf import resolved_robot_model
         world.append(resolved_robot_model(resolved_robot, start=c['robot_start_xyzyaw']))
-    bin_spec = _bin(world, c['bin_center_xy_m'])
+    bin_spec = fixture['bin'] if fixture else _bin(world, c['bin_center_xy_m'])
+    observers = {}
+    if fixture:
+        from .harvest_perception import add_instance_observer
+        for plant, camera in fixture['camera_by_plant'].items():
+            if any(fruit['plant_id'] == plant for fruit in plants['fruits']):
+                observers[plant] = add_instance_observer(world, name=f'view_{plant}', pose=camera,
+                    targets=plants['fruits'], width=960, height=540, horizontal_fov_rad=1.0, fps=4)
     # Robot links use disjoint masks to suppress proxy self-collision. All
     # external bodies expose all 16 bits, including fruit-fruit contacts after
     # successive attachments to the same tool skeleton in DART.
@@ -262,6 +326,8 @@ def build_pilot(config):
         e(interaction, name, numbers(pose))
     for key, value in c['interaction'].items():
         e(interaction, key, value)
+    if fixture:
+        _jaw_guard(interaction, fixture['gripper'])
     if resolved_robot:
         task = c['robot_task']
         e(interaction, 'tool_cut_axis', numbers(task['tool_axis']))
@@ -318,6 +384,10 @@ def build_pilot(config):
         manifest['limitations'][0] = 'Resolved robot topology; cutting/retention still uses an ideal logical attachment and is not a validated physical gripper.'
     if c.get('video_observer'):
         manifest['video_observer'] = c['video_observer']
+    if fixture:
+        manifest['perception_observers'] = observers
+        if c['plants'].get('ideal_cut_segment_m'):
+            manifest['limitations'].append('The designated terminal pedicel span is a virtual cutting zone. Only the named blades and pads may enter it during the matching pickup. The retained plant support remains a native collider.')
     occupied = set(plants['meshes']) | set(soil_assets['meshes']) | set(plants.get('texture_assets', {})) | set(source_assets) | set(soil_assets['generated_binary_assets'])
     if occupied.intersection(robot_assets):
         raise ValueError('Robot asset URI collides with a plant/scene asset')
@@ -348,7 +418,7 @@ def write_package(output, config, source_metadata=None):
     for name, content in assets.items():
         path = directory / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(content, encoding='utf-8')
+        path.write_text(content, encoding='utf-8', newline='\n')
     binary_assets = bundle.get('binary_assets', {})
     for name, source in binary_assets.items():
         path = (directory / name).resolve()
@@ -435,4 +505,39 @@ def load_verified_package(directory):
         target_axes = {t['id']: numbers(t['cut_axis_world']) for t in manifest['mission']['targets']}
         if {f.get('id'): f.findtext('cut_axis') for f in interaction.findall('fruit')} != target_axes:
             raise ValueError('Harvest plugin fruit axes differ from the frozen mission')
+        if 'demo_fixture' in task:
+            from .harvest_basket import validated_demonstration
+            from .harvest_perception import add_instance_observer
+            fixture = validated_demonstration(robot, task)
+            guard = interaction.find('jaw_guard')
+            expected_guard = _jaw_guard(ET.Element('guard'), fixture['gripper'])
+            if guard is None or canonical(guard) != canonical(expected_guard) or manifest['bin'] != fixture['bin']:
+                raise ValueError('Native jaw guard or basket differs from the resolved demonstration')
+            camera_world = ET.Element('world')
+            for fruit in manifest['fruits']:
+                e(camera_world, 'model', name=fruit['model_name'])
+            cameras = {plant: add_instance_observer(camera_world, name=f'view_{plant}', pose=pose,
+                       targets=manifest['fruits'], width=960, height=540, horizontal_fov_rad=1.0, fps=4)
+                       for plant, pose in fixture['camera_by_plant'].items()
+                       if any(f['plant_id'] == plant for f in manifest['fruits'])}
+            if cameras != manifest['perception_observers']:
+                raise ValueError('Camera contract differs from the frozen CAD demonstration')
+            for reference in camera_world.findall('model'):
+                name = reference.get('name')
+                actual_model = world.find(f"model[@name='{name}']")
+                if actual_model is None:
+                    raise ValueError('Missing target or observation camera in the native scene')
+                if name.startswith('view_'):
+                    matches = canonical(reference) == canonical(actual_model)
+                else:
+                    matches = [canonical(p) for p in reference.findall('plugin')] == [canonical(p) for p in actual_model.findall('plugin')]
+                if not matches:
+                    raise ValueError('Native cameras or target labels disagree with their contract')
+            for fruit in manifest['fruits']:
+                geom = fruit.get('collision_geometry')
+                if geom:
+                    model = world.find(f"model[@name='{fruit['model_name']}']")
+                    uri = model.findtext("link/collision[@name='harvest_collision']/geometry/mesh/uri")
+                    if uri != geom['uri'] or manifest['files_sha256'].get(uri) != geom['sha256']:
+                        raise ValueError('Native fruit collider differs from the audited V8 mesh')
     return manifest

@@ -178,6 +178,13 @@ def rigid_cylinders(bundle, mesh_root=None):
     return result
 
 
+def planned_crop_obstacles(bundle, mesh_root=None):
+    """Retain virtual terminal pedicels in planning even in the ideal cutter zone."""
+    return rigid_cylinders(bundle, mesh_root) + [
+        {**fruit['ideal_contact_zone'], 'id': fruit['id']+':ideal_cut_contact', 'ideal_cut_target': fruit['id']}
+        for fruit in bundle['fruits'] if 'ideal_contact_zone' in fruit]
+
+
 def _arm_boxes(joints, base, config):
     c = config
     landmarks = link_origins(joints, c)
@@ -293,7 +300,7 @@ def _world_clearance(joints, base, cylinders, fruit_specs, held, config, report_
 
 
 def audit_joint_segment(start, end, base, cylinders, fruit_specs, *, held=None,
-                        config=None, samples=81, clearance_m=.004, stop_on_failure=False):
+                        config=None, samples=81, clearance_m=.004, stop_on_failure=False, report_cap=.5):
     """Sample the commanded straight interpolation in joint space, fail closed."""
     if type(samples) is not int or samples < 2:
         raise ValueError("At least two samples are required")
@@ -310,7 +317,7 @@ def audit_joint_segment(start, end, base, cylinders, fruit_specs, *, held=None,
         near_cylinders = _legacy_near_cylinders(c, base, cylinders, held_extra)
         limits = JOINT_LIMITS
     return _audit_samples(start, end, base, near_cylinders, cylinders, fruit_specs,
-                          held, c, samples, clearance_m, stop_on_failure, limits)
+                          held, c, samples, clearance_m, stop_on_failure, limits, report_cap)
 
 
 def _legacy_near_cylinders(c, base, cylinders, held_extra):
@@ -327,16 +334,16 @@ def _legacy_near_cylinders(c, base, cylinders, held_extra):
 
 
 def _audit_samples(start, end, base, near_cylinders, cylinders, fruit_specs,
-                   held, c, samples, clearance_m, stop_on_failure, limits):
+                   held, c, samples, clearance_m, stop_on_failure, limits, report_cap=.5):
     if len(start) != len(limits) or len(end) != len(limits):
         raise ValueError('Joint segment does not match the robot joint limits')
     # Bound articulation increments as well as the minimum sample count.
     count = max(samples, math.ceil(max(abs(a - b) for a, b in zip(start, end)) / .004) + 1)
     result = {"passed": True, "samples": 0, "requested_samples": count,
-              "minimum_robot_clearance_m": .5, "minimum_held_clearance_m": .5 if held else None,
-              "minimum_held_robot_clearance_m": .5 if held else None,
+              "minimum_robot_clearance_m": report_cap, "minimum_held_clearance_m": report_cap if held else None,
+              "minimum_held_robot_clearance_m": report_cap if held else None,
               "minimum_joint_margin_rad": math.inf, "maximum_tcp_sample_step_m": 0.0,
-              "clearance_threshold_m": clearance_m, "distance_report_cap_m": .5,
+              "clearance_threshold_m": clearance_m, "distance_report_cap_m": report_cap,
               "broad_phase_cylinders": len(near_cylinders), "source_cylinders": len(cylinders)}
     previous_tcp = None
     for index in range(count):
@@ -344,7 +351,7 @@ def _audit_samples(start, end, base, near_cylinders, cylinders, fruit_specs,
         joints = [(1 - t) * a + t * b for a, b in zip(start, end)]
         margin = min(min(value - bound[0], bound[1] - value) for value, bound in zip(joints, limits))
         result["minimum_joint_margin_rad"] = min(result["minimum_joint_margin_rad"], margin)
-        state = _world_clearance(joints, base, near_cylinders, fruit_specs, held, c)
+        state = _world_clearance(joints, base, near_cylinders, fruit_specs, held, c, report_cap=report_cap)
         result["samples"] += 1
         for source, target, detail in (
             ("robot_clearance_m", "minimum_robot_clearance_m", "limiting_robot_pair"),

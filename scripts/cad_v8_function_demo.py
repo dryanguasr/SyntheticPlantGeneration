@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare/run a short native visual demonstration, never a harvest mission.
+"""Prepare/run a short native visual demonstration while crop stays attached.
 
 The fixed-gripper RobotSpec remains authoritative. The three frozen V8 plants
 retain their geometry and world poses; only their three detachable fruit models
@@ -87,10 +87,17 @@ def prepare(args):
             raise ValueError('Frozen V8 file changed: '+uri)
     robot = resolve_robot_profile(args.profile)
     data = robot.to_dict()
-    if robot.sha256 != '100172ef1472a624c9e6288065bb82712b4b3ff53dbfab89c92dbb4b5e7d3059':
+    if not args.robot_derivation and robot.sha256 != '100172ef1472a624c9e6288065bb82712b4b3ff53dbfab89c92dbb4b5e7d3059':
         raise ValueError('This demonstration requires the explicitly fixed q0 diagnostic profile')
-    if data['control'].get('gripper') or any(j['type'] != 'fixed' for j in data['joints'] if j['name'].startswith('gripper_')):
+    if not args.robot_derivation and (data['control'].get('gripper') or
+            any(j['type'] != 'fixed' for j in data['joints'] if j['name'].startswith('gripper_'))):
         raise ValueError('Gripper must be physically fixed, with no controller')
+    demo = read(args.robot_derivation) if args.robot_derivation else None
+    if demo:
+        from uchuva_gazebo.harvest_basket import DEMO_FIXTURE_SCHEMA, validated_demonstration
+        validated_demonstration(robot, {'demo_fixture': {'schema_version': DEMO_FIXTURE_SCHEMA,
+            'robot_spec_sha256': demo['robot_spec_sha256'], 'gripper': demo['gripper'],
+            'bin': {**demo['bin'], 'frame': 'robot_base'}}})
     verify_robot_assets(robot, args.asset_root)
     build = read(args.plugin_dir/'build_provenance.json')
     for name in ('RobotTelemetrySystem.cc', 'ClosedLoopSystem.cc', 'JointPositionForceSystem.cc',
@@ -120,6 +127,21 @@ def prepare(args):
         'fruit_change': 'Only the three detachable fruit model static flags become true. All their geometry, inertia metadata, names and poses remain identical; no fruit detachment is simulated.'}
     observer = {'pose': [-4.8, -2.9, 2.7, 0., .320, .829], 'width': 1280, 'height': 720,
                 'fps': 10, 'horizontal_fov_rad': 1.1, 'topic': '/harvest/video_observer/image'}
+    if demo:
+        protocol.update(jaw=demo['gripper'], wall_timeout_s=540,
+            scope='Native preflight video of the CAD payload and gripper with static V8 fruit',
+            derivation_sha256=sha(args.robot_derivation),
+            commands='Native finite-effort wheel, arm and jaw commands; no pose, cut or release commands')
+        protocol['start_xyzyaw'][2] = .296218017078388
+        protocol['initialization'] = 'Wheel support begins tangent to the floor; full gravity remains on'
+        if args.duration is not None:
+            protocol['duration_s'] = args.duration
+            protocol['phases'] = [{**phase, 'end_s': min(phase['end_s'], args.duration)}
+                                  for phase in protocol['phases'] if phase['start_s'] < args.duration]
+        for phase in protocol['phases']:
+            phase['jaw_position_m'] = (demo['gripper']['open_position_m'] if phase['name'] in
+                ('arm_positive', 'arm_return', 'brake') else demo['gripper']['closed_position_m'])
+        observer.update(pose=[-3.15, -1.65, 1.90, 0., .48, .96], horizontal_fov_rad=1.34)
     root = ET.fromstring(mobility.world(robot, protocol))
     world = root.find('world')
     source_world = ET.parse(plants/manifest['world_file']).getroot().find('world')
@@ -214,7 +236,7 @@ def prepare(args):
         'plant_seeds': [p['seed'] for p in manifest['plants']], 'target_ids': [f['id'] for f in manifest['fruits']],
         'crop_model_guards': crop_guards, 'asset_identity': assets, 'files_sha256': files,
         'source_sha256': source_hashes, 'video_observer': observer,
-        'scope': 'Diagnostic visual evidence only; fixed gripper, static fruit and no harvesting.'})
+        'scope': protocol['scope']})
     print(json.dumps({'prepared': str(output), 'robot_spec_sha256': robot.sha256,
                       'assets': len(assets), 'native_execution': 'NOT_RUN'}))
 
@@ -252,6 +274,8 @@ def run(args):
     controller = DriveReferenceController(drive)
     arm_publishers = {name: transport.advertise(topic, Double) for name, topic in contract['topics']['joint_commands'].items()}
     wheel_publishers = {name: transport.advertise(data['namespace']+'/drive/'+name+'/cmd_vel', Double) for name in drive['joints']}
+    jaw = protocol.get('jaw')
+    jaw_publisher = transport.advertise(contract['topics']['gripper_commands'][jaw['joint']], Double) if jaw else None
     references = dict(data['arm_home_positions'])
     previous_time = 0.
 
@@ -293,10 +317,15 @@ def run(args):
                     publisher.publish(Double(data=references[name]))
                 for name, value in reference['wheel_velocity_references_rad_s'].items():
                     wheel_publishers[name].publish(Double(data=value))
+                jaw_commands = []
+                if jaw_publisher is not None:
+                    requested = phase['jaw_position_m']
+                    jaw_publisher.publish(Double(data=requested))
+                    jaw_commands.append({'joint': jaw['joint'], 'requested_position_m': requested})
                 records['joints'].append(row)
                 records['commands'].append({'sim_time': stamp, 'phase': phase['name'],
                     'arm_references_rad': dict(references), 'drive_reference': reference,
-                    'gripper_commands': [], 'interaction_commands': [], 'pose_commands': []})
+                    'gripper_commands': jaw_commands, 'interaction_commands': [], 'pose_commands': []})
         except Exception as error:
             errors.append('command: '+str(error))
             stop_requested.set()
@@ -366,7 +395,8 @@ def run(args):
         'last_sim_time': records['joints'][-1]['sim_time'] if records['joints'] else None,
         'video': video_report, 'robot_spec_sha256': manifest['robot_spec_sha256'],
         'full_robot_or_harvest_acceptance': False,
-        'limitations': ['Fixed gripper q0; three target fruits explicitly static', 'No crop interaction, force-grasp, cutting, or long-turn evidence',
+        'limitations': [protocol['scope'], 'Three target fruits explicitly static; zero native harvests',
+                        'No crop interaction, force-grasp, cutting, or long-turn evidence',
                         'Native observations retained for a separate physical audit; successful recording is not physical acceptance'],
         'files_sha256': {p.name: sha(p) for p in output.iterdir() if p.is_file()}})
     print(json.dumps({'output': str(output), 'native_exit_code': code, 'errors': errors}))
@@ -377,9 +407,13 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--run', action='store_true')
     parser.add_argument('--package', type=Path)
+    parser.add_argument('--robot-derivation', type=Path, help='Use the explicit CAD payload and short-stroke demonstration profile')
+    parser.add_argument('--duration', type=float, help='Native seconds to record in the short-stroke visual preflight')
     for name in ('profile', 'asset-root', 'plant-package', 'acceptance-lock', 'plugin-dir'):
         parser.add_argument('--'+name, type=Path)
     args = parser.parse_args()
+    if args.duration is not None and (not args.robot_derivation or not 3 <= args.duration <= 8):
+        parser.error('--duration requires --robot-derivation and a finite interval from 3 to 8 seconds')
     if args.run:
         if args.package is None:
             parser.error('--run requires --package')

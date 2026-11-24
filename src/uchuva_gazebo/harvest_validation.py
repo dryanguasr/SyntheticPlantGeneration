@@ -92,7 +92,7 @@ def sphere_in_bin(position, radius, bin_spec):
 
 
 def deposited_interval(samples, fruit_id, radius, bin_spec,
-                       min_duration=.7, max_speed=.035):
+                       min_duration=.7, max_speed=.035, *, mesh_vertices=None):
     """Require consecutive released samples, geometric containment and low speed."""
     first = None
     previous = None
@@ -103,14 +103,23 @@ def deposited_interval(samples, fruit_id, radius, bin_spec,
         if fruit is None or not isinstance(t, (int, float)):
             first = previous = None
             continue
-        current = (t, fruit["position"])
+        in_base = bin_spec.get('frame') == 'robot_base'
+        position = local_point(fruit['position'], sample['robot_pose']) if in_base else fruit['position']
+        current = (t, position)
         valid = (fruit["state"] == "RELEASED" and fruit.get("joint_present") is False
                  and fruit.get("joint_parent") == "none"
                  and fruit.get("removal_pending") is False)
-        valid = valid and sphere_in_bin(fruit["position"], radius, bin_spec)
+        if valid and mesh_vertices is not None:
+            pose = _pose(fruit['pose'], 'released fruit pose')
+            base = sample['robot_pose'] if in_base else [0, 0, 0, 0, 0, 0, 1]
+            lo, hi = bin_spec['inner_min_m'], bin_spec['inner_max_m']
+            valid = all(all(a-.004 <= v <= b+.004 for v,a,b in zip(
+                local_point(world_point(point, pose), base), lo, hi)) for point in mesh_vertices)
+        elif valid:
+            valid = sphere_in_bin(position, radius, bin_spec)
         if previous is not None:
             dt = t - previous[0]
-            valid = valid and 0 < dt <= .25 and distance(fruit["position"], previous[1]) / dt <= max_speed
+            valid = valid and 0 < dt <= .25 and distance(position, previous[1]) / dt <= max_speed
         else:
             valid = False
         if valid:
@@ -128,7 +137,7 @@ def deposited_interval(samples, fruit_id, radius, bin_spec,
 
 
 def evaluate_harvest_run(manifest, samples, events, target_ids, *, mode="harvest",
-                         execution_error=None):
+                         execution_error=None, fruit_mesh_vertices=None):
     """Return a fail-closed report for a native smoke test or complete harvest.
 
     A cut acknowledgement is not evidence of physical detachment; a released
@@ -314,7 +323,9 @@ def evaluate_harvest_run(manifest, samples, events, target_ids, *, mode="harvest
                   and all(f.get("joint_present") and f.get("joint_parent") == "tool" for _, f in held),
                   observed=bool(held), held_duration_s=span, held_displacement_m=motion,
                   maximum_constraint_error_m=residual, relative_slip_m=slip)
-            result = deposited_interval(samples, identifier, specs[identifier]["radius_m"], manifest["bin"])
+            vertices = (fruit_mesh_vertices or {}).get(identifier)
+            result = deposited_interval(samples, identifier, specs[identifier]["radius_m"], manifest["bin"],
+                                        mesh_vertices=vertices)
             released = [s for s in samples if fruit_map(s)[identifier]['state'] == 'RELEASED']
             check(f"{identifier}:settled_in_bin", result.pop("passed"), observed=bool(released), **result)
     passed = all(item["passed"] for item in checks)

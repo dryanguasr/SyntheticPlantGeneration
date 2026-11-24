@@ -307,7 +307,8 @@ def require_native_harvest_adapter(robot, task=None):
             raise ValueError(f'{name}: native effort control requires a traced effective joint-output actuator')
         if max(abs(gains['cmd_min']), abs(gains['cmd_max'])) > actuators[name]['continuous_effort']:
             raise ValueError(f'{name}: command exceeds continuous effort; a validated peak-duration/duty-cycle model is required')
-    if any(j['group'] in ('passive', 'gripper') for j in data['joints']):
+    demonstration = isinstance(task, dict) and 'demo_fixture' in task
+    if not demonstration and any(j['group'] in ('passive', 'gripper') for j in data['joints']):
         raise ValueError('Native harvest for articulated gripper/suspension requires their motion and stability protocol')
     if not isinstance(task, dict) or task.get('tool_frame') != 'cut_point' or task.get('target_direction_source') != 'pedicel_axis':
         raise ValueError('Native resolved harvest requires cut_point and the morphological pedicel_axis direction')
@@ -315,4 +316,8 @@ def require_native_harvest_adapter(robot, task=None):
         raise ValueError('Native cut-axis symmetry must be an explicit cut_axis_bidirectional boolean')
     from .robot_validation import acceptance_config
     acceptance_config(task)
-    robot.require_capability('native_harvest')
+    if demonstration:
+        from .harvest_basket import validated_demonstration
+        validated_demonstration(robot, task)
+    else:
+        robot.require_capability('native_harvest')

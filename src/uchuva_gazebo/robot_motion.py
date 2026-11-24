@@ -69,6 +69,10 @@ class ResolvedMotionConfig:
         return ResolvedMotionConfig(self.robot, {**self.task,
             'auxiliary_joint_positions': {n: positions[n] for n in names}}, mesh_repository=self.mesh_repository)
 
+    def for_target_cut(self, identifier):
+        return ResolvedMotionConfig(self.robot, {**self.task, 'active_cut_target': identifier},
+                                    mesh_repository=self.mesh_repository)
+
     def solve(self, target, pitch=0, roll=0, *, seed=None):
         if pitch != 0 or roll != 0:
             raise ValueError('Resolved IK uses the explicit task direction, not proxy Euler constraints')
@@ -134,10 +138,16 @@ def box_separation(first, first_half, second, second_half):
     return max(gaps)
 
 
-def resolved_world_clearance(values, base, cylinders, fruits, held, config, report_cap=.5):
+def resolved_world_clearance(values, base, cylinders, fruits, held, config, report_cap=.5,
+                             *, reject_on_first_failure=False):
     from .harvest_clearance import _segment_box_distance, _point_box_distance, _point_segment_distance
     shapes, tcp = config.world_shapes(values, base)
+    if reject_on_first_failure:
+        shapes = sorted(shapes, key=lambda shape: not shape['link'].startswith(('arm_wrist', 'gripper')))
     repository = config.mesh_repository
+    fruit_shapes = [({'geometry': fruit['collision_geometry'],
+                      'pose': pose_from_center(fruit['center_world_m'])} if 'collision_geometry' in fruit else None, fruit)
+                    for fruit in fruits]
     boxes = [(s, None if s['geometry']['type'] == 'mesh' else shape_box(s), inverse_pose(s['pose'])) for s in shapes]
     if any(half is None for _, half, _ in boxes) and repository is None:
         raise ValueError('Mesh clearance requires its verified geometry repository')
@@ -149,6 +159,11 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
     limiting = limiting_held = limiting_held_robot = None
     drive_links = {j['child'] for j in config.robot.joints if j.get('group') == 'drive'}
     exclusions = {tuple(sorted(row['links'])) for row in config.robot.data['collision_policy']['excluded_pairs']}
+
+    def rejected(gap, pair, scope):
+        return {'robot_clearance_m': gap, 'limiting_robot_pair': pair, 'first_failure_only': True,
+                'scope': scope, 'tcp_world_m': tcp['xyz_m'], 'robot_spec_sha256': config.robot.sha256}
+
     for index, (first, first_half, _) in enumerate(boxes):
         for second_index in range(index+1, len(boxes)):
             second, second_half, _ = boxes[second_index]
@@ -166,12 +181,16 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 gap = box_separation(first, first_half, second, second_half)
             if gap < minimum:
                 minimum, limiting = gap, [first['link']+'/'+first['name'], second['link']+'/'+second['name']]
+                if reject_on_first_failure:
+                    return rejected(gap, limiting, 'self')
     self_minimum,self_limiting=minimum,limiting
     # Report the environment independently of internal mechanical interfaces.
     # The authoritative total remains their minimum: this adds diagnostics,
     # never an exemption or permission to accept internal contact.
     minimum,limiting=report_cap,None
-    for shape, half, inverse in boxes:
+    matching_blades = set(config.task.get('demo_fixture', {}).get('ideal_cut_blade_shapes', []))
+    active_cut = config.task.get('active_cut_target')
+    for index, (shape, half, inverse) in enumerate(boxes):
         name = shape['link']+'/'+shape['name']
         center = shape['pose']['xyz_m']
         if half is None:
@@ -184,20 +203,40 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
         # body: deeper intersections still contribute to the reported minimum.
         nearby = cylinders.near(center, bound+max(0, minimum)) if hasattr(cylinders, 'near') else cylinders
         for obstacle in nearby:
+            if (active_cut is not None and obstacle.get('ideal_cut_target') == active_cut and name in matching_blades
+                    and math.dist(tcp['xyz_m'], obstacle['end']) <= .02):
+                continue
+            if bounds is not None:
+                low_bound, high_bound = bounds[index]
+                reach = max(0, minimum) + obstacle['radius']
+                if any(min(a,b)-hi >= reach or lo-max(a,b) >= reach for a,b,lo,hi in
+                       zip(obstacle['start'], obstacle['end'], low_bound, high_bound)):
+                    continue
             gap = (repository.segment_distance(shape, obstacle['start'], obstacle['end'],
                                                 limit=max(0, minimum+obstacle['radius']))
                    if half is None else _segment_box_distance(transform_point(inverse, obstacle['start']),
                    transform_point(inverse, obstacle['end']), half))-obstacle['radius']
             if gap < minimum:
                 minimum, limiting = gap, [name, obstacle['id']]
-        for fruit in fruits:
+                if reject_on_first_failure:
+                    return rejected(gap, limiting, 'crop')
+        for fruit_shape, fruit in fruit_shapes:
             if held is not None and fruit['id'] == held['id']:
                 continue
+            if bounds is not None:
+                low_bound, high_bound = bounds[index]
+                reach = max(0, minimum) + fruit['radius_m']
+                if any(p-hi >= reach or lo-p >= reach for p,lo,hi in zip(fruit['center_world_m'], low_bound, high_bound)):
+                    continue
             gap = (repository.point_distance(shape, fruit['center_world_m'],
                                               limit=max(0, minimum+fruit['radius_m'])) if half is None
                    else _point_box_distance(transform_point(inverse, fruit['center_world_m']), half))-fruit['radius_m']
+            if fruit_shape is not None and gap < minimum:
+                gap = repository.shape_distance(shape, fruit_shape, limit=max(0, minimum))
             if gap < minimum:
                 minimum, limiting = gap, [name, fruit['id']]
+                if reject_on_first_failure:
+                    return rejected(gap, limiting, 'fruit')
         if shape['link'] not in drive_links:
             if half is None:
                 gap = low[2]
@@ -206,6 +245,8 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
                 gap = center[2]-sum(abs(axis[2])*h for axis, h in zip(axes, half))
             if gap < minimum:
                 minimum, limiting = gap, [name, 'ground']
+                if reject_on_first_failure:
+                    return rejected(gap, limiting, 'ground')
     environment_minimum,environment_limiting=minimum,limiting
     if self_minimum<=minimum:
         minimum,limiting=self_minimum,self_limiting
@@ -216,21 +257,35 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
             raise ValueError('Resolved held clearance requires the audited cut-frame attachment offset')
         center = transform_point(tcp, held['held_offset_in_tool_m'])
         radius = held['radius_m']
-        held_min, limiting_held = min(report_cap, center[2]-radius), 'ground'
+        held_shape = ({'geometry': held['collision_geometry'],
+                       'pose': compose_poses(tcp, held['held_pose_in_tool'])}
+                      if 'collision_geometry' in held else None)
+        floor_gap = repository.world_bounds(held_shape)[0][2] if held_shape else center[2]-radius
+        held_min, limiting_held = min(report_cap, floor_gap), 'ground'
         nearby = cylinders.near(center, radius+max(0, held_min)) if hasattr(cylinders, 'near') else cylinders
         for obstacle in nearby:
             gap = _point_segment_distance(center, obstacle['start'], obstacle['end'])-radius-obstacle['radius']
+            if held_shape and gap < held_min:
+                gap = repository.segment_distance(held_shape, obstacle['start'], obstacle['end'],
+                    limit=max(0, held_min+obstacle['radius']))-obstacle['radius']
             if gap < held_min:
                 held_min, limiting_held = gap, obstacle['id']
-        for fruit in fruits:
+        for fruit_shape, fruit in fruit_shapes:
             if fruit['id'] != held['id']:
                 gap = math.dist(center, fruit['center_world_m'])-radius-fruit['radius_m']
+                if (held_shape or fruit_shape) and gap < held_min:
+                    first = held_shape or {'geometry': {'type': 'sphere', 'radius_m': radius}, 'pose': pose_from_center(center)}
+                    second = fruit_shape or {'geometry': {'type': 'sphere', 'radius_m': fruit['radius_m']},
+                                             'pose': pose_from_center(fruit['center_world_m'])}
+                    gap = repository.shape_distance(first, second, limit=max(0, held_min))
                 if gap < held_min:
                     held_min, limiting_held = gap, fruit['id']
         for shape, half, inverse in boxes:
             gap = (repository.point_distance(shape, center,
                                               limit=max(0, held_robot_min+radius)) if half is None
                    else _point_box_distance(transform_point(inverse, center), half))-radius
+            if held_shape and gap < held_robot_min:
+                gap = repository.shape_distance(shape, held_shape, limit=max(0, held_robot_min))
             if gap < held_robot_min:
                 held_robot_min, limiting_held_robot = gap, shape['link']+'/'+shape['name']
     return {'robot_clearance_m': minimum, 'held_clearance_m': held_min if held else None,
@@ -240,3 +295,7 @@ def resolved_world_clearance(values, base, cylinders, fruits, held, config, repo
             'limiting_robot_pair': limiting, 'limiting_held_obstacle': limiting_held,
             'limiting_held_robot_link': limiting_held_robot, 'tcp_world_m': tcp['xyz_m'],
             'robot_spec_sha256': config.robot.sha256}
+
+
+def pose_from_center(center):
+    return {'xyz_m': list(center), 'quaternion_xyzw': [0, 0, 0, 1]}
