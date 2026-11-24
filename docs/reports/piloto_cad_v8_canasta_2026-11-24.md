@@ -153,3 +153,79 @@ La [guía de operación](../guides/piloto_cad_v8_canasta.md) reúne los pasos de
 preparación, la criba, los ensayos y el auditor. El control y los contactos
 registrados son resultados de simulación. El montaje, la masa de la carga y
 el funcionamiento de la pinza física requieren evidencia del prototipo.
+
+## Toma continua con depósitos bajos
+
+La toma usa los tres V8 inmóviles y comienza con el carro a 1,78 m del
+primer arbusto y a 0,91 m de su primera parada. El primer capacho está a
+0,474 m del suelo.
+El movimiento guiado sigue cinco fases por fruto. El corte conserva sus
+guardas nativas y los objetivos se preseleccionan por identificador V8. Los
+desplazamientos entre paradas de un mismo arbusto bajaron en conjunto de
+11,47 m a 2,06 m respecto a las salidas repetidas al pasillo.
+
+Gazebo aceptó los nueve cortes y liberaciones. Se observaron los nueve
+capachos completos dentro de la canasta al final del desplazamiento,
+**3 + 3 + 3** a 561,992 s de simulación. Las poses nativas anteriores a
+cada liberación dieron una separación de 104,2–109,5 mm entre la parte
+inferior del capacho y el fondo. La velocidad del capacho con respecto a
+la canasta fue cero a la precisión observada en esas muestras. La
+caída por gravedad y los contactos entre frutos y canasta se simularon.
+
+Se omitió la respuesta de contacto en el brazo, el chasis y las mallas
+estáticas del cultivo, con la canasta activa. El barrido registró
+intersecciones geométricas del brazo. También hubo un contacto nativo
+entre capachos durante el transporte a t226,464 s. En esa muestra el
+simulador registró 0,416 rad/s de pitch y 0,588 rad/s de roll. Las velocidades
+de muñeca estimadas por diferencia de posiciones en muestras de 52 ms
+se mantuvieron cerca de la referencia de 0,30 rad/s. La toma verifica el
+resultado de cosecha con movimiento prescrito y deja la admisión por
+fuerzas pendiente.
+
+El paquete está en `cad_v8_continuous_take_package_02/`, con la ruta de
+entrada en `cad_v8_simple_native_candidate_shortbase_01.json`. Los eventos,
+la telemetría y el RGB de origen están en `cad_v8_continuous_take_native_01/`.
+La edición con contador y la compacta están en
+`cad_v8_continuous_take_editions_01/`. Ambas incluyen 6.745 fotogramas
+en el mismo orden y se verificaron por decodificación completa. Duran
+562,083 s y 265,548 s, respectivamente. Se conservaron estos archivos
+locales fuera de Git. La regresión de cosecha en WSL pasó 100 pruebas.
+
+## Repetición con codo arriba
+
+Se conservaron los nueve identificadores y las poses, visuales y materiales de
+los tres arbustos V8. Se eligieron otras posturas de corte y se usó el codo
+arriba desde la marcha inicial hasta la salida final. La pinza baja hacia la
+abertura de la canasta desde una posición elevada, libera el capacho y se
+retira por encima del borde.
+
+El barrido continuo cubre los 183 intervalos de la trayectoria, incluidos
+los cierres y aperturas de mordaza. La cota inferior de holgura es de 4 mm
+entre los 1.586 pares brazo–carro y en los pares internos de brazo incluidos
+en la comprobación. Los cuerpos y exclusiones se tomaron del CAD nominal.
+Se certificaron por separado las 38 maniobras de chasis frente a tallos bajos
+V8 con una cota mínima de 6,85 mm.
+
+El diagnóstico de los recorridos inmediatamente posteriores al corte
+observó doce muestras de proximidad entre el capacho retenido y tallos
+vecinos. Esas muestras corresponden al cultivo de la toma. El perfil mantiene
+el movimiento guiado y la gravedad y los contactos de los frutos liberados.
+
+El paquete certificado está en `cad_v8_elbow_up_full_package_01/` y la
+ruta de entrada en `cad_v8_elbow_up_take_routes_shortbase_01.json`.
+La corrida independiente está en `cad_v8_elbow_up_native_01/`.
+Gazebo aceptó los nueve cortes y las nueve sueltas. La auditoría confirmó
+**tres frutos de cada arbusto dentro de la canasta** tras el desplazamiento
+final a 501,236 s. Las sueltas se observaron desde reposo, con 77,6–84,8 mm
+entre el capacho y el fondo. Las velocidades máximas observadas de muñeca
+fueron 0,300 rad/s en pitch y 0,209 rad/s en roll.
+
+La auditoría nativa contrastó 9.640 muestras de 0,004 a 501,232 s. Certificó
+4 mm de holgura y un margen de codo arriba de al menos 0,236 rad en todas
+ellas. El intervalo máximo entre muestras fue de 0,052 s. La evidencia
+queda en `native_arm_clearance.json` y `native_harvest_evidence.json`.
+
+Los vídeos `cosecha_v8.mp4` y `cosecha_v8_compacta.mp4` conservan los
+6.016 fotogramas de la toma y duran 501,333 s y 290,683 s. Las dos ediciones
+pasaron decodificación completa. La regresión del subsistema de robot
+en WSL pasó 117 pruebas.

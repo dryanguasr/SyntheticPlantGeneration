@@ -31,10 +31,14 @@ class OnboardBasketTests(unittest.TestCase):
                      'state': 'RELEASED', 'joint_present': False,
                      'joint_parent': 'none', 'removal_pending': False}
             rows.append({'sim_time': index*.05, 'robot_pose': base, 'fruits': [fruit]})
-        self.assertTrue(deposited_interval(rows, 'a', .03, self.basket)['passed'])
+        deposited = deposited_interval(rows, 'a', .03, self.basket)
+        self.assertTrue(deposited['passed'])
+        self.assertAlmostEqual(deposited['first_confirmed_deposit_sim_s'], .75)
         escaped = copy.deepcopy(rows)
         escaped[-1]['fruits'][0]['position'] = world_point([.40, 0., .147], rows[-1]['robot_pose'])
-        self.assertFalse(deposited_interval(escaped, 'a', .03, self.basket)['passed'])
+        audit = deposited_interval(escaped, 'a', .03, self.basket)
+        self.assertFalse(audit['passed'])
+        self.assertEqual(audit['first_confirmed_deposit_sim_s'], deposited['first_confirmed_deposit_sim_s'])
 
     def test_closed_mesh_uses_the_native_pose_and_shape(self):
         base = [0., 2., .25, 0., 0., 0., 1.]

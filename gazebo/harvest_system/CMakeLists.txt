@@ -51,6 +51,21 @@ target_link_libraries(UchuvaJointPositionForceSystem PRIVATE
   gz-transport13::gz-transport13 gz-msgs10::gz-msgs10)
 install(TARGETS UchuvaJointPositionForceSystem LIBRARY DESTINATION lib)
 
+add_library(UchuvaHarvestDemoCameraSystem SHARED HarvestDemoCameraSystem.cc)
+target_compile_features(UchuvaHarvestDemoCameraSystem PRIVATE cxx_std_17)
+target_compile_options(UchuvaHarvestDemoCameraSystem PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(UchuvaHarvestDemoCameraSystem PRIVATE
+  gz-plugin2::gz-plugin2 gz-sim8::gz-sim8)
+install(TARGETS UchuvaHarvestDemoCameraSystem LIBRARY DESTINATION lib)
+
+add_library(UchuvaHarvestDemoPlaybackSystem SHARED HarvestDemoPlaybackSystem.cc)
+target_compile_features(UchuvaHarvestDemoPlaybackSystem PRIVATE cxx_std_17)
+target_compile_options(UchuvaHarvestDemoPlaybackSystem PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(UchuvaHarvestDemoPlaybackSystem PRIVATE
+  gz-plugin2::gz-plugin2 gz-sim8::gz-sim8
+  gz-transport13::gz-transport13 gz-msgs10::gz-msgs10)
+install(TARGETS UchuvaHarvestDemoPlaybackSystem LIBRARY DESTINATION lib)
+
 include(CTest)
 if(BUILD_TESTING)
   add_executable(PositionForceControllerTest tests/PositionForceControllerTest.cc)

@@ -2997,7 +2997,7 @@
       "id": "entrypoint.harvest_pilot",
       "type": "entrypoint",
       "label": "Piloto de uchuva desmontable con carro 4WD y brazo de cinco GDL",
-      "summary": "Piloto rigido con corte y retencion ideales por plugin Harmonic. Los perfiles historicos conviven con una demostracion CAD de mordaza prismatica, canasta movil y seleccion de objetivos en los arboles V8 congelados. La auditoria separa el resultado observado, el diagnostico RGB y la visibilidad de instancia del simulador. Las pruebas y las aproximaciones se identifican por escenario y perfil.",
+      "summary": "Piloto rigido con corte y retencion ideales por plugin Harmonic. Los perfiles historicos conviven con una demostracion CAD de mordaza prismatica, canasta movil y seleccion de objetivos en los arboles V8 congelados. La toma continua admite movimiento prescrito con codo arriba y holgura verificada durante todo el barrido. La auditoria separa la comprobacion de las poses nativas, el deposito fisico de los frutos y la evidencia de percepcion.",
       "paths": [
         "src/uchuva_gazebo/harvest_plants.py",
         "src/uchuva_gazebo/harvest_visuals.py",
@@ -3017,6 +3017,13 @@
         "scripts/run_harvest_pilot.py",
         "scripts/audit_harvest_pilot.py",
         "scripts/prepare_cad_v8_demo_robot.py",
+        "scripts/prepare_cad_v8_demo_take.py",
+        "scripts/run_cad_v8_demo_capture.py",
+        "scripts/audit_cad_v8_demo_arm.py",
+        "src/uchuva_gazebo/elbow_up_clearance.py",
+        "tests/test_robot_elbow_up_clearance.py",
+        "gazebo/harvest_system/HarvestDemoPlaybackSystem.cc",
+        "gazebo/harvest_system/HarvestDemoCameraSystem.cc",
         "scripts/prepare_cad_v8_experiment.py",
         "scripts/screen_cad_v8_demo.py",
         "scripts/probe_harvest_jaw_guard.py",
@@ -3043,6 +3050,18 @@
         "tests/test_harvest_perception.py"
       ],
       "evidence": [
+        {
+          "path": "scripts/prepare_cad_v8_demo_take.py",
+          "locator": "class Take:"
+        },
+        {
+          "path": "src/uchuva_gazebo/elbow_up_clearance.py",
+          "locator": "class ElbowUpClearance:"
+        },
+        {
+          "path": "scripts/run_cad_v8_demo_capture.py",
+          "locator": "def deposit_evidence("
+        },
         {
           "path": "src/uchuva_gazebo/harvest_plants.py",
           "locator": "def build_harvest_plants"
