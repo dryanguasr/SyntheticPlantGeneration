@@ -25,7 +25,9 @@ físico debe seguir las mismas precauciones del banco USB.
 | `firmware/drv8833_wifi/drv8833_wifi.ino` | Envoltorio: red, autenticación y un solo cliente |
 | `firmware/drv8833_wifi/wifi_config.example.h` | Plantilla de red, clave y token |
 | `scripts/prepare_drv8833_wifi.py` | Verifica el sketch original y genera los archivos locales |
+| `firmware/drv8833_wifi/pca9685_servos.h` | Servos por PCA9685 (I2C): límites, velocidad y parada |
 | `scripts/drv8833_wifi_bridge.py` | Puente del computador por TCP |
+| `scripts/servo_wifi.py` | Órdenes de servo a través del puente |
 | `firmware/drv8833_wifi/test/` y `tests/test_drv8833_wifi_bridge.py` | Simuladores y pruebas |
 
 El snapshot `contributions/physalisharvest/` no se modifica. El envoltorio
@@ -116,6 +118,88 @@ banco USB (`physalisharvest_ros.py fuente`, `armar`, `parar`). Antes de
 habilitar VM aplica la lista del banco: chasis inmovilizado, ruedas libres,
 GND común, límite de corriente y corte físico al alcance.
 
+## 5. Servos por PCA9685
+
+El firmware maneja hasta 16 servos con una placa PCA9685 por I2C. **Este
+código es nuevo, no proviene del banco de Diego, y solo se ha verificado en
+simulador.** Los rangos por defecto son genéricos, no medidos en el brazo.
+
+### Conexión
+
+| PCA9685 | ESP32 |
+| --- | --- |
+| VCC (lógica) | 3V3 |
+| GND | GND |
+| SDA | GPIO 21 |
+| SCL | GPIO 22 |
+| V+ (potencia de servos) | Fuente aparte de 5-6 V con GND común |
+
+No alimentes los servos desde el ESP32. La dirección por defecto es `0x40`
+(A0-A5 sin puentear). Los pines, la dirección y la frecuencia (50 Hz) se
+cambian en `wifi_config.h`.
+
+### Límites antes de mover
+
+En `wifi_config.h`, fija el rango seguro de cada canal:
+
+```c
+// canal 0, canal 1, canal 2...
+#define SERVO_LIMITS {{1100, 1900}, {1000, 1700}, {1200, 1800}}
+```
+
+Sin `SERVO_LIMITS`, todos los canales de `0` a `SERVO_CHANNELS - 1` usan
+`SERVO_MIN_US`-`SERVO_MAX_US` (1000-2000 us). Mide el rango real con el
+servo desacoplado del brazo y amplíalo poco a poco. Una orden fuera de rango
+se rechaza (`ERR SV RANGO`), no se recorta.
+
+### Uso
+
+Inicia el puente con ROS, como en el paso 4, o solo para servos, sin ROS:
+
+```powershell
+python scripts/drv8833_wifi_bridge.py --host 192.168.4.1 --solo-servos
+```
+
+Con el puente en marcha, en otra terminal:
+
+```powershell
+python scripts/servo_wifi.py 0 1500
+```
+
+```powershell
+python scripts/servo_wifi.py estado
+```
+
+```powershell
+python scripts/servo_wifi.py off
+```
+
+El puente atiende estas órdenes en `127.0.0.1:3334` y las envía por la misma
+conexión autenticada que los motores. Solo acepta conexiones del propio
+computador, sin token: cualquier programa local puede mover los servos.
+
+### Comportamiento
+
+- **Arranque:** todos los canales sin pulso hasta la primera orden.
+- **Primera orden de un canal:** va directa al objetivo, porque el ESP32 no
+  conoce la posición previa del servo. Envía primero un valor cercano a la
+  posición en reposo.
+- **Velocidad:** después, el pulso avanza como máximo `SERVO_SLEW_US_PER_S`
+  (500 us/s por defecto).
+- **Pérdida del puente:** con `SERVO_HOLD_ON_DISCONNECT 0` (por defecto) los
+  servos quedan sin pulso y sin par. Si el brazo cae por gravedad, evalúa `1`,
+  que mantiene la última posición, con el corte de V+ al alcance.
+- **Independencia de los motores:** las órdenes de servo no alimentan el
+  watchdog de 250 ms de la base; los motores se paran igual sin órdenes.
+- **Sin PCA9685 en el bus:** `SV` responde `ERR SV PCA9685`; los motores
+  siguen funcionando.
+
+| Orden | Respuesta |
+| --- | --- |
+| `SV <canal> <us>` | `OK SV <canal> <us>`, `ERR SV RANGO <mín>-<máx>`, `ERR SV CANAL`, `ERR SV FORMATO` o `ERR SV PCA9685` |
+| `SVQ` | `OK SVQ <canal>:<actual>/<objetivo> ...`, o `OK SVQ -` sin canales activos |
+| `SVOFF` | `OK SVOFF` |
+
 ## Diferencias frente al USB
 
 - La latencia WiFi varía. Si una respuesta tarda más de 250 ms, el puente se
@@ -140,4 +224,6 @@ bash firmware/drv8833_wifi/test/run.sh
 El simulador comprueba: rechazo sin token, con token erróneo y con línea
 desbordada; acuses idénticos al USB; `ERR BUSY` para un segundo cliente;
 watchdog de 250 ms; parada al desconectarse; descarte de órdenes a medias; y
-liberación por inactividad.
+liberación por inactividad. Para los servos, con un PCA9685 simulado: frecuencia
+de 50 Hz, rango por canal, límite de velocidad, `SVOFF`, corte al
+desconectarse, independencia del watchdog de motores y placa ausente.

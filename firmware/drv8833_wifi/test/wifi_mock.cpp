@@ -97,5 +97,81 @@ int main() {
   at(6000);
   assert(!silent->open);
 
+  // ---- Servos por PCA9685 ----
+  // Arranque: 50 Hz (prescaler 121 con oscilador de 25 MHz), reinicio con
+  // auto-incremento y todos los canales sin pulso.
+  assert(servoReady && Wire.sdaPin == 21 && Wire.sclPin == 22);
+  assert(pca.registers[0xFE] == 121 && pca.registers[0x00] == 0xA0);
+  for (int channel = 0; channel < 16; ++channel) assert(pca.offTicks(channel) == -1);
+  assert(pulseTicks(1500) == 307 && pulseTicks(1000) == 205 && pulseTicks(2000) == 410);
+
+  auto arm = connectClient();
+  assert(say(arm, 7000, token) == "AUTH OK\n");
+  assert(say(arm, 7010, "SVQ\n") == "OK SVQ -\n");
+
+  // Primera orden de un canal: va directa al objetivo (posición previa desconocida).
+  assert(say(arm, 7020, "SV 0 1500\n") == "OK SV 0 1500\n");
+  at(7040);
+  assert(pca.offTicks(0) == 307 && pca.offTicks(1) == -1);
+
+  // Después, el pulso avanza como máximo 500 us/s.
+  assert(say(arm, 7060, "SV 0 2000\n") == "OK SV 0 2000\n");
+  at(7080);
+  assert(servoCurrent[0] == 1520);
+  at(7580);
+  assert(servoCurrent[0] == 1770);
+  assert(say(arm, 7600, "SVQ\n") == "OK SVQ 0:1770/2000\n");
+  at(8100);
+  assert(servoCurrent[0] == 2000 && pca.offTicks(0) == 410);
+
+  // Rango por canal, canal inexistente y formato: se rechazan sin mover nada.
+  assert(say(arm, 8110, "SV 1 1900\n") == "ERR SV RANGO 1200-1800\n");
+  assert(say(arm, 8120, "SV 1 1100\n") == "ERR SV RANGO 1200-1800\n");
+  assert(say(arm, 8130, "SV 2 1500\n") == "ERR SV CANAL\n");
+  assert(say(arm, 8140, "SV 0 abc\n") == "ERR SV FORMATO\n");
+  assert(say(arm, 8150, "SV 0\n") == "ERR SV FORMATO\n");
+  assert(say(arm, 8160, "SV 0 1500 9\n") == "ERR SV FORMATO\n");
+  assert(say(arm, 8170, "SV -1 1500\n") == "ERR SV FORMATO\n");
+  assert(servoTarget[0] == 2000 && servoTarget[1] == 0 && pca.offTicks(1) == -1);
+
+  // Las órdenes de servo no alimentan el watchdog de los motores.
+  assert(say(arm, 8300, "CF\n") == "OK CF 1010\n");
+  assert(say(arm, 8400, "SV 1 1500\n") == "OK SV 1 1500\n");
+  at(8549);
+  assert(active == 'F');
+  at(8550);
+  assert(active == 'S' && !armed && motorsLow());
+  assert(servoTarget[1] == 1500);  // los servos no dependen del watchdog de motores
+
+  // Una línea larga sigue llegando al sketch, que aplica su desbordamiento.
+  // El sketch lee como máximo 32 bytes por ciclo, igual que por USB.
+  arm->send(std::string(60, 'F') + "\n");
+  for (uint32_t time = 8600; time < 8604; ++time) at(time);
+  assert(arm->take() == "ERR COMMAND\n");
+  assert(!armed);
+
+  // SVOFF corta el pulso de todos los canales.
+  assert(say(arm, 8700, "SVOFF\n") == "OK SVOFF\n");
+  assert(pca.offTicks(0) == -1 && pca.offTicks(1) == -1 && servoTarget[0] == 0);
+  assert(say(arm, 8710, "SVQ\n") == "OK SVQ -\n");
+
+  // Al desconectarse el puente, los servos quedan sin pulso.
+  assert(say(arm, 8800, "SV 1 1500\n") == "OK SV 1 1500\n");
+  at(8820);
+  assert(pca.offTicks(1) == 307);
+  arm->open = false;
+  at(8821);
+  assert(pca.offTicks(1) == -1 && servoTarget[1] == 0 && servoCurrent[1] == 0);
+
+  // Sin PCA9685 en el bus: las órdenes de posición se rechazan.
+  pca.present = false;
+  servoReady = false;
+  servoSetup();
+  auto missing = connectClient();
+  assert(say(missing, 9000, token) == "AUTH OK\n");
+  assert(say(missing, 9010, "SV 0 1500\n") == "ERR SV PCA9685\n");
+  assert(say(missing, 9020, "SVOFF\n") == "OK SVOFF\n");
+  assert(say(missing, 9030, "ID\n") == "DRV8833_ROS_V5\n");
+
   std::puts("PASS drv8833_wifi mock");
 }

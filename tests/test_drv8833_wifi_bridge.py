@@ -18,19 +18,25 @@ ROOT = Path(__file__).resolve().parents[1]
 _spec = spec_from_file_location("drv8833_wifi_bridge", ROOT / "scripts/drv8833_wifi_bridge.py")
 wifi = module_from_spec(_spec)
 _spec.loader.exec_module(wifi)
+_servo_spec = spec_from_file_location("servo_wifi", ROOT / "scripts/servo_wifi.py")
+servo_cli = module_from_spec(_servo_spec)
+_servo_spec.loader.exec_module(servo_cli)
 
 TOKEN = "token-de-prueba-0123456789"
-REPLIES = {"ID": "DRV8833_ROS_V5", "S": "OK S 0000", "CF": "OK CF 1010", "F": "OK F 1010"}
+REPLIES = {"ID": "DRV8833_ROS_V5", "S": "OK S 0000", "CF": "OK CF 1010", "F": "OK F 1010",
+           "SVQ": "OK SVQ -", "SVOFF": "OK SVOFF", "SV 0 1500": "OK SV 0 1500",
+           "SV 0 2400": "ERR SV RANGO 1000-2000"}
 
 
 class FakeEsp32:
     """Acepta un cliente, exige AUTH y responde como DRV8833_ROS_V5."""
 
-    def __init__(self, busy=False, close_after=None):
+    def __init__(self, busy=False, close_after=None, servos=True):
         self.server = socket.create_server(("127.0.0.1", 0))
         self.port = self.server.getsockname()[1]
         self.busy = busy
         self.close_after = close_after
+        self.servos = servos
         self.received = []
         self.thread = Thread(target=self.serve, daemon=True)
         self.thread.start()
@@ -51,7 +57,10 @@ class FakeEsp32:
                 self.received.append(command)
                 if self.close_after is not None and len(self.received) >= self.close_after:
                     return
-                stream.write((REPLIES.get(command, "ERR COMMAND") + "\n").encode())
+                reply = REPLIES.get(command, "ERR COMMAND")
+                if not self.servos and command.startswith("SV"):
+                    reply = "ERR COMMAND"  # firmware anterior, sin servos
+                stream.write((reply + "\n").encode())
 
     def stop(self):
         self.server.close()
@@ -114,7 +123,7 @@ class BridgeFlowTests(unittest.TestCase):
             code = wifi.main(["--host", "127.0.0.1", "--port", str(esp.port), "--check"])
         esp.stop()
         self.assertEqual(code, 0)
-        self.assertEqual(esp.received, ["ID", "S", "S"])  # identidad, parada, parada final
+        self.assertEqual(esp.received, ["ID", "S", "SVQ", "S"])  # identidad, parada, servos, parada
         self.assertIn("DRV8833_ROS_V5", output.getvalue())
 
     def test_unreachable_host_reports_network_hint(self):
@@ -163,6 +172,89 @@ class BridgeFlowTests(unittest.TestCase):
         port.close()
         esp.stop()
         self.assertNotIn("CF", esp.received)
+
+
+class ServoTests(unittest.TestCase):
+    def test_servo_exchange_and_probe(self):
+        esp = FakeEsp32()
+        port = wifi.TcpPort.connect("127.0.0.1", esp.port, TOKEN)
+        self.assertEqual(wifi.probe_servos(port), "OK SVQ -")
+        self.assertEqual(wifi.servo_exchange(port, "SV 0 1500"), "OK SV 0 1500")
+        self.assertEqual(wifi.servo_exchange(port, "SV 0 2400"), "ERR SV RANGO 1000-2000")
+        with self.assertRaises(ValueError):
+            wifi.servo_exchange(port, "CF")  # no se pueden colar órdenes de motor
+        port.close()
+        esp.stop()
+        self.assertEqual(esp.received, ["SVQ", "SV 0 1500", "SV 0 2400"])
+
+    def test_old_firmware_without_servos_is_detected(self):
+        esp = FakeEsp32(servos=False)
+        port = wifi.TcpPort.connect("127.0.0.1", esp.port, TOKEN)
+        self.assertIsNone(wifi.probe_servos(port))
+        port.close()
+        esp.stop()
+
+    def test_servo_cli_reaches_esp32_through_running_relay(self):
+        esp = FakeEsp32()
+        usb = wifi.load_usb_bridge()
+        port = wifi.TcpPort.connect("127.0.0.1", esp.port, TOKEN)
+        events = wifi.Queue()
+        server = wifi.ServoServer(events, 0)
+        replies = []
+        controller = (
+            "import time\n"
+            "print('CONTROLLER_READY', flush=True)\n"
+            "time.sleep(0.6)\n"
+        )
+
+        def operator():
+            replies.append(servo_cli.send("SV 0 1500", server.port))
+            replies.append(servo_cli.send("CF", server.port))  # rechazado localmente
+            replies.append(servo_cli.send("SVOFF", server.port))
+
+        Thread(target=operator, daemon=True).start()
+        with redirect_stdout(StringIO()):
+            with self.assertRaisesRegex(RuntimeError, "controlador ROS terminó"):
+                wifi.relay(port, usb, [sys.executable, "-c", controller], lambda warm=False: 0, 0,
+                           events)
+        server.close()
+        port.close()
+        esp.stop()
+        self.assertEqual(replies, ["OK SV 0 1500", "ERR SV FORMATO", "OK SVOFF"])
+        self.assertIn("SV 0 1500", esp.received)
+        self.assertNotIn("CF", esp.received)
+
+    def test_servo_only_mode_keeps_link_alive_and_stops_on_link_loss(self):
+        esp = FakeEsp32(close_after=3)
+        usb = wifi.load_usb_bridge()
+        port = wifi.TcpPort.connect("127.0.0.1", esp.port, TOKEN)
+        events = wifi.Queue()
+        replies = wifi.Queue()
+        events.put(("servo", "SV 0 1500", replies))
+        with patch.object(wifi, "KEEPALIVE_S", 0.05):
+            with self.assertRaises((ConnectionError, RuntimeError)):
+                wifi.hold(port, usb, events)
+        port.close()
+        esp.stop()
+        self.assertEqual(replies.get_nowait(), "OK SV 0 1500")
+        self.assertEqual(esp.received[:2], ["SV 0 1500", "S"])
+
+    def test_cli_validates_orders_before_sending(self):
+        self.assertEqual(servo_cli.order_from(["3", "1500"]), "SV 3 1500")
+        self.assertEqual(servo_cli.order_from(["estado"]), "SVQ")
+        self.assertEqual(servo_cli.order_from(["off"]), "SVOFF")
+        for words in (["16", "1500"], ["0", "3000"], ["0"], ["mover"]):
+            with self.assertRaises(ValueError):
+                servo_cli.order_from(words)
+
+    def test_cli_reports_missing_bridge(self):
+        unused = socket.create_server(("127.0.0.1", 0))
+        port = unused.getsockname()[1]
+        unused.close()
+        errors = StringIO()
+        with redirect_stderr(errors):
+            self.assertEqual(servo_cli.main(["estado", "--port", str(port)]), 1)
+        self.assertIn("No hay puente", errors.getvalue())
 
 
 class ConfigTests(unittest.TestCase):

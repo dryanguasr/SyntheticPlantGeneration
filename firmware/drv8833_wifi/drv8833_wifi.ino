@@ -7,6 +7,8 @@
 //
 // Este envoltorio solo cambia el canal: un cliente TCP autenticado ocupa el
 // lugar del puerto USB. Al desconectarse el cliente, los motores se paran.
+// Las líneas SV, SVOFF y SVQ manejan servos por un PCA9685 (pca9685_servos.h)
+// y no llegan al sketch de motores.
 
 #include <Arduino.h>
 #include <WiFi.h>
@@ -15,6 +17,7 @@
 #include <string.h>
 
 #include "wifi_config.h"
+#include "pca9685_servos.h"
 
 constexpr bool sameText(const char* a, const char* b) {
   return *a == *b && (*a == '\0' || sameText(a + 1, b + 1));
@@ -38,18 +41,82 @@ uint32_t lastActivity = 0;
 char authBuffer[authLimit];
 size_t authLength = 0;
 
+void sendLine(WiFiClient& target, const char* text) {
+  target.write(reinterpret_cast<const uint8_t*>(text), strlen(text));
+  target.write(reinterpret_cast<const uint8_t*>("\n"), 1);
+}
+
+// Líneas del cliente: las de servos se atienden aquí; el resto se entrega al
+// sketch igual que antes. Una línea larga pasa tal cual para que el sketch
+// aplique su propio desbordamiento.
+constexpr size_t lineLimit = 48;
+char lineBuffer[lineLimit];
+size_t lineLength = 0;
+bool linePassthrough = false;
+char forward[lineLimit + 1];
+size_t forwardLength = 0;
+size_t forwardPosition = 0;
+
+void resetLines() {
+  lineLength = 0;
+  linePassthrough = false;
+  forwardLength = 0;
+  forwardPosition = 0;
+}
+
+void finishLine() {
+  size_t size = lineLength;
+  if (size && lineBuffer[size - 1] == '\r') --size;
+  lineBuffer[size] = '\0';
+  if (isServoLine(lineBuffer)) {
+    handleServo(lineBuffer, [](const char* text) { sendLine(client, text); });
+  } else {
+    memcpy(forward, lineBuffer, lineLength);
+    forward[lineLength] = '\n';
+    forwardLength = lineLength + 1;
+    forwardPosition = 0;
+  }
+  lineLength = 0;
+}
+
+// Lee del cliente hasta tener bytes para el sketch o agotar lo recibido.
+void pumpLines() {
+  while (forwardPosition == forwardLength && client.available()) {
+    const int byte = client.read();
+    lastActivity = millis();
+    forwardLength = forwardPosition = 0;
+    if (linePassthrough) {
+      forward[forwardLength++] = static_cast<char>(byte);
+      if (byte == '\n') linePassthrough = false;
+    } else if (byte == '\n') {
+      finishLine();
+    } else if (lineLength < lineLimit - 1) {
+      lineBuffer[lineLength++] = static_cast<char>(byte);
+    } else {
+      memcpy(forward, lineBuffer, lineLength);
+      forward[lineLength] = static_cast<char>(byte);
+      forwardLength = lineLength + 1;
+      lineLength = 0;
+      linePassthrough = true;
+    }
+  }
+}
+
 // Sustituye a Serial dentro del sketch original: solo habla con el cliente
 // autenticado. Sin cliente, available() es 0 y lo escrito se descarta.
 class NetSerial {
  public:
   void begin(unsigned long) {}
 
-  int available() { return authenticated ? client.available() : 0; }
+  int available() {
+    if (!authenticated) return 0;
+    pumpLines();
+    return static_cast<int>(forwardLength - forwardPosition);
+  }
 
   int read() {
-    if (!authenticated) return -1;
-    lastActivity = millis();
-    return client.read();
+    if (!authenticated || forwardPosition == forwardLength) return -1;
+    return static_cast<unsigned char>(forward[forwardPosition++]);
   }
 
   size_t println(const char* text) {
@@ -83,14 +150,12 @@ NetSerial netSerial;
 #undef setup
 #undef Serial
 
-void sendLine(WiFiClient& target, const char* text) {
-  target.write(reinterpret_cast<const uint8_t*>(text), strlen(text));
-  target.write(reinterpret_cast<const uint8_t*>("\n"), 1);
-}
-
-// Cualquier pérdida del cliente para los motores y descarta órdenes a medias.
+// Cualquier pérdida del cliente para los motores, aplica la política de los
+// servos y descarta órdenes a medias.
 void dropClient() {
   disarm(millis());
+  servoReleaseOnDisconnect();
+  resetLines();
   hasClient = false;
   authenticated = false;
   authLength = 0;
@@ -112,6 +177,7 @@ void acceptClient() {
   hasClient = true;
   authenticated = false;
   authLength = 0;
+  resetLines();
   lastActivity = millis();
 }
 
@@ -166,6 +232,7 @@ void startWifi() {
 
 void setup() {
   drv8833_setup();  // GPIO en bajo y PWM antes de abrir la red
+  servoSetup();     // canales del PCA9685 sin pulso
   Serial.begin(115200);
   startWifi();
 }
@@ -181,4 +248,5 @@ void loop() {
   }
   serviceNetwork(millis());
   drv8833_loop();
+  servoUpdate(millis());
 }

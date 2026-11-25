@@ -8,6 +8,10 @@ Comprobar identidad y parada sin ROS ni movimiento:
 
     python scripts/drv8833_wifi_bridge.py --host 192.168.4.1 --check
 
+Servos del PCA9685: mientras el puente corre (con ROS o con --solo-servos),
+escucha en 127.0.0.1:3334 y reenvía al ESP32 las órdenes de
+scripts/servo_wifi.py por la misma conexión autenticada.
+
 El token se lee de DRV8833_WIFI_TOKEN o de firmware/drv8833_wifi/wifi_config.h.
 """
 from __future__ import annotations
@@ -31,6 +35,9 @@ CONFIG = ROOT / "firmware/drv8833_wifi/wifi_config.h"
 DEFAULT_PORT = 3333
 KEEPALIVE_S = 1.0  # menor que la expiración por inactividad del ESP32 (3 s)
 BUSY_PROBE_S = 0.15  # espera de un rechazo inmediato antes de enviar el token
+SERVO_PORT = 3334  # puerto local para scripts/servo_wifi.py
+SERVO_REPLY_S = 2.0
+SERVO_LINE = re.compile(r"(SV \d{1,2} \d{3,4}|SVOFF|SVQ)")
 
 
 def load_usb_bridge():
@@ -122,6 +129,89 @@ class TcpPort:
         self.sock.close()
 
 
+def servo_exchange(port, line):
+    """Envía una orden SV/SVOFF/SVQ y devuelve el acuse del ESP32."""
+    if not SERVO_LINE.fullmatch(line):
+        raise ValueError(f"Orden de servo inválida: {line!r}")
+    port.write((line + "\n").encode("ascii"))
+    reply = port.readline(256).decode("ascii", errors="replace").strip()
+    if not reply.startswith(("OK SV", "ERR SV")):
+        raise RuntimeError(f"Acuse inesperado para {line}: {reply or 'sin respuesta'}")
+    return reply
+
+
+def probe_servos(port):
+    """Estado de los servos, o None si el firmware cargado no los maneja."""
+    try:
+        return servo_exchange(port, "SVQ")
+    except RuntimeError:
+        return None
+
+
+class ServoServer:
+    """Recibe órdenes de servo en 127.0.0.1 y las encola para el bucle principal.
+
+    Solo escucha en la máquina local; el bucle principal las envía por la
+    conexión autenticada, intercaladas con las órdenes de los motores.
+    """
+
+    def __init__(self, events, port=SERVO_PORT):
+        self.events = events
+        self.sock = socket.create_server(("127.0.0.1", port))
+        self.port = self.sock.getsockname()[1]
+        Thread(target=self._accept, daemon=True).start()
+
+    def _accept(self):
+        while True:
+            try:
+                connection, _ = self.sock.accept()
+            except OSError:
+                return
+            Thread(target=self._serve, args=(connection,), daemon=True).start()
+
+    def _serve(self, connection):
+        with connection, connection.makefile("rwb", buffering=0) as stream:
+            for raw in stream:
+                line = raw.decode("ascii", errors="replace").strip()
+                if not line:
+                    continue
+                if SERVO_LINE.fullmatch(line):
+                    replies = Queue()
+                    self.events.put(("servo", line, replies))
+                    try:
+                        reply = replies.get(timeout=SERVO_REPLY_S)
+                    except Empty:
+                        reply = "ERR SV SIN RESPUESTA"
+                else:
+                    reply = "ERR SV FORMATO"
+                try:
+                    stream.write((reply + "\n").encode("ascii"))
+                except OSError:
+                    return
+
+    def close(self):
+        self.sock.close()
+
+
+def answer_servo(port, line, replies):
+    try:
+        replies.put(servo_exchange(port, line))
+    except BaseException:
+        replies.put("ERR SV ENLACE")
+        raise
+
+
+def hold(port, usb, events):
+    """Sin ROS: mantiene el enlace con "S" y atiende solo órdenes de servo."""
+    while True:
+        try:
+            _, line, replies = events.get(timeout=KEEPALIVE_S)
+        except Empty:
+            usb.exchange(port, "S")
+            continue
+        answer_servo(port, line, replies)
+
+
 def read_config(path=CONFIG):
     """Token y puerto de wifi_config.h, si existe."""
     if not path.is_file():
@@ -146,16 +236,16 @@ def controller_command(distro, domain_id, route):
     return plan.command
 
 
-def relay(port, usb, command, measure, offset):
-    """Reenvía las órdenes del controlador; mantiene viva la conexión en reposo."""
+def relay(port, usb, command, measure, offset, events=None):
+    """Reenvía las órdenes del controlador y de servos; mantiene viva la conexión."""
+    events = Queue() if events is None else events
     with subprocess.Popen(command, cwd=ROOT, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                           text=True, encoding="utf-8") as controller:
-        lines = Queue()
 
         def read():
             for line in controller.stdout:
-                lines.put(line)
-            lines.put(None)
+                events.put(("ctl", line))
+            events.put(("ctl", None))
 
         Thread(target=read, daemon=True).start()
         try:
@@ -163,12 +253,16 @@ def relay(port, usb, command, measure, offset):
             last_reply = None
             while True:
                 try:
-                    line = lines.get(timeout=KEEPALIVE_S)
+                    event = events.get(timeout=KEEPALIVE_S)
                 except Empty:
                     # Sin órdenes durante 1 s el watchdog de 250 ms ya paró los
                     # motores; "S" confirma la parada y evita la expiración TCP.
                     usb.exchange(port, "S")
                     continue
+                if event[0] == "servo":
+                    answer_servo(port, event[1], event[2])
+                    continue
+                line = event[1]
                 if line is None:
                     raise RuntimeError("El controlador ROS terminó. Revisa su diagnóstico.")
                 if not ready:
@@ -202,9 +296,15 @@ def main(argv=None):
     parser.add_argument("--domain-id", type=int, default=83, choices=range(1, 102), metavar="1..101")
     parser.add_argument("--check", action="store_true", help="Comprueba identidad y parada sin iniciar ROS")
     parser.add_argument("--ruta", nargs="+", type=int, choices=range(50), metavar="ID")
+    parser.add_argument("--solo-servos", action="store_true",
+                        help="Sin ROS: mantiene el enlace y atiende solo órdenes de servo")
+    parser.add_argument("--servo-port", type=int, default=SERVO_PORT,
+                        help=f"Puerto local para scripts/servo_wifi.py (por defecto {SERVO_PORT}; 0 lo desactiva)")
     args = parser.parse_args(argv)
     if args.ruta and len(set(args.ruta)) != len(args.ruta):
         parser.error("La ruta requiere IDs únicos.")
+    if args.solo_servos and (args.check or args.ruta):
+        parser.error("--solo-servos no se combina con --check ni --ruta.")
     config_token, config_port = read_config()
     token = os.environ.get("DRV8833_WIFI_TOKEN") or config_token
     if not token:
@@ -213,11 +313,13 @@ def main(argv=None):
 
     usb = load_usb_bridge()
     port = None
+    servo_server = None
+    without_ros = args.check or args.solo_servos
     try:
-        if not args.check:
+        if not without_ros:
             sys.path.insert(0, str(TOOLS))
             from wsl_clock import clock_probe
-        reference = nullcontext(None) if args.check else clock_probe(args.distro)
+        reference = nullcontext(None) if without_ros else clock_probe(args.distro)
         with reference as measure:
             offset = measure() if measure else 0
             try:
@@ -229,15 +331,30 @@ def main(argv=None):
                 ) from error
             usb.open_link(port)
             print(usb.exchange(port, "S"), flush=True)
-            if not args.check:
+            servos = probe_servos(port)
+            print(servos or "Firmware sin servos: carga la versión actual de firmware/drv8833_wifi.",
+                  flush=True)
+            if args.check:
+                return 0
+            events = Queue()
+            if servos and args.servo_port:
+                servo_server = ServoServer(events, args.servo_port)
+                print(f"SERVOS 127.0.0.1:{servo_server.port}", flush=True)
+            elif args.solo_servos:
+                raise RuntimeError("--solo-servos necesita un firmware con servos y --servo-port")
+            if args.solo_servos:
+                hold(port, usb, events)
+            else:
                 relay(port, usb, controller_command(args.distro, args.domain_id, args.ruta),
-                      measure, offset)
+                      measure, offset, events)
     except KeyboardInterrupt:
         return 130
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
         print(f"Puente WiFi DRV8833 cerrado: {error}", file=sys.stderr)
         return 1
     finally:
+        if servo_server is not None:
+            servo_server.close()
         if port is not None:
             try:
                 print(usb.exchange(port, "S"), flush=True)
