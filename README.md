@@ -8,6 +8,7 @@
 [![Blender](https://img.shields.io/badge/Blender-5.x-E87D0D?logo=blender&logoColor=white)](docs/guides/generador_actual_y_contrato_gazebo.md)
 [![ROS 2](https://img.shields.io/badge/ROS%202-Jazzy-22314E?logo=ros&logoColor=white)](docs/guides/integracion_physalisharvest.md)
 [![Robot](https://img.shields.io/badge/robot-Robot--Cosechador-E7352C?logo=github&logoColor=white)](https://github.com/dryanguasr/Robot-Cosechador)
+[![ESP32](https://img.shields.io/badge/ESP32-WiFi%20%C2%B7%20motores%20%C2%B7%20servos-E7352C?logo=espressif&logoColor=white)](docs/guides/esp32_wifi.md)
 [![Ultralytics](https://img.shields.io/badge/Ultralytics-8.4.114-111F68)](requirements.txt)
 [![Licencia](https://img.shields.io/badge/licencia-MIT-green)](LICENSE)
 
@@ -230,12 +231,82 @@ Los módulos del robot conservados aquí (`RobotSpec`, perfiles,
 Diego Amaya, corresponden al **corte histórico de integración** y se mantienen
 para reproducir los experimentos registrados.
 
+### ESP32 por WiFi: motores y servos
+
+El ESP32 del banco se controla por WiFi en lugar de USB. Una sola conexión TCP
+autenticada lleva las órdenes de los motores de la base (DRV8833, firmware
+original de Diego sin cambios) y de hasta 16 servos por una placa **PCA9685**
+(I2C).
+
+```mermaid
+flowchart LR
+    ROS["Controlador ROS 2<br/>órdenes de base"] --> BR{"Puente WiFi<br/>drv8833_wifi_bridge.py"}
+    CLI["servo_wifi.py<br/>127.0.0.1:3334"] --> BR
+    BR -->|"TCP + token<br/>un solo cliente"| ESP["ESP32"]
+    ESP --> DRV["DRV8833"] --> MOT["Motores 2WD"]
+    ESP -->|"I2C · GPIO 21/22"| PCA["PCA9685"] --> SRV["Servos 0-15"]
+```
+
+```powershell
+python scripts/drv8833_wifi_bridge.py --host 192.168.4.1 --solo-servos
+```
+
+```powershell
+python scripts/servo_wifi.py 0 1500
+```
+
+| Orden | Efecto |
+| --- | --- |
+| `servo_wifi.py <canal> <us>` | Lleva el canal al pulso indicado, dentro de su rango |
+| `servo_wifi.py estado` | Posición actual y objetivo de cada canal activo |
+| `servo_wifi.py off` | Corta el pulso de todos los servos |
+
+- **Rango por canal** en `wifi_config.h` (`SERVO_LIMITS`): una orden fuera de
+  rango se rechaza, no se recorta. Los valores por defecto (1000-2000 us) son
+  genéricos; mide el rango de cada articulación antes de acoplarla.
+- **Velocidad limitada** a 500 us/s. La primera orden de cada canal va directa,
+  porque el ESP32 no conoce la posición previa.
+- **Pérdida del enlace:** motores parados y servos sin pulso (configurable para
+  mantener posición). El watchdog de 250 ms de la base no depende de los servos.
+- **Seguridad del enlace:** token obligatorio, un solo puente y firmware que no
+  compila con las claves de ejemplo.
+
+<details>
+<summary><b>Protocolo del enlace WiFi</b></summary>
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant PC as Puente (PC)
+    participant ESP as ESP32
+    PC->>ESP: AUTH token
+    ESP-->>PC: AUTH OK
+    PC->>ESP: ID
+    ESP-->>PC: DRV8833_ROS_V5
+    PC->>ESP: SVQ
+    ESP-->>PC: OK SVQ -
+    PC->>ESP: SV 0 1500
+    ESP-->>PC: OK SV 0 1500
+    loop órdenes de base (menos de 250 ms)
+        PC->>ESP: CF / F / L / R / S
+        ESP-->>PC: OK + estado de GPIO
+    end
+    Note over ESP: Sin órdenes de base durante 250 ms, el watchdog para los motores
+    Note over ESP: Si el puente se desconecta, motores parados y servos sin pulso
+```
+
+</details>
+
 > [!WARNING]
-> TF calibrada, sincronización, puente de odometría e integración física siguen
-> pendientes; recibir una coordenada no confirma movimiento ni llegada.
+> El transporte WiFi y los servos están **verificados solo en simulador**
+> (red, GPIO y PCA9685 simulados). No se han cargado en una placa ni probado
+> con motores o servos reales. TF calibrada, sincronización, puente de
+> odometría e integración física también siguen pendientes; recibir una
+> coordenada no confirma movimiento ni llegada.
 
 [Separación de repositorios](docs/architecture/separacion_robot_cosechador.md) ·
 [Integración PhysalisHarvest (histórica)](docs/guides/integracion_physalisharvest.md) ·
+[ESP32 por WiFi y servos](docs/guides/esp32_wifi.md) ·
 [Compatibilidad y verificaciones](docs/reports/conciliacion_cosechador_physalisharvest_2026-11-24.md)
 
 ## Estructura del repositorio
