@@ -273,10 +273,12 @@ class ArmMapTests(unittest.TestCase):
         self.assertEqual(actuators["J2"], "ASME-03B")
         self.assertEqual(actuators["J3"], "ASME-MRA-110KG")
         self.assertEqual(actuators["J4"], actuators["J5"])
-        # Rangos y canales sin medir: el mapa debe decirlo explícitamente.
+        # Canal 0 = J1 y así sucesivamente (confirmado por el equipo).
+        self.assertEqual([joint["pca9685_channel"] for joint in self.joints], list(range(6)))
+        # Rangos sin medir: el mapa debe decirlo explícitamente.
         for joint in self.joints:
+            self.assertEqual(joint["channel_status"], "user_confirmed")
             self.assertNotEqual(joint["pulse_limits_status"], "documented")
-            self.assertNotEqual(joint["channel_status"], "documented")
 
     def test_names_aliases_and_channels_resolve(self):
         self.assertEqual(servo_cli.order_from(["J2", "1500"], self.joints), "SV 1 1500")
@@ -331,7 +333,7 @@ class ArmMapTests(unittest.TestCase):
         with redirect_stdout(output):
             self.assertEqual(servo_cli.main(["mapa"]), 0)
         self.assertIn("ASME-03B", output.getvalue())
-        self.assertIn("valores iniciales sin medir", output.getvalue())
+        self.assertIn("valores iniciales sin medir", output.getvalue())  # rangos
 
 
 class ConfigTests(unittest.TestCase):

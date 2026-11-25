@@ -109,7 +109,7 @@ def describe_map(joints):
             f"{joint['pulse_min_us']}-{joint['pulse_max_us']:<7} {joint['slew_us_per_s']:>5} us/s  "
             f"{joint['actuator']}"
         )
-    lines.append("Canales y rangos: valores iniciales sin medir. Ver docs/guides/esp32_wifi.md.")
+    lines.append("Rangos y velocidades: valores iniciales sin medir. Ver docs/guides/esp32_wifi.md.")
     return "\n".join(lines)
 
 

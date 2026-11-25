@@ -142,9 +142,9 @@ Las articulaciones vienen de la
 | J5 | `muneca_pitch` | Muñeca (Pitch) | TD-8135MG-180 | 4 |
 | gripper | `pinza` | Apertura y cierre | TD-8135MG-180 (por confirmar) | 5 |
 
-- **Canales:** el documento no fija el cableado; la asignación 0-5 es una
-  propuesta (`manual_initial_guess`). Cámbiala en el JSON si el cableado real
-  es otro.
+- **Canales:** confirmados por el equipo (25-11-2026): el canal 0 es J1 y
+  así sucesivamente, hasta el gripper en el canal 5. El documento del brazo no
+  fija el cableado.
 - **Rangos:** todos empiezan en una ventana estrecha de **1400-1600 us**
   alrededor del centro, sin medir. 1500 us no tiene por qué coincidir con la
   pose de referencia del CAD.

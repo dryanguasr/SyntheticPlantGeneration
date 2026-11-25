@@ -273,8 +273,9 @@ python scripts/servo_wifi.py J2 1500
 
 - **Mapa del brazo** en [`configs/robots/brazo_5gdl_servos.json`](configs/robots/brazo_5gdl_servos.json),
   tomado de la [configuración documentada](docs/references/configuracion_brazo_5gdl_2026-11-25.md).
-  Los canales son una propuesta y todos los rangos empiezan en 1400-1600 us,
-  **sin medir**: amplíalos solo tras medir cada articulación.
+  Canal 0 = J1 y así sucesivamente hasta el gripper (canal 5), confirmado por
+  el equipo. Todos los rangos empiezan en 1400-1600 us, **sin medir**:
+  amplíalos solo tras medir cada articulación.
 - **Rango por articulación** aplicado por el propio ESP32: una orden fuera de
   rango se rechaza, no se recorta.
 - **Velocidad limitada** a 250 us/s por articulación. La primera orden de cada
