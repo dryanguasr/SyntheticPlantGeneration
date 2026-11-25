@@ -248,6 +248,7 @@ src/
 ├── uchuva_gazebo/                   # Contrato puro hacia Gazebo; robot histórico
 └── uchuva_reconstruction/           # Reconstrucción desde vídeo real
 scripts/                             # Puntos de entrada (ver scripts/README.md)
+firmware/drv8833_wifi/               # Transporte WiFi del ESP32 (envuelve el firmware original)
 tests/                               # Suite unittest
 docs/                                # Arquitectura, guías, informes y referencias
 contributions/                       # Aportes externos atribuidos (PhysalisHarvest)
@@ -261,7 +262,7 @@ desktop/ · mobile/                   # Aplicaciones ArUco de escritorio y Andro
 | 🌿 Cultivo y banco de imágenes | [Generador y contrato Gazebo](docs/guides/generador_actual_y_contrato_gazebo.md) · [Continuación optimizada del dataset](docs/guides/completar_dataset_optimizado.md) |
 | 🎭 Máscaras y revisión humana | [Piloto de máscaras](docs/guides/piloto_privado_mascaras.md) · [Sintéticas y fotogramas](docs/guides/piloto_privado_sintetico_mascaras.md) · [Revisión cruzada](docs/guides/auditoria_ciega_segmentacion.md) · [Manual para estudiantes (PDF)](docs/guides/manual_estudiantes_revision_cruzada.pdf) |
 | 🦾 Robot y simulación | [Modelo paramétrico](docs/guides/robot_cosechador_parametrico.md) · [Demostración V8](docs/guides/piloto_cad_v8_canasta.md) · [Piloto de cosecha histórico](docs/guides/piloto_cosecha_desmontable.md) |
-| 📡 Hardware | [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador) · [Integración PhysalisHarvest (histórica)](docs/guides/integracion_physalisharvest.md) |
+| 📡 Hardware | [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador) · [Integración PhysalisHarvest (histórica)](docs/guides/integracion_physalisharvest.md) · [ESP32 por WiFi](docs/guides/esp32_wifi.md) |
 | 🎥 Otros consumidores | [Reconstrucción desde vídeo](docs/guides/reconstruccion_piloto.md) · [Android y ArUco](docs/guides/aplicacion_movil_aruco.md) |
 
 ## Procedencia, licencia y citación
