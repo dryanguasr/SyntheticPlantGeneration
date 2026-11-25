@@ -276,13 +276,37 @@ El primer comando escribe `outputs/specs/morphology_tree_seed_1.json` y
 cámara, puertos ni motores. La compilación real y las consultas requieren el
 entorno Jazzy descrito en la guía.
 
-Para las pruebas del repositorio, usar un entorno con las dependencias de cada
-componente ya configuradas:
+### Entorno Python
+
+Se requiere **Python 3.11 o posterior** (los informes usaron 3.12). Las
+dependencias de la suite de pruebas están en [`requirements.txt`](requirements.txt):
+NumPy, OpenCV, Pillow, Torch, Ultralytics, PyYAML, Matplotlib, ReportLab, pypdf y
+SciPy. Ultralytics queda fijada en **8.4.114**, la versión de todos los
+informes, porque el emparejamiento de predicciones de AP cambia entre versiones.
+
+El núcleo morfológico no necesita ninguna de ellas. Algunos flujos
+opcionales, fuera de la suite, usan además:
+
+| Componente | Paquetes adicionales |
+| --- | --- |
+| Reconstrucción desde vídeo | `pycolmap`, `psutil` |
+| Detector móvil y escritorio | `onnx`, `onnxruntime`, `imageio-ffmpeg` (ver también `desktop/requirements.txt`) |
+
+Blender, Gazebo y ROS aportan sus propios intérpretes y módulos (`bpy`, `gz`)
+y no se instalan con pip. Para entrenar con GPU, instalar primero la variante
+de Torch adecuada desde [pytorch.org](https://pytorch.org/get-started/locally/).
+
+Para las pruebas del repositorio:
 
 ```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements.txt
 $env:PYTHONPATH = Join-Path (Get-Location) 'src'
-python -m unittest discover -s tests -v
+.\.venv\Scripts\python -m unittest discover -s tests -v
 ```
+
+En Windows, clonar en una ruta corta (por ejemplo `C:\src\`) o activar las
+rutas largas: algunas rutas del repositorio superan los 200 caracteres.
 
 La suite completa incluye visión y entrenamiento; no se limita a Python
 estándar. Los contratos puros no requieren Blender ni Gazebo, mientras que la

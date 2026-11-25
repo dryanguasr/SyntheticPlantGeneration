@@ -1,0 +1,28 @@
+# Dependencias de la suite `python -m unittest discover -s tests`.
+#
+# Requiere Python 3.11 o posterior (hashlib.file_digest); los informes usaron 3.12.
+# El núcleo morfológico (uchuva_lsystem sin Blender) usa solo la biblioteca estándar.
+# Blender (bpy) y Gazebo/ROS (gz) aportan sus propios entornos y no se instalan aquí.
+#
+#   python -m pip install -r requirements.txt
+#
+# Para GPU, instalar antes la variante de torch adecuada desde
+# https://pytorch.org/get-started/locally/
+
+# Imágenes, máscaras, ArUco y aplicaciones de revisión
+numpy>=2.2
+opencv-python>=4.11
+pillow>=10.0
+
+# Detección y segmentación. Ultralytics queda fijada a la versión de todos los
+# informes: el emparejamiento de predicciones de AP cambia entre versiones.
+torch>=2.4
+torchvision>=0.19
+ultralytics==8.4.114
+pyyaml>=6.0
+
+# Figuras, PDF y análisis
+matplotlib>=3.8
+reportlab>=4.0
+pypdf>=4.0
+scipy>=1.11

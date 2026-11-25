@@ -10,7 +10,6 @@ from __future__ import annotations
 import argparse
 from contextlib import ExitStack
 from datetime import datetime, timezone
-import fcntl
 import json
 import math
 import os
@@ -31,6 +30,21 @@ from uchuva_gazebo.harvest_validation import (angle_error, deposited_interval, d
     fruit_map, local_point, rotate_vector, world_point, yaw_of)
 from audit_harvest_pilot import (native_source_files, native_library_files, audit, json_safe,
     strict_json_loads, valid_digest)
+
+
+def lock_exclusive_nonblocking(stream):
+    """Hold an exclusive run lock until `stream` closes; raise OSError if taken.
+
+    Native runs need Linux/WSL, but the module must import on Windows so its
+    contracts can be tested there.
+    """
+    if os.name == 'nt':
+        import msvcrt
+        stream.seek(0)
+        msvcrt.locking(stream.fileno(), msvcrt.LK_NBLCK, 1)
+    else:
+        import fcntl
+        fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
 
 def write_json(path, data):
@@ -937,8 +951,8 @@ def main(argv=None):
     with ExitStack() as stack:
         lock = stack.enter_context((package / '.harvest_run.lock').open('a+'))
         try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
+            lock_exclusive_nonblocking(lock)
+        except OSError:
             failure = 'Another harvest run owns this package; use a separate prepared package'
         stream_names = ['telemetry', 'events', 'commands']
         if 'robot_spec_sha256' in manifest:
