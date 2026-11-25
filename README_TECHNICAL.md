@@ -1,5 +1,12 @@
 # SyntheticPlantGeneration: documentación técnica
 
+Desde el **25 de noviembre de 2026**, el desarrollo canónico del robot y su
+integración física se mantiene en
+[Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador). Las secciones
+de cosechador de este documento conservan el corte histórico incorporado aquí;
+el generador y su contrato de plantas siguen en este repositorio.
+Véase [la separación de responsabilidades](docs/architecture/separacion_robot_cosechador.md).
+
 Plataforma de investigación sobre **uchuva (*Physalis peruviana*)**, datos
 sintéticos, percepción e interacción robótica. Este documento reúne el estado
 por componente y la evidencia hasta el **24 de noviembre de 2026**. La
@@ -58,7 +65,7 @@ Vídeo real → reconstrucción parcial → revisión en Blender y Gazebo
 | Generación sintética | `src/uchuva_lsystem/` | Morfología nodal, escenas de cultivo, geometría Blender, anotaciones, apariencia y validación |
 | Revisión de anotaciones | `src/uchuva_annotation_audit/` | Aplicación de máscaras, revisión cruzada, asistencia interactiva y trazabilidad de decisiones |
 | Simulación y percepción | `src/uchuva_gazebo/` | Campos SDF, captura, recorridos, seguimiento, localización ArUco y evaluación |
-| Modelo digital del cosechador | `src/uchuva_gazebo/robot_spec.py`, `robot.py` y módulos asociados | Perfil resuelto con hash, cinemática, geometría, control, colisiones y demostraciones V8 |
+| Modelo digital del cosechador, corte histórico | `src/uchuva_gazebo/robot_spec.py`, `robot.py` y módulos asociados | Fuentes compatibles conservadas; desarrollo activo en Robot-Cosechador |
 | Reconstrucción desde vídeo | `src/uchuva_reconstruction/` | Piloto COLMAP con superficies parciales importadas a Gazebo y Blender |
 | Aplicación Android | `mobile/android/` | Detector histórico sin conexión y coordenadas sobre el plano de un ArUco; validación física pendiente |
 | PhysalisHarvest y otros aportes | `contributions/` | Snapshots atribuidos; los bancos ROS 2/ESP32 se mantienen separados del núcleo morfológico |

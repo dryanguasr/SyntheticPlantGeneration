@@ -1,5 +1,8 @@
 # Percepción RGB y visibilidad nativa del piloto
 
+> Desde el 25-11-2026, la guía operativa vigente y el desarrollo del robot
+> están en [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador/blob/main/docs/guides/percepcion_cosecha_diagnostica.md). Esta copia conserva el contexto histórico de SPG.
+
 La detección aprendida y la visibilidad privilegiada de Gazebo son dos fuentes
 distintas. Los resultados no acreditan madurez interna, pose del pedicelo ni
 percepción 3D autónoma. La selección de objetivos morfológicos sigue separada.

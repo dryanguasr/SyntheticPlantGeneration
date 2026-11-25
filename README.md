@@ -22,6 +22,13 @@ modelo digital del cosechador. Los informes conservan resultados negativos y
 pendientes. La transferencia al cultivo real, la madurez del fruto oculto y la
 cosecha autónoma con percepción desplegable siguen sin demostrarse.
 
+**Organización actualizada el 25 de noviembre:** el desarrollo del cosechador,
+su hardware y su integración se centraliza en
+[Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador). Este repositorio
+conserva generación sintética y el contrato de plantas; las fuentes históricas
+del robot quedan para reproducir los experimentos anteriores.
+[Responsabilidades y enlace entre repositorios](docs/architecture/separacion_robot_cosechador.md).
+
 ```text
 Parámetros y reglas morfológicas
                │
@@ -39,7 +46,7 @@ Parámetros y reglas morfológicas
 | --- | --- | --- |
 | Morfología y generación sintética | [`src/uchuva_lsystem/`](src/uchuva_lsystem/) | Plantas nodales, escenas de cultivo, anotaciones, apariencia y validación geométrica |
 | Aumentación y percepción | [`src/uchuva_classical_augmentation/`](src/uchuva_classical_augmentation/), [`src/uchuva_annotation_audit/`](src/uchuva_annotation_audit/) | Baselines, pilotos de detección y máscaras, aplicación de revisión y protocolos humanos |
-| Simulación e interacción robótica | [`src/uchuva_gazebo/`](src/uchuva_gazebo/) | Captura, seguimiento, localización ArUco, robot paramétrico y demostraciones de cosecha |
+| Puente y simulación de cultivo | [`src/uchuva_gazebo/`](src/uchuva_gazebo/) | Contratos de plantas, captura y localización; desarrollo del cosechador en Robot-Cosechador |
 
 La [documentación técnica](README_TECHNICAL.md) incluye también reconstrucción
 desde vídeo real, Android, equipo, citación y organización del código.
@@ -72,6 +79,11 @@ capacho**, no madurez agronómica demostrada del fruto interno. El
 campañas cerradas, exploratorias y bloqueadas.
 
 ## Modelo digital y PhysalisHarvest
+
+La implementación vigente está en
+[`Robot-Cosechador/src/uchuva_robot`](https://github.com/dryanguasr/Robot-Cosechador/tree/main/src/uchuva_robot).
+Ese repositorio enlaza una revisión fija de este generador. Los módulos del
+robot y el snapshot conservados aquí corresponden al corte histórico de integración.
 
 `RobotSpec` es la descripción canónica del robot; SDF, cinemática, límites y
 validación consumen ese mismo modelo. El aporte de Diego de

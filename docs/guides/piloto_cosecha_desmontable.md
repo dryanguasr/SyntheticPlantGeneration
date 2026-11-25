@@ -1,5 +1,8 @@
 # Piloto de uchuvas desmontables en Gazebo
 
+> Desde el 25-11-2026, la guía operativa vigente y el desarrollo del robot
+> están en [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador/blob/main/docs/guides/piloto_cosecha_desmontable.md). Esta copia conserva el contexto histórico de SPG.
+
 ## Objetivo y estado de entrega
 
 Preparar un escenario pequeño y reproducible en el que un carro 4WD con brazo

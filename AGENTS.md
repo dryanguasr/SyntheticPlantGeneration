@@ -10,6 +10,18 @@ This repository integrates three related research workstreams for agricultural r
 2. a procedural **cape gooseberry / uchuva** (*Physalis peruviana*) generator;
 3. a morphology-first bridge toward Gazebo for robot-plant simulation.
 
+### Robot repository ownership (2026-11-25)
+
+The canonical harvester robot implementation and hardware integration now live
+in https://github.com/dryanguasr/Robot-Cosechador under `src/uchuva_robot/`.
+Develop robot CAD, kinematics, control, harvesting runtime and PhysalisHarvest
+integration there. The robot-related files retained here are historical
+compatibility sources for earlier experiments, not a second active authority.
+Do not delete these historical scripts or break recorded experiments as part
+of the transfer. This repository continues to own botanical morphology,
+synthetic generation, augmentation, annotation and the plant export contract.
+See `docs/architecture/separacion_robot_cosechador.md` for the pinned hand-off.
+
 The botanical source of truth is the morphology-first functional-structural
 model under `src/uchuva_lsystem/`. Blender and Gazebo are downstream
 interpreters and must not redefine botanical architecture.

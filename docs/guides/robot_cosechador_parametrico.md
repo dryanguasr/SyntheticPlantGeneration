@@ -1,5 +1,8 @@
 # Robot cosechador: configuración, CAD y pruebas
 
+> Desde el 25-11-2026, la guía operativa vigente y el desarrollo del robot
+> están en [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador/blob/main/docs/guides/robot_cosechador_parametrico.md). Esta copia conserva el contexto histórico de SPG.
+
 El robot se describe mediante `robot-spec/1.0` en JSON. El resolvedor produce
 un `ResolvedRobot` inmutable en SI con hash de contenido. SDF, FK/IK, límites,
 marcos, colisiones, contrato y auditoría consumen ese mismo resultado.

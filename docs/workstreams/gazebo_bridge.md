@@ -1,5 +1,12 @@
 # Frente C: puente de morfologia hacia Gazebo
 
+Actualización del **25-11-2026**: este repositorio mantiene el contrato y los
+intérpretes de plantas. El modelo canónico, hardware e integración del cosechador
+se desarrollan en [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador).
+Los apartados del piloto de robot que siguen son antecedentes conservados.
+La [decisión de separación](../architecture/separacion_robot_cosechador.md)
+documenta el enlace fijado y la continuidad de los experimentos.
+
 Gazebo es un nuevo interprete de `Plant`, no una conversion del archivo
 `.blend` ni una dependencia del nucleo morfologico. El paquete
 `src/uchuva_gazebo/` es puro y genera un plan semantico por nivel de detalle:

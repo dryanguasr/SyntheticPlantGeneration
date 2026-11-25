@@ -1,5 +1,8 @@
 # Mecanismos CAD cerrados en Gazebo Harmonic
 
+> Desde el 25-11-2026, la guía operativa vigente y el desarrollo del robot
+> están en [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador/blob/main/docs/guides/mecanismos_cerrados_cad_gazebo.md). Esta copia conserva el contexto histórico de SPG.
+
 El adaptador conserva las articulaciones móviles y sus ejes CAD. La articulación
 que cerraría el ciclo pasa a un cuerpo auxiliar, situado en el mismo marco que
 su cuerpo físico. Se divide la masa y cada componente del tensor de inercia,

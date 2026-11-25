@@ -34,7 +34,7 @@
       "id": "module.parametric_harvester",
       "type": "module",
       "label": "Robot paramétrico con procedencia CAD y observación física",
-      "summary": "Descripción JSON canónica resuelta e inmutable para SDF, FK/IK, control, colisiones y auditoría. Conserva el proxy histórico y el CAD diagnóstico reducido. Candidatos articulados con cierres nativos, engranajes pasivos, mallas cóncavas y control por esfuerzo con referencia limitada por paso; la auditoría contrasta observadores independientes. Las revisiones locales CAD preservan originales y recalculan inercia por pieza; las pruebas aisladas no admiten automáticamente el robot completo ni cosecha. La carrera corta aproximada comunicada por el usuario conserva su incertidumbre. Sin calibración del prototipo. Revisión PR1: IK/FK/colisiones comparten auxiliares observados; la API rechaza obstáculos y separaciones inválidas; cierre y apertura de la mordaza incluyen posiciones intermedias sin certificar continuidad. El contrato del cosechador rechaza brazos no revolutos antes de emitir campos en radianes.",
+      "summary": "Copia histórica compatible conservada para los experimentos de SPG. Desde el 25-11-2026, desarrollo canónico en Robot-Cosechador/src/uchuva_robot. Descripción JSON canónica resuelta e inmutable para SDF, FK/IK, control, colisiones y auditoría. Conserva el proxy histórico y el CAD diagnóstico reducido. Candidatos articulados con cierres nativos, engranajes pasivos, mallas cóncavas y control por esfuerzo con referencia limitada por paso; la auditoría contrasta observadores independientes. Las revisiones locales CAD preservan originales y recalculan inercia por pieza; las pruebas aisladas no admiten automáticamente el robot completo ni cosecha. La carrera corta aproximada comunicada por el usuario conserva su incertidumbre. Sin calibración del prototipo. Revisión PR1: IK/FK/colisiones comparten auxiliares observados; la API rechaza obstáculos y separaciones inválidas; cierre y apertura de la mordaza incluyen posiciones intermedias sin certificar continuidad. El contrato del cosechador rechaza brazos no revolutos antes de emitir campos en radianes.",
       "paths": [
         "src/uchuva_gazebo/robot.py",
         "src/uchuva_gazebo/robot_spec.py",
@@ -204,7 +204,9 @@
           "path": "src/uchuva_gazebo/robot_harvest_planning.py",
           "locator": "def audit_jaw_transition("
         }
-      ]
+      ],
+      "development_repository": "https://github.com/dryanguasr/Robot-Cosechador",
+      "maintenance_scope": "historical_compatibility"
     },
     {
       "id": "entrypoint.marker_localization_pilot",
@@ -3057,7 +3059,7 @@
       "id": "entrypoint.harvest_pilot",
       "type": "entrypoint",
       "label": "Piloto de uchuva desmontable con carro 4WD y brazo de cinco GDL",
-      "summary": "Piloto rigido con corte y retencion ideales por plugin Harmonic. Los perfiles historicos conviven con una demostracion CAD de mordaza prismatica, canasta movil y seleccion de objetivos en los arboles V8 congelados. La toma continua admite movimiento prescrito con codo arriba y holgura verificada durante todo el barrido. La auditoria separa la comprobacion de las poses nativas, el deposito fisico de los frutos y la evidencia de percepcion.",
+      "summary": "Copia histórica compatible conservada para los experimentos de SPG. Desde el 25-11-2026, desarrollo canónico en Robot-Cosechador/src/uchuva_robot. Piloto rigido con corte y retencion ideales por plugin Harmonic. Los perfiles historicos conviven con una demostracion CAD de mordaza prismatica, canasta movil y seleccion de objetivos en los arboles V8 congelados. La toma continua admite movimiento prescrito con codo arriba y holgura verificada durante todo el barrido. La auditoria separa la comprobacion de las poses nativas, el deposito fisico de los frutos y la evidencia de percepcion.",
       "paths": [
         "src/uchuva_gazebo/harvest_plants.py",
         "src/uchuva_gazebo/harvest_visuals.py",
@@ -3150,7 +3152,9 @@
           "path": "src/uchuva_gazebo/harvest_clearance.py",
           "locator": "def plan_harvest_motion"
         }
-      ]
+      ],
+      "development_repository": "https://github.com/dryanguasr/Robot-Cosechador",
+      "maintenance_scope": "historical_compatibility"
     },
     {
       "id": "artifact.editorial_pilot_results_20261124",
@@ -3176,7 +3180,7 @@
       "id": "module.physalisharvest_integration",
       "type": "module",
       "label": "Conciliación del cosechador y PhysalisHarvest",
-      "summary": "Contrato puro derivado de RobotSpec y observaciones ópticas ArUco con reloj explícito. Snapshot externo íntegro y atribuido, sin autoridad botánica ni relicenciamiento MIT. Banco físico 2WD separado del robot digital. TF, adaptación de control, puente y misión física pendientes; pruebas de software no equivalen a cosecha autónoma. Lanzador canónico externo al snapshot: compilar y consultar nodos originales comparte install configurable bajo outputs; dry-run no inicia procesos y ejecución exige instalación existente. No abre cámara/serie ni arma implícitamente.",
+      "summary": "Copia histórica compatible conservada para los experimentos de SPG. Desde el 25-11-2026, desarrollo canónico en Robot-Cosechador/src/uchuva_robot. Contrato puro derivado de RobotSpec y observaciones ópticas ArUco con reloj explícito. Snapshot externo íntegro y atribuido, sin autoridad botánica ni relicenciamiento MIT. Banco físico 2WD separado del robot digital. TF, adaptación de control, puente y misión física pendientes; pruebas de software no equivalen a cosecha autónoma. Lanzador canónico externo al snapshot: compilar y consultar nodos originales comparte install configurable bajo outputs; dry-run no inicia procesos y ejecución exige instalación existente. No abre cámara/serie ni arma implícitamente.",
       "paths": [
         "src/uchuva_gazebo/physalisharvest.py",
         "scripts/check_physalisharvest_integration.py",
@@ -3207,7 +3211,9 @@
           "path": "src/uchuva_gazebo/physalisharvest_launch.py",
           "locator": "def create_launch_plan("
         }
-      ]
+      ],
+      "development_repository": "https://github.com/dryanguasr/Robot-Cosechador",
+      "maintenance_scope": "historical_compatibility"
     },
     {
       "id": "entrypoint.third_candidate_space_admission",
@@ -4192,6 +4198,22 @@
         {
           "path": "scripts/evaluate_private_synthetic_masks.py",
           "locator": "def control_threshold("
+        }
+      ]
+    },
+    {
+      "id": "decision.robot_repository_20261125",
+      "type": "decision",
+      "label": "Robot-Cosechador como repositorio principal del robot",
+      "summary": "Separa el desarrollo del robot de la autoridad botánica; enlaza SPG 5e74df7 como proveedor fijado y conserva fuentes históricas sin dependencia circular.",
+      "paths": [
+        "docs/architecture/separacion_robot_cosechador.md",
+        "AGENTS.md"
+      ],
+      "evidence": [
+        {
+          "path": "docs/architecture/separacion_robot_cosechador.md",
+          "locator": "Los cambios nuevos del robot se hacen"
         }
       ]
     }
@@ -7472,6 +7494,39 @@
         {
           "path": "scripts/prepare_private_synthetic_bank.py",
           "locator": "outputs/daylight_augmentation_115_20261112/bank"
+        }
+      ]
+    },
+    {
+      "source": "decision.robot_repository_20261125",
+      "relation": "documents",
+      "target": "entrypoint.harvest_pilot",
+      "evidence": [
+        {
+          "path": "docs/architecture/separacion_robot_cosechador.md",
+          "locator": "Los cambios nuevos del robot se hacen"
+        }
+      ]
+    },
+    {
+      "source": "decision.robot_repository_20261125",
+      "relation": "documents",
+      "target": "module.parametric_harvester",
+      "evidence": [
+        {
+          "path": "docs/architecture/separacion_robot_cosechador.md",
+          "locator": "Los cambios nuevos del robot se hacen"
+        }
+      ]
+    },
+    {
+      "source": "decision.robot_repository_20261125",
+      "relation": "documents",
+      "target": "module.physalisharvest_integration",
+      "evidence": [
+        {
+          "path": "docs/architecture/separacion_robot_cosechador.md",
+          "locator": "Los cambios nuevos del robot se hacen"
         }
       ]
     }

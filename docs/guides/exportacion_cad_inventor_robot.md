@@ -1,5 +1,8 @@
 # Exportación CAD del robot con Inventor
 
+> Desde el 25-11-2026, la guía operativa vigente y el desarrollo del robot
+> están en [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador/blob/main/docs/guides/exportacion_cad_inventor_robot.md). Esta copia conserva el contexto histórico de SPG.
+
 `scripts/export_inventor_robot.ps1` interpreta copias locales IAM/IPT mediante
 Inventor instalado. Exporta evidencia geométrica del diseño; no confirma que
 las piezas, densidades, motores o montajes coincidan con el prototipo construido.

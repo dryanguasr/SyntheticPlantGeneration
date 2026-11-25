@@ -1,5 +1,8 @@
 # Piloto CAD V8 con canasta a bordo
 
+> Desde el 25-11-2026, la guía operativa vigente y el desarrollo del robot
+> están en [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador/blob/main/docs/guides/piloto_cad_v8_canasta.md). Esta copia conserva el contexto histórico de SPG.
+
 El perfil de demostración conserva el CAD local de referencia y las tres plantas
 V8 del manifiesto histórico. Añade una canasta abierta a bordo, dos envolventes
 internas para baterías LiFePO₄ y una caja blanca para electrónica. Las masas y el

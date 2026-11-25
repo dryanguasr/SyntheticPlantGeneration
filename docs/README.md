@@ -6,6 +6,8 @@ función, no por orden de creación. La única excepción deliberada es
 
 ## Arquitectura vigente
 
+- [Separación del robot cosechador y enlace con el generador](architecture/separacion_robot_cosechador.md):
+  Robot-Cosechador centraliza la robótica; aquí permanece la autoridad botánica.
 - `architecture/modelo_morfologico_uchuva.md`: entidades y supuestos botánicos.
 - `architecture/adaptacion_morfologica_del_cultivo.md`: adaptación de cultivo.
 - `architecture/crecimiento_multi_planta_sincronizado.md`: coordinación,

@@ -1,5 +1,8 @@
 # Integración del cosechador y PhysalisHarvest
 
+> Desde el 25-11-2026, la guía operativa vigente y el desarrollo del robot
+> están en [Robot-Cosechador](https://github.com/dryanguasr/Robot-Cosechador/blob/main/docs/guides/integracion_physalisharvest.md). Esta copia conserva el contexto histórico de SPG.
+
 Esta integración centraliza el modelo digital y el banco experimental de Diego
 en **SyntheticPlantGeneration**, mediante la rama de revisión
 [`codex/integracion-physalisharvest-20261124`](https://github.com/dryanguasr/SyntheticPlantGeneration/tree/codex/integracion-physalisharvest-20261124). No fusiona
