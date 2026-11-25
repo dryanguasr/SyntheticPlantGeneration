@@ -27,7 +27,9 @@ físico debe seguir las mismas precauciones del banco USB.
 | `scripts/prepare_drv8833_wifi.py` | Verifica el sketch original y genera los archivos locales |
 | `firmware/drv8833_wifi/pca9685_servos.h` | Servos por PCA9685 (I2C): límites, velocidad y parada |
 | `scripts/drv8833_wifi_bridge.py` | Puente del computador por TCP |
-| `scripts/servo_wifi.py` | Órdenes de servo a través del puente |
+| `scripts/servo_wifi.py` | Órdenes de servo a través del puente, por articulación o canal |
+| `configs/robots/brazo_5gdl_servos.json` | Articulaciones J1-J5 y gripper: canal, rango y velocidad |
+| `docs/references/configuracion_brazo_5gdl_2026-11-25.md` | Configuración documentada del brazo |
 | `firmware/drv8833_wifi/test/` y `tests/test_drv8833_wifi_bridge.py` | Simuladores y pruebas |
 
 El snapshot `contributions/physalisharvest/` no se modifica. El envoltorio
@@ -122,7 +124,46 @@ GND común, límite de corriente y corte físico al alcance.
 
 El firmware maneja hasta 16 servos con una placa PCA9685 por I2C. **Este
 código es nuevo, no proviene del banco de Diego, y solo se ha verificado en
-simulador.** Los rangos por defecto son genéricos, no medidos en el brazo.
+simulador.** Los rangos por defecto no están medidos en el brazo.
+
+### Brazo de 5 GDL
+
+Las articulaciones vienen de la
+[configuración del brazo](../references/configuracion_brazo_5gdl_2026-11-25.md)
+(25-11-2026) y se declaran en
+[`configs/robots/brazo_5gdl_servos.json`](../../configs/robots/brazo_5gdl_servos.json):
+
+| Nombre | Alias | Función | Actuador documentado | Canal PCA9685 |
+| --- | --- | --- | --- | --- |
+| J1 | `base` | Giro de la base (Yaw) | RDS3235-270 | 0 |
+| J2 | `hombro` | Hombro (Pitch) | ASME-03B | 1 |
+| J3 | `codo` | Codo (Pitch) | ASME-MRA-110KG | 2 |
+| J4 | `muneca_roll` | Muñeca (Roll) | TD-8135MG-180 | 3 |
+| J5 | `muneca_pitch` | Muñeca (Pitch) | TD-8135MG-180 | 4 |
+| gripper | `pinza` | Apertura y cierre | TD-8135MG-180 (por confirmar) | 5 |
+
+- **Canales:** el documento no fija el cableado; la asignación 0-5 es una
+  propuesta (`manual_initial_guess`). Cámbiala en el JSON si el cableado real
+  es otro.
+- **Rangos:** todos empiezan en una ventana estrecha de **1400-1600 us**
+  alrededor del centro, sin medir. 1500 us no tiene por qué coincidir con la
+  pose de referencia del CAD.
+- **Velocidad:** 250 us/s por articulación, criterio de puesta en marcha.
+- `scripts/prepare_drv8833_wifi.py` convierte el JSON en `servo_map.h`, que
+  el firmware aplica por su cuenta. Tras editar el JSON, vuelve a ejecutarlo y
+  a cargar el firmware.
+
+**Diferencias con el CAD** (`configs/robots/cad_arm_mapping.json`), sin
+resolver:
+
+- El documento pone J4 Roll antes que J5 Pitch; en el CAD, `wrist_pitch` es
+  padre de `wrist_roll`.
+- El ensamble CAD del gripper incluye un TowerPro MG946R, no un TD-8135MG-180.
+- El CAD tiene dos TD-8135MG; el documento añade un tercero para el gripper.
+
+**Fuera de este código:** los encoders AS5600 previstos no se leen (cantidad,
+montaje y calibración sin confirmar), y no hay conversión de pulso a ángulo:
+ceros y sentido de giro siguen pendientes de calibrar eje por eje.
 
 ### Conexión
 
@@ -132,25 +173,30 @@ simulador.** Los rangos por defecto son genéricos, no medidos en el brazo.
 | GND | GND |
 | SDA | GPIO 21 |
 | SCL | GPIO 22 |
-| V+ (potencia de servos) | Fuente aparte de 5-6 V con GND común |
+| V+ (potencia de servos) | Fuente aparte, con GND común |
 
-No alimentes los servos desde el ESP32. La dirección por defecto es `0x40`
+No alimentes los servos desde el ESP32. Las referencias del brazo son de
+distinta potencia: comprueba en la ficha de cada una la tensión y la corriente
+de bloqueo antes de elegir la fuente; puede hacer falta más de una. No
+dimensiones la fuente sumando corrientes nominales. La dirección por defecto es `0x40`
 (A0-A5 sin puentear). Los pines, la dirección y la frecuencia (50 Hz) se
 cambian en `wifi_config.h`.
 
 ### Límites antes de mover
 
-En `wifi_config.h`, fija el rango seguro de cada canal:
+Mide el rango de cada articulación con el servo desacoplado del brazo, o con
+el brazo asegurado y sin carga, y amplíalo poco a poco en
+`pulse_min_us`/`pulse_max_us` del JSON. Una orden fuera de rango se rechaza
+(`ERR SV RANGO`), no se recorta. Empieza por J2, que soporta el resto del
+brazo.
+
+Para pruebas sueltas sin el mapa del brazo, un `SERVO_LIMITS` en
+`wifi_config.h` tiene prioridad:
 
 ```c
 // canal 0, canal 1, canal 2...
 #define SERVO_LIMITS {{1100, 1900}, {1000, 1700}, {1200, 1800}}
 ```
-
-Sin `SERVO_LIMITS`, todos los canales de `0` a `SERVO_CHANNELS - 1` usan
-`SERVO_MIN_US`-`SERVO_MAX_US` (1000-2000 us). Mide el rango real con el
-servo desacoplado del brazo y amplíalo poco a poco. Una orden fuera de rango
-se rechaza (`ERR SV RANGO`), no se recorta.
 
 ### Uso
 
@@ -163,7 +209,14 @@ python scripts/drv8833_wifi_bridge.py --host 192.168.4.1 --solo-servos
 Con el puente en marcha, en otra terminal:
 
 ```powershell
-python scripts/servo_wifi.py 0 1500
+python scripts/servo_wifi.py J2 1500
+```
+
+Acepta el nombre (`J1`-`J5`, `gripper`), el alias (`hombro`, `codo`...) o el
+número de canal. Para ver el mapa sin conectarte:
+
+```powershell
+python scripts/servo_wifi.py mapa
 ```
 
 ```powershell
@@ -226,4 +279,6 @@ desbordada; acuses idénticos al USB; `ERR BUSY` para un segundo cliente;
 watchdog de 250 ms; parada al desconectarse; descarte de órdenes a medias; y
 liberación por inactividad. Para los servos, con un PCA9685 simulado: frecuencia
 de 50 Hz, rango por canal, límite de velocidad, `SVOFF`, corte al
-desconectarse, independencia del watchdog de motores y placa ausente.
+desconectarse, independencia del watchdog de motores y placa ausente. Un
+segundo simulador compila el firmware con el `servo_map.h` generado y comprueba
+el rango y la velocidad de cada articulación del brazo.

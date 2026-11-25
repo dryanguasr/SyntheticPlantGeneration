@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "status": "configuración documentada; canales, rangos y velocidades sin validar en el hardware",
+  "source_document": "docs/references/configuracion_brazo_5gdl_2026-11-25.md",
+  "cad_mapping": "configs/robots/cad_arm_mapping.json",
+  "controller": "PCA9685 por I2C en el ESP32 (firmware/drv8833_wifi)",
+  "value_status_legend": {
+    "documented": "tomado del documento de configuración",
+    "manual_initial_guess": "valor inicial propuesto; no medido",
+    "engineering_heuristic": "criterio de seguridad para la puesta en marcha; no medido",
+    "to_be_measured": "pendiente de medir en el brazo"
+  },
+  "joints": [
+    {
+      "name": "J1",
+      "alias": "base",
+      "function": "Giro de la base (Yaw)",
+      "cad_joint": "arm_yaw",
+      "actuator": "RDS3235-270",
+      "actuator_status": "documented",
+      "advertised_torque_kgf_cm": 35,
+      "pca9685_channel": 0,
+      "channel_status": "manual_initial_guess",
+      "pulse_min_us": 1400,
+      "pulse_max_us": 1600,
+      "pulse_limits_status": "manual_initial_guess",
+      "slew_us_per_s": 250,
+      "slew_status": "engineering_heuristic"
+    },
+    {
+      "name": "J2",
+      "alias": "hombro",
+      "function": "Hombro (Pitch)",
+      "cad_joint": "arm_shoulder",
+      "actuator": "ASME-03B",
+      "actuator_status": "documented",
+      "advertised_torque_kgf_cm": 380,
+      "pca9685_channel": 1,
+      "channel_status": "manual_initial_guess",
+      "pulse_min_us": 1400,
+      "pulse_max_us": 1600,
+      "pulse_limits_status": "manual_initial_guess",
+      "slew_us_per_s": 250,
+      "slew_status": "engineering_heuristic"
+    },
+    {
+      "name": "J3",
+      "alias": "codo",
+      "function": "Codo (Pitch)",
+      "cad_joint": "arm_elbow",
+      "actuator": "ASME-MRA-110KG",
+      "actuator_status": "documented",
+      "advertised_torque_kgf_cm": 110,
+      "pca9685_channel": 2,
+      "channel_status": "manual_initial_guess",
+      "pulse_min_us": 1400,
+      "pulse_max_us": 1600,
+      "pulse_limits_status": "manual_initial_guess",
+      "slew_us_per_s": 250,
+      "slew_status": "engineering_heuristic"
+    },
+    {
+      "name": "J4",
+      "alias": "muneca_roll",
+      "function": "Muñeca (Roll)",
+      "cad_joint": "wrist_roll",
+      "actuator": "TD-8135MG-180",
+      "actuator_status": "documented",
+      "advertised_torque_kgf_cm": 35,
+      "pca9685_channel": 3,
+      "channel_status": "manual_initial_guess",
+      "pulse_min_us": 1400,
+      "pulse_max_us": 1600,
+      "pulse_limits_status": "manual_initial_guess",
+      "slew_us_per_s": 250,
+      "slew_status": "engineering_heuristic"
+    },
+    {
+      "name": "J5",
+      "alias": "muneca_pitch",
+      "function": "Muñeca (Pitch)",
+      "cad_joint": "wrist_pitch",
+      "actuator": "TD-8135MG-180",
+      "actuator_status": "documented",
+      "advertised_torque_kgf_cm": 35,
+      "pca9685_channel": 4,
+      "channel_status": "manual_initial_guess",
+      "pulse_min_us": 1400,
+      "pulse_max_us": 1600,
+      "pulse_limits_status": "manual_initial_guess",
+      "slew_us_per_s": 250,
+      "slew_status": "engineering_heuristic"
+    },
+    {
+      "name": "gripper",
+      "alias": "pinza",
+      "function": "Apertura y cierre de la pinza; no es GDL de posicionamiento",
+      "cad_joint": null,
+      "actuator": "TD-8135MG-180 (opcional; por confirmar)",
+      "actuator_status": "to_be_measured",
+      "advertised_torque_kgf_cm": 35,
+      "pca9685_channel": 5,
+      "channel_status": "manual_initial_guess",
+      "pulse_min_us": 1400,
+      "pulse_max_us": 1600,
+      "pulse_limits_status": "manual_initial_guess",
+      "slew_us_per_s": 250,
+      "slew_status": "engineering_heuristic"
+    }
+  ],
+  "discrepancies_with_cad": [
+    "Orden de la muñeca: el documento pone J4 Roll antes de J5 Pitch; en cad_arm_mapping.json wrist_pitch es padre de wrist_roll.",
+    "Gripper: el documento propone TD-8135MG-180; el ensamble CAD del gripper incluye TowerPro_MG946R:1.",
+    "El CAD tiene dos TD-8135MG (wrist_pitch y wrist_roll); el documento añade un tercero para el gripper."
+  ],
+  "not_implemented": [
+    "Encoders AS5600: previstos en el documento, sin cantidad, montaje ni calibración confirmados; el firmware no los lee.",
+    "Conversión de pulso a ángulo, ceros y sentido de giro: pendientes de calibrar eje por eje."
+  ]
+}

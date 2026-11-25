@@ -22,6 +22,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Mapa del brazo de 5 GDL generado por scripts/prepare_drv8833_wifi.py desde
+// configs/robots/brazo_5gdl_servos.json. Un SERVO_LIMITS en wifi_config.h
+// tiene prioridad sobre él.
+#if __has_include("servo_map.h")
+#include "servo_map.h"
+#endif
+
 #ifndef SERVO_ENABLED
 #define SERVO_ENABLED 1
 #endif
@@ -62,11 +69,19 @@ struct ServoLimit {
 };
 
 #ifdef SERVO_LIMITS
-// Rango por canal, en orden desde el canal 0: {{mín, máx}, ...}
+// Rango por canal, en orden desde el canal 0: {{mín, máx}, ...}.
+// {0, 0} deja un canal sin uso: sus órdenes se rechazan.
 constexpr ServoLimit servoLimits[] = SERVO_LIMITS;
 constexpr uint8_t servoCount = sizeof(servoLimits) / sizeof(servoLimits[0]);
 #else
 constexpr uint8_t servoCount = SERVO_CHANNELS;
+#endif
+
+#ifdef SERVO_SLEW_LIMITS
+// Velocidad máxima por canal, en us/s, en el mismo orden que SERVO_LIMITS.
+constexpr uint16_t servoSlews[] = SERVO_SLEW_LIMITS;
+static_assert(sizeof(servoSlews) / sizeof(servoSlews[0]) == servoCount,
+              "SERVO_SLEW_LIMITS necesita un valor por canal de SERVO_LIMITS");
 #endif
 
 static_assert(servoCount >= 1 && servoCount <= 16, "El PCA9685 tiene 16 canales (0-15)");
@@ -81,13 +96,27 @@ constexpr ServoLimit servoLimit(uint8_t channel) {
 #endif
 }
 
+constexpr uint32_t servoSlew(uint8_t channel) {
+#ifdef SERVO_SLEW_LIMITS
+  return servoSlews[channel];
+#else
+  return (void)channel, SERVO_SLEW_US_PER_S;
+#endif
+}
+
+constexpr bool channelUsed(uint8_t channel) {
+  return channel < servoCount && servoLimit(channel).maxUs != 0;
+}
+
 constexpr bool limitsValid(uint8_t channel = 0) {
   return channel >= servoCount ||
-         (servoLimit(channel).minUs >= 500 && servoLimit(channel).maxUs <= 2500 &&
-          servoLimit(channel).minUs < servoLimit(channel).maxUs &&
-          servoLimit(channel).maxUs < 1000000UL / SERVO_FREQUENCY_HZ && limitsValid(channel + 1));
+         (((servoLimit(channel).minUs == 0 && servoLimit(channel).maxUs == 0) ||
+           (servoLimit(channel).minUs >= 500 && servoLimit(channel).maxUs <= 2500 &&
+            servoLimit(channel).minUs < servoLimit(channel).maxUs &&
+            servoLimit(channel).maxUs < 1000000UL / SERVO_FREQUENCY_HZ && servoSlew(channel) > 0)) &&
+          limitsValid(channel + 1));
 }
-static_assert(limitsValid(), "Cada rango de servo debe estar dentro de 500-2500 us, con mín < máx");
+static_assert(limitsValid(), "Cada rango de servo debe estar dentro de 500-2500 us, con mín < máx y velocidad > 0");
 
 namespace pca9685 {
 constexpr uint8_t mode1 = 0x00;
@@ -161,9 +190,10 @@ void servoSetup() {
 // Acerca cada canal a su objetivo sin superar la velocidad configurada.
 void servoUpdate(uint32_t now) {
   if (!servoReady || now - servoUpdatedAt < 20) return;
-  const uint32_t step = (now - servoUpdatedAt) * SERVO_SLEW_US_PER_S / 1000;
+  const uint32_t elapsed = now - servoUpdatedAt;
   servoUpdatedAt = now;
   for (uint8_t channel = 0; channel < servoCount; ++channel) {
+    const uint32_t step = elapsed * servoSlew(channel) / 1000;
     const uint16_t current = servoCurrent[channel];
     const uint16_t target = servoTarget[channel];
     if (!target || current == target) continue;
@@ -235,7 +265,7 @@ void handleServo(const char* line, Reply reply) {
     reply("ERR SV FORMATO");
     return;
   }
-  if (channel >= servoCount) {
+  if (!channelUsed(static_cast<uint8_t>(channel < 16 ? channel : 16))) {
     reply("ERR SV CANAL");
     return;
   }

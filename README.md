@@ -235,8 +235,8 @@ para reproducir los experimentos registrados.
 
 El ESP32 del banco se controla por WiFi en lugar de USB. Una sola conexión TCP
 autenticada lleva las órdenes de los motores de la base (DRV8833, firmware
-original de Diego sin cambios) y de hasta 16 servos por una placa **PCA9685**
-(I2C).
+original de Diego sin cambios) y de los servos del **brazo de 5 GDL** por una
+placa **PCA9685** (I2C).
 
 ```mermaid
 flowchart LR
@@ -244,7 +244,7 @@ flowchart LR
     CLI["servo_wifi.py<br/>127.0.0.1:3334"] --> BR
     BR -->|"TCP + token<br/>un solo cliente"| ESP["ESP32"]
     ESP --> DRV["DRV8833"] --> MOT["Motores 2WD"]
-    ESP -->|"I2C · GPIO 21/22"| PCA["PCA9685"] --> SRV["Servos 0-15"]
+    ESP -->|"I2C · GPIO 21/22"| PCA["PCA9685"] --> SRV["Brazo 5 GDL<br/>J1-J5 + gripper"]
 ```
 
 ```powershell
@@ -252,20 +252,35 @@ python scripts/drv8833_wifi_bridge.py --host 192.168.4.1 --solo-servos
 ```
 
 ```powershell
-python scripts/servo_wifi.py 0 1500
+python scripts/servo_wifi.py J2 1500
 ```
+
+| Articulación | Función | Actuador documentado | Canal |
+| --- | --- | --- | --- |
+| J1 `base` | Giro de la base (Yaw) | RDS3235-270 | 0 |
+| J2 `hombro` | Hombro (Pitch) | ASME-03B | 1 |
+| J3 `codo` | Codo (Pitch) | ASME-MRA-110KG | 2 |
+| J4 `muneca_roll` | Muñeca (Roll) | TD-8135MG-180 | 3 |
+| J5 `muneca_pitch` | Muñeca (Pitch) | TD-8135MG-180 | 4 |
+| gripper `pinza` | Apertura y cierre | TD-8135MG-180 (por confirmar) | 5 |
 
 | Orden | Efecto |
 | --- | --- |
-| `servo_wifi.py <canal> <us>` | Lleva el canal al pulso indicado, dentro de su rango |
-| `servo_wifi.py estado` | Posición actual y objetivo de cada canal activo |
+| `servo_wifi.py <articulación> <us>` | Lleva la articulación (nombre, alias o canal) al pulso indicado |
+| `servo_wifi.py estado` | Posición actual y objetivo de cada articulación activa |
 | `servo_wifi.py off` | Corta el pulso de todos los servos |
+| `servo_wifi.py mapa` | Muestra articulaciones, canales, rangos y velocidades |
 
-- **Rango por canal** en `wifi_config.h` (`SERVO_LIMITS`): una orden fuera de
-  rango se rechaza, no se recorta. Los valores por defecto (1000-2000 us) son
-  genéricos; mide el rango de cada articulación antes de acoplarla.
-- **Velocidad limitada** a 500 us/s. La primera orden de cada canal va directa,
-  porque el ESP32 no conoce la posición previa.
+- **Mapa del brazo** en [`configs/robots/brazo_5gdl_servos.json`](configs/robots/brazo_5gdl_servos.json),
+  tomado de la [configuración documentada](docs/references/configuracion_brazo_5gdl_2026-11-25.md).
+  Los canales son una propuesta y todos los rangos empiezan en 1400-1600 us,
+  **sin medir**: amplíalos solo tras medir cada articulación.
+- **Rango por articulación** aplicado por el propio ESP32: una orden fuera de
+  rango se rechaza, no se recorta.
+- **Velocidad limitada** a 250 us/s por articulación. La primera orden de cada
+  una va directa, porque el ESP32 no conoce la posición previa.
+- **Pendiente:** el documento y el CAD difieren en el orden de la muñeca y en
+  el servo del gripper; los encoders AS5600 previstos aún no se leen.
 - **Pérdida del enlace:** motores parados y servos sin pulso (configurable para
   mantener posición). El watchdog de 250 ms de la base no depende de los servos.
 - **Seguridad del enlace:** token obligatorio, un solo puente y firmware que no

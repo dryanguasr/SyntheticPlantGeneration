@@ -28,13 +28,18 @@
 #define SERVO_FREQUENCY_HZ 50
 #define SERVO_SLEW_US_PER_S 500  // velocidad máxima del pulso: 500 us/s
 
-// Rango común para los canales 0..SERVO_CHANNELS-1.
+// Brazo de 5 GDL: scripts/prepare_drv8833_wifi.py genera servo_map.h con el
+// rango y la velocidad de J1-J5 y el gripper desde
+// configs/robots/brazo_5gdl_servos.json. Ese mapa sustituye a los tres valores
+// siguientes; edita el JSON y vuelve a ejecutar el script para cambiarlo.
+
+// Rango común para los canales 0..SERVO_CHANNELS-1 (solo sin servo_map.h).
 #define SERVO_CHANNELS 16
 #define SERVO_MIN_US 1000
 #define SERVO_MAX_US 2000
 
-// O bien un rango por canal, empezando en el canal 0 (sustituye a los tres
-// anteriores). Ejemplo para tres articulaciones:
+// O bien un rango por canal aquí, empezando en el canal 0; tiene prioridad
+// sobre servo_map.h. Ejemplo para tres articulaciones:
 // #define SERVO_LIMITS {{1100, 1900}, {1000, 1700}, {1200, 1800}}
 
 // Al perder el puente: 0 corta el pulso (servos sin par); 1 mantiene la última

@@ -70,3 +70,4 @@ mobile/android/app/src/androidTest/assets/mobile_validation_fixture.json
 # Firmware WiFi del ESP32: generado y secretos locales
 firmware/drv8833_wifi/drv8833_core.h
 firmware/drv8833_wifi/wifi_config.h
+firmware/drv8833_wifi/servo_map.h

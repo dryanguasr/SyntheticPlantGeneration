@@ -5,6 +5,7 @@ from __future__ import annotations
 from contextlib import redirect_stderr, redirect_stdout
 from importlib.util import module_from_spec, spec_from_file_location
 from io import StringIO
+import json
 import os
 from pathlib import Path
 import socket
@@ -21,6 +22,9 @@ _spec.loader.exec_module(wifi)
 _servo_spec = spec_from_file_location("servo_wifi", ROOT / "scripts/servo_wifi.py")
 servo_cli = module_from_spec(_servo_spec)
 _servo_spec.loader.exec_module(servo_cli)
+_prepare_spec = spec_from_file_location("prepare_drv8833_wifi", ROOT / "scripts/prepare_drv8833_wifi.py")
+prepare = module_from_spec(_prepare_spec)
+_prepare_spec.loader.exec_module(prepare)
 
 TOKEN = "token-de-prueba-0123456789"
 REPLIES = {"ID": "DRV8833_ROS_V5", "S": "OK S 0000", "CF": "OK CF 1010", "F": "OK F 1010",
@@ -255,6 +259,79 @@ class ServoTests(unittest.TestCase):
         with redirect_stderr(errors):
             self.assertEqual(servo_cli.main(["estado", "--port", str(port)]), 1)
         self.assertIn("No hay puente", errors.getvalue())
+
+
+class ArmMapTests(unittest.TestCase):
+    def setUp(self):
+        self.joints = servo_cli.load_servo_map()
+
+    def test_documented_five_dof_arm_plus_gripper(self):
+        names = [joint["name"] for joint in self.joints]
+        self.assertEqual(names, ["J1", "J2", "J3", "J4", "J5", "gripper"])
+        actuators = {joint["name"]: joint["actuator"] for joint in self.joints}
+        self.assertEqual(actuators["J1"], "RDS3235-270")
+        self.assertEqual(actuators["J2"], "ASME-03B")
+        self.assertEqual(actuators["J3"], "ASME-MRA-110KG")
+        self.assertEqual(actuators["J4"], actuators["J5"])
+        # Rangos y canales sin medir: el mapa debe decirlo explícitamente.
+        for joint in self.joints:
+            self.assertNotEqual(joint["pulse_limits_status"], "documented")
+            self.assertNotEqual(joint["channel_status"], "documented")
+
+    def test_names_aliases_and_channels_resolve(self):
+        self.assertEqual(servo_cli.order_from(["J2", "1500"], self.joints), "SV 1 1500")
+        self.assertEqual(servo_cli.order_from(["hombro", "1500"], self.joints), "SV 1 1500")
+        self.assertEqual(servo_cli.order_from(["GRIPPER", "1450"], self.joints), "SV 5 1450")
+        self.assertEqual(servo_cli.order_from(["0", "1500"], self.joints), "SV 0 1500")
+        with self.assertRaisesRegex(ValueError, "J2 admite 1400-1600"):
+            servo_cli.order_from(["J2", "1900"], self.joints)
+        with self.assertRaisesRegex(ValueError, "desconocida"):
+            servo_cli.order_from(["J7", "1500"], self.joints)
+
+    def test_state_reply_shows_joint_names(self):
+        self.assertEqual(servo_cli.describe_state("OK SVQ 1:1500/1550 9:1000/1000", self.joints),
+                         "OK SVQ J2=1500/1550 9:1000/1000")
+        self.assertEqual(servo_cli.describe_state("OK SVQ -", self.joints), "OK SVQ -")
+
+    def test_invalid_maps_are_rejected(self):
+        base = json.loads(servo_cli.SERVO_MAP.read_text(encoding="utf-8"))
+        cases = {
+            "canal 0 repetido": lambda joints: joints[1].update(pca9685_channel=0),
+            "rango de pulso": lambda joints: joints[0].update(pulse_min_us=1700),
+            "fuera de 0-15": lambda joints: joints[0].update(pca9685_channel=16),
+            "alias repetido": lambda joints: joints[1].update(alias="base"),
+        }
+        for message, change in cases.items():
+            data = json.loads(json.dumps(base))
+            change(data["joints"])
+            with tempfile.TemporaryDirectory() as folder:
+                path = Path(folder) / "mapa.json"
+                path.write_text(json.dumps(data), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, message):
+                    servo_cli.load_servo_map(path)
+
+    def test_firmware_header_follows_channels_with_gaps(self):
+        data = json.loads(servo_cli.SERVO_MAP.read_text(encoding="utf-8"))
+        data["joints"][5]["pca9685_channel"] = 8  # gripper en el canal 8
+        data["joints"][1]["slew_us_per_s"] = 120
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "firmware/drv8833_wifi").mkdir(parents=True)
+            source = root / "mapa.json"
+            source.write_text(json.dumps(data), encoding="utf-8")
+            header = prepare.write_servo_map(root, source).read_text(encoding="utf-8")
+        self.assertIn("#define SERVO_LIMITS {{1400, 1600}, {1400, 1600}, {1400, 1600}, "
+                      "{1400, 1600}, {1400, 1600}, {0, 0}, {0, 0}, {0, 0}, {1400, 1600}}", header)
+        self.assertIn("#define SERVO_SLEW_LIMITS {250, 120, 250, 250, 250, 1, 1, 1, 250}", header)
+        self.assertIn("canal  5: sin uso", header)
+        self.assertIn("#ifndef SERVO_LIMITS", header)
+
+    def test_cli_prints_map_without_bridge(self):
+        output = StringIO()
+        with redirect_stdout(output):
+            self.assertEqual(servo_cli.main(["mapa"]), 0)
+        self.assertIn("ASME-03B", output.getvalue())
+        self.assertIn("valores iniciales sin medir", output.getvalue())
 
 
 class ConfigTests(unittest.TestCase):
