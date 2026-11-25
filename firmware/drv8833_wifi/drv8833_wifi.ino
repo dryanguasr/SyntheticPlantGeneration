@@ -8,7 +8,8 @@
 // Este envoltorio solo cambia el canal: un cliente TCP autenticado ocupa el
 // lugar del puerto USB. Al desconectarse el cliente, los motores se paran.
 // Las líneas SV, SVOFF y SVQ manejan servos por un PCA9685 (pca9685_servos.h)
-// y no llegan al sketch de motores.
+// y ENQ lee los encoders AS5600 (as5600_encoders.h); no llegan al sketch de
+// motores.
 
 #include <Arduino.h>
 #include <WiFi.h>
@@ -18,6 +19,7 @@
 
 #include "wifi_config.h"
 #include "pca9685_servos.h"
+#include "as5600_encoders.h"
 
 constexpr bool sameText(const char* a, const char* b) {
   return *a == *b && (*a == '\0' || sameText(a + 1, b + 1));
@@ -70,6 +72,8 @@ void finishLine() {
   lineBuffer[size] = '\0';
   if (isServoLine(lineBuffer)) {
     handleServo(lineBuffer, [](const char* text) { sendLine(client, text); });
+  } else if (isEncoderLine(lineBuffer)) {
+    handleEncoder(lineBuffer, [](const char* text) { sendLine(client, text); });
   } else {
     memcpy(forward, lineBuffer, lineLength);
     forward[lineLength] = '\n';
@@ -233,6 +237,10 @@ void startWifi() {
 void setup() {
   drv8833_setup();  // GPIO en bajo y PWM antes de abrir la red
   servoSetup();     // canales del PCA9685 sin pulso
+  if (ENCODER_ENABLED) {
+    i2cBegin();
+    encoderDetect();  // TCA9548A con AS5600, o un AS5600 directo
+  }
   Serial.begin(115200);
   startWifi();
 }

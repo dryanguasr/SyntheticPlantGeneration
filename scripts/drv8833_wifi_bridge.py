@@ -37,7 +37,7 @@ KEEPALIVE_S = 1.0  # menor que la expiración por inactividad del ESP32 (3 s)
 BUSY_PROBE_S = 0.15  # espera de un rechazo inmediato antes de enviar el token
 SERVO_PORT = 3334  # puerto local para scripts/servo_wifi.py
 SERVO_REPLY_S = 2.0
-SERVO_LINE = re.compile(r"(SV \d{1,2} \d{3,4}|SVOFF|SVQ)")
+SERVO_LINE = re.compile(r"(SV \d{1,2} \d{3,4}|SVOFF|SVQ|ENQ)")  # servos y encoders
 
 
 def load_usb_bridge():
@@ -130,12 +130,12 @@ class TcpPort:
 
 
 def servo_exchange(port, line):
-    """Envía una orden SV/SVOFF/SVQ y devuelve el acuse del ESP32."""
+    """Envía una orden SV/SVOFF/SVQ/ENQ y devuelve el acuse del ESP32."""
     if not SERVO_LINE.fullmatch(line):
         raise ValueError(f"Orden de servo inválida: {line!r}")
     port.write((line + "\n").encode("ascii"))
     reply = port.readline(256).decode("ascii", errors="replace").strip()
-    if not reply.startswith(("OK SV", "ERR SV")):
+    if not reply.startswith(("OK SV", "ERR SV", "OK ENQ", "ERR EN")):
         raise RuntimeError(f"Acuse inesperado para {line}: {reply or 'sin respuesta'}")
     return reply
 
@@ -144,6 +144,14 @@ def probe_servos(port):
     """Estado de los servos, o None si el firmware cargado no los maneja."""
     try:
         return servo_exchange(port, "SVQ")
+    except RuntimeError:
+        return None
+
+
+def probe_encoders(port):
+    """Lectura de los encoders AS5600, o None si el firmware no los maneja."""
+    try:
+        return servo_exchange(port, "ENQ")
     except RuntimeError:
         return None
 
@@ -335,6 +343,7 @@ def main(argv=None):
             print(servos or "Firmware sin servos: carga la versión actual de firmware/drv8833_wifi.",
                   flush=True)
             if args.check:
+                print(probe_encoders(port) or "Firmware sin encoders.", flush=True)
                 return 0
             events = Queue()
             if servos and args.servo_port:

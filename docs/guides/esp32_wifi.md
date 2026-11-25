@@ -26,6 +26,8 @@ físico debe seguir las mismas precauciones del banco USB.
 | `firmware/drv8833_wifi/wifi_config.example.h` | Plantilla de red, clave y token |
 | `scripts/prepare_drv8833_wifi.py` | Verifica el sketch original y genera los archivos locales |
 | `firmware/drv8833_wifi/pca9685_servos.h` | Servos por PCA9685 (I2C): límites, velocidad y parada |
+| `firmware/drv8833_wifi/as5600_encoders.h` | Lectura de los encoders AS5600 por el TCA9548A |
+| `firmware/hardware_tests/01_test_encoders_as5600/` | Test 01 del equipo: encoders por USB, independiente del WiFi |
 | `scripts/drv8833_wifi_bridge.py` | Puente del computador por TCP |
 | `scripts/servo_wifi.py` | Órdenes de servo a través del puente, por articulación o canal |
 | `configs/robots/brazo_5gdl_servos.json` | Articulaciones J1-J5 y gripper: canal, rango y velocidad |
@@ -101,7 +103,9 @@ Conecta el computador a la red del ESP32 y, con VM desconectada:
 python scripts/drv8833_wifi_bridge.py --host 192.168.4.1 --check
 ```
 
-Debe responder `DRV8833_ROS_V5` y `OK S 0000`. El token se toma de
+Debe responder `DRV8833_ROS_V5`, `OK S 0000`, el estado de los servos
+(`OK SVQ -`) y la lectura de los encoders (`OK ENQ ...` o
+`ERR EN SIN SENSORES`). El token se toma de
 `wifi_config.h`, o de la variable `DRV8833_WIFI_TOKEN` si el puente corre
 en otro computador.
 
@@ -161,9 +165,9 @@ resolver:
 - El ensamble CAD del gripper incluye un TowerPro MG946R, no un TD-8135MG-180.
 - El CAD tiene dos TD-8135MG; el documento añade un tercero para el gripper.
 
-**Fuera de este código:** los encoders AS5600 previstos no se leen (cantidad,
-montaje y calibración sin confirmar), y no hay conversión de pulso a ángulo:
-ceros y sentido de giro siguen pendientes de calibrar eje por eje.
+**Fuera de este código:** no hay conversión de pulso a ángulo ni control con
+los encoders (sección 6): ceros, sentido de giro y relación de transmisión
+siguen pendientes de calibrar eje por eje.
 
 ### Conexión
 
@@ -253,6 +257,49 @@ computador, sin token: cualquier programa local puede mover los servos.
 | `SVQ` | `OK SVQ <canal>:<actual>/<objetivo> ...`, o `OK SVQ -` sin canales activos |
 | `SVOFF` | `OK SVOFF` |
 
+## 6. Encoders AS5600
+
+El firmware lee los encoders magnéticos de J1-J5 con el montaje del
+[test 01 del equipo](../../firmware/hardware_tests/01_test_encoders_as5600/01_test_encoders_as5600.ino):
+
+| Elemento | Conexión |
+| --- | --- |
+| TCA9548A | Bus I2C del ESP32 (GPIO 21/22), dirección `0x70` (A0-A2 a GND) |
+| AS5600 de J1-J5 | Canales SD0/SC0 a SD4/SC4 del TCA9548A |
+| Gripper | Sin encoder |
+| Alimentación de los sensores | 3,3 V, no 5 V |
+
+Sin multiplexor, un solo AS5600 conectado directo al bus se lee como el
+encoder de J1. El PCA9685 debe ir en el bus principal, **no** detrás del
+TCA9548A. Los canales de encoder están en `encoder_channel` del mapa del brazo.
+
+Con el puente en marcha:
+
+```powershell
+python scripts/servo_wifi.py encoders
+```
+
+Muestra, por articulación, el ángulo del imán (0-360°), su valor crudo
+(0-4095) y el estado del imán: OK, muy cerca, muy lejos o sin imán. Si un
+canal no responde, aparece como sin sensor. La orden de bajo nivel es `ENQ`:
+
+| Orden | Respuesta |
+| --- | --- |
+| `ENQ` | `OK ENQ <canal>:<raw>:<imán> ...` (`<canal>:--` sin sensor), o `ERR EN SIN SENSORES` |
+
+**Límites de esta lectura:**
+
+- Es el ángulo del **imán**, no el de la articulación: cero, sentido de giro y
+  relación de transmisión están sin calibrar. El CAD muestra al menos un
+  engranaje de encoder auxiliar (`cad_arm_mapping.json`), así que la relación
+  puede no ser 1:1.
+- Solo se lee a petición; no cierra ningún lazo de control ni detiene los
+  servos si un sensor falla.
+- Se lee con registros del AS5600, sin la librería del test 01. El test sigue
+  siendo la herramienta para diagnosticar el montaje por USB.
+- Un multiplexor conectado después del arranque se detecta en la siguiente
+  consulta.
+
 ## Diferencias frente al USB
 
 - La latencia WiFi varía. Si una respuesta tarda más de 250 ms, el puente se
@@ -281,4 +328,6 @@ liberación por inactividad. Para los servos, con un PCA9685 simulado: frecuenci
 de 50 Hz, rango por canal, límite de velocidad, `SVOFF`, corte al
 desconectarse, independencia del watchdog de motores y placa ausente. Un
 segundo simulador compila el firmware con el `servo_map.h` generado y comprueba
-el rango y la velocidad de cada articulación del brazo.
+el rango y la velocidad de cada articulación del brazo. Un tercero simula el
+TCA9548A y los AS5600: estados del imán, canal sin sensor, modo directo,
+detección tardía y convivencia con el PCA9685 en el mismo bus.

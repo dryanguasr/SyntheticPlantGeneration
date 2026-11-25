@@ -171,9 +171,18 @@ void servosOff() {
   if (servoReady) pcaRegister(pca9685::allLedOffH, pca9685::fullOff);
 }
 
+// Bus I2C compartido por el PCA9685 y los encoders AS5600.
+void i2cBegin() {
+  static bool started = false;
+  if (started) return;
+  Wire.begin(PCA9685_SDA, PCA9685_SCL);
+  Wire.setClock(100000);  // 100 kHz, como el test de encoders del equipo
+  started = true;
+}
+
 void servoSetup() {
   if (!SERVO_ENABLED) return;
-  Wire.begin(PCA9685_SDA, PCA9685_SCL);
+  i2cBegin();
   Wire.beginTransmission(PCA9685_ADDRESS);
   if (Wire.endTransmission() != 0) return;  // sin placa: SV responde ERR SV PCA9685
   // Salidas apagadas antes de despertar el oscilador.

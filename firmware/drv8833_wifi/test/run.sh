@@ -16,7 +16,8 @@ done
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 mkdir "$work/test"
-cp "$fw/drv8833_wifi.ino" "$fw/pca9685_servos.h" "$fw/drv8833_core.h" "$fw/servo_map.h" "$work/"
+cp "$fw/drv8833_wifi.ino" "$fw/pca9685_servos.h" "$fw/as5600_encoders.h" "$fw/drv8833_core.h" \
+  "$fw/servo_map.h" "$work/"
 cp "$fw"/test/*.cpp "$work/test/"
 mock=contributions/physalisharvest/firmware/bench_2wd/drv8833_ros/test
 
@@ -29,3 +30,8 @@ g++ -std=c++17 -Wall -Wextra -Werror -I "$fw/test" -I "$mock" \
 g++ -std=c++17 -Wall -Wextra -Werror -I "$fw/test/arm" -I "$fw/test" -I "$mock" \
   "$work/test/arm_map_mock.cpp" -o "$work/arm-mock"
 "$work/arm-mock"
+
+# Encoders AS5600 detrás de un TCA9548A, o uno directo.
+g++ -std=c++17 -Wall -Wextra -Werror -I "$fw/test" -I "$mock" \
+  "$work/test/encoder_mock.cpp" -o "$work/encoder-mock"
+"$work/encoder-mock"

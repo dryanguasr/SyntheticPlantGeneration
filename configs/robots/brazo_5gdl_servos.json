@@ -9,7 +9,8 @@
     "user_confirmed": "indicado por el equipo el 25-11-2026: canal 0 = J1 y así sucesivamente",
     "manual_initial_guess": "valor inicial propuesto; no medido",
     "engineering_heuristic": "criterio de seguridad para la puesta en marcha; no medido",
-    "to_be_measured": "pendiente de medir en el brazo"
+    "to_be_measured": "pendiente de medir en el brazo",
+    "documented_absent": "el documento o test indica que no existe"
   },
   "joints": [
     {
@@ -22,6 +23,8 @@
       "advertised_torque_kgf_cm": 35,
       "pca9685_channel": 0,
       "channel_status": "user_confirmed",
+      "encoder_channel": 0,
+      "encoder_status": "documented",
       "pulse_min_us": 1400,
       "pulse_max_us": 1600,
       "pulse_limits_status": "manual_initial_guess",
@@ -38,6 +41,8 @@
       "advertised_torque_kgf_cm": 380,
       "pca9685_channel": 1,
       "channel_status": "user_confirmed",
+      "encoder_channel": 1,
+      "encoder_status": "documented",
       "pulse_min_us": 1400,
       "pulse_max_us": 1600,
       "pulse_limits_status": "manual_initial_guess",
@@ -54,6 +59,8 @@
       "advertised_torque_kgf_cm": 110,
       "pca9685_channel": 2,
       "channel_status": "user_confirmed",
+      "encoder_channel": 2,
+      "encoder_status": "documented",
       "pulse_min_us": 1400,
       "pulse_max_us": 1600,
       "pulse_limits_status": "manual_initial_guess",
@@ -70,6 +77,8 @@
       "advertised_torque_kgf_cm": 35,
       "pca9685_channel": 3,
       "channel_status": "user_confirmed",
+      "encoder_channel": 3,
+      "encoder_status": "documented",
       "pulse_min_us": 1400,
       "pulse_max_us": 1600,
       "pulse_limits_status": "manual_initial_guess",
@@ -86,6 +95,8 @@
       "advertised_torque_kgf_cm": 35,
       "pca9685_channel": 4,
       "channel_status": "user_confirmed",
+      "encoder_channel": 4,
+      "encoder_status": "documented",
       "pulse_min_us": 1400,
       "pulse_max_us": 1600,
       "pulse_limits_status": "manual_initial_guess",
@@ -102,6 +113,8 @@
       "advertised_torque_kgf_cm": 35,
       "pca9685_channel": 5,
       "channel_status": "user_confirmed",
+      "encoder_channel": null,
+      "encoder_status": "documented_absent",
       "pulse_min_us": 1400,
       "pulse_max_us": 1600,
       "pulse_limits_status": "manual_initial_guess",
@@ -115,7 +128,14 @@
     "El CAD tiene dos TD-8135MG (wrist_pitch y wrist_roll); el documento añade un tercero para el gripper."
   ],
   "not_implemented": [
-    "Encoders AS5600: previstos en el documento, sin cantidad, montaje ni calibración confirmados; el firmware no los lee.",
+    "Encoders AS5600: se leen en crudo por WiFi (ENQ); sin calibrar cero, sentido ni relación con el ángulo de la articulación, y no intervienen en el control.",
     "Conversión de pulso a ángulo, ceros y sentido de giro: pendientes de calibrar eje por eje."
-  ]
+  ],
+  "encoders": {
+    "sensor": "AS5600",
+    "multiplexer": "TCA9548A en 0x70 (A0-A2 a GND)",
+    "source": "firmware/hardware_tests/01_test_encoders_as5600/01_test_encoders_as5600.ino",
+    "status": "documented",
+    "note": "Lectura cruda del imán (0-4095 por vuelta). Cero, sentido y relación de transmisión sin calibrar."
+  }
 }

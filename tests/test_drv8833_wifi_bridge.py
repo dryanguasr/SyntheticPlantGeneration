@@ -29,7 +29,8 @@ _prepare_spec.loader.exec_module(prepare)
 TOKEN = "token-de-prueba-0123456789"
 REPLIES = {"ID": "DRV8833_ROS_V5", "S": "OK S 0000", "CF": "OK CF 1010", "F": "OK F 1010",
            "SVQ": "OK SVQ -", "SVOFF": "OK SVOFF", "SV 0 1500": "OK SV 0 1500",
-           "SV 0 2400": "ERR SV RANGO 1000-2000"}
+           "SV 0 2400": "ERR SV RANGO 1000-2000",
+           "ENQ": "OK ENQ 0:1024:OK 1:4095:MH 2:-- 3:0:ML 4:2048:NM"}
 
 
 class FakeEsp32:
@@ -62,8 +63,8 @@ class FakeEsp32:
                 if self.close_after is not None and len(self.received) >= self.close_after:
                     return
                 reply = REPLIES.get(command, "ERR COMMAND")
-                if not self.servos and command.startswith("SV"):
-                    reply = "ERR COMMAND"  # firmware anterior, sin servos
+                if not self.servos and command.startswith(("SV", "ENQ")):
+                    reply = "ERR COMMAND"  # firmware anterior, sin servos ni encoders
                 stream.write((reply + "\n").encode())
 
     def stop(self):
@@ -127,7 +128,9 @@ class BridgeFlowTests(unittest.TestCase):
             code = wifi.main(["--host", "127.0.0.1", "--port", str(esp.port), "--check"])
         esp.stop()
         self.assertEqual(code, 0)
-        self.assertEqual(esp.received, ["ID", "S", "SVQ", "S"])  # identidad, parada, servos, parada
+        # identidad, parada, servos, encoders, parada final
+        self.assertEqual(esp.received, ["ID", "S", "SVQ", "ENQ", "S"])
+        self.assertIn("OK ENQ 0:1024:OK", output.getvalue())
         self.assertIn("DRV8833_ROS_V5", output.getvalue())
 
     def test_unreachable_host_reports_network_hint(self):
@@ -191,6 +194,18 @@ class ServoTests(unittest.TestCase):
         esp.stop()
         self.assertEqual(esp.received, ["SVQ", "SV 0 1500", "SV 0 2400"])
 
+    def test_encoder_query_passes_and_old_firmware_is_detected(self):
+        esp = FakeEsp32()
+        port = wifi.TcpPort.connect("127.0.0.1", esp.port, TOKEN)
+        self.assertTrue(wifi.probe_encoders(port).startswith("OK ENQ 0:1024:OK"))
+        port.close()
+        esp.stop()
+        old = FakeEsp32(servos=False)
+        port = wifi.TcpPort.connect("127.0.0.1", old.port, TOKEN)
+        self.assertIsNone(wifi.probe_encoders(port))
+        port.close()
+        old.stop()
+
     def test_old_firmware_without_servos_is_detected(self):
         esp = FakeEsp32(servos=False)
         port = wifi.TcpPort.connect("127.0.0.1", esp.port, TOKEN)
@@ -215,6 +230,7 @@ class ServoTests(unittest.TestCase):
             replies.append(servo_cli.send("SV 0 1500", server.port))
             replies.append(servo_cli.send("CF", server.port))  # rechazado localmente
             replies.append(servo_cli.send("SVOFF", server.port))
+            replies.append(servo_cli.send("ENQ", server.port))
 
         Thread(target=operator, daemon=True).start()
         with redirect_stdout(StringIO()):
@@ -224,7 +240,8 @@ class ServoTests(unittest.TestCase):
         server.close()
         port.close()
         esp.stop()
-        self.assertEqual(replies, ["OK SV 0 1500", "ERR SV FORMATO", "OK SVOFF"])
+        self.assertEqual(replies, ["OK SV 0 1500", "ERR SV FORMATO", "OK SVOFF",
+                                   REPLIES["ENQ"]])
         self.assertIn("SV 0 1500", esp.received)
         self.assertNotIn("CF", esp.received)
 
@@ -247,6 +264,7 @@ class ServoTests(unittest.TestCase):
         self.assertEqual(servo_cli.order_from(["3", "1500"]), "SV 3 1500")
         self.assertEqual(servo_cli.order_from(["estado"]), "SVQ")
         self.assertEqual(servo_cli.order_from(["off"]), "SVOFF")
+        self.assertEqual(servo_cli.order_from(["encoders"]), "ENQ")
         for words in (["16", "1500"], ["0", "3000"], ["0"], ["mover"]):
             with self.assertRaises(ValueError):
                 servo_cli.order_from(words)
@@ -290,6 +308,24 @@ class ArmMapTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "desconocida"):
             servo_cli.order_from(["J7", "1500"], self.joints)
 
+    def test_encoders_follow_test_01_wiring(self):
+        channels = {joint["name"]: joint["encoder_channel"] for joint in self.joints}
+        self.assertEqual(channels, {"J1": 0, "J2": 1, "J3": 2, "J4": 3, "J5": 4, "gripper": None})
+
+    def test_encoder_reply_shows_joint_angles(self):
+        text = servo_cli.describe_encoders(REPLIES["ENQ"], self.joints)
+        lines = text.splitlines()
+        self.assertIn("J1", lines[0])
+        self.assertIn("90.0°", lines[0])
+        self.assertIn("imán OK", lines[0])
+        self.assertIn("imán muy cerca", lines[1])
+        self.assertIn("sin sensor", lines[2])
+        self.assertIn("imán muy lejos", lines[3])
+        self.assertIn("sin imán", lines[4])
+        self.assertIn("sin calibrar", lines[-1])
+        self.assertEqual(servo_cli.describe_encoders("ERR EN SIN SENSORES", self.joints),
+                         "ERR EN SIN SENSORES")
+
     def test_state_reply_shows_joint_names(self):
         self.assertEqual(servo_cli.describe_state("OK SVQ 1:1500/1550 9:1000/1000", self.joints),
                          "OK SVQ J2=1500/1550 9:1000/1000")
@@ -302,6 +338,8 @@ class ArmMapTests(unittest.TestCase):
             "rango de pulso": lambda joints: joints[0].update(pulse_min_us=1700),
             "fuera de 0-15": lambda joints: joints[0].update(pca9685_channel=16),
             "alias repetido": lambda joints: joints[1].update(alias="base"),
+            "encoder 0 repetido": lambda joints: joints[1].update(encoder_channel=0),
+            "encoder fuera de 0-7": lambda joints: joints[0].update(encoder_channel=8),
         }
         for message, change in cases.items():
             data = json.loads(json.dumps(base))

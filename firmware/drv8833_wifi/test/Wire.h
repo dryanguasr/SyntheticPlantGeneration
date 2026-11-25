@@ -1,8 +1,10 @@
 #pragma once
 
-// MOCK nativo del bus I2C con un PCA9685 en memoria: guarda sus registros.
+// MOCK nativo del bus I2C: un PCA9685 en el bus principal, un multiplexor
+// TCA9548A y encoders AS5600 detrás de él (o uno directo), con sus registros.
 #include <cstddef>
 #include <cstdint>
+#include <deque>
 #include <vector>
 
 struct MockPca9685 {
@@ -20,7 +22,38 @@ struct MockPca9685 {
   }
 };
 
+struct MockAs5600 {
+  bool present = false;
+  uint8_t registers[256] = {};
+  uint8_t pointer = 0;
+
+  void set(uint16_t raw, uint8_t status) {
+    present = true;
+    registers[0x0B] = status;
+    registers[0x0C] = static_cast<uint8_t>(raw >> 8);
+    registers[0x0D] = static_cast<uint8_t>(raw & 0xFF);
+  }
+};
+
 inline MockPca9685 pca;
+inline bool muxPresent = false;
+inline uint8_t muxSelection = 0;  // máscara de canales abiertos
+inline MockAs5600 muxEncoders[8];
+inline MockAs5600 directEncoder;  // AS5600 en el bus principal
+
+// AS5600 que responde en 0x36 ahora mismo, o nullptr (ninguno o choque).
+inline MockAs5600* reachableEncoder() {
+  MockAs5600* found = directEncoder.present ? &directEncoder : nullptr;
+  if (muxPresent) {
+    for (int channel = 0; channel < 8; ++channel) {
+      if ((muxSelection & (1 << channel)) && muxEncoders[channel].present) {
+        if (found) return nullptr;  // dos AS5600 a la vez: misma dirección
+        found = &muxEncoders[channel];
+      }
+    }
+  }
+  return found;
+}
 
 class TwoWire {
  public:
@@ -29,6 +62,7 @@ class TwoWire {
     sclPin = scl;
     return true;
   }
+  void setClock(uint32_t hz) { clock = hz; }
   void beginTransmission(uint8_t address) {
     target = address;
     data.clear();
@@ -38,6 +72,16 @@ class TwoWire {
     return size;
   }
   uint8_t endTransmission() {
+    if (target == 0x70 && muxPresent) {
+      if (!data.empty()) muxSelection = data.back();
+      return 0;
+    }
+    if (target == 0x36) {
+      MockAs5600* encoder = reachableEncoder();
+      if (!encoder) return 2;
+      if (!data.empty()) encoder->pointer = data[0];
+      return 0;
+    }
     if (!pca.present || target != pca.address) return 2;  // NACK de dirección
     if (pca.failWrites) return 4;
     if (data.empty()) return 0;
@@ -56,13 +100,29 @@ class TwoWire {
     ++pca.writes;
     return 0;
   }
+  uint8_t requestFrom(uint8_t address, uint8_t count) {
+    incoming.clear();
+    MockAs5600* encoder = address == 0x36 ? reachableEncoder() : nullptr;
+    if (!encoder) return 0;
+    for (uint8_t i = 0; i < count; ++i) incoming.push_back(encoder->registers[encoder->pointer++]);
+    return count;
+  }
+  int available() { return static_cast<int>(incoming.size()); }
+  int read() {
+    if (incoming.empty()) return -1;
+    const uint8_t value = incoming.front();
+    incoming.pop_front();
+    return value;
+  }
 
   int sdaPin = -1;
   int sclPin = -1;
+  uint32_t clock = 0;
 
  private:
   uint8_t target = 0;
   std::vector<uint8_t> data;
+  std::deque<uint8_t> incoming;
 };
 
 inline TwoWire Wire;

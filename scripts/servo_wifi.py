@@ -9,6 +9,7 @@ la única conexión autenticada con el ESP32; este script le pasa órdenes por
     python scripts/servo_wifi.py 1 1500       o por canal del PCA9685
     python scripts/servo_wifi.py estado       posición actual/objetivo
     python scripts/servo_wifi.py off          todos los servos sin pulso
+    python scripts/servo_wifi.py encoders     ángulo crudo de los AS5600 (J1-J5)
     python scripts/servo_wifi.py mapa         articulaciones, canales y rangos
 
 Los nombres, canales y rangos vienen de configs/robots/brazo_5gdl_servos.json.
@@ -34,6 +35,7 @@ def load_servo_map(path=SERVO_MAP):
     joints = data["joints"]
     seen_channels = set()
     seen_names = set()
+    seen_encoders = set()
     for joint in joints:
         channel = joint["pca9685_channel"]
         low, high = joint["pulse_min_us"], joint["pulse_max_us"]
@@ -48,6 +50,13 @@ def load_servo_map(path=SERVO_MAP):
             raise ValueError(f"{joint['name']}: velocidad inválida")
         if names & seen_names:
             raise ValueError(f"{joint['name']}: nombre o alias repetido")
+        encoder = joint.get("encoder_channel")
+        if encoder is not None:
+            if not isinstance(encoder, int) or not 0 <= encoder <= 7:
+                raise ValueError(f"{joint['name']}: canal de encoder fuera de 0-7")
+            if encoder in seen_encoders:
+                raise ValueError(f"{joint['name']}: canal de encoder {encoder} repetido")
+            seen_encoders.add(encoder)
         seen_channels.add(channel)
         seen_names |= names
     return joints
@@ -74,6 +83,8 @@ def order_from(words, joints=None):
         return "SVQ"
     if words == ["off"]:
         return "SVOFF"
+    if words == ["encoders"]:
+        return "ENQ"
     if len(words) == 2 and words[1].isdigit():
         channel, joint = resolve_channel(words[0], joints)
         pulse = int(words[1])
@@ -85,7 +96,7 @@ def order_from(words, joints=None):
                 f"({joint['pulse_limits_status']}; ver {SERVO_MAP.relative_to(ROOT)})"
             )
         return f"SV {channel} {pulse}"
-    raise ValueError("Usa: <articulación o canal> <us>, estado, off o mapa")
+    raise ValueError("Usa: <articulación o canal> <us>, estado, off, encoders o mapa")
 
 
 def describe_state(reply, joints):
@@ -101,11 +112,37 @@ def describe_state(reply, joints):
     return "OK SVQ " + " ".join(parts)
 
 
+MAGNET = {"OK": "imán OK", "MH": "imán muy cerca", "ML": "imán muy lejos", "NM": "sin imán"}
+
+
+def describe_encoders(reply, joints):
+    """Una línea por encoder: articulación, ángulo crudo del imán y estado."""
+    if not reply.startswith("OK ENQ"):
+        return reply
+    names = {item["encoder_channel"]: item["name"] for item in joints
+             if item.get("encoder_channel") is not None}
+    lines = []
+    for entry in reply[len("OK ENQ"):].split():
+        fields = entry.split(":")
+        channel = int(fields[0])
+        name = names.get(channel, "sin articulación")
+        if len(fields) == 3:
+            raw = int(fields[1])
+            lines.append(f"{name:<8} enc {channel}: {raw * 360 / 4096:6.1f}° (raw {raw:4}) "
+                         f"{MAGNET.get(fields[2], fields[2])}")
+        else:
+            lines.append(f"{name:<8} enc {channel}: sin sensor")
+    lines.append("Ángulo del imán sin calibrar: no es aún el ángulo de la articulación.")
+    return "\n".join(lines)
+
+
 def describe_map(joints):
-    lines = ["Articulación  Alias          Canal  Rango (us)   Velocidad   Actuador"]
+    lines = ["Articulación  Alias          Canal  Encoder  Rango (us)   Velocidad   Actuador"]
     for joint in joints:
+        encoder = joint.get("encoder_channel")
         lines.append(
             f"{joint['name']:<13} {joint['alias']:<14} {joint['pca9685_channel']:>5}  "
+            f"{'-' if encoder is None else encoder:>7}  "
             f"{joint['pulse_min_us']}-{joint['pulse_max_us']:<7} {joint['slew_us_per_s']:>5} us/s  "
             f"{joint['actuator']}"
         )
@@ -151,7 +188,7 @@ def main(argv=None):
     except RuntimeError as error:
         print(error, file=sys.stderr)
         return 1
-    print(describe_state(reply, joints))
+    print(describe_encoders(reply, joints) if order == "ENQ" else describe_state(reply, joints))
     return 0 if reply.startswith("OK") else 1
 
 

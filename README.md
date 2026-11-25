@@ -245,6 +245,7 @@ flowchart LR
     BR -->|"TCP + token<br/>un solo cliente"| ESP["ESP32"]
     ESP --> DRV["DRV8833"] --> MOT["Motores 2WD"]
     ESP -->|"I2C · GPIO 21/22"| PCA["PCA9685"] --> SRV["Brazo 5 GDL<br/>J1-J5 + gripper"]
+    ESP -->|"I2C · mismo bus"| MUX["TCA9548A"] --> ENC["Encoders AS5600<br/>J1-J5"]
 ```
 
 ```powershell
@@ -269,6 +270,7 @@ python scripts/servo_wifi.py J2 1500
 | `servo_wifi.py <articulación> <us>` | Lleva la articulación (nombre, alias o canal) al pulso indicado |
 | `servo_wifi.py estado` | Posición actual y objetivo de cada articulación activa |
 | `servo_wifi.py off` | Corta el pulso de todos los servos |
+| `servo_wifi.py encoders` | Ángulo del imán de los AS5600 de J1-J5 y estado de cada imán |
 | `servo_wifi.py mapa` | Muestra articulaciones, canales, rangos y velocidades |
 
 - **Mapa del brazo** en [`configs/robots/brazo_5gdl_servos.json`](configs/robots/brazo_5gdl_servos.json),
@@ -280,8 +282,12 @@ python scripts/servo_wifi.py J2 1500
   rango se rechaza, no se recorta.
 - **Velocidad limitada** a 250 us/s por articulación. La primera orden de cada
   una va directa, porque el ESP32 no conoce la posición previa.
+- **Encoders AS5600** de J1-J5 por un TCA9548A, como en el
+  [test 01 del equipo](firmware/hardware_tests/01_test_encoders_as5600/01_test_encoders_as5600.ino).
+  Se leen a petición y en crudo: el ángulo del imán aún no está calibrado
+  como ángulo de la articulación y no interviene en el control.
 - **Pendiente:** el documento y el CAD difieren en el orden de la muñeca y en
-  el servo del gripper; los encoders AS5600 previstos aún no se leen.
+  el servo del gripper.
 - **Pérdida del enlace:** motores parados y servos sin pulso (configurable para
   mantener posición). El watchdog de 250 ms de la base no depende de los servos.
 - **Seguridad del enlace:** token obligatorio, un solo puente y firmware que no
@@ -314,8 +320,8 @@ sequenceDiagram
 </details>
 
 > [!WARNING]
-> El transporte WiFi y los servos están **verificados solo en simulador**
-> (red, GPIO y PCA9685 simulados). No se han cargado en una placa ni probado
+> El transporte WiFi, los servos y los encoders están **verificados solo en
+> simulador** (red, GPIO, PCA9685, TCA9548A y AS5600 simulados). No se han cargado en una placa ni probado
 > con motores o servos reales. TF calibrada, sincronización, puente de
 > odometría e integración física también siguen pendientes; recibir una
 > coordenada no confirma movimiento ni llegada.
